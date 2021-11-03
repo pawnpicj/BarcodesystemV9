@@ -24,8 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Interop.SAPbobsCOM">
-      <HintPath>..\..\..\..\Desktop\Interop.SAPbobsCOM\Interop.SAPbobsCOM.dll</HintPath>
+    <Reference Include="SAPBusinessOneSDK">
+      <HintPath>..\..\..\..\Desktop\SAPBusinessOneSDK(2)\SAPBusinessOneSDK.dll</HintPath>
     </Reference>
   </ItemGroup>
 

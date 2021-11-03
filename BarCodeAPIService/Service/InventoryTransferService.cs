@@ -1,0 +1,98 @@
+﻿using BarCodeAPIService.Connection;
+using BarCodeLibrary.Request.SAP;
+using BarCodeLibrary.Respones.SAP;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace BarCodeAPIService.Service
+{
+    public class InventoryTransferService : IInventoryTransferService
+    {
+        private int ErrCode;
+        private string ErrMsg;
+
+        public Task<ResponseInventoryTransfer> responseInventoryTransfer(SendInventoryTransfer sendInventoryTransfer)
+        {
+            try
+            {
+                SAPbobsCOM.StockTransfer oStockTransfer;
+                SAPbobsCOM.Company oCompany;
+                int Retval = 0;
+                Login login = new();
+                if (login.LErrCode == 0)
+                {
+                    oCompany = login.Company;
+
+                    oStockTransfer = (SAPbobsCOM.StockTransfer)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oStockTransfer);
+                    oStockTransfer.CardCode = sendInventoryTransfer.Series;
+                    //oStockTransfer.DocNum = sendInventoryTransfer.DocNum;
+                    //oStockTransfer.DocEntry = sendInventoryTransfer.DocEntry;
+                    oStockTransfer.DocDate = sendInventoryTransfer.DocDate;
+                    oStockTransfer.FromWarehouse = sendInventoryTransfer.FromWhsCode;
+                    oStockTransfer.ToWarehouse = sendInventoryTransfer.ToWhsCode;
+
+                    foreach (SendInventoryTransferLine l in sendInventoryTransfer.Line)
+                    {
+                        oStockTransfer.Lines.ItemCode = l.lItemCode;
+                        oStockTransfer.Lines.ItemDescription = l.lItemName;
+                        oStockTransfer.Lines.Quantity = l.lQuantity;
+                        oStockTransfer.Lines.FromWarehouseCode = l.lFromWhsCode;
+                        oStockTransfer.Lines.WarehouseCode = l.lToWhsCode;
+
+                        oStockTransfer.Lines.BinAllocations.SetCurrentLine(0);
+                        oStockTransfer.Lines.BinAllocations.BinActionType = SAPbobsCOM.BinActionTypeEnum.batFromWarehouse;
+                        oStockTransfer.Lines.BinAllocations.BinAbsEntry = Convert.ToInt32(l.FromBinLocations);
+                        oStockTransfer.Lines.BinAllocations.Quantity = l.lQuantity;
+                        oStockTransfer.Lines.BinAllocations.Add();
+
+                        oStockTransfer.Lines.BinAllocations.SetCurrentLine(1);
+                        oStockTransfer.Lines.BinAllocations.BinActionType = SAPbobsCOM.BinActionTypeEnum.batToWarehouse;
+                        oStockTransfer.Lines.BinAllocations.BinAbsEntry = Convert.ToInt32(l.ToBinLocations);
+                        oStockTransfer.Lines.BinAllocations.Quantity = l.lQuantity;
+                        oStockTransfer.Lines.BinAllocations.Add();
+
+                        oStockTransfer.Lines.Add();
+                    }
+                    if (Retval != 0)
+                    {
+                        oCompany.GetLastError(out ErrCode, out ErrMsg);
+                        return Task.FromResult(new ResponseInventoryTransfer
+                        {
+                            ErrorCode = ErrCode,
+                            ErrorMsg = ErrMsg,
+                            DocEntry = null
+                        });
+                    }
+                    else
+                    {
+                        return Task.FromResult(new ResponseInventoryTransfer
+                        {
+                            ErrorCode = 0,
+                            ErrorMsg = "",
+                            DocEntry = oCompany.GetNewObjectKey(),
+                        });
+                    }
+
+                }
+                else
+                {
+                    return Task.FromResult(new ResponseInventoryTransfer
+                    {
+                        ErrorCode = login.LErrCode,
+                        ErrorMsg = login.SErrMsg
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseInventoryTransfer
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMsg = ex.Message
+                });
+            }
+        }
+    }
+}

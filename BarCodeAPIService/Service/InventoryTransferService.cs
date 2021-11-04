@@ -26,7 +26,7 @@ namespace BarCodeAPIService.Service
                     oCompany = login.Company;
 
                     oStockTransfer = (SAPbobsCOM.StockTransfer)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oStockTransfer);
-                    //oStockTransfer.CardCode = sendInventoryTransfer.Series;
+                    oStockTransfer.Series = sendInventoryTransfer.Series;
                     //oStockTransfer.DocNum = sendInventoryTransfer.DocNum;
                     //oStockTransfer.DocEntry = sendInventoryTransfer.DocEntry;
                     oStockTransfer.DocDate = sendInventoryTransfer.DocDate;

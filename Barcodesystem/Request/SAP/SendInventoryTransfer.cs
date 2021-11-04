@@ -9,7 +9,7 @@ namespace BarCodeLibrary.Request.SAP
     public class SendInventoryTransfer
     {
         //Head
-        public string Series { get; set; }
+        public int Series { get; set; }
         //public int DocNum { get; set; }
         //public string DocEntry { get; set; }
 

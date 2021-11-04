@@ -35,22 +35,22 @@ namespace BarCodeAPIService.Service
 
                     foreach (SendInventoryTransferLine l in sendInventoryTransfer.Line)
                     {
-                        oStockTransfer.Lines.ItemCode = l.lItemCode;
-                        oStockTransfer.Lines.ItemDescription = l.lItemName;
-                        oStockTransfer.Lines.Quantity = l.lQuantity;
-                        oStockTransfer.Lines.FromWarehouseCode = l.lFromWhsCode;
-                        oStockTransfer.Lines.WarehouseCode = l.lToWhsCode;
+                        oStockTransfer.Lines.ItemCode = l.ItemCode;
+                        //oStockTransfer.Lines.ItemDescription = l.ItemName;
+                        oStockTransfer.Lines.Quantity = l.Quantity;
+                        oStockTransfer.Lines.FromWarehouseCode = l.FromWhsCode;
+                        oStockTransfer.Lines.WarehouseCode = l.ToWhsCode;
 
                         //oStockTransfer.Lines.BinAllocations.SetCurrentLine(0);
                         oStockTransfer.Lines.BinAllocations.BinActionType = SAPbobsCOM.BinActionTypeEnum.batFromWarehouse;
                         oStockTransfer.Lines.BinAllocations.BinAbsEntry = Convert.ToInt32(l.FromBinLocations);
-                        oStockTransfer.Lines.BinAllocations.Quantity = l.lQuantity;
+                        oStockTransfer.Lines.BinAllocations.Quantity = l.Quantity;
                         oStockTransfer.Lines.BinAllocations.Add();
 
                         //oStockTransfer.Lines.BinAllocations.SetCurrentLine(1);
                         oStockTransfer.Lines.BinAllocations.BinActionType = SAPbobsCOM.BinActionTypeEnum.batToWarehouse;
                         oStockTransfer.Lines.BinAllocations.BinAbsEntry = Convert.ToInt32(l.ToBinLocations);
-                        oStockTransfer.Lines.BinAllocations.Quantity = l.lQuantity;
+                        oStockTransfer.Lines.BinAllocations.Quantity = l.Quantity;
                         oStockTransfer.Lines.BinAllocations.Add();
 
                         oStockTransfer.Lines.Add();

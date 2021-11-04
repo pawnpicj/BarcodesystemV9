@@ -9,9 +9,9 @@ namespace BarCodeLibrary.Request.SAP
     public class SendInventoryTransfer
     {
         //Head
-        public string Series { get; set; }
-        public int DocNum { get; set; }
-        public string DocEntry { get; set; }
+        //public string Series { get; set; }
+        //public int DocNum { get; set; }
+        //public string DocEntry { get; set; }
 
         public DateTime DocDate { get; set; }
         public DateTime TaxDate { get; set; }

@@ -26,7 +26,7 @@ namespace BarCodeAPIService.Service
                     oCompany = login.Company;
 
                     oStockTransfer = (SAPbobsCOM.StockTransfer)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oStockTransfer);
-                    oStockTransfer.CardCode = sendInventoryTransfer.Series;
+                    //oStockTransfer.CardCode = sendInventoryTransfer.Series;
                     //oStockTransfer.DocNum = sendInventoryTransfer.DocNum;
                     //oStockTransfer.DocEntry = sendInventoryTransfer.DocEntry;
                     oStockTransfer.DocDate = sendInventoryTransfer.DocDate;
@@ -41,13 +41,13 @@ namespace BarCodeAPIService.Service
                         oStockTransfer.Lines.FromWarehouseCode = l.lFromWhsCode;
                         oStockTransfer.Lines.WarehouseCode = l.lToWhsCode;
 
-                        oStockTransfer.Lines.BinAllocations.SetCurrentLine(0);
+                        //oStockTransfer.Lines.BinAllocations.SetCurrentLine(0);
                         oStockTransfer.Lines.BinAllocations.BinActionType = SAPbobsCOM.BinActionTypeEnum.batFromWarehouse;
                         oStockTransfer.Lines.BinAllocations.BinAbsEntry = Convert.ToInt32(l.FromBinLocations);
                         oStockTransfer.Lines.BinAllocations.Quantity = l.lQuantity;
                         oStockTransfer.Lines.BinAllocations.Add();
 
-                        oStockTransfer.Lines.BinAllocations.SetCurrentLine(1);
+                        //oStockTransfer.Lines.BinAllocations.SetCurrentLine(1);
                         oStockTransfer.Lines.BinAllocations.BinActionType = SAPbobsCOM.BinActionTypeEnum.batToWarehouse;
                         oStockTransfer.Lines.BinAllocations.BinAbsEntry = Convert.ToInt32(l.ToBinLocations);
                         oStockTransfer.Lines.BinAllocations.Quantity = l.lQuantity;

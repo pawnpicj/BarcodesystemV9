@@ -13,7 +13,7 @@ namespace BarCodeAPIService.Service
         private int ErrCode;
         private string ErrMsg;
 
-        public Task<ResponseGoodReceiptPO> responseGoodReceiptPO(SendGoodReceiptPO sendGoodReceiptPO)
+        public Task<ResponseGoodReceiptPO> PostGoodReceiptPO(SendGoodReceiptPO sendGoodReceiptPO)
         {
             try
             {
@@ -91,13 +91,14 @@ namespace BarCodeAPIService.Service
                     oCompany = login.Company;
                     SAPbobsCOM.Recordset? oRS = null;
                     SAPbobsCOM.Recordset? oRSLine = null;
-                    string sqlStr = "EXEC USP_Get_Transcation_Data 'OPDN','','','','',''";
+                    string sqlStr = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_TENGKIMLEANG('OPDN','','','','','')"; ;
                     oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+                    oRSLine = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRS.DoQuery(sqlStr);
                     while (!oRS.EoF)
                     {
-                        oRSLine = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-                        oRSLine.DoQuery("EXEC USP_Get_Transcation_Data 'PDN1','"+ oRS.Fields.Item(0).Value+"','','','',''");
+                        //oRSLine.DoQuery("EXEC USP_Get_Transcation_Data 'PDN1','"+ oRS.Fields.Item(0).Value+"','','','',''");
+                        oRSLine.DoQuery("CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_TENGKIMLEANG('PDN1','" + oRS.Fields.Item(0).Value + "','','','','')");
                         pDN1s = new List<PDN1>();
                         while (!oRSLine.EoF)
                         {

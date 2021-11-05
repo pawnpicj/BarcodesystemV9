@@ -26,7 +26,7 @@
 
   <ItemGroup>
     <Reference Include="SAPBusinessOneSDK">
-      <HintPath>..\..\plugin\SAPBusinessOneSDK.dll</HintPath>
+      <HintPath>..\..\..\..\Desktop\SAPBusinessOneSDK(2)\SAPBusinessOneSDK.dll</HintPath>
     </Reference>
   </ItemGroup>
 

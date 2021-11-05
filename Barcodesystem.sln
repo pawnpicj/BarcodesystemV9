@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31410.357
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BarCodeLibrary", "Barcodesystem\BarCodeLibrary.csproj", "{BE3488E8-BDFE-4DA6-8435-22C38F5D0960}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BarCodeLibrary", "Barcodesystem\BarCodeLibrary.csproj", "{BE3488E8-BDFE-4DA6-8435-22C38F5D0960}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BarCodeAPIService", "BarCodeAPIService\BarCodeAPIService.csproj", "{41932B8C-7F75-4259-BF2F-529B022D23C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BarCodeAPIService", "BarCodeAPIService\BarCodeAPIService.csproj", "{41932B8C-7F75-4259-BF2F-529B022D23C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BarCodeClientService", "BarCodeClientService\BarCodeClientService.csproj", "{E1A84156-4E09-4C3A-90B7-63E7BE86A944}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BarCodeClientService", "BarCodeClientService\BarCodeClientService.csproj", "{E1A84156-4E09-4C3A-90B7-63E7BE86A944}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

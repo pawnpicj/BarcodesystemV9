@@ -29,14 +29,14 @@ namespace BarCodeAPIService.Service
                     oGoodReceiptPO.DocDate = sendGoodReceiptPO.DocDate;
                     oGoodReceiptPO.BPL_IDAssignedToInvoice = sendGoodReceiptPO.BrandID;
                     foreach (SendGoodReceiptPOLine l in sendGoodReceiptPO.Line)
-                        {
+                    {
                         oGoodReceiptPO.Lines.ItemCode = l.ItemCode;
                         oGoodReceiptPO.Lines.Quantity = l.Qty;
                         oGoodReceiptPO.Lines.UnitPrice = l.UnitPrice;
                         oGoodReceiptPO.Lines.WarehouseCode = l.WhsCode;
                         oGoodReceiptPO.Lines.UoMEntry = l.UomCode;
                         oGoodReceiptPO.Lines.Add();
-                        }
+                    }
                         Retval = oGoodReceiptPO.Add();
                         if (Retval != 0)
                         {

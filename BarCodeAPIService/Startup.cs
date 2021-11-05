@@ -43,6 +43,7 @@ namespace BarCodeAPIService
             services.AddScoped<IBPMasterDataService, BPMasterDataService>();
             services.AddScoped<IWarehouseService, WarehouseService>();
             services.AddScoped<IItemMasterDataService, ItemMasterDataService>();
+
             #endregion
             #region ConfigureJWTToken
             var tokenvalidationParameters = new TokenValidationParameters

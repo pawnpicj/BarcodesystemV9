@@ -43,6 +43,18 @@ namespace BarCodeAPIService
             services.AddScoped<IBPMasterDataService, BPMasterDataService>();
             services.AddScoped<IWarehouseService, WarehouseService>();
             services.AddScoped<IItemMasterDataService, ItemMasterDataService>();
+            services.AddScoped<IBinCodeService, BinCodeService>();
+            services.AddScoped<ICostCenterService, CostCenterService>();
+            services.AddScoped<IBatchNumberService, BatchNumberService>();
+            services.AddScoped<ISerialNumberService, SerialNumberService>();
+            services.AddScoped<IGLAccountService, GLAccountService>();
+            services.AddScoped<IContactPersonService, ContactPersonService>();
+            services.AddScoped<IBPAddressService, IBPAddressService>();
+            services.AddScoped<ISaleEmployeeService, SaleEmployeeService>();
+            services.AddScoped<IDocumentSeriesService, DocumentSeriesService>();
+            services.AddScoped<IPriceListService, PriceListService>();
+            services.AddScoped<<IUserService,UserService > ();
+
             #endregion
             #region ConfigureJWTToken
             var tokenvalidationParameters = new TokenValidationParameters

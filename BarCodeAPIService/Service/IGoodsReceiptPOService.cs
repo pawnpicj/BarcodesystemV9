@@ -10,6 +10,6 @@ namespace BarCodeAPIService.Service
     public interface IGoodsReceiptPOService
     {
         Task<ResponseOPDNGetPO> responseOPDNGetPO();
-        Task<ResponseGoodReceiptPO> responseGoodReceiptPO(SendGoodReceiptPO sendGoodReceiptPO);
+        Task<ResponseGoodReceiptPO> PostGoodReceiptPO(SendGoodReceiptPO sendGoodReceiptPO);
     }
 }

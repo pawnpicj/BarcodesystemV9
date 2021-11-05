@@ -55,6 +55,7 @@ namespace BarCodeAPIService.Service
 
                         oStockTransfer.Lines.Add();
                     }
+                    Retval = oStockTransfer.Add();
                     if (Retval != 0)
                     {
                         oCompany.GetLastError(out ErrCode, out ErrMsg);

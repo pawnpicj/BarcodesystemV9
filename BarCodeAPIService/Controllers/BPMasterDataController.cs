@@ -21,7 +21,7 @@ namespace BarCodeAPIService.Controllers
             this.bPMasterData = bPMasterData;    
         }
         [HttpGet("GetBP")]
-        public Task<IActionResult> GetBPMasterData() {
+        public async Task<IActionResult> GetBPMasterDataAsync() {
             var a = await bPMasterData.ResponseOCRDGetBP();
             if (a.ErrorCode == 0)
             {

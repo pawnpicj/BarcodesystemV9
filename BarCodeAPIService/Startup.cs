@@ -53,8 +53,7 @@ namespace BarCodeAPIService
             services.AddScoped<ISaleEmployeeService, SaleEmployeeService>();
             services.AddScoped<IDocumentSeriesService, DocumentSeriesService>();
             services.AddScoped<IPriceListService, PriceListService>();
-            services.AddScoped<<IUserService,UserService > ();
-
+            services.AddScoped<IUserService, UserService>();
             #endregion
             #region ConfigureJWTToken
             var tokenvalidationParameters = new TokenValidationParameters
@@ -104,7 +103,7 @@ namespace BarCodeAPIService
                          Type = ReferenceType.SecurityScheme,
                          Id = "Bearer"
                        }
-                      },
+                     },
                       new string[] { }
                     }
                  });

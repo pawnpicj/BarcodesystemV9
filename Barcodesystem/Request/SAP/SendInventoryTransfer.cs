@@ -23,7 +23,7 @@ namespace BarCodeLibrary.Request.SAP
         public string SalesEmployeeCode { get; set; }
 
         public string Comments { get; set; }
-        public string JournalRemark { get; set; }
+        //public string JournalRemark { get; set; }
 
         public List<SendInventoryTransferLine> Line { get; set; }
         

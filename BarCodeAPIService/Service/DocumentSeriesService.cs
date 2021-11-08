@@ -29,7 +29,7 @@ namespace BarCodeAPIService.Service
                             ObjectCode = Convert.ToInt32(oRS.Fields.Item(0).Value.ToString()),
                             Series = Convert.ToInt32(oRS.Fields.Item(1).Value.ToString()),
                             SeriesName = oRS.Fields.Item(0).Value.ToString(),
-                            InitialNum = Convert.ToInt32(Convert.ToInt32(oRS.Fields.Item(1).Value.ToString()),
+                            InitialNum = Convert.ToInt32(Convert.ToInt32(oRS.Fields.Item(1).Value.ToString())),
                             NextNumber = Convert.ToInt32(oRS.Fields.Item(0).Value.ToString()),
                             Indicator = oRS.Fields.Item(1).Value.ToString(),
                         });

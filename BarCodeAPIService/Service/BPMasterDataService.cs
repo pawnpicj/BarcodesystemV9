@@ -24,7 +24,8 @@ namespace BarCodeAPIService.Service
                 {
                     oCompany = login.Company;
                     SAPbobsCOM.Recordset? oRS = null;
-                    string sqlStr = "CALL \""+ConnectionString.DbPassword+ "\"._USP_CALLTRANS_Smey('OCRD','','','','','')"; 
+                    string sqlStr = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey('OCRD','','','','','')"; 
+                 //   string sqlStr = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_TENGKIMLEANG('OPDN','','','','','')"; ;
                     oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oBusinessPartners);
                     oRS.DoQuery(sqlStr);
                     while (!oRS.EoF)

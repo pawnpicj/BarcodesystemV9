@@ -8,14 +8,10 @@ using Barcodesystem.Contract.RouteApi;
 
 namespace BarCodeAPIService.Controllers
 {
+    [ApiController]
+    [Route(APIRoute.Root)]
     public class BPMasterDataController : Controller
-    {
-        //public IActionResult Index()
-        //{
-        //    return View();
-        //}
-        [ApiController]
-        [Route(APIRoute.Root)]
+    {     
         private readonly IBPMasterDataService bPMasterData;
         public BPMasterDataController(IBPMasterDataService bPMasterData) {
             this.bPMasterData = bPMasterData;    

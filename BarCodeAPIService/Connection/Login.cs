@@ -151,7 +151,7 @@ namespace BarCodeAPIService.Connection
                 oCompany.CompanyDB = ConnectionString.CompanyDB;
                 oCompany.UserName = ConnectionString.UserName;
                 oCompany.Password = ConnectionString.Password;
-                oCompany.SLDServer = ConnectionString.SLDServer;
+                //oCompany.SLDServer = ConnectionString.SLDServer;
 
                 if (oCompany.Connect() != 0)
                 {

@@ -40,6 +40,7 @@ namespace BarCodeAPIService
             #region AddScope
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IGoodsReceiptPOService, GoodsReceiptPOService>();
+            services.AddScoped<IInventoryTransferService, InventoryTransferService>();
             #endregion
             #region ConfigureJWTToken
             var tokenvalidationParameters = new TokenValidationParameters

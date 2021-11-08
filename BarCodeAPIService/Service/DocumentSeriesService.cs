@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 namespace BarCodeAPIService.Service
 {
     public class DocumentSeriesService:IDocumentSeriesService
-    {
-        Task<ResponseNNM1GetDocumentSeries> ResponseNNM1GetDocumentSeries() {
+    {       
+        Task<ResponseNNM1GetDocumentSeries> IDocumentSeriesService.ResponseNNM1GetDocumentSeries()
+        {
             var nMM1 = new List<NNM1>();
             SAPbobsCOM.Company oCompany;
             try
@@ -26,8 +27,12 @@ namespace BarCodeAPIService.Service
                     {
                         nMM1.Add(new NNM1
                         {
-                            UserCode = oRS.Fields.Item(0).Value.ToString(),
-                            UserName = oRS.Fields.Item(1).Value.ToString(),
+                            ObjectCode = oRS.Fields.Item(0).Value.ToString(),
+                            Series = Convert.ToInt32(oRS.Fields.Item(1).Value.ToString()),
+                            SeriesName = oRS.Fields.Item(0).Value.ToString(),
+                            InitialNum = Convert.ToInt32(oRS.Fields.Item(1).Value.ToString()),
+                            NextNumber =Convert.ToInt32(oRS.Fields.Item(0).Value.ToString()),
+                            Indicator = oRS.Fields.Item(1).Value.ToString(),
 
                         });
                         oRS.MoveNext();

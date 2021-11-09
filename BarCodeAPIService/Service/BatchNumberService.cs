@@ -19,19 +19,17 @@ namespace BarCodeAPIService.Service
                     oCompany = login.Company;
                     SAPbobsCOM.Recordset oRS = null;
                     oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-                    string query = "";
-                    oRS.DoQuery(query);
+                    string Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('OIBT','','','','','')";
+                    oRS.DoQuery(Query);
                     while (!oRS.EoF)
                     {
                         oBIN.Add(new OIBT
                         {
-                            CardCode = oRS.Fields.Item(0).Value.ToString(),
-                            CardName = oRS.Fields.Item(1).Value.ToString(),
-                            ItemCode = oRS.Fields.Item(2).Value.ToString(),
-                            ItemName = oRS.Fields.Item(3).Value.ToString(),
-                            BatchNumber = oRS.Fields.Item(4).Value.ToString(),
-                            WhsCode = oRS.Fields.Item(5).Value.ToString(),
-                            Quantity = Convert.ToInt32(oRS.Fields.Item(6).Value.ToString())
+                            ItemCode = oRS.Fields.Item(0).Value.ToString(),
+                            ItemName = oRS.Fields.Item(1).Value.ToString(),
+                            BatchNumber = oRS.Fields.Item(2).Value.ToString(),
+                            WhsCode = oRS.Fields.Item(3).Value.ToString(),
+                            Quantity = Convert.ToInt32(oRS.Fields.Item(4).Value.ToString())
                         });
                         oRS.MoveNext();
                     }

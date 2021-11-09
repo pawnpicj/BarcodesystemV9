@@ -19,7 +19,8 @@ namespace BarCodeLibrary.Respones.SAP
         public string ItemName { get; set; }
         public string ItemFName { get; set; }
         public string ItemGroup { get; set; }
+        public string ManBtchNum { get; set; }
+        public string ManSerNum { get; set; }
         public string UoM { get; set; }
-        public string ManageItemBy { get; set; }
     }
 }

@@ -21,17 +21,18 @@ namespace BarCodeAPIService.Service
                     oCompany = login.Company;
                     SAPbobsCOM.Recordset oRS = null;
                     oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-                    string query = "";
-                    oRS.DoQuery(query);
+                    string Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('OSRI','','','','','')";
+                    oRS.DoQuery(Query);
                     while (!oRS.EoF)
                     {
                         oSRI.Add(new OSRI
                         {
-                            ItemCode=oRS.Fields.Item(0).Value.ToString(),
-                            IntrSerial=oRS.Fields.Item(1).Value.ToString(),
-                            WhsCode=oRS.Fields.Item(2).Value.ToString(),
-                            Quantity=Convert.ToInt32(oRS.Fields.Item(3).Value.ToString())
-                        });
+                            ItemCode = oRS.Fields.Item(0).Value.ToString(),
+                            ItemName = oRS.Fields.Item(1).Value.ToString(),
+                            IntrSerial = oRS.Fields.Item(1).Value.ToString(),
+                            WhsCode = oRS.Fields.Item(2).Value.ToString(),
+                            Quantity = Convert.ToInt32(oRS.Fields.Item(3).Value.ToString())
+                        }); ;
                         oRS.MoveNext();
                     }
                     return Task.FromResult(new ResponseOSRIGetSerial

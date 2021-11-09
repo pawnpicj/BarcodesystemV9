@@ -13,8 +13,6 @@ namespace BarCodeLibrary.Respones.SAP
         public List<OIBT> Data { get; set; }
     }
     public class OIBT { 
-        public string CardCode { get; set; }
-        public string CardName { get; set; }
         public string ItemCode { get; set; }
         public string ItemName { get; set; }
         public string BatchNumber { get; set; }

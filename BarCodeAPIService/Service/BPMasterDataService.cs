@@ -1,6 +1,5 @@
 ﻿using BarCodeAPIService.Connection;
 using BarCodeLibrary.Respones.SAP;
-using BarCodeLibrary.Request.SAP;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +9,7 @@ namespace BarCodeAPIService.Service
 {
     public class BPMasterDataService : IBPMasterDataService
     {
-        private int ErrCode;
-        private string ErrMsg;
-        
+
         public Task<ResponseOCRDGetBP> ResponseOCRDGetBP()
         {
             var oCRD = new List<OCRD>();
@@ -24,9 +21,9 @@ namespace BarCodeAPIService.Service
                 {
                     oCompany = login.Company;
                     SAPbobsCOM.Recordset? oRS = null;
-                    string sqlStr = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey('OCRD','','','','','')"; 
-                 //   string sqlStr = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_TENGKIMLEANG('OPDN','','','','','')"; ;
-                    oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oBusinessPartners);
+                    string sqlStr = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('OCRD','','','','','')"; 
+                 
+                    oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRS.DoQuery(sqlStr);
                     while (!oRS.EoF)
                     {

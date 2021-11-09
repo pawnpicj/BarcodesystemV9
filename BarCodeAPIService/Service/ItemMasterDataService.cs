@@ -20,7 +20,7 @@ namespace BarCodeAPIService.Service
                     oCompany = login.Company;
                     SAPbobsCOM.Recordset oRS=null;
                     oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-                    string Query = "";
+                    string Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('OITM','','','','','')";
                     oRS.DoQuery(Query);
                     while (!oRS.EoF)
                     {
@@ -29,8 +29,9 @@ namespace BarCodeAPIService.Service
                             ItemName=oRS.Fields.Item(1).Value.ToString(),
                             ItemFName=oRS.Fields.Item(2).Value.ToString(),
                             ItemGroup=oRS.Fields.Item(3).Value.ToString(),
-                            UoM=oRS.Fields.Item(4).Value.ToString(),
-                            ManageItemBy=oRS.Fields.Item(5).Value.ToString()
+                            ManBtchNum=oRS.Fields.Item(4).Value.ToString(),
+                            ManSerNum=oRS.Fields.Item(5).Value.ToString(),
+                            UoM=oRS.Fields.Item(4).Value.ToString(),                            
                         });
                         oRS.MoveNext();
                     }

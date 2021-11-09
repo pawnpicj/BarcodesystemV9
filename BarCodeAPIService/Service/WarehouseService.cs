@@ -18,8 +18,8 @@ namespace BarCodeAPIService.Service
                 oCompany = login.Company;
                 if (login.LErrCode == 0)
                 {
-                    SAPbobsCOM.Recordset? oRS;
-                    string sqlStr = "";
+                    SAPbobsCOM.Recordset? oRS;                  
+                    string sqlStr = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('OWHS','','','','','')";
                     oRS =(SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRS.DoQuery(sqlStr);
                     while (oRS.EoF)

@@ -19,9 +19,9 @@ namespace BarCodeAPIService.Service
                 {
                     oCompany = login.Company;
                     SAPbobsCOM.Recordset oRS = null;
-                    oRS =(SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-                    string query = "";
-                    oRS.DoQuery(query);
+                    oRS =(SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);                    
+                    string Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('OBIN','','','','','')";
+                    oRS.DoQuery(Query);
                     while (!oRS.EoF) {
                         oBIN.Add(new OBIN { 
                             BinCode=oRS.Fields.Item(0).Value.ToString(),

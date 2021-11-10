@@ -49,6 +49,7 @@ namespace BarCodeAPIService
             services.AddScoped<ISerialNumberService, SerialNumberService>();
             services.AddScoped<IGLAccountService, GLAccountService>();
             services.AddScoped<IContactPersonService, ContactPersonService>();
+            services.AddScoped<IBPAddressService, IBPAddressService>();
             services.AddScoped<ISaleEmployeeService, SaleEmployeeService>();
             //services.AddScoped<IDocumentSeriesService, DocumentSeriesService>();
             services.AddScoped<IPriceListService, PriceListService>();

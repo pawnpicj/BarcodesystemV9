@@ -28,8 +28,7 @@ namespace BarCodeAPIService.Service
                         oUSR.Add(new OUSR
                         {
                             UserCode = oRS.Fields.Item(0).Value.ToString(),
-                            UserName = oRS.Fields.Item(1).Value.ToString(),
-                            
+                            UserName = oRS.Fields.Item(1).Value.ToString(),                            
                         });
                         oRS.MoveNext();
                     }

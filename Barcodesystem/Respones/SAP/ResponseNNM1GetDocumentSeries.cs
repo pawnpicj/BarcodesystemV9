@@ -14,11 +14,11 @@ namespace BarCodeLibrary.Respones.SAP
     }
     public class NNM1
     {
-        public int ObjectCode { get; set; }
+        public string ObjectCode { get; set; }
         public int Series { get; set; }
         public string SeriesName { get; set; }
-        public string InitialNum { get; set; }
-        public string NextNumber { get; set; }
+        public int InitialNum { get; set; }
+        public int NextNumber { get; set; }
         public string Indicator { get; set; }
     }
 }

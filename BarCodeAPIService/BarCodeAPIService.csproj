@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <Platforms>AnyCPU;ARM32</Platforms>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -29,10 +30,8 @@
 
   <ItemGroup>
     <Reference Include="SAPBusinessOneSDK">
-      <HintPath>bin\Debug\SAPBusinessOneSDK.dll</HintPath>
+      <HintPath>..\..\plugin\SAPBusinessOneSDK.dll</HintPath>
     </Reference>
   </ItemGroup>
-
-  
 
 </Project>

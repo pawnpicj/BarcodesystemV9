@@ -1,9 +1,9 @@
-﻿using BarCodeLibrary.Respones.SAP;
-using BarCodeAPIService.Connection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿//using BarCodeLibrary.Respones.SAP;
+//using BarCodeAPIService.Connection;
+//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Threading.Tasks;
 
 namespace BarCodeAPIService.Service
 {
@@ -29,35 +29,35 @@ namespace BarCodeAPIService.Service
                             UserCode = oRS.Fields.Item(0).Value.ToString(),
                             UserName = oRS.Fields.Item(1).Value.ToString(),
 
-                        });
-                        oRS.MoveNext();
-                    }
-                    return Task.FromResult(new ResponseNNM1GetDocumentSeries
-                    {
-                        ErrorCode = 0,
-                        ErrorMessage = "",
-                        Data = nMM1.ToList()
-                    });
-                }
-                else
-                {
-                    return Task.FromResult(new ResponseNNM1GetDocumentSeries
-                    {
-                        ErrorCode = login.LErrCode,
-                        ErrorMessage = login.SErrMsg,
-                        Data = null
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                return Task.FromResult(new ResponseNNM1GetDocumentSeries
-                {
-                    ErrorCode = ex.HResult,
-                    ErrorMessage = ex.Message,
-                    Data = null
-                });
-            }
-        }
-    }
-}
+//                        });
+//                        oRS.MoveNext();
+//                    }
+//                    return Task.FromResult(new ResponseNNM1GetDocumentSeries
+//                    {
+//                        ErrorCode = 0,
+//                        ErrorMessage = "",
+//                        Data = nMM1.ToList()
+//                    });
+//                }
+//                else
+//                {
+//                    return Task.FromResult(new ResponseNNM1GetDocumentSeries
+//                    {
+//                        ErrorCode = login.LErrCode,
+//                        ErrorMessage = login.SErrMsg,
+//                        Data = null
+//                    });
+//                }
+//            }
+//            catch (Exception ex)
+//            {
+//                return Task.FromResult(new ResponseNNM1GetDocumentSeries
+//                {
+//                    ErrorCode = ex.HResult,
+//                    ErrorMessage = ex.Message,
+//                    Data = null
+//                });
+//            }
+//        }
+//    }
+//}

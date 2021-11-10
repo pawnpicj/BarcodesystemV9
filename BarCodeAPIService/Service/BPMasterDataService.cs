@@ -26,7 +26,7 @@ namespace BarCodeAPIService.Service
                     SAPbobsCOM.Recordset? oRS = null;
                     string sqlStr = "CALL \""+ConnectionString.DbPassword+ "\"."UDOM_BARCODE"."_USP_CALLTRANS_Smey" ('OCRD','','','','','')";
                     oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oBusinessPartners);
-                    oRS.DoQuery(sqlStr);
+                    //oRS.DoQuery(sqlStr);
                     while (!oRS.EoF)
                     {
                         oCRD.Add(new OCRD { 

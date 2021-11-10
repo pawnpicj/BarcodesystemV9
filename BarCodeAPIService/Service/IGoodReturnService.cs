@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace BarCodeAPIService.Service
 {
-    public interface IGoodsReceiptPOService
+    public interface IGoodReturnService
     {
-        Task<ResponseOPORGetPO> responseOPORGetPO();
-        Task<ResponseGoodReceiptPO> PostGoodReceiptPO(SendGoodReceiptPO sendGoodReceiptPO);
+        Task<ResponseOPDNGetGoodReceipt> responseOPDNGetGoodReceipt();
+        Task<ResponseGoodReturn> sendGoodReturn(SendGoodsReturn sendGoodReturn);
     }
 }

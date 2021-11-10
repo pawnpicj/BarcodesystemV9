@@ -8,4 +8,9 @@
     <PackageReference Include="ClrHeapAllocationAnalyzer" Version="3.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Request\SAP\Pannreaksmey\" />
+    <Folder Include="Respones\SAP\Pannreaksmey\" />
+  </ItemGroup>
+
 </Project>

@@ -27,7 +27,7 @@ namespace BarCodeAPIService.Controllers
         [HttpGet("GetPO")]
         public async Task<IActionResult> GetGoodsReceiptPOAsync()
         {
-            var a =await  goodsReceiptPO.responseOPDNGetPO();
+            var a =await  goodsReceiptPO.responseOPORGetPO();
             if (a.ErrorCode == 0)
             {
                 return Ok(a);

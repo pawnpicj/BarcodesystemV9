@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,6 +26,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Barcodesystem\BarCodeLibrary.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\Pannreaksmey\" />
+    <Folder Include="Service\Pannreaksmey\" />
   </ItemGroup>
 
   <ItemGroup>

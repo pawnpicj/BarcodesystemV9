@@ -8,77 +8,12 @@ using System.Threading.Tasks;
 
 namespace BarCodeAPIService.Service
 {
-    public class GoodsReceiptPOService : IGoodsReceiptPOService
+    public class GoodReturnService : IGoodReturnService
     {
         private int ErrCode;
         private string ErrMsg;
 
-        public Task<ResponseGoodReceiptPO> PostGoodReceiptPO(SendGoodReceiptPO sendGoodReceiptPO)
-        {
-            try
-            {
-                SAPbobsCOM.Documents oGoodReceiptPO;
-                SAPbobsCOM.Company oCompany;
-                int Retval = 0;
-                Login login = new();
-                if (login.LErrCode == 0)
-                {
-                    oCompany = login.Company;
-                    oGoodReceiptPO = (SAPbobsCOM.Documents)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oPurchaseDeliveryNotes);
-                    oGoodReceiptPO.CardCode = sendGoodReceiptPO.CardCode;
-                    oGoodReceiptPO.DocDate = sendGoodReceiptPO.DocDate;
-                    oGoodReceiptPO.BPL_IDAssignedToInvoice = sendGoodReceiptPO.BrandID;
-                    foreach (SendGoodReceiptPOLine l in sendGoodReceiptPO.Line)
-                    {
-                        oGoodReceiptPO.Lines.ItemCode = l.ItemCode;
-                        oGoodReceiptPO.Lines.Quantity = l.Qty;
-                        oGoodReceiptPO.Lines.UnitPrice = l.UnitPrice;
-                        oGoodReceiptPO.Lines.WarehouseCode = l.WhsCode;
-                        oGoodReceiptPO.Lines.UoMEntry = l.UomCode;
-                        oGoodReceiptPO.Lines.Add();
-                    }
-                        Retval = oGoodReceiptPO.Add();
-                        if (Retval != 0)
-                        {
-                            oCompany.GetLastError(out ErrCode, out ErrMsg);
-                            return Task.FromResult(new ResponseGoodReceiptPO
-                            {
-                                ErrorCode = ErrCode,
-                                ErrorMsg = ErrMsg,
-                                DocEntry = null
-                            }) ;
-                        }
-                        else
-                        {
-                            return Task.FromResult(new ResponseGoodReceiptPO
-                            {
-                                ErrorCode = 0,
-                                ErrorMsg = "",
-                                DocEntry = oCompany.GetNewObjectKey(),
-                            });
-                        }
-
-                }
-                else
-                {
-                    return Task.FromResult(new ResponseGoodReceiptPO
-                    {
-                        ErrorCode = login.LErrCode,
-                        ErrorMsg = login.SErrMsg
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                return Task.FromResult(new ResponseGoodReceiptPO
-                {
-                    ErrorCode = ex.HResult,
-                    ErrorMsg = ex.Message
-                });
-            }
-        }
-
-        public Task<ResponseOPDNGetPO> responseOPDNGetPO()
+        public Task<ResponseOPDNGetGoodReceipt> responseOPDNGetGoodReceipt()
         {
             var oPDNs = new List<OPDN>();
             var pDN1s = new List<PDN1>();
@@ -91,7 +26,7 @@ namespace BarCodeAPIService.Service
                     oCompany = login.Company;
                     SAPbobsCOM.Recordset? oRS = null;
                     SAPbobsCOM.Recordset? oRSLine = null;
-                    string sqlStr = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_TENGKIMLEANG('OPDN','','','','','')"; ;                    
+                    string sqlStr = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_TENGKIMLEANG('OPDN','','','','','')"; ;
                     oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRSLine = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRS.DoQuery(sqlStr);
@@ -125,7 +60,7 @@ namespace BarCodeAPIService.Service
                         });
                         oRS.MoveNext();
                     }
-                    return Task.FromResult(new ResponseOPDNGetPO
+                    return Task.FromResult(new ResponseOPDNGetGoodReceipt
                     {
                         ErrorCode = 0,
                         ErrorMessage = "",
@@ -134,7 +69,7 @@ namespace BarCodeAPIService.Service
                 }
                 else
                 {
-                    return Task.FromResult(new ResponseOPDNGetPO
+                    return Task.FromResult(new ResponseOPDNGetGoodReceipt
                     {
                         ErrorCode = login.LErrCode,
                         ErrorMessage = login.SErrMsg,
@@ -143,11 +78,75 @@ namespace BarCodeAPIService.Service
                 }
             }catch(Exception ex)
             {
-                return Task.FromResult(new ResponseOPDNGetPO
+                return Task.FromResult(new ResponseOPDNGetGoodReceipt
                 {
                     ErrorCode = ex.HResult,
                     ErrorMessage = ex.Message,
                     Data = null
+                });
+            }
+        }
+
+        public Task<ResponseGoodReturn> sendGoodReturn(SendGoodsReturn sendGoodReturn)
+        {
+            try
+            {
+                SAPbobsCOM.Documents oGoodReceiptPO;
+                SAPbobsCOM.Company oCompany;
+                int Retval = 0;
+                Login login = new();
+                if (login.LErrCode == 0)
+                {
+                    oCompany = login.Company;
+                    oGoodReceiptPO = (SAPbobsCOM.Documents)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oPurchaseReturns);
+                    oGoodReceiptPO.CardCode = sendGoodReturn.CardCode;
+                    oGoodReceiptPO.DocDate = sendGoodReturn.DocDate;
+                    foreach (SendGoodsReturnLine l in sendGoodReturn.Lines)
+                    {
+                        oGoodReceiptPO.Lines.ItemCode = l.ItemCode;
+                        oGoodReceiptPO.Lines.Quantity = l.Quantity;
+                        oGoodReceiptPO.Lines.UnitPrice = l.UnitPrice;
+                        oGoodReceiptPO.Lines.WarehouseCode = l.WarehouseCode;
+                        oGoodReceiptPO.Lines.UoMEntry = l.UomCode;
+                        oGoodReceiptPO.Lines.Add();
+                    }
+                    Retval = oGoodReceiptPO.Add();
+                    if (Retval != 0)
+                    {
+                        oCompany.GetLastError(out ErrCode, out ErrMsg);
+                        return Task.FromResult(new ResponseGoodReturn
+                        {
+                            ErrorCode = ErrCode,
+                            ErrorMsg = ErrMsg,
+                            DocEntry = null
+                        });
+                    }
+                    else
+                    {
+                        return Task.FromResult(new ResponseGoodReturn
+                        {
+                            ErrorCode = 0,
+                            ErrorMsg = "",
+                            DocEntry = oCompany.GetNewObjectKey(),
+                        });
+                    }
+
+                }
+                else
+                {
+                    return Task.FromResult(new ResponseGoodReturn
+                    {
+                        ErrorCode = login.LErrCode,
+                        ErrorMsg = login.SErrMsg
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseGoodReturn
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMsg = ex.Message
                 });
             }
         }

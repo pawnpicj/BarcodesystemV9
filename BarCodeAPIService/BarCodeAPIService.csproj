@@ -33,4 +33,10 @@
     <Folder Include="Service\Pannreaksmey\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="SAPBusinessOneSDK">
+      <HintPath>..\..\plugin\SAPBusinessOneSDK.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

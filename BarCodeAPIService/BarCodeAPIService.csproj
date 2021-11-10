@@ -30,8 +30,15 @@
 
   <ItemGroup>
     <Reference Include="SAPBusinessOneSDK">
-      <HintPath>..\..\plugin\SAPBusinessOneSDK.dll</HintPath>
+      <HintPath>..\..\..\..\Desktop\SAPBusinessOneSDK(2)\SAPBusinessOneSDK.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\Bank\" />
+    <Folder Include="Controllers\Pannreaksmey\" />
+    <Folder Include="Service\Bank\" />
+    <Folder Include="Service\Pannreaksmey\" />
   </ItemGroup>
 
 </Project>

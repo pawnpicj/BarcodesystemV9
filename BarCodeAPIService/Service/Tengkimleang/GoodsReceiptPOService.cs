@@ -46,7 +46,7 @@ namespace BarCodeAPIService.Service
                                 ErrorCode = ErrCode,
                                 ErrorMsg = ErrMsg,
                                 DocEntry = null
-                            }) ;
+                            });
                         }
                         else
                         {

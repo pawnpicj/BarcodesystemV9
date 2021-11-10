@@ -10,7 +10,7 @@ namespace BarCodeAPIService.Controllers
 {
     [ApiController]
     [Route(APIRoute.Root)]
-    public class ContactPersonController : Controller
+    public class ContactPersonController : ControllerBase
     {
         private readonly IContactPersonService contactPerson;
 

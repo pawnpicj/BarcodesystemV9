@@ -10,7 +10,7 @@ namespace BarCodeAPIService.Controllers
 {
     [ApiController]
     [Route(APIRoute.Root)]
-    public class DocumentSeriesController : Controller
+    public class DocumentSeriesController : ControllerBase
     {
         private readonly IDocumentSeriesService documentSeries;
 
@@ -21,7 +21,7 @@ namespace BarCodeAPIService.Controllers
         [HttpGet]
         public async Task<IActionResult> GetDocumentSeries()
         {
-            var a = await documentSeries.ResponseNNM1GetDocumentSeries();
+            var a = await documentSeries.responseNNM1GetDocumentSeries();
             if (a.ErrorCode == 0)
             {
                 return Ok(a);

@@ -8,6 +8,6 @@ namespace BarCodeAPIService.Service
 {
     public interface IDocumentSeriesService
     {
-        Task<ResponseNNM1GetDocumentSeries> ResponseNNM1GetDocumentSeries();
+        Task<ResponseNNM1GetDocumentSeries> responseNNM1GetDocumentSeries();
     }
 }

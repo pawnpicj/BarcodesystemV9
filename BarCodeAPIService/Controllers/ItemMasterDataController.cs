@@ -10,7 +10,7 @@ namespace BarCodeAPIService.Controllers
 {
     [ApiController]
     [Route(APIRoute.Root)]
-    public class ItemMasterDataController : Controller
+    public class ItemMasterDataController : ControllerBase
     {
         private readonly IItemMasterDataService itemMasterData;
 

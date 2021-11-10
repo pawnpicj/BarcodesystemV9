@@ -10,7 +10,7 @@ namespace BarCodeAPIService.Controllers
 {
     [ApiController]
     [Route(APIRoute.Root)]
-    public class BPAddressController : Controller
+    public class BPAddressController : ControllerBase
     {
         private readonly IBPAddressService bpAddress;
 
@@ -20,7 +20,7 @@ namespace BarCodeAPIService.Controllers
         [HttpGet]
         public async Task<IActionResult> GetBPAddress()
         {
-            var a = await bpAddress.ResponseCRD1Address();
+            var a = await bpAddress.responseCRD1Address();
             if (a.ErrorCode == 0)
             {
                 return Ok(a);

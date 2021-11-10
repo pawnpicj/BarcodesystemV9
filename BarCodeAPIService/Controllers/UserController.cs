@@ -10,7 +10,7 @@ namespace BarCodeAPIService.Controllers
 {
     [ApiController]
     [Route(APIRoute.Root)]
-    public class UserController : Controller
+    public class UserController : ControllerBase
     {
         private readonly IUserService user;
 

@@ -11,7 +11,7 @@ namespace BarCodeAPIService.Controllers
 {
     [ApiController]
     [Route(APIRoute.Root)]
-    public class WarehouseController : Controller
+    public class WarehouseController : ControllerBase
     {
         private readonly IWarehouseService warehouse;
 

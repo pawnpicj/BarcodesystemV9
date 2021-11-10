@@ -10,7 +10,7 @@ namespace BarCodeAPIService.Controllers
 {
     [ApiController]
     [Route(APIRoute.Root)]
-    public class SaleEmployeeController : Controller
+    public class SaleEmployeeController : ControllerBase
     {
         private readonly ISaleEmployeeService saleEmployee;
 

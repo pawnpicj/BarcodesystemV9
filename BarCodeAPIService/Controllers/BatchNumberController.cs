@@ -10,7 +10,7 @@ namespace BarCodeAPIService.Controllers
 {
     [ApiController]
     [Route(APIRoute.Root)]
-    public class BatchNumberController : Controller
+    public class BatchNumberController : ControllerBase
     {
         private readonly IBatchNumberService batchNumber;
 

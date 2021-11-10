@@ -10,7 +10,7 @@ namespace BarCodeAPIService.Controllers
 {
     [ApiController]
     [Route(APIRoute.Root)]
-    public class SerialNumberController : Controller
+    public class SerialNumberController : ControllerBase
     {
         private readonly ISerialNumberService serialNumber;
 

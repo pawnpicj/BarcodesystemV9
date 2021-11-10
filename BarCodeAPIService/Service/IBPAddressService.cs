@@ -8,6 +8,6 @@ namespace BarCodeAPIService.Service
 {
     public interface IBPAddressService
     {
-        Task<ResponseCRD1Address> ResponseCRD1Address();
+        Task<ResponseCRD1Address> responseCRD1Address();
     }
 }

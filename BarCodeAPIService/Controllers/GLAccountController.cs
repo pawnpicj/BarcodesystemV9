@@ -10,7 +10,7 @@ namespace BarCodeAPIService.Controllers
 {
     [ApiController]
     [Route(APIRoute.Root)]
-    public class GLAccountController : Controller
+    public class GLAccountController : ControllerBase
     {
         private readonly IGLAccountService gLAccount;
 

@@ -10,7 +10,7 @@ namespace BarCodeAPIService.Controllers
 {
     [ApiController]
     [Route(APIRoute.Root)]
-    public class BinCodeController : Controller
+    public class BinCodeController : ControllerBase
     {
         private readonly IBinCodeService binCode;
 

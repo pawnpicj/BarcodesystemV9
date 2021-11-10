@@ -9,7 +9,7 @@ namespace BarCodeAPIService.Service
 {
     public class BPAddressService : IBPAddressService
     {
-        public Task<ResponseCRD1Address> ResponseCRD1Address()
+        public Task<ResponseCRD1Address> responseCRD1Address()
         {
             var cRD1 = new List<CRD1>();
             SAPbobsCOM.Company oCompany;

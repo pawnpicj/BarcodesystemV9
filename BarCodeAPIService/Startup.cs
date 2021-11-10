@@ -40,7 +40,7 @@ namespace BarCodeAPIService
             #region AddScope
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IGoodsReceiptPOService, GoodsReceiptPOService>();
-            services.AddScoped<IBPMasterDataService, BPMasterDataService>();
+            //services.AddScoped<IBPMasterDataService, BPMasterDataService>();
             services.AddScoped<IWarehouseService, WarehouseService>();
             services.AddScoped<IItemMasterDataService, ItemMasterDataService>();
             services.AddScoped<IBinCodeService, BinCodeService>();
@@ -49,7 +49,7 @@ namespace BarCodeAPIService
             services.AddScoped<ISerialNumberService, SerialNumberService>();
             services.AddScoped<IGLAccountService, GLAccountService>();
             services.AddScoped<IContactPersonService, ContactPersonService>();
-            services.AddScoped<IBPAddressService, IBPAddressService>();
+            //services.AddScoped<IBPAddressService, IBPAddressService>();
             services.AddScoped<ISaleEmployeeService, SaleEmployeeService>();
             //services.AddScoped<IDocumentSeriesService, DocumentSeriesService>();
             services.AddScoped<IPriceListService, PriceListService>();

@@ -14,7 +14,7 @@ namespace BarCodeLibrary.Respones.SAP
     }
     public class OPRC
     {
-        public int PrcCode { get; set; }
+        public string PrcCode { get; set; }
         public string PrcName { get; set; }
     }
 }

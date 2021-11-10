@@ -1,5 +1,4 @@
-﻿using BarCodeLibrary.Respones.SAP;
-using BarCodeAPIService.Service;
+﻿using BarCodeAPIService.Service;
 using Barcodesystem.Contract.RouteApi;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,17 +10,18 @@ namespace BarCodeAPIService.Controllers
 {
     [ApiController]
     [Route(APIRoute.Root)]
-    public class WarehouseController : Controller
+    public class SaleEmployeeController : Controller
     {
-        private readonly IWarehouseService warehouse;
+        private readonly ISaleEmployeeService saleEmployee;
 
-        public WarehouseController(IWarehouseService warehouse) {
-            this.warehouse = warehouse;
-        }
-        [HttpGet("GetWarehouse")]
-        public async Task<IActionResult> GetWarehouseAsync()
+        public SaleEmployeeController(ISaleEmployeeService saleEmployee)
         {
-            var a = await warehouse.responseWHSGetWarehouse();
+            this.saleEmployee = saleEmployee;
+        }   
+        [HttpGet]
+        public async Task<IActionResult> GetSaleEmployee()
+        {
+            var a = await saleEmployee.ResponseOSLPGetSalesEmployee();
             if (a.ErrorCode == 0)
             {
                 return Ok(a);

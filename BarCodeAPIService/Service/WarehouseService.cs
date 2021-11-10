@@ -15,19 +15,20 @@ namespace BarCodeAPIService.Service
             SAPbobsCOM.Company oCompany;
             try {
                 Login login = new();
-                oCompany = login.Company;
+                
                 if (login.LErrCode == 0)
                 {
-                    SAPbobsCOM.Recordset? oRS;                  
+                    oCompany = login.Company;
+                    SAPbobsCOM.Recordset? oRS=null;                  
                     string sqlStr = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('OWHS','','','','','')";
                     oRS =(SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRS.DoQuery(sqlStr);
-                    while (oRS.EoF)
+                    while (!oRS.EoF)
                     {
                         oWHS.Add(new OWHS
                         {
-                            WhsCode=oRS.Fields.Item(0).ToString(),
-                            WhsName=oRS.Fields.Item(1).ToString()
+                            WhsCode=oRS.Fields.Item(0).Value.ToString(),
+                            WhsName=oRS.Fields.Item(1).Value.ToString()
                         }
                         );
                         oRS.MoveNext();

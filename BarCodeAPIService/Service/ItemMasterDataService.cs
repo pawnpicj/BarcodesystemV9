@@ -31,7 +31,7 @@ namespace BarCodeAPIService.Service
                             ItemGroup=oRS.Fields.Item(3).Value.ToString(),
                             ManBtchNum=oRS.Fields.Item(4).Value.ToString(),
                             ManSerNum=oRS.Fields.Item(5).Value.ToString(),
-                            UoM=oRS.Fields.Item(4).Value.ToString(),                            
+                            UoM=oRS.Fields.Item(6).Value.ToString(),                            
                         });
                         oRS.MoveNext();
                     }

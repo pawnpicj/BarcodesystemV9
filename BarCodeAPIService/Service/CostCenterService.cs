@@ -27,7 +27,7 @@ namespace BarCodeAPIService.Service
                     {
                         oPRC.Add(new OPRC
                         {
-                            PrcCode = Convert.ToInt32(oRS.Fields.Item(0).Value.ToString()),
+                            PrcCode = oRS.Fields.Item(0).Value.ToString(),
                             PrcName = oRS.Fields.Item(1).Value.ToString()
                         });
                         oRS.MoveNext();

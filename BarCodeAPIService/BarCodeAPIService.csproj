@@ -29,11 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\Pannreaksmey\" />
-    <Folder Include="Service\Pannreaksmey\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="SAPBusinessOneSDK">
       <HintPath>..\.vs\SAPBusinessOneSDK.dll</HintPath>
     </Reference>

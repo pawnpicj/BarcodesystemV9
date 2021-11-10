@@ -1,10 +1,10 @@
-﻿//using Microsoft.AspNetCore.Mvc;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Threading.Tasks;
-//using BarCodeAPIService.Service;
-//using Barcodesystem.Contract.RouteApi;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using BarCodeAPIService.Service;
+using Barcodesystem.Contract.RouteApi;
 
 namespace BarCodeAPIService.Controllers
 {

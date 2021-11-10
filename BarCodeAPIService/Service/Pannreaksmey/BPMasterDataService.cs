@@ -54,15 +54,16 @@ namespace BarCodeAPIService.Service
                     });
                 }
 
-//        //    //}catch(Exception ex)
-//        //    //{
-//        //    //    return Task.FromResult(new ResponseOCRDGetBP
-//        //    //    {
-//        //    //        ErrorCode = ex.HResult,
-//        //    //        ErrorMessage = ex.Message,
-//        //    //        Data = null
-//        //    //    }); 
-//        //    //}
-//        //}
-//    }
-//}
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseOCRDGetBP
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMessage = ex.Message,
+                    Data = null
+                });
+            }
+        }
+    }
+}

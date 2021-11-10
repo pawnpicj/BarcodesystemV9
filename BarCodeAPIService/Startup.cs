@@ -49,11 +49,13 @@ namespace BarCodeAPIService
             services.AddScoped<ISerialNumberService, SerialNumberService>();
             services.AddScoped<IGLAccountService, GLAccountService>();
             services.AddScoped<IContactPersonService, ContactPersonService>();
-            services.AddScoped<IBPAddressService, IBPAddressService>();
             services.AddScoped<ISaleEmployeeService, SaleEmployeeService>();
-            services.AddScoped<IDocumentSeriesService, DocumentSeriesService>();
+            //services.AddScoped<IDocumentSeriesService, DocumentSeriesService>();
             services.AddScoped<IPriceListService, PriceListService>();
             services.AddScoped<IUserService, UserService>();
+
+            services.AddScoped<IInventoryTransferService, InventoryTransferService>();
+            services.AddScoped<IInventoryCountingService, InventoryCountingService>();
             #endregion
             #region ConfigureJWTToken
             var tokenvalidationParameters = new TokenValidationParameters

@@ -9,9 +9,9 @@ namespace BarCodeAPIService.Service
 {
     public class BatchNumberService : IBatchNumberService
     {
-        public Task<ResponseOIBTGetBatch> ResponseOIBTGetBatch()
+        public Task<ResponseOBTNGetBatch> ResponseOIBTGetBatch()
         {
-            var oBIN = new List<OIBT>();
+            var oBIN = new List<OBTN>();
             SAPbobsCOM.Company oCompany;
             try {
                 Login login = new();
@@ -23,17 +23,17 @@ namespace BarCodeAPIService.Service
                     oRS.DoQuery(Query);
                     while (!oRS.EoF)
                     {
-                        oBIN.Add(new OIBT
+                        oBIN.Add(new OBTN
                         {
                             ItemCode = oRS.Fields.Item(0).Value.ToString(),
                             ItemName = oRS.Fields.Item(1).Value.ToString(),
                             BatchNumber = oRS.Fields.Item(2).Value.ToString(),
-                            WhsCode = oRS.Fields.Item(3).Value.ToString(),
-                            Quantity = Convert.ToInt32(oRS.Fields.Item(4).Value.ToString())
+                            ExpDate=oRS.Fields.Item(3).Value.ToString()
+                            
                         });
                         oRS.MoveNext();
                     }
-                    return Task.FromResult(new ResponseOIBTGetBatch
+                    return Task.FromResult(new ResponseOBTNGetBatch
                     {
                         ErrorCode = 0,
                         ErrorMessage = "",
@@ -42,7 +42,7 @@ namespace BarCodeAPIService.Service
                 }
                 else
                 {
-                    return Task.FromResult(new ResponseOIBTGetBatch { 
+                    return Task.FromResult(new ResponseOBTNGetBatch { 
                         ErrorCode=login.LErrCode,
                         ErrorMessage=login.SErrMsg,
                         Data=null
@@ -51,7 +51,7 @@ namespace BarCodeAPIService.Service
             }
 
             catch (Exception ex) {
-                return Task.FromResult(new ResponseOIBTGetBatch { 
+                return Task.FromResult(new ResponseOBTNGetBatch { 
                     ErrorCode=ex.HResult,
                     ErrorMessage=ex.Message,
                     Data=null

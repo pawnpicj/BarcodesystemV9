@@ -8,6 +8,6 @@ namespace BarCodeAPIService.Service
 {
     public interface IBatchNumberService
     {
-        Task<ResponseOIBTGetBatch> ResponseOIBTGetBatch();
+        Task<ResponseOBTNGetBatch> ResponseOIBTGetBatch();
     }
 }

@@ -6,17 +6,16 @@ using System.Threading.Tasks;
 
 namespace BarCodeLibrary.Respones.SAP
 {
-    public class ResponseOIBTGetBatch
+    public class ResponseOBTNGetBatch
     {
         public int ErrorCode { get; set; }
         public string ErrorMessage { get; set; }
-        public List<OIBT> Data { get; set; }
+        public List<OBTN> Data { get; set; }
     }
-    public class OIBT { 
+    public class OBTN { 
         public string ItemCode { get; set; }
         public string ItemName { get; set; }
         public string BatchNumber { get; set; }
-        public string WhsCode { get; set; }
-        public int Quantity { get; set; }
+        public string ExpDate { get; set; }
     }
 }

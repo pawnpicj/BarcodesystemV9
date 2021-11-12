@@ -30,8 +30,7 @@ namespace BarCodeAPIService.Service
                             ItemCode = oRS.Fields.Item(0).Value.ToString(),
                             ItemName = oRS.Fields.Item(1).Value.ToString(),
                             IntrSerial = oRS.Fields.Item(2).Value.ToString(),
-                            WhsCode = oRS.Fields.Item(3).Value.ToString(),
-                            Quantity = Convert.ToInt32(oRS.Fields.Item(4).Value.ToString())
+                           ExpDate=oRS.Fields.Item(3).Value.ToString()
                         }); ;
                         oRS.MoveNext();
                     }

@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace BarCodeAPIService.Service
 {
-    public interface IDocumentSeriesService
+    public interface IBatchNumberService
     {
-        Task<ResponseNNM1GetDocumentSeries> ResponseNNM1GetDocumentSeries();
+        Task<ResponseOBTNGetBatch> ResponseOIBTGetBatch();
     }
 }

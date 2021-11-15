@@ -10,7 +10,6 @@
 
   <ItemGroup>
     <Folder Include="Request\SAP\Pannreaksmey\" />
-    <Folder Include="Respones\SAP\Pannreaksmey\" />
   </ItemGroup>
 
 </Project>

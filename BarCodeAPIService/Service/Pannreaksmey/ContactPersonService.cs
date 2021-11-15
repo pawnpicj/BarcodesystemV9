@@ -1,5 +1,5 @@
-﻿using BarCodeAPIService.Connection;
-using BarCodeLibrary.Respones.SAP;
+﻿using BarCodeLibrary.Respones.SAP;
+using BarCodeAPIService.Connection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace BarCodeAPIService.Service
 {
-    public class GLAccountService : IGLAccountService
+    public class ContactPersonService : IContactPersonService
     {
-        public Task<ResponseOACTGetGLAccount> ResponseOACTGetGLAccount()
+        public Task<ResponseOCPRGetContactPerson> ResponseOCPRGetContactPerson()
         {
-            var oACT = new List<OACT>();
+            var oCPR = new List<OCPR>();
             SAPbobsCOM.Company oCompany;
             try
             {
@@ -21,27 +21,32 @@ namespace BarCodeAPIService.Service
                     oCompany = login.Company;
                     SAPbobsCOM.Recordset oRS = null;
                     oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-                    string query = "";
-                    oRS.DoQuery(query);
+                    string Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('OCPR','','','','','')";
+                    oRS.DoQuery(Query);
                     while (!oRS.EoF)
                     {
-                        oACT.Add(new OACT
+                        oCPR.Add(new OCPR
                         {
-                            AcctCode= oRS.Fields.Item(0).Value.ToString(),
-                            AcctName= oRS.Fields.Item(1).Value.ToString(),                            
+                            CardCode = oRS.Fields.Item(0).Value.ToString(),
+                            Name = oRS.Fields.Item(1).Value.ToString(),
+                            Position = oRS.Fields.Item(2).Value.ToString(),
+                            Address = oRS.Fields.Item(3).Value.ToString(),
+                            Tel1 = oRS.Fields.Item(4).Value.ToString(),
+                            Tel2 = oRS.Fields.Item(5).Value.ToString(),
+                            Cellolar = oRS.Fields.Item(6).Value.ToString(),
                         });
                         oRS.MoveNext();
                     }
-                    return Task.FromResult(new ResponseOACTGetGLAccount
+                    return Task.FromResult(new ResponseOCPRGetContactPerson
                     {
                         ErrorCode = 0,
                         ErrorMessage = "",
-                        Data = oACT.ToList()
+                        Data = oCPR.ToList()
                     });
                 }
                 else
                 {
-                    return Task.FromResult(new ResponseOACTGetGLAccount
+                    return Task.FromResult(new ResponseOCPRGetContactPerson
                     {
                         ErrorCode = login.LErrCode,
                         ErrorMessage = login.SErrMsg,
@@ -52,7 +57,7 @@ namespace BarCodeAPIService.Service
 
             catch (Exception ex)
             {
-                return Task.FromResult(new ResponseOACTGetGLAccount
+                return Task.FromResult(new ResponseOCPRGetContactPerson
                 {
                     ErrorCode = ex.HResult,
                     ErrorMessage = ex.Message,

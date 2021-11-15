@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -29,13 +29,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\Pannreaksmey\" />
-    <Folder Include="Service\Pannreaksmey\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="SAPBusinessOneSDK">
-      <HintPath>..\..\..\..\Desktop\SAPBusinessOneSDK(2)\SAPBusinessOneSDK.dll</HintPath>
+      <HintPath>..\..\plugin\SAPBusinessOneSDK.dll</HintPath>
     </Reference>
   </ItemGroup>
 

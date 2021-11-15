@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace BarCodeAPIService.Service
 {
-    public interface IBatchNumberService
+    public interface IBPAddressService
     {
-        Task<ResponseOIBTGetBatch> ResponseOIBTGetBatch();
+        Task<ResponseCRD1Address> responseCRD1Address();
     }
 }

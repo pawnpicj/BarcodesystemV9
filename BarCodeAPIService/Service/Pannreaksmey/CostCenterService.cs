@@ -20,14 +20,14 @@ namespace BarCodeAPIService.Service
                 {
                     oCompany = login.Company;
                     SAPbobsCOM.Recordset oRS = null;
-                    oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-                    string query = "";
-                    oRS.DoQuery(query);
+                    oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);                    
+                    string Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('OPRC','','','','','')";
+                    oRS.DoQuery(Query);
                     while (!oRS.EoF)
                     {
                         oPRC.Add(new OPRC
                         {
-                            PrcCode = Convert.ToInt32(oRS.Fields.Item(0).Value.ToString()),
+                            PrcCode = oRS.Fields.Item(0).Value.ToString(),
                             PrcName = oRS.Fields.Item(1).Value.ToString()
                         });
                         oRS.MoveNext();

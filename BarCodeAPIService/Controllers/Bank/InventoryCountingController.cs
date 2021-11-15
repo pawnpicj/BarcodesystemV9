@@ -14,7 +14,7 @@ namespace BarCodeAPIService.Controllers
 {
     [ApiController]
     [Route(APIRoute.Root)]
-    public class InventoryCountingController : Controller
+    public class InventoryCountingController : ControllerBase
     {
         private readonly IInventoryCountingService inventoryCounting;
 

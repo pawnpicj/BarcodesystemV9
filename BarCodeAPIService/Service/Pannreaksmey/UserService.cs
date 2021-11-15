@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace BarCodeAPIService.Service
 {
-    public class SerialNumberService : ISerialNumberService
+    public class UserService : IUserService
     {
-        public Task<ResponseOSRIGetSerial> ResponseOSRIGetSerial()
+        public Task<ResponseOUSRGetUser> ResponseOUSRGetUser()
         {
-            var oSRI = new List<OSRI>();
+            var oUSR = new List<OUSR>();
             SAPbobsCOM.Company oCompany;
             try
             {
@@ -21,29 +21,27 @@ namespace BarCodeAPIService.Service
                     oCompany = login.Company;
                     SAPbobsCOM.Recordset oRS = null;
                     oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-                    string query = "";
-                    oRS.DoQuery(query);
+                    String Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('OUSR','','','','','')";
+                    oRS.DoQuery(Query);
                     while (!oRS.EoF)
                     {
-                        oSRI.Add(new OSRI
+                        oUSR.Add(new OUSR
                         {
-                            ItemCode=oRS.Fields.Item(0).Value.ToString(),
-                            IntrSerial=oRS.Fields.Item(1).Value.ToString(),
-                            WhsCode=oRS.Fields.Item(2).Value.ToString(),
-                            Quantity=Convert.ToInt32(oRS.Fields.Item(3).Value.ToString())
+                            UserCode = oRS.Fields.Item(0).Value.ToString(),
+                            UserName = oRS.Fields.Item(1).Value.ToString(),                            
                         });
                         oRS.MoveNext();
                     }
-                    return Task.FromResult(new ResponseOSRIGetSerial
+                    return Task.FromResult(new ResponseOUSRGetUser
                     {
                         ErrorCode = 0,
                         ErrorMessage = "",
-                        Data = oSRI.ToList()
+                        Data = oUSR.ToList()
                     });
                 }
                 else
                 {
-                    return Task.FromResult(new ResponseOSRIGetSerial
+                    return Task.FromResult(new ResponseOUSRGetUser
                     {
                         ErrorCode = login.LErrCode,
                         ErrorMessage = login.SErrMsg,
@@ -51,17 +49,15 @@ namespace BarCodeAPIService.Service
                     });
                 }
             }
-
             catch (Exception ex)
             {
-                return Task.FromResult(new ResponseOSRIGetSerial
+                return Task.FromResult(new ResponseOUSRGetUser
                 {
                     ErrorCode = ex.HResult,
                     ErrorMessage = ex.Message,
                     Data = null
                 });
             }
-
         }
     }
 }

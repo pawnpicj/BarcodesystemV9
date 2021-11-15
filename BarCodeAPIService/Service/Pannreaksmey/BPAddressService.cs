@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace BarCodeAPIService.Service
 {
-    public class SaleEmployeeService : ISaleEmployeeService
+    public class BPAddressService : IBPAddressService
     {
-        public Task<ResponseOSLPGetSalesEmployee> ResponseOSLPGetSalesEmployee()
+        public Task<ResponseCRD1Address> responseCRD1Address()
         {
-            var oSLP = new List<OSLP>();
+            var cRD1 = new List<CRD1>();
             SAPbobsCOM.Company oCompany;
             try
             {
@@ -21,28 +21,32 @@ namespace BarCodeAPIService.Service
                     oCompany = login.Company;
                     SAPbobsCOM.Recordset oRS = null;
                     oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-                    string query = "";
-                    oRS.DoQuery(query);
+                    string Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('CRD1','','','','','')";
+                    oRS.DoQuery(Query);
                     while (!oRS.EoF)
                     {
-                        oSLP.Add(new OSLP
+                        cRD1.Add(new CRD1
                         {
-                            SlpCode    = Convert.ToInt32(oRS.Fields.Item(0).Value.ToString()),
-                            SlpName     = oRS.Fields.Item(1).Value.ToString(),
-                           
+                            AdreType = oRS.Fields.Item(0).Value.ToString(),
+                            Address = oRS.Fields.Item(1).Value.ToString(),
+                            CardCode = oRS.Fields.Item(2).Value.ToString(),
+                            Street  = oRS.Fields.Item(3).Value.ToString(),
+                            Block     = oRS.Fields.Item(4).Value.ToString(),
+                            ZipCode     = oRS.Fields.Item(5).Value.ToString(),
+                            City = oRS.Fields.Item(6).Value.ToString(),
                         });
                         oRS.MoveNext();
                     }
-                    return Task.FromResult(new ResponseOSLPGetSalesEmployee
+                    return Task.FromResult(new ResponseCRD1Address
                     {
                         ErrorCode = 0,
                         ErrorMessage = "",
-                        Data = oSLP.ToList()
+                        Data = cRD1.ToList()
                     });
                 }
                 else
                 {
-                    return Task.FromResult(new ResponseOSLPGetSalesEmployee
+                    return Task.FromResult(new ResponseCRD1Address
                     {
                         ErrorCode = login.LErrCode,
                         ErrorMessage = login.SErrMsg,
@@ -53,7 +57,7 @@ namespace BarCodeAPIService.Service
 
             catch (Exception ex)
             {
-                return Task.FromResult(new ResponseOSLPGetSalesEmployee
+                return Task.FromResult(new ResponseCRD1Address
                 {
                     ErrorCode = ex.HResult,
                     ErrorMessage = ex.Message,

@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace BarCodeAPIService.Service
 {
-    public class PriceListService : IPriceListService
+    public class GLAccountService : IGLAccountService
     {
-        public Task<ResponseITM1GetPriceList> ResponseITM1GetPriceList()
+        public Task<ResponseOACTGetGLAccount> ResponseOACTGetGLAccount()
         {
-            var iTM1 = new List<ITM1>();
+            var oACT = new List<OACT>();
             SAPbobsCOM.Company oCompany;
             try
             {
@@ -21,29 +21,27 @@ namespace BarCodeAPIService.Service
                     oCompany = login.Company;
                     SAPbobsCOM.Recordset oRS = null;
                     oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-                    string query = "";
-                    oRS.DoQuery(query);
+                    string Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('OACT','','','','','')";
+                    oRS.DoQuery(Query);
                     while (!oRS.EoF)
                     {
-                        iTM1.Add(new ITM1
+                        oACT.Add(new OACT
                         {
-                            ItemCode = oRS.Fields.Item(0).Value.ToString(),
-                            PriceList =Convert.ToInt32(oRS.Fields.Item(1).Value.ToString()),
-                            Price =Convert.ToDouble(oRS.Fields.Item(2).Value.ToString()),
-                            ListName=oRS.Fields.Item(3).Value.ToString()
+                            AcctCode= oRS.Fields.Item(0).Value.ToString(),
+                            AcctName= oRS.Fields.Item(1).Value.ToString(),                            
                         });
                         oRS.MoveNext();
                     }
-                    return Task.FromResult(new ResponseITM1GetPriceList
+                    return Task.FromResult(new ResponseOACTGetGLAccount
                     {
                         ErrorCode = 0,
                         ErrorMessage = "",
-                        Data = iTM1.ToList()
+                        Data = oACT.ToList()
                     });
                 }
                 else
                 {
-                    return Task.FromResult(new ResponseITM1GetPriceList
+                    return Task.FromResult(new ResponseOACTGetGLAccount
                     {
                         ErrorCode = login.LErrCode,
                         ErrorMessage = login.SErrMsg,
@@ -51,9 +49,10 @@ namespace BarCodeAPIService.Service
                     });
                 }
             }
+
             catch (Exception ex)
             {
-                return Task.FromResult(new ResponseITM1GetPriceList
+                return Task.FromResult(new ResponseOACTGetGLAccount
                 {
                     ErrorCode = ex.HResult,
                     ErrorMessage = ex.Message,

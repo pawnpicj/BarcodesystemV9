@@ -1,48 +1,225 @@
-﻿<!DOCTYPE html>
+﻿@*<!DOCTYPE html>*@
+@*@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor*@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - BarCodeClientService</title>
+    <title>@ViewData["Title"]</title>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <!-- Font Awesome JS -->
+    <link href="~/css/styles.css" rel="stylesheet" />
+    <script src="~/font icon/fontaws.js"></script>
+    <script src="~/font icon/fonticons.js"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+            $(".hamburger .hamburger__inner").click(function () {
+                $(".wrapper").toggleClass("active")
+
+                $.ajax({
+                    url: '@Url.Action("Layout", "Home")',
+                    type: "GET",
+                    dataType: "JSON",
+                    success: function (data) {
+                    }
+                });
+            })
+
+            $("#user").click(function () {
+                $(".profile_dd").toggleClass("active");
+                $(".profile_dd1").removeClass("active");
+            });
+            $("#setting").click(function () {
+                $(".profile_dd1").toggleClass("active");
+                $(".profile_dd").removeClass("active");
+            });
+        });
+    </script>
+    <style type="text/css">
+        a,
+        a:hover,
+        a:focus {
+            color: #717171;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .wrapper.active .sidebar .sidebar__inner .profile {
+            width: 80px;
+        }
+
+        .wrapper .sidebar .sidebar__inner .profile {
+            width: 225px;
+        }
+    </style>
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BarCodeClientService</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+<body style="background:#dce7f1">
+    @*@if (@ViewBag.UserCode == "1")
+        {*@
+    <div class="wrapper @*@HttpContextAccessor.HttpContext.Session.GetString("Layout")*@">
+        <div class="top_navbar" style="background:#5f95c3;">
+            <div class="hamburger" style="background:#f0eff1">
+                <div class="hamburger__inner">
+                    <div class="one" style="background:#000000"></div>
+                    <div class="two" style="background:#000000"></div>
+                    <div class="three" style="background:#000000"></div>
+                </div>
+            </div>
+            <div class="menu">
+                <div class="logo" style="color:#f0eff1">
+                    VANs System
+                </div>
+                <div class="right_menu">
+                    <ul>
+                        <li style="margin-top:10px;margin-right:10px;">
+                            <a id="user" href="#"><i class="fas fa-user"></i></a>
+                            <div class="profile_dd">
+
+                                <div class="dd_item" id="changepass">Change Password</div>
+                                <div class="dd_item" id="logout">Logout</div>
+                            </div>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        @*<li style="margin-top:10px">
+                                <a id="setting" href="#"><i class="fas fa-cog"></i></a>
+                                <div class="profile_dd1">
+                                    <div class="dd_item1" id="CreateUser">Create User</div>
+                                    <div class="dd_item1" id="Quit">Quit</div>
+                                </div>
+                            </li>*@
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="main_container">
+            <div class="sidebar" style="background:#f0eff1">
+                <div class="sidebar__inner">
+                    <div class="profile">
+                        <div class="img">
+                            <a href="@Url.Action("Index","Home")" id="Home">
+                                <img src="~/Icon/sap.png" alt="profile_pic" style="width:100%;margin-left:-10px;">
+                            </a>
+                        </div>
+                    </div>
+                    <ul>
+                        <li>
+                            <a asp-controller="Dashboard" asp-action="DashboardSaleAR" id="AR" class="active" style="color:#696969">
+                                @*href="@Url.Action("SaleARCreation","Home")"*@
+                                <span class="icon"><i class="fas fa-chart-pie" style="margin-left:-20px;"></i></span>
+                                <span class="title">Sale A/R</span>
+                            </a>
                         </li>
                     </ul>
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2021 - BarCodeClientService - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <div class="container1">
+                @RenderBody()
+            </div>
         </div>
-    </footer>
+
+    </div>
+    @*}else{
+            @RenderBody()
+        }*@
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+
+    <script type="text/javascript">
+        @*$('#CreateUser').click(function () {
+            window.location.replace('@Url.Action("ViewUser", "Setting")');
+        });
+        $('#logout').click(function () {
+            if (confirm("Unsaved data will be lost. Do you want to continue without saving?") == true) {
+                window.location.replace('@Url.Action("LogOut", "Setting")');
+            }
+        });
+        $('#changepass').click(function () {
+            if (confirm("Unsaved data will be lost. Do you want to continue without saving?") == true) {
+                window.location.replace('@Url.Action("ViewChangePassword", "Setting")');
+            }
+        });
+
+        $('#Home').click(function () {
+            if ('@HttpContextAccessor.HttpContext.Session.GetString("ask")'== 'T') {
+                if (confirm("Unsaved data will be lost. Do you want to continue without saving?") == true) {
+                    window.location.replace('@Url.Action("Index", "Home")');
+                }
+            } else {
+                window.location.replace('@Url.Action("Index", "Home")');
+            }
+        })
+
+        $('#Admin').click(function () {
+            if ('@HttpContextAccessor.HttpContext.Session.GetString("ask")'== 'T') {
+                if (confirm("Unsaved data will be lost. Do you want to continue without saving?") == true) {
+                    window.location.replace('@Url.Action("Admin", "Admin")');
+                }
+            } else {
+                window.location.replace('@Url.Action("Admin", "Admin")');
+            }
+        })
+
+        $('#AR').click(function () {
+            if ('@HttpContextAccessor.HttpContext.Session.GetString("ask")'== 'T') {
+                if (confirm("Unsaved data will be lost. Do you want to continue without saving?") == true) {
+                    window.location.replace('@Url.Action("DashboardAR", "Dashboard")');
+                }
+            } else {
+                window.location.replace('@Url.Action("DashboardAR", "Dashboard")');
+            }
+        })
+
+        $('#Banking').click(function () {
+            if ('@HttpContextAccessor.HttpContext.Session.GetString("ask")'== 'T') {
+                if (confirm("Unsaved data will be lost. Do you want to continue without saving?") == true) {
+                    window.location.replace('@Url.Action("DashboardBanking", "Dashboard")');
+                }
+            } else {
+                window.location.replace('@Url.Action("DashboardBanking", "Dashboard")');
+            }
+        })
+
+        $('#Inventory').click(function () {
+            if ('@HttpContextAccessor.HttpContext.Session.GetString("ask")'== 'T') {
+                if (confirm("Unsaved data will be lost. Do you want to continue without saving?") == true) {
+                    window.location.replace('@Url.Action("DashboardInventory", "Dashboard")');
+                }
+            } else {
+                window.location.replace('@Url.Action("DashboardInventory", "Dashboard")');
+            }
+        })
+
+        //Product
+        $('#Product').click(function () {
+            if ('@HttpContextAccessor.HttpContext.Session.GetString("ask")'== 'T') {
+                if (confirm("Unsaved data will be lost. Do you want to continue without saving?") == true) {
+                    window.location.replace('@Url.Action("DashboardProduct", "Dashboard")');
+                }
+            } else {
+                window.location.replace('@Url.Action("DashboardProduct", "Dashboard")');
+            }
+        })
+
+        $('#Report').click(function () {
+            if ('@HttpContextAccessor.HttpContext.Session.GetString("ask")'== 'T') {
+                if (confirm("Unsaved data will be lost. Do you want to continue without saving?") == true) {
+                    window.location.replace('@Url.Action("DashoardReport", "Dashboard")');
+                }
+            } else {
+                window.location.replace('@Url.Action("DashoardReport", "Dashboard")');
+            }
+        })*@
+
+    </script>
+
+    @RenderSection("Scripts", required: false)
+
 </body>
 </html>

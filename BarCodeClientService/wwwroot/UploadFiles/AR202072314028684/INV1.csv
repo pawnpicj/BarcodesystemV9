@@ -1,0 +1,4 @@
+ParentKey,LineNum,ItemCode,Quantity,Currency,Rate,DiscountPercent,U_DiscAMT,WarehouseCode,SalesPersonCode,UseBaseUnits,TaxPercentagePerRow,UnitPrice,PriceAfterVAT
+DocNum,LineNum,ItemCode,Quantity,Currency,Rate,DiscPrcnt,U_DiscAMT,WhsCode,SlpCode,UseBaseUn,VatPrcnt,PriceBefDi,PriceAfVAT
+20001,0,A00002,1,GBP,1,0,0,01,3,Y,10,300,330
+20002,0,A00002,2,GBP,1,0,0,01,3,Y,10,300,660

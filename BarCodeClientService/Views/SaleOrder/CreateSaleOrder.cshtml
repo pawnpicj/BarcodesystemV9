@@ -1,0 +1,747 @@
+﻿
+@{
+    ViewData["Title"] = "O2O";
+    DateTime dt = DateTime.Now;
+    ViewData["Date"] = dt.ToShortDateString();
+}
+
+<link href="~/css/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/css/DataTable/rowReorder.dataTables.min.css" rel="stylesheet" />
+@*<link href="~/css/DataTable/responsive.dataTables.min.css" rel="stylesheet" />*@
+
+<script src="~/css/DataTable/jquery-3.3.1.js"></script>
+<script src="~/css/DataTable/jquery.dataTables.min.js"></script>
+<script src="~/css/DataTable/dataTables.rowReorder.min.js"></script>
+@*<script src="~/css/DataTable/dataTables.responsive.min.js"></script>*@
+
+<style>
+    tr.selected {
+        background: red;
+        color: red;
+    }
+
+    #main {
+        position: absolute;
+    }
+
+    .color_tap {
+        min-width: 60px;
+        background-color: #5f95c3;
+        color: #ffffff;
+        font-weight: 600;
+        margin-right: 1px;
+    }
+
+    .nav-tabs .nav-link {
+        border-radius: 0px 12px 0px 0px;
+        border: 1px solid rgb(193, 193, 193);
+        height: 40px;
+        line-height: 20px;
+    }
+
+    .modal {
+        z-index: 200000;
+    }
+
+    .modal-header {
+        background: #5f95c3;
+        height: 40px;
+        color: #ffffff;
+    }
+
+        .modal-header b {
+            margin-top: -10px;
+        }
+
+    #TbAR table tr td {
+        position: relative !important;
+        padding: 0px !important;
+        height: 35px;
+        margin-left: 15px;
+        margin-top: 10px;
+        background-color: none;
+    }
+
+    table tbody tr td {
+        background-color: #ffffff;
+        color: black;
+    }
+
+    table tbody tr.selected td {
+        background: #94d8e1;
+        color: red;
+    }
+
+        table tbody tr.selected td .clsinput {
+            background: #94d8e1;
+            color: red;
+        }
+
+    .clsinput:focus {
+        outline: none;
+    }
+</style>
+
+<div id="#main">
+
+    <div class="row" style="margin-left:5px;margin-top:5px;color:#696969;">
+        <h5 style="margin-top:5px;color:#696969;">
+            <a asp-action="DashboardAR" asp-controller="Dashboard" onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fas fa-home"></i> Dashboard</a>
+            <span>
+                <a asp-action="ShowAR" asp-controller="ARInvoice" onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fa fa-caret-right align-right"></i> Sale Order</a>
+                <i class="fa fa-caret-right align-right"></i> Create SaleOrder
+            </span>
+        </h5>
+    </div>
+    <hr />
+    <div style="padding: 10px; color: #696969;">
+        <ul class="nav nav-tabs Tap-PA" id="mytab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active color_tap" id="cus-tab" data-toggle="tab" href="#cus" role="tab" aria-controls="Customer" aria-selected="true">Customer</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link color_tap" id="item-tab" data-toggle="tab" href="#item" role="tab" aria-controls="Items" aria-selected="false">Items</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="cus" role="tabpanel" aria-labelledby="cus-tab" style="margin-top: 10px">
+                <div class="row">
+                    <div class="col-sm-6">
+                            <div>
+                                Branch Code :
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <button class="input-group-text" id="CcusID"><i class="fa fa-check"></i></button>
+                                    </div>
+                                    <input type="text" class="form-control" placeholder="Search Code" value="" id="CusID">
+                                    <div class="input-group-append">
+                                        <button class="input-group-text btnModelsCus" data-toggle="modal" data-target="#ModalCusCode"><i class="fa fa-search"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                Branch Name :
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="CusName" value="" readonly>
+                                </div>
+                            </div>
+                        Order Number :
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="CusRef">
+                        </div>
+                        Remarks :
+                        <div class="input-group">
+                            <textarea class="form-control" id="Remark" rows="1"></textarea>
+                        </div>
+                        Payment O2O :
+                        <div class="input-group">
+                            <select id="paymentO2O" class="form-control">
+                                <option value="Y">Yes</option>
+                                <option value="N" selected>No</option>
+                            </select>
+                        </div>
+                        Customer Tax ID<span style="color:red;">*</span> :
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="TaxId">
+                        </div>
+                        Customer Type<span style="color:red;">*</span> :
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="CusType">
+                        </div>
+                        Customer Name :
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="CusRemark">
+                        </div>
+                        Address<span style="color:red;">*</span> :
+                        <div class="input-group">
+                            <textarea class="form-control" id="Address" rows="3"></textarea>
+                        </div>
+                        Tel :
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="CusTel">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                            <div>
+                                Series :
+                                <div class="input-group">
+                                    <select id="SeriesID" class="form-control">
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                Posting Date :
+                                <div class="input-group">
+                                    <input type="date" class="form-control" id="DocDate">
+                                </div>
+                            </div>
+                            <div>
+                                Document Date :
+                                <div class="input-group">
+                                    <input type="date" class="form-control" id="DocumentDate">
+                                </div>
+                            </div>
+                            <div>
+                                BP Currency :
+                                <div class="input-group">
+                                    <select class="form-control" id="BPDocCurr"></select>
+                                </div>
+                            </div>
+                        Sales Employees :
+                        <div class="input-group">
+                            <select class="form-control" id="SaleEmp"></select>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="item" role="tabpanel" aria-labelledby="item-tab" style="margin-top: 10px">
+                <div class="row">
+                    <div class="col-sm-6">
+                        Item Code :
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <button class="input-group-text" id="CItemCode"><i class="fa fa-check"></i></button>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Search Code" id="ItemCode">
+                            <div class="input-group-append">
+                                <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalItem"><i class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+                        Item Descrition :
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="ItemDescr" readonly>
+                        </div>
+                        Quantity :
+                        <div class="input-group">
+                            <input type="number" class="form-control" value="1" id="Qty">
+                        </div>
+                            <div>
+                                Gross Price :
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <input type="button" class="input-group-text" id="DocCurr" />
+                                    </div>
+                                    <input type="number" class="form-control" id="Price" value="0">
+                                </div>
+                            </div>
+
+                            <div>
+                                Discount(%) :
+                                <div class="input-group">
+                                    <input type="number" class="form-control" value="0" id="Discount" onchange="LineDiscountPer()">
+                                </div>
+                                Discount Amount :
+                                <div class="input-group">
+                                    <input type="number" class="form-control" value="0" id="DiscountAmt" onchange="LinDiscountAMT()">
+                                </div>
+                            </div>
+                        Uom Name :
+                        <div class="input-group">
+                            <select id="UomID" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                            <div>
+                                VAT Code :
+                                <div class="input-group">
+                                    <select id="TaxCode" class="form-control">
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                OcrCode :
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <button class="input-group-text" id="COcrCode"><i class="fa fa-check"></i></button>
+                                    </div>
+                                    <input type="text" class="form-control" placeholder="Search Code" value="" id="OcrCode">
+                                    @*<input type="text" class="form-control" placeholder="Search Code" value="C6" id="OcrCode">*@
+                                    <div class="input-group-append">
+                                        <button class="input-group-text btnModelsOcrCode" data-toggle="modal" data-target="#ModalOcrCode"><i class="fa fa-search"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                OcrCode2 :
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <button class="input-group-text" id="COcrCode2"><i class="fa fa-check"></i></button>
+                                    </div>
+                                    <input type="text" class="form-control" placeholder="Search Code" value="" id="OcrCode2">
+                                    @*<input type="text" class="form-control" placeholder="Search Code" value="C62" id="OcrCode2">*@
+                                    <div class="input-group-append">
+                                        <button class="input-group-text btnModelsOcrCode2" data-toggle="modal" data-target="#ModalOcrCode2"><i class="fa fa-search"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                OcrCode3 :
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <button class="input-group-text" id="COcrCode3"><i class="fa fa-check"></i></button>
+                                    </div>
+                                    <input type="text" class="form-control" placeholder="Search Code" id="OcrCode3" value="">
+                                    <div class="input-group-append">
+                                        <button class="input-group-text btnModelsOcrCode3" data-toggle="modal" data-target="#ModalOcrCode3"><i class="fa fa-search"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                OcrCode4 :
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <button class="input-group-text" id="COcrCode4"><i class="fa fa-check"></i></button>
+                                    </div>
+                                    <input type="text" class="form-control" placeholder="Search Code" id="OcrCode4" value="">
+                                    <div class="input-group-append">
+                                        <button class="input-group-text btnModelsOcrCode4" data-toggle="modal" data-target="#ModalOcrCode4"><i class="fa fa-search"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        Inventory Uom :
+                        <div class="input-group">
+                            <select id="InventoryID" class="form-control">
+                            </select>
+                        </div>
+                            <div>
+                                Warehouse :
+                                <div class="input-group">
+                                    <select id="whscode" class="form-control">
+                                    </select>
+                                </div>
+                            </div>
+                        <div>
+                            Total :
+                            <div class="input-group">
+                                <input type="number" class="form-control" value="0" id="totalItem" disabled>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style=" padding: 15px; ">
+                    <div class="nav navbar-nav ml-auto">
+                        <button class="btn btn-info" id="AddItem" style="background:#f0eff1;color:#696969">Add Item</button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="TbAR" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <thead>
+                                    <tr>
+                                        <th>ItemCode</th>
+                                        <th>UnitPrice</th>
+                                        <th>Discount(%)</th>
+                                        <th>Dis.Amount</th>
+                                        <th>Qty</th>
+                                        <th>Price Before Discount</th>
+                                        <th>Line Total</th>
+                                        <th>Uom Name</th>
+                                        <th>TaxCode</th>
+                                        @*<th>Tax Amount</th>*@
+                                        <th>Warehouse</th>
+                                        <th>Command</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top:5px;">
+                    <div class="col-sm-4">
+
+                    </div>
+                    <div class="col-sm-4">
+                        Discount % :
+                        <input type="number" class="form-control" value="0" id="DisPer" onchange="DisPer()" />
+                        Discount Amount :
+                        <input type="number" class="form-control" value="0" id="DisAmt" onchange="DisAmt()" />
+                        DownPayment :
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-info" data-target="#ModalDT" data-toggle="modal" style="background:#f0eff1;color:#696969" id="btnDT">....</button>
+                            <input class="form-control" readonly id="DTamount" />
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        Before Discount :
+                        <input class="form-control" readonly id="BTax" />
+                        Discount By Items :
+                        <input class="form-control" readonly id="DisA" />
+                        @*Tax Amount :*@
+                        <input class="form-control d-none" readonly id="Tax" />
+                        <input class="d-none" id="TaxBeforeDis" />
+                        Total Amount :
+                        <input class="form-control" readonly id="Total" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="row" style="padding: 15px;margin-top:-20px;margin-bottom:-20px;">
+            @*<button class="btn btn-info" id="Save" style="background:#f0eff1;color:#696969">Add New</button>*@
+            @*<button class="btn btn-success" id="Save" type="button">Add New</button>*@
+            @*<input type="checkbox" id="cpayment" style="background:#f0eff1;color:#696969;margin-left:5px;margin-top:15px" /> <label>Auto Payment</label>*@
+            <div class="nav navbar-nav ml-auto">
+                <div class="btn-group">
+                    @*<button class="btn btn-info previous" style="background:#f0eff1;color:#696969">Previous</button>
+                        <button class="btn btn-info next" style="background: #f0eff1;color: #696969;">Next</button>*@
+                    <button class="btn btn-info" id="Save" style="background:#f0eff1;color:#696969;margin-left:5px;">Add New</button>
+                </div>
+            </div>
+        </div>
+        <hr />
+    </div>
+</div>
+
+@*Block Batch and Serails*@
+<div class="modal fade" id="ModalBatch" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+            <div class="modal-header">
+                <b>Batch Number</b>
+            </div>
+            <div class="modal-body">
+                <div class="row" style="margin-bottom:5px">
+                    <div class="col-sm-6">
+                        Totals Needs :
+                        <input type="number" class="form-control" readonly id="TotalsNeeds" />
+                    </div>
+                    <div class="col-sm-6">
+                        Totals Selected :
+                        <input type="number" class="form-control" readonly id="TotalsSelected" />
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="tbBatch" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <thead>
+                                    <tr>
+                                        <th>Batch Number</th>
+                                        <th>Quantity</th>
+                                        <th>Available Quantity</th>
+                                        <th>Expired Date</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="padding:10px;margin-left:1px">
+                    <strong>Batch Selected</strong>
+                </div>
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="tbBatchSelected" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <thead>
+                                    <tr>
+                                        <th>Batch Number</th>
+                                        <th>Quantity</th>
+                                        <th>Command</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-info" id="BatchOk" style="background:#f0eff1;color:#696969;">OK</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;" id="CloseBatch">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*Block Models*@
+<div class="modal modal-backdrop" id="Modalloder" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+            <div class="modal-body">
+                <div class="text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="ModalSuccess" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+            <div class="modal-header">
+                <b>Information</b>
+            </div>
+            <div class="modal-body">
+                <p id="ErrMsg"> - </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-sm btn-success" data-dismiss="modal" style="color:#696969;">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Create Models*@
+@*1. Search Customer Code*@
+<div class="modal fade" id="ModalCusCode">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+            <div class="modal-header">
+                <b>List of Customer</b>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="TbCusCode" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <thead>
+                                    <tr>
+                                        <th>Customer Code</th>
+                                        <th>Cusetomer Name</th>
+                                        <th>Phone</th>
+                                        <th>Address</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseCus" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*2. Search ItemCode*@
+<div class="modal fade" id="ModalItem">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+            <div class="modal-header">
+                <b>List of Items</b>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="TbItem" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <thead>
+                                    <tr>
+                                        <th>Item Code</th>
+                                        <th>Item Descrition</th>
+                                        <th>Gross Price</th>
+                                        <th>In Stock</th>
+                                        <th>BarCode</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseItem" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*3. Search OcrCode*@
+<div class="modal fade" id="ModalOcrCode">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+            <div class="modal-header">
+                <b>List of OcrCode</b>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="TbOcrCode" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <thead>
+                                    <tr>
+                                        <th>PrcCode</th>
+                                        <th>PrcName</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseOcrCode" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*4. Search OcrCode2*@
+<div class="modal fade" id="ModalOcrCode2">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+            <div class="modal-header">
+                <b>List of OcrCode2</b>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="TbOcrCode2" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <thead>
+                                    <tr>
+                                        <th>PrcCode</th>
+                                        <th>PrcName</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseOcrCode2" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*5. Search OcrCode3*@
+<div class="modal fade" id="ModalOcrCode3">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+            <div class="modal-header">
+                <b>List of OcrCode3</b>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="TbOcrCode3" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <thead>
+                                    <tr>
+                                        <th>PrcCode</th>
+                                        <th>PrcName</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseOcrCode3" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*6. Search OcrCode4*@
+<div class="modal fade" id="ModalOcrCode4">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+            <div class="modal-header">
+                <b>List of OcrCode4</b>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="TbOcrCode4" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <thead>
+                                    <tr>
+                                        <th>PrcCode</th>
+                                        <th>PrcName</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseOcrCode4" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*DT Payment*@
+<div class="modal fade" id="ModalDT" data-backdrop="static">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+            <div class="modal-header">
+                <b>A/R DownPayment</b>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="TbDT" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <thead>
+                                    <tr>
+                                        <th>Receipt No(SAP)</th>
+                                        <th>Web Reference</th>
+                                        <th>Customer Name</th>
+                                        <th>Create By</th>
+                                        <th>Document Date</th>
+                                        <th>DocTotal</th>
+                                        <th>Available Amount</th>
+                                        <th>Amount To Draw</th>
+                                        <th>Tax Amount To Draw</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseDT" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/Array.js"></script>
+<script type="text/javascript">
+    var LDT = [];
+    $('#TbDT').DataTable({
+        responsive: true,
+        bLengthChange: false,
+        binfo: false,
+        data: LDT,
+        columns: [
+            { data: "docNum", autoWidth: true },
+            { data: "webID", autoWidth: true },
+            { data: "customerName", autoWidth: true },
+            { data: "posuser", autoWidth: true },
+            { data: "documentDate", autoWidth: true },
+            { data: "docTotal", autoWidth: true },
+            { data: "grossAmount", autoWidth: true },
+            { data: "drawAmount", autoWidth: true },
+            { data: "taxAmount", autoWidth: true }
+        ]
+    });
+    var tbdtpayment = $('#TbAR').DataTable()
+</script>
+

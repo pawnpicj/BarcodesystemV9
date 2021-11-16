@@ -1,0 +1,3 @@
+DocNum,DocType,HandWrtten,Printed,DocDate,DocDueDate,CardCode,Address,DocCurrency,DocRate,DocTotal,Comments,SalesPersonCode,Confirmed,SummeryType,TaxDate,DocObjectCode,Manual Number,VatPercent,U_DiscPer,U_DiscAMT
+DocNum,DocType,HandWrtten,Printed,DocDate,DocDueDate,CardCode,Address,DocCur,DocRate,DocTotal,Comments,SlpCode,Confirmed,SummryType,TaxDate,ObjType,ManualNum,VatPercent,U_DiscPer,U_DiscAMT
+20001,I,Y,Y,20200625,20200625,C20000,,GBP,1,360,,3,Y,Y,20200625,14,,10,0,0

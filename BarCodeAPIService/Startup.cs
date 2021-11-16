@@ -17,6 +17,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Serilog;
+using BarCodeAPIService.Service.Tengkimleang;
 
 namespace BarCodeAPIService
 {
@@ -40,6 +41,8 @@ namespace BarCodeAPIService
             #region AddScope
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IGoodsReceiptPOService, GoodsReceiptPOService>();
+            services.AddScoped<IGoodReturnService, GoodReturnService>();
+            services.AddScoped<IStockDataService, StockDataService>();
             //services.AddScoped<IBPMasterDataService, BPMasterDataService>();
             services.AddScoped<IWarehouseService, WarehouseService>();
             services.AddScoped<IItemMasterDataService, ItemMasterDataService>();

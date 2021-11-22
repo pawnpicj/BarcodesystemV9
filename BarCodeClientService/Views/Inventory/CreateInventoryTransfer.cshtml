@@ -1,0 +1,123 @@
+﻿
+@{
+    ViewData["Title"] = "InventoryTransfer";
+    DateTime dt = DateTime.Now;
+    ViewData["Date"] = dt.ToShortDateString();
+}
+
+<link href="~/css/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/css/DataTable/rowReorder.dataTables.min.css" rel="stylesheet" />
+@*<link href="~/css/DataTable/responsive.dataTables.min.css" rel="stylesheet" />*@
+
+<script src="~/css/DataTable/jquery-3.3.1.js"></script>
+<script src="~/css/DataTable/jquery.dataTables.min.js"></script>
+<script src="~/css/DataTable/dataTables.rowReorder.min.js"></script>
+@*<script src="~/css/DataTable/dataTables.responsive.min.js"></script>*@
+
+<style>
+    tr.selected {
+        background: red;
+        color: red;
+    }
+
+    #main {
+        position: absolute;
+    }
+
+    .color_tap {
+        min-width: 60px;
+        background-color: #5f95c3;
+        color: #ffffff;
+        font-weight: 600;
+        margin-right: 1px;
+    }
+
+    .nav-tabs .nav-link {
+        border-radius: 0px 12px 0px 0px;
+        border: 1px solid rgb(193, 193, 193);
+        height: 40px;
+        line-height: 20px;
+    }
+
+    .modal {
+        z-index: 200000;
+    }
+
+    .modal-header {
+        background: #5f95c3;
+        height: 40px;
+        color: #ffffff;
+    }
+
+        .modal-header b {
+            margin-top: -10px;
+        }
+
+    #TbAR table tr td {
+        position: relative !important;
+        padding: 0px !important;
+        height: 35px;
+        margin-left: 15px;
+        margin-top: 10px;
+        background-color: none;
+    }
+
+    table tbody tr td {
+        background-color: #ffffff;
+        color: black;
+    }
+
+    table tbody tr.selected td {
+        background: #94d8e1;
+        color: red;
+    }
+
+        table tbody tr.selected td .clsinput {
+            background: #94d8e1;
+            color: red;
+        }
+
+    .clsinput:focus {
+        outline: none;
+    }
+</style>
+
+<div id="#main">
+    @* TimeLine *@
+    <div class="row" style="margin-left:5px;margin-top:5px;color:#696969;">
+        <h5 style="margin-top:5px;color:#696969;">
+            <a asp-action="DashboardInventory" asp-controller="Dashboard" onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fas fa-home"></i> Dashboard</a>
+            <span>
+                <a asp-action="ShowInventory" asp-controller="InventoryTransfer" onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fa fa-caret-right align-right"></i> Inventory Transfer</a>
+                <i class="fa fa-caret-right align-right"></i> Create InventoryTransfer
+            </span>
+        </h5>
+    </div>
+    <hr />
+
+
+</div>
+
+<script src="~/js/Array.js"></script>
+<script type="text/javascript">
+    var LDT = [];
+    $('#TbDT').DataTable({
+        responsive: true,
+        bLengthChange: false,
+        binfo: false,
+        data: LDT,
+        columns: [
+            { data: "docNum", autoWidth: true },
+            { data: "webID", autoWidth: true },
+            { data: "customerName", autoWidth: true },
+            { data: "posuser", autoWidth: true },
+            { data: "documentDate", autoWidth: true },
+            { data: "docTotal", autoWidth: true },
+            { data: "grossAmount", autoWidth: true },
+            { data: "drawAmount", autoWidth: true },
+            { data: "taxAmount", autoWidth: true }
+        ]
+    });
+    var tbdtpayment = $('#TbAR').DataTable()
+</script>
+

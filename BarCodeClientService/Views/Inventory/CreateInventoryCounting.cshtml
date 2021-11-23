@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "InventoryTransfer";
+    ViewData["Title"] = "InventoryCounting";
     DateTime dt = DateTime.Now;
     ViewData["Date"] = dt.ToShortDateString();
 }
@@ -88,8 +88,8 @@
         <h5 style="margin-top:5px;color:#696969;">
             <a asp-action="DashboardInventory" asp-controller="Dashboard" onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fas fa-home"></i> Dashboard</a>
             <span>
-                <a asp-action="ShowInventory" asp-controller="InventoryTransfer" onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fa fa-caret-right align-right"></i> Inventory Transfer</a>
-                <i class="fa fa-caret-right align-right"></i> Create InventoryTransfer
+                <a asp-action="ShowInventory" asp-controller="InventoryCounting" onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fa fa-caret-right align-right"></i> Inventory Counting</a>
+                <i class="fa fa-caret-right align-right"></i> Create InventoryCounting
             </span>
         </h5>
     </div>
@@ -140,60 +140,6 @@
                     </div>
 
                     <div class="col-sm-6">
-                        <div>
-                            From Warehouse :
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <button class="input-group-text" id="COcrCode"><i class="fa fa-check"></i></button>
-                                </div>
-                                <input type="text" class="form-control" placeholder="" value="" id="FromWhsCode">
-                                <div class="input-group-append">
-                                    <button class="input-group-text btnModelsOcrCode" data-toggle="modal" data-target="#ModalOcrCode"><i class="fa fa-search"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            From Bin Location :
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <button class="input-group-text" id="COcrCode2"><i class="fa fa-check"></i></button>
-                                </div>
-                                <input type="text" class="form-control" placeholder="" value="" id="FromBinCode">
-                                @*<input type="text" class="form-control" placeholder="Search Code" value="C62" id="OcrCode2">*@
-                                <div class="input-group-append">
-                                    <button class="input-group-text btnModelsOcrCode2" data-toggle="modal" data-target="#ModalOcrCode2"><i class="fa fa-search"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            To Warehouse :
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <button class="input-group-text" id="COcrCode3"><i class="fa fa-check"></i></button>
-                                </div>
-                                <input type="text" class="form-control" placeholder="" id="ToWhsCode" value="">
-                                <div class="input-group-append">
-                                    <button class="input-group-text btnModelsOcrCode3" data-toggle="modal" data-target="#ModalOcrCode3"><i class="fa fa-search"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            To Bin Location :
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <button class="input-group-text" id="COcrCode4"><i class="fa fa-check"></i></button>
-                                </div>
-                                <input type="text" class="form-control" placeholder="" id="ToBinCode" value="">
-                                <div class="input-group-append">
-                                    <button class="input-group-text btnModelsOcrCode4" data-toggle="modal" data-target="#ModalOcrCode4"><i class="fa fa-search"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                        <hr>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
                         Sale Employee :
                         <div class="input-group">
                             <div class="input-group-prepend">
@@ -205,9 +151,9 @@
                             </div>
                         </div>
                         <div>
-                            Journal Remark :
+                            Ref2 :
                             <div class="input-group">
-                                <input type="text" class="form-control" value="" id="jrnlMemo">
+                                <input type="text" class="form-control" value="" id="ref2">
                                 </select>
                             </div>
                         </div>
@@ -218,17 +164,40 @@
                             </div>
                         </div>
                     </div>
+                        
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div>
+                            Warehouse :
+                            <div class="input-group">
+                                
+                                <input type="text" class="form-control" placeholder="" value="" id="FromWhsCode">
+                                <div class="input-group-append">
+                                    <button class="input-group-text btnModelsOcrCode" data-toggle="modal" data-target="#ModalOcrCode"><i class="fa fa-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            Bin Location :
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="" value="" id="FromBinCode">
+                                <button class="btn btn-warning" id="btnSearch" style="margin-left:5px;">Search</button>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="col-sm-6">
-                        Quantity :
-                        <div class="input-group">
-                            <input type="number" class="form-control" placeholder="" id="Quantity" value="">
-                        </div>
                         <div>
                             Scan Barcode :
                             <div class="input-group">
                                 <input type="text" class="form-control" value="" id="scanbarcode" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
                             </div>
+                        </div>
+                        Quantity :
+                        <div class="input-group">
+                            <input type="number" class="form-control" placeholder="" id="Quantity" value="">
+                            <button class="btn btn-warning" id="btnUpdateQty" style="margin-left:5px;">Update Qty</button>
                         </div>
                     </div>
 
@@ -248,10 +217,9 @@
                                         <th>ItemCode</th>
                                         <th>ItemName</th>
                                         <th>Quantity</th>
-                                        <th>FromWarehouse</th>
-                                        <th>FromBinLocation</th>
-                                        <th>ToWarehouse</th>
-                                        <th>ToBinLocation</th>
+                                        <th>Warehouse</th>
+                                        <th>BinCode</th>
+                                        <th>BinName</th>
                                     </tr>
                                 </thead>
                             </table>

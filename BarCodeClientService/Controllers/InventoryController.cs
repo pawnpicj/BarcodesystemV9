@@ -12,5 +12,9 @@ namespace BarCodeClientService.Controllers
         {
             return View();
         }
+        public IActionResult CreateInventoryCounting()
+        {
+            return View();
+        }
     }
 }

@@ -98,14 +98,14 @@
     <div style="padding: 10px; color: #696969;">
         <ul class="nav nav-tabs Tap-PA" id="mytab" role="tablist">
             @*<li class="nav-item">
-                <a class="nav-link active color_tap" id="cus-tab" data-toggle="tab" href="#cus" role="tab" aria-controls="Customer" aria-selected="true">Customer</a>
-            </li>*@
+                    <a class="nav-link active color_tap" id="cus-tab" data-toggle="tab" href="#cus" role="tab" aria-controls="Customer" aria-selected="true">Customer</a>
+                </li>*@
             <li class="nav-item">
                 <a class="nav-link color_tap" id="item-tab" data-toggle="tab" href="#item" role="tab" aria-controls="Items" aria-selected="false">Add Data</a>
             </li>
         </ul>
         <div class="tab-content" id="myTabContent">
-            
+
             <div class="tab-pane fade show active" id="item" role="tabpanel" aria-labelledby="item-tab" style="margin-top: 10px">
                 <div class="row">
                     <div class="col-sm-6">
@@ -116,7 +116,7 @@
                             </div>
                             <input type="text" class="form-control" placeholder="" id="CardCode">
                             <div class="input-group-append">
-                                <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalItem"><i class="fa fa-search"></i></button>
+                                <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalCusCode"><i class="fa fa-search"></i></button>
                             </div>
                         </div>
                         Customer Name :
@@ -147,7 +147,7 @@
                             </div>
                             <input type="text" class="form-control" placeholder="" id="SlpCode" value="">
                             <div class="input-group-append">
-                                <button class="input-group-text btnModelsOcrCode4" data-toggle="modal" data-target="#ModalOcrCode4"><i class="fa fa-search"></i></button>
+                                <button class="input-group-text btnModelsOcrCode4" data-toggle="modal" data-target="#ModalSaleEmployee"><i class="fa fa-search"></i></button>
                             </div>
                         </div>
                         <div>
@@ -164,17 +164,17 @@
                             </div>
                         </div>
                     </div>
-                        
+
                 </div>
                 <div class="row">
                     <div class="col-sm-6">
                         <div>
                             Warehouse :
                             <div class="input-group">
-                                
+
                                 <input type="text" class="form-control" placeholder="" value="" id="FromWhsCode">
                                 <div class="input-group-append">
-                                    <button class="input-group-text btnModelsOcrCode" data-toggle="modal" data-target="#ModalOcrCode"><i class="fa fa-search"></i></button>
+                                    <button class="input-group-text btnModelsOcrCode" data-toggle="modal" data-target="#ModalWarehouse"><i class="fa fa-search"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -182,6 +182,7 @@
                             Bin Location :
                             <div class="input-group">
                                 <input type="text" class="form-control" placeholder="" value="" id="FromBinCode">
+                                <button class="input-group-text btnModelsOcrCode" data-toggle="modal" data-target="#ModalBinLocation"><i class="fa fa-search"></i></button>
                                 <button class="btn btn-warning" id="btnSearch" style="margin-left:5px;">Search</button>
                             </div>
                         </div>
@@ -202,22 +203,126 @@
                     </div>
 
                 </div>
-                
+
             </div>
 
 
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="table-responsive">
-                            <table id="TbAR" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="table-responsive">
+                        <table id="TbAR" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Barcode</th>
+                                    <th>ItemCode</th>
+                                    <th>ItemName</th>
+                                    <th>Quantity</th>
+                                    <th>Warehouse</th>
+                                    <th>BinCode</th>
+                                    <th>BinName</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row" style="padding: 15px;margin-top:-20px;margin-bottom:-20px;">
+        @*<button class="btn btn-info" id="Save" style="background:#f0eff1;color:#696969">Add New</button>*@
+        @*<button class="btn btn-success" id="Save" type="button">Add New</button>*@
+        @*<input type="checkbox" id="cpayment" style="background:#f0eff1;color:#696969;margin-left:5px;margin-top:15px" /> <label>Auto Payment</label>*@
+        <div class="nav navbar-nav ml-auto">
+            <div class="btn-group">
+                @*<button class="btn btn-info previous" style="background:#f0eff1;color:#696969">Previous</button>
+                    <button class="btn btn-info next" style="background: #f0eff1;color: #696969;">Next</button>*@
+                <button class="btn btn-success" id="Save" style="margin-left:5px;">Send To SAP</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+@*Create Models*@
+@*1. Search Customer Code*@
+<div class="modal fade" id="ModalCusCode">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+            <div class="modal-header">
+                <b>List of Customer</b>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="TbCusCode" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
                                 <thead>
                                     <tr>
-                                        <th>No</th>
-                                        <th>Barcode</th>
-                                        <th>ItemCode</th>
-                                        <th>ItemName</th>
-                                        <th>Quantity</th>
-                                        <th>Warehouse</th>
+                                        <th>Customer Code</th>
+                                        <th>Cusetomer Name</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseCus" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*2. Search Warehouse*@
+<div class="modal fade" id="ModalWarehouse">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+            <div class="modal-header">
+                <b>List of Warehouse</b>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="TbCusCode" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <thead>
+                                    <tr>
+                                        <th>WhsCode</th>
+                                        <th>WhsName</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseCus" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*3. Search Bin Location*@
+<div class="modal fade" id="ModalBinLocation">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+            <div class="modal-header">
+                <b>List of Bin Location</b>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="TbCusCode" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <thead>
+                                    <tr>
                                         <th>BinCode</th>
                                         <th>BinName</th>
                                     </tr>
@@ -226,23 +331,44 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-        </div>
-        <div class="row" style="padding: 15px;margin-top:-20px;margin-bottom:-20px;">
-            @*<button class="btn btn-info" id="Save" style="background:#f0eff1;color:#696969">Add New</button>*@
-            @*<button class="btn btn-success" id="Save" type="button">Add New</button>*@
-            @*<input type="checkbox" id="cpayment" style="background:#f0eff1;color:#696969;margin-left:5px;margin-top:15px" /> <label>Auto Payment</label>*@
-            <div class="nav navbar-nav ml-auto">
-                <div class="btn-group">
-                    @*<button class="btn btn-info previous" style="background:#f0eff1;color:#696969">Previous</button>
-                    <button class="btn btn-info next" style="background: #f0eff1;color: #696969;">Next</button>*@
-                    <button class="btn btn-success" id="Save" style="margin-left:5px;">Send To SAP</button>
-                </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseCus" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
             </div>
         </div>
     </div>
+</div>
 
+@*3. Search SaleEmployee*@
+<div class="modal fade" id="ModalSaleEmployee">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+            <div class="modal-header">
+                <b>List of Sale Employee</b>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="TbCusCode" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <thead>
+                                    <tr>
+                                        <th>SlpCode</th>
+                                        <th>SlpName</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseCus" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="~/js/Array.js"></script>

@@ -16,11 +16,26 @@
 </style>
 <div class="container">
     <div class="row">
+        @* InventoryTransfer (Borrow Bills) *@
         <div class="col-lg-3" style="width: 250px;height: 250px;margin-top:30px;">
-            <a asp-controller="Inventory" asp-action="CreateInventoryTransfer">
+            <a asp-controller="Inventory" asp-action="CreateInventoryTransferBB">
                 <div style="width:100%;height:100%;background:#f0eff1">
                     <div style="text-align:center">
-                        <p style="text-align:center;padding-top:15px;"><b>Inventory Tranfer</b></p>
+                        <p style="text-align:center;padding-top:15px;"><b>Inventory Tranfer (Borrow Bills)</b></p>
+                    </div>
+                    <div style="width:100%;height:100%;text-align:center">
+                        <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        @* InventoryTransfer (Return Borrow Bills) *@
+        <div class="col-lg-3" style="width: 250px;height: 250px;margin-top:30px;">
+            <a asp-controller="Inventory" asp-action="CreateInventoryTransferRBB">
+                <div style="width:100%;height:100%;background:#f0eff1">
+                    <div style="text-align:center">
+                        <p style="text-align:center;padding-top:15px;"><b>Inventory Tranfer (Return Borrow Bills)</b></p>
                     </div>
                     <div style="width:100%;height:100%;text-align:center">
                         <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>

@@ -1,6 +1,5 @@
-﻿
-@{
-    ViewData["Title"] = "InventoryTransfer";
+﻿@{
+    ViewData["Title"] = "InventoryTransfer (Borrow bills)";
     DateTime dt = DateTime.Now;
     ViewData["Date"] = dt.ToShortDateString();
 }
@@ -101,7 +100,7 @@
             <a asp-action="DashboardInventory" asp-controller="Dashboard" onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fas fa-home"></i> Dashboard</a>
             <span>
                 <a asp-action="ShowInventory" asp-controller="InventoryTransfer" onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fa fa-caret-right align-right"></i> Inventory Transfer</a>
-                <i class="fa fa-caret-right align-right"></i> Create InventoryTransfer
+                <i class="fa fa-caret-right align-right"></i> Create InventoryTransfer (Borrow Bills)
             </span>
         </h5>
     </div>
@@ -128,8 +127,8 @@
                             </div>
                             @{
                                 var txtDocNum = "123";
-                             }
-                            <input type="text" class="form-control" placeholder="" id="DocNum" value="@txtDocNum">
+                            }
+                            <input type="text" class="form-control" placeholder="" id="DocNum" value="">
                             <div class="input-group-append">
                                 <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalInfReq"><i class="fa fa-search"></i></button>
                             </div>

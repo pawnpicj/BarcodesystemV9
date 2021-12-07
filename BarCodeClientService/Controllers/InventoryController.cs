@@ -8,7 +8,11 @@ namespace BarCodeClientService.Controllers
 {
     public class InventoryController : Controller
     {
-        public IActionResult CreateInventoryTransfer()
+        public IActionResult CreateInventoryTransferBB()
+        {
+            return View();
+        }
+        public IActionResult CreateInventoryTransferRBB()
         {
             return View();
         }

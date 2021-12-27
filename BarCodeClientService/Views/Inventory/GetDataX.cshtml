@@ -5,32 +5,26 @@
 <hr>
 
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@3.17.0/swagger-ui.css">
+<script src="https://unpkg.com/swagger-ui-dist@3/swagger-ui-bundle.js" charset="UTF-8"></script>
+
+
+<button type="submit" onclick="UserAction()">Search</button>
 
 <script type="text/javascript">
-    $(document).ready(function () {
-        var ulEmployees = $('#ulEmployees');
-        $('#btn').click(function () {
-            $.ajax({
-                type: 'GET',
-                url: "https://localhost:5002/api/ContactPerson",
-                dataType: 'json',
-                success: function (data) {
-                    ulEmployees.empty();
-                    $.each(data, function (index, val) {
-                        var fullName = val.cardCode + ' ' + val.name;
-                        ulEmployees.append('<li>' + fullName + '</li>');
-                    });
-                }
-            });
-        });
-        $('#btnClear').click(function () {
-            ulEmployees.empty();
-        });
-    });
+
+    function UserAction() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                alert(this.responseText);
+            }
+        };
+        xhttp.open("GET", "http://localhost:5002/api/SaleEmployee", true);
+        xhttp.setRequestHeader("Content-type", "application/json");
+        xhttp.send("Your JSON Data Here");
+    }
+
 </script>
-<div>
-    <input id="btn" type="button" value="Get All Employees" />
-    <input id="btnClear" type="button" value="Clear" />
-    <ul id="ulEmployees" />
-</div>
+
 <hr>

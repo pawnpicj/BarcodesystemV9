@@ -16,7 +16,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": ""
+      "applicationUrl": "http://localhost:5002"
     },
     "BarCodeAPIService": {
       "commandName": "Project",

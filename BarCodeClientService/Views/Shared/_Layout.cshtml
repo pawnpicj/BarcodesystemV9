@@ -114,6 +114,13 @@
                                 <span class="title">Sale A/R</span>
                             </a>
                         </li>
+                        <li>
+                            <a asp-controller="Dashboard" asp-action="DashboardInventory" id="INT" class="active" style="color:#696969">
+                                @*href="@Url.Action("InventoryCreation","Home")"*@
+                                <span class="icon"><i class="fas fa-warehouse" style="margin-left:-20px;"></i></span>
+                                <span class="title">Inventory</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -123,9 +130,6 @@
         </div>
 
     </div>
-    @*}else{
-            @RenderBody()
-        }*@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

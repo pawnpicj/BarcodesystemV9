@@ -1,8 +1,10 @@
 ﻿using BarCodeAPIService.Connection;
+using BarCodeAPIService.Models;
 using BarCodeLibrary.Request.SAP;
 using BarCodeLibrary.Respones.SAP;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,66 +19,64 @@ namespace BarCodeAPIService.Service
         {
             var oPDNs = new List<OPDN>();
             var pDN1s = new List<PDN1>();
-            SAPbobsCOM.Company oCompany;
+            DataTable dt = new DataTable();
+            DataTable dtLine = new DataTable();
             try
             {
-                Login login = new();
-                if (login.LErrCode == 0)
+                LoginOnlyDatabase login = new LoginOnlyDatabase();
+                if (login.lErrCode == 0)
                 {
-                    oCompany = login.Company;
-                    SAPbobsCOM.Recordset? oRS = null;
-                    SAPbobsCOM.Recordset? oRSLine = null;
-                    string sqlStr = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_TENGKIMLEANG('OPDN','','','','','')"; ;
-                    oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-                    oRSLine = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-                    oRS.DoQuery(sqlStr);
-                    while (!oRS.EoF)
+                    string query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_TENGKIMLEANG('OPDN','','','','','')";
+                    login.AD = new System.Data.Odbc.OdbcDataAdapter(query, login.CN);
+                    login.AD.Fill(dt);
+                    pDN1s = new List<PDN1>();
+                    foreach (DataRow row in dt.Rows)
                     {
-                        //oRSLine.DoQuery("EXEC USP_Get_Transcation_Data 'PDN1','"+ oRS.Fields.Item(0).Value+"','','','',''");
-                        oRSLine.DoQuery("CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_TENGKIMLEANG('PDN1','" + oRS.Fields.Item(0).Value + "','','','','')");
-                        pDN1s = new List<PDN1>();
-                        while (!oRSLine.EoF)
+                        dtLine = new DataTable();
+                        string query1 = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_TENGKIMLEANG('PDN1','','','','','')";
+                        login.AD = new System.Data.Odbc.OdbcDataAdapter(query1, login.CN);
+                        login.AD.Fill(dtLine);
+                        foreach (DataRow rowLine in dtLine.Rows)
                         {
                             pDN1s.Add(new PDN1
                             {
-                                ItemCode=oRSLine.Fields.Item(0).Value.ToString(),
-                                Description=oRSLine.Fields.Item(1).Value.ToString(),
-                                Quatity=Convert.ToInt32(oRSLine.Fields.Item(2).Value),
-                                Price=Convert.ToDouble(oRSLine.Fields.Item(3).Value),
-                                DiscPrcnt=Convert.ToDouble(oRSLine.Fields.Item(4).Value),
-                                VatGroup=oRSLine.Fields.Item(5).Value.ToString(),
-                                LineTotal= Convert.ToDouble(oRSLine.Fields.Item(6).Value),
-                                WhsCode=oRSLine.Fields.Item(6).Value.ToString(),
+                                Description= rowLine["Dscription"].ToString(),
+                                DiscPrcnt=Convert.ToInt32(rowLine[""].ToString()),
+                                ItemCode=rowLine["ItemCode"].ToString(),
+                                LineTotal=Convert.ToDouble(rowLine["LineTotal"].ToString()),
+                                Price=Convert.ToDouble(rowLine["Price"].ToString()),
+                                Quatity=Convert.ToInt32(rowLine["Quantity"].ToString()),
+                                VatGroup=row["VatGroup"].ToString(),
+                                WhsCode=row["WhsCode"].ToString()
                             });
-                            oRSLine.MoveNext();
                         }
                         oPDNs.Add(new OPDN
                         {
-                            CardCode = oRS.Fields.Item(1).Value.ToString(),
-                            CardName = oRS.Fields.Item(2).Value.ToString(),
-                            CntctCode = Convert.ToInt32(oRS.Fields.Item(3).Value.ToString()),
-                            NumAtCard = oRS.Fields.Item(4).Value.ToString(),
-                            Line = pDN1s.ToList()
+                            CardCode = row["CardCode"].ToString(),
+                            CardName = row["CardName"].ToString(),
+                            CntctCode = Convert.ToInt32(row["CntctCode"].ToString()),
+                            DiscPrcnt = Convert.ToInt32(row["DiscPrcnt"].ToString()),
+                            DocDate = Convert.ToDateTime(row["DocDate"].ToString()),
+                            DocDueDate = Convert.ToDateTime(row["DocDueDate"].ToString()),
+                            DocNum = Convert.ToInt32(row["DocNum"].ToString()),
+                            DocStatus = row["DocStatus"].ToString(),
+                            DocTotal = Convert.ToDouble(row["DocTotal"].ToString()),
+                            Line = pDN1s.ToList(),
+                            NumAtCard=row["NumAtCard"].ToString(),
+                            TaxDate=Convert.ToDateTime("2022-01-01")
                         });
-                        oRS.MoveNext();
                     }
-                    return Task.FromResult(new ResponseOPDNGetGoodReceipt
-                    {
-                        ErrorCode = 0,
-                        ErrorMessage = "",
-                        Data = oPDNs.ToList()
-                    });
+                    ErrCode = login.lErrCode;
+                    ErrMsg = login.sErrMsg;
                 }
                 else
                 {
-                    return Task.FromResult(new ResponseOPDNGetGoodReceipt
-                    {
-                        ErrorCode = login.LErrCode,
-                        ErrorMessage = login.SErrMsg,
-                        Data = null
-                    });
+
+                    ErrCode = login.lErrCode;
+                    ErrMsg = login.sErrMsg;
                 }
-            }catch(Exception ex)
+            }
+            catch(Exception ex)
             {
                 return Task.FromResult(new ResponseOPDNGetGoodReceipt
                 {

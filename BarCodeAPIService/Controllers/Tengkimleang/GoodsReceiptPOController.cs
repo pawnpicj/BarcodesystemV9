@@ -40,7 +40,7 @@ namespace BarCodeAPIService.Controllers
         [HttpPost("SendGoodReceiptPO")]
         public async Task<IActionResult> PostGoodReceiptPOAsync(SendGoodReceiptPO sendGoodReceiptPO)
         {
-            var a=await goodsReceiptPO.PostGoodReceiptPO(sendGoodReceiptPO);
+            var a = await goodsReceiptPO.PostGoodReceiptPO(sendGoodReceiptPO);
             if (a.ErrorCode == 0)
             {
                 return Ok(a);

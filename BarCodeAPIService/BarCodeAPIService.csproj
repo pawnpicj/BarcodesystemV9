@@ -24,6 +24,7 @@
     <PackageReference Include="Serilog.Enrichers.Thread" Version="3.1.0" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="3.3.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    <PackageReference Include="System.Data.Odbc" Version="6.0.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.14.0" />
   </ItemGroup>
@@ -34,7 +35,7 @@
 
   <ItemGroup>
     <Reference Include="SAPBusinessOneSDK">
-      <HintPath>..\..\SAPBusinessOneSDK(2)\SAPBusinessOneSDK(2)\SAPBusinessOneSDK.dll</HintPath>
+      <HintPath>..\..\plugin\SAPBusinessOneSDK.dll</HintPath>
     </Reference>
   </ItemGroup>
 

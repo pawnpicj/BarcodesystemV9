@@ -28,5 +28,83 @@
                 </div>
             </a>
         </div>
+        <div class="col-lg-3" style="width: 250px;height: 250px;margin-top:30px;">
+            <a onclick="test1()">
+                <div style="width:100%;height:100%;background:#f0eff1">
+                    <div style="text-align:center">
+                        <p style="text-align:center;padding-top:15px;">Sale A/R</p>
+                    </div>
+                    <div style="width:100%;height:100%;text-align:center">
+                        <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-3" style="width: 250px;height: 250px;margin-top:30px;">
+            <a onclick="POSTDataAPI()">
+                <div style="width:100%;height:100%;background:#f0eff1">
+                    <div style="text-align:center">
+                        <p style="text-align:center;padding-top:15px;">POST DATA to Web API</p>
+                    </div>
+                    <div style="width:100%;height:100%;text-align:center">
+                        <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
     </div>
 </div>
+<script>
+    function test1() {
+        $.ajax({
+        url: '@Url.Action("GetAPITesting", "Home")',
+        type: "GET",
+        //data: { ItemCode: Items },
+        dataType: "JSON",
+        beforeSend: function () {
+                    //$('#Modalloder').modal('show');
+        },
+        success: function (data) {
+            console.log(data);
+            if (data.errorCode == 0) {
+                alert("I can get Data from Restful Service");
+            } else {
+                alert("Oppp Maybe Internal Error Look Like this:" + data.errorMessage);
+            }
+        }
+    });
+    }
+    function POSTDataAPI() {
+        obj = {};
+        arrayLine = {};
+        line = [];
+        obj.cardCode = "EAC00001";
+        obj.numAtCard = "123";
+        obj.docDate = "2021-12-16";
+        obj.contactPersion = "";
+        obj.docType = "";
+        arrayLine.itemCode = "00-1121-140-01";
+        arrayLine.quantity = 1;
+        arrayLine.unitPrice = 5;
+        arrayLine.discount = 0;
+        arrayLine.TaxCode = "";
+        arrayLine.warehouseCode = "01";
+        arrayLine.uomCode = "";
+        line.push(arrayLine);
+        obj.Lines = line;
+        console.log(obj);
+        $.ajax({
+            url: '@Url.Action("PostDataAPI", "Home")',
+            type: "POST",
+            data: { sendGoodsReturn: obj },
+            dataType: "JSON",
+            beforeSend: function () {
+                        //$('#Modalloder').modal('show');
+            },
+            success: function (data) {
+                console.log(data);
+
+            }
+        });
+    }
+</script>

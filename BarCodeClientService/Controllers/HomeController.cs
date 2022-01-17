@@ -1,10 +1,17 @@
 ﻿using BarCodeClientService.Models;
+using BarCodeLibrary.APICall;
+using BarCodeLibrary.Request.SAP;
+using BarCodeLibrary.Respones.SAP;
+using Barcodesystem.Contract.RouteApi;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace BarCodeClientService.Controllers
@@ -32,10 +39,6 @@ namespace BarCodeClientService.Controllers
             return View();
         }
         public IActionResult InventoryCreation()
-        {
-            return View();
-        }
-        public IActionResult APCreation()
         {
             return View();
         }

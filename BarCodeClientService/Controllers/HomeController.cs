@@ -1,10 +1,17 @@
 ﻿using BarCodeClientService.Models;
+using BarCodeLibrary.APICall;
+using BarCodeLibrary.Request.SAP;
+using BarCodeLibrary.Respones.SAP;
+using Barcodesystem.Contract.RouteApi;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace BarCodeClientService.Controllers
@@ -34,6 +41,18 @@ namespace BarCodeClientService.Controllers
         public IActionResult InventoryCreation()
         {
             return View();
+        }
+
+        public IActionResult GetAPITesting()
+        {
+            var a=API.Read<ResponseOPDNGetGoodReceipt>("GetGoodsReceiptPO");
+            return Ok(a);
+        }
+        [HttpPost]
+        public IActionResult PostDataAPI(SendGoodsReturn sendGoodsReturn)
+        {
+            var a = API.PostWithReturn<ResponseGoodReturn>("api/GoodsReturn/SendGoodsReturn", sendGoodsReturn);
+            return Ok(a);
         }
         
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

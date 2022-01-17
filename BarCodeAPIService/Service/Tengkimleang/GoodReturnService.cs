@@ -29,25 +29,25 @@ namespace BarCodeAPIService.Service
                     string query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_TENGKIMLEANG('OPDN','','','','','')";
                     login.AD = new System.Data.Odbc.OdbcDataAdapter(query, login.CN);
                     login.AD.Fill(dt);
-                    pDN1s = new List<PDN1>();
                     foreach (DataRow row in dt.Rows)
                     {
                         dtLine = new DataTable();
-                        string query1 = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_TENGKIMLEANG('PDN1','','','','','')";
+                        string query1 = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_TENGKIMLEANG('PDN1','"+row["DocEntry"].ToString()+"','','','','')";
                         login.AD = new System.Data.Odbc.OdbcDataAdapter(query1, login.CN);
                         login.AD.Fill(dtLine);
+                        pDN1s = new List<PDN1>();
                         foreach (DataRow rowLine in dtLine.Rows)
                         {
-                            pDN1s.Add(new PDN1
+                            pDN1s.Add(new PDN1  
                             {
                                 Description= rowLine["Dscription"].ToString(),
-                                DiscPrcnt=Convert.ToInt32(rowLine[""].ToString()),
+                                DiscPrcnt=Convert.ToDouble(rowLine["DiscPrcnt"].ToString()),
                                 ItemCode=rowLine["ItemCode"].ToString(),
                                 LineTotal=Convert.ToDouble(rowLine["LineTotal"].ToString()),
                                 Price=Convert.ToDouble(rowLine["Price"].ToString()),
-                                Quatity=Convert.ToInt32(rowLine["Quantity"].ToString()),
-                                VatGroup=row["VatGroup"].ToString(),
-                                WhsCode=row["WhsCode"].ToString()
+                                Quatity=Convert.ToDouble(rowLine["Quantity"].ToString()),
+                                VatGroup= rowLine["VatGroup"].ToString(),
+                                WhsCode= rowLine["WhsCode"].ToString()
                             });
                         }
                         oPDNs.Add(new OPDN
@@ -55,15 +55,15 @@ namespace BarCodeAPIService.Service
                             CardCode = row["CardCode"].ToString(),
                             CardName = row["CardName"].ToString(),
                             CntctCode = Convert.ToInt32(row["CntctCode"].ToString()),
-                            DiscPrcnt = Convert.ToInt32(row["DiscPrcnt"].ToString()),
+                            DiscPrcnt = Convert.ToDouble(row["DiscPrcnt"].ToString()),
                             DocDate = Convert.ToDateTime(row["DocDate"].ToString()),
                             DocDueDate = Convert.ToDateTime(row["DocDueDate"].ToString()),
                             DocNum = Convert.ToInt32(row["DocNum"].ToString()),
-                            DocStatus = row["DocStatus"].ToString(),
-                            DocTotal = Convert.ToDouble(row["DocTotal"].ToString()),
+                            //DocStatus = row["DocStatus"].ToString(),
+                            //DocTotal = Convert.ToDouble(row["DocTotal"].ToString()),
                             Line = pDN1s.ToList(),
-                            NumAtCard=row["NumAtCard"].ToString(),
-                            TaxDate=Convert.ToDateTime("2022-01-01")
+                            //NumAtCard = row["NumAtCard"].ToString(),
+                            //TaxDate = Convert.ToDateTime("2022-01-01")
                         });
                     }
                     ErrCode = login.lErrCode;
@@ -85,6 +85,12 @@ namespace BarCodeAPIService.Service
                     Data = null
                 });
             }
+            return Task.FromResult(new ResponseOPDNGetGoodReceipt
+            {
+                Data=oPDNs,
+                ErrorCode=0,
+                ErrorMessage=""
+            });
         }
 
         public Task<ResponseGoodReturn> sendGoodReturn(SendGoodsReturn sendGoodReturn)

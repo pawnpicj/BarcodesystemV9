@@ -1,5 +1,6 @@
 ﻿using BarCodeAPIService.Service;
 using BarCodeLibrary.Request.SAP;
+using Barcodesystem.Contract.RouteApi;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,8 @@ using System.Threading.Tasks;
 
 namespace BarCodeAPIService.Controllers.Tengkimleang
 {
+    [ApiController]
+    [Route(APIRoute.Root)]
     public class GoodsReturnController : ControllerBase
     {
         private readonly IGoodReturnService goodReturnService;

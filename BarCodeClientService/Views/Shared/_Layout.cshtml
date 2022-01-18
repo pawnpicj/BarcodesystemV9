@@ -72,7 +72,7 @@
             </div>
             <div class="menu">
                 <div class="logo" style="color:#f0eff1">
-                    BarCode System
+                    VANs System
                 </div>
                 <div class="right_menu">
                     <ul>
@@ -112,6 +112,13 @@
                                 @*href="@Url.Action("SaleARCreation","Home")"*@
                                 <span class="icon"><i class="fas fa-chart-pie" style="margin-left:-20px;"></i></span>
                                 <span class="title">Sale A/R</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="Dashboard" asp-action="DashboardPurchasingAP" id="AP" class="active" style="color:#696969">
+                                @*href="@Url.Action("Purchasing","Home")"*@
+                                <span class="icon"><i class="fas fa-chart-pie" style="margin-left:-20px;"></i></span>
+                                <span class="title">Purchasing - A/P</span>
                             </a>
                         </li>
                         <li>

@@ -4,13 +4,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Data.SqlClient;
+using System.Data;
+
 
 namespace BarCodeAPIService.Service
 {
     public class BinCodeService : IBinCodeService
     {
         public Task<ResponseOBINGetBinCode> ResponseOBINGetBinCode()
-        {
+        {          
             var oBIN =new List<OBIN>();
             SAPbobsCOM.Company oCompany;
             try {
@@ -19,7 +22,7 @@ namespace BarCodeAPIService.Service
                 {
                     oCompany = login.Company;
                     SAPbobsCOM.Recordset oRS = null;
-                    oRS =(SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);                    
+                    oRS =(SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     string Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('OBIN','','','','','')";
                     oRS.DoQuery(Query);
                     while (!oRS.EoF) {

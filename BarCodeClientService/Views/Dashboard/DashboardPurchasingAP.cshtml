@@ -1,5 +1,10 @@
-﻿@{
-    ViewData["Title"] = "Dashboard-Sale A/R";
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@{
+    ViewData["Title"] = "Dashboard-Purchasing - A/P";
 }
 <style type="text/css">
     #Icon {
@@ -17,10 +22,10 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-3" style="width: 250px;height: 250px;margin-top:30px;">
-            <a asp-controller="SaleOrder" asp-action="CreateSaleOrder">
+            <a asp-controller="GoodsReceiptPO" asp-action="CreatePO">
                 <div style="width:100%;height:100%;background:#f0eff1">
                     <div style="text-align:center">
-                        <p style="text-align:center;padding-top:15px;">Delivery</p>
+                        <p style="text-align:center;padding-top:15px;">Goods receipt PO</p>
                     </div>
                     <div style="width:100%;height:100%;text-align:center">
                         <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
@@ -28,18 +33,18 @@
                 </div>
             </a>
         </div>
-        <div class="col-lg-3" style="width: 250px;height: 250px;margin-top:30px;">
+        @*<div class="col-lg-3" style="width: 250px;height: 250px;margin-top:30px;">
             <a asp-controller="DeliveryReturn" asp-action="CreateDeliveryReturn">
-            <div style="width:100%;height:100%;background:#f0eff1">
-                <div style="text-align:center">
-                    <p style="text-align:center;padding-top:15px;">Delivery Return</p>
+                <div style="width:100%;height:100%;background:#f0eff1">
+                    <div style="text-align:center">
+                        <p style="text-align:center;padding-top:15px;">AP Goods return</p>
+                    </div>
+                    <div style="width:100%;height:100%;text-align:center">
+                        <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
+                    </div>
                 </div>
-                <div style="width:100%;height:100%;text-align:center">
-                    <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
-                </div>
-            </div>
             </a>
-        </div>
+        </div>*@
     </div>
 </div>
 

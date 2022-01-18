@@ -6,13 +6,17 @@ using System.Threading.Tasks;
 
 namespace BarCodeClientService.Controllers
 {
-    public class DashboardController : Controller
+    public class InventoryController : Controller
     {
-        public IActionResult DashboardSaleAR()
+        public IActionResult CreateInventoryTransferBB()
         {
             return View();
         }
-        public IActionResult DashboardInventory()
+        public IActionResult CreateInventoryTransferRBB()
+        {
+            return View();
+        }
+        public IActionResult CreateInventoryCounting()
         {
             return View();
         }

@@ -33,10 +33,4 @@
     <ProjectReference Include="..\Barcodesystem\BarCodeLibrary.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="SAPBusinessOneSDK">
-      <HintPath>..\..\plugin\SAPBusinessOneSDK.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>

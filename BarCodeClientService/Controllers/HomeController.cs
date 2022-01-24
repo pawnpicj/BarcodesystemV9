@@ -46,7 +46,7 @@ namespace BarCodeClientService.Controllers
         public IActionResult GetAPITesting()
         {
             var a = API.Read<List<ResponseOPDNGetGoodReceipt>>("GetGoodReceiptPO");
-            return Ok("Hello");
+            return Ok(a);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

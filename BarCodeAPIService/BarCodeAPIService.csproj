@@ -34,11 +34,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="SAPBusinessOneSDK">
-      <HintPath>..\..\plugin\SAPBusinessOneSDK.dll</HintPath>
-    </Reference>
+    <Folder Include="Views\" />
   </ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties properties_4launchsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+  <ItemGroup>
+    <Reference Include="SAPBusinessOneSDK">
+      <HintPath>..\.vs\SAPBusinessOneSDK.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 
 </Project>

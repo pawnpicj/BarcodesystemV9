@@ -42,7 +42,13 @@ namespace BarCodeClientService.Controllers
         {
             return View();
         }
-        
+
+        public IActionResult GetAPITesting()
+        {
+            var a = API.Read<List<ResponseOPDNGetGoodReceipt>>("GetGoodReceiptPO");
+            return Ok("Hello");
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

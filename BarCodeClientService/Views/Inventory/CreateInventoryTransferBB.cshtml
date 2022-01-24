@@ -336,7 +336,7 @@
             <div class="btn-group">
                 @*<button class="btn btn-info previous" style="background:#f0eff1;color:#696969">Previous</button>
                     <button class="btn btn-info next" style="background: #f0eff1;color: #696969;">Next</button>*@
-                <button class="btn btn-success" id="Save" style="margin-left:5px;">Send To SAP</button>
+                <button class="btn btn-success" id="Save" style="margin-left:5px;" onclick="test1()">Send To SAP</button>
             </div>
         </div>
     </div>
@@ -502,24 +502,24 @@
 
 <script src="~/js/Array.js"></script>
 <script type="text/javascript">
-    //var LDT = [];
-    //$('#TbDT').DataTable({
-    //    responsive: true,
-    //    bLengthChange: false,
-    //    binfo: false,
-    //    data: LDT,
-    //    columns: [
-    //        { data: "docNum", autoWidth: true },
-    //        { data: "webID", autoWidth: true },
-    //        { data: "customerName", autoWidth: true },
-    //        { data: "posuser", autoWidth: true },
-    //        { data: "documentDate", autoWidth: true },
-    //        { data: "docTotal", autoWidth: true },
-    //        { data: "grossAmount", autoWidth: true },
-    //        { data: "drawAmount", autoWidth: true },
-    //        { data: "taxAmount", autoWidth: true }
-    //    ]
-    //});
-    //var tbdtpayment = $('#TbAR').DataTable()
+    function test1() {
+        $.ajax({
+        url: '@Url.Action("GetAPITesting", "Home")',
+        type: "GET",
+        //data: { ItemCode: Items },
+        dataType: "JSON",
+        beforeSend: function () {
+                    //$('#Modalloder').modal('show');
+        },
+        success: function (data) {
+            console.log(data);
+            if (data.errorCode == 0) {
+                alert("I can get Data from Restful Service");
+            } else {
+                alert("Oppp Maybe Internal Error Look Like this:" + data.errorMessage);
+            }
+        }
+    });
+    }
 </script>
 

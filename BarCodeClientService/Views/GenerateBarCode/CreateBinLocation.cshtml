@@ -1,5 +1,6 @@
 ﻿@{
-    ViewData["Title"] = "Dashboard-Inventory";
+    ViewData["Title"] = "Generate Bin Location";
+   
 }
 <style type="text/css">
     #Icon {
@@ -17,12 +18,12 @@
 
 <div class="container">
     <div class="row">
-        @* InventoryTransfer (Borrow Bills) *@
+        @*Bin Location *@
         <div class="col-lg-3" style="width: 250px;height: 250px;margin-top:30px;">
-            <a asp-controller="Inventory" asp-action="CreateInventoryTransferBB">
+            <a asp-controller="BinLocation" asp-action="GBinLocation">
                 <div style="width:100%;height:100%;background:#f0eff1">
                     <div style="text-align:center">
-                        <p style="text-align:center;padding-top:15px;"><b>Inventory Tranfer (Borrow Bills)</b></p>
+                        <p style="text-align:center;padding-top:15px;"><b>Bin Location</b></p>
                     </div>
                     <div style="width:100%;height:100%;text-align:center">
                         <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
@@ -30,8 +31,8 @@
                 </div>
             </a>
         </div>
-
-        @* InventoryTransfer (Return Borrow Bills) *@
+        @*
+         InventoryTransfer (Return Borrow Bills)
         <div class="col-lg-3" style="width: 250px;height: 250px;margin-top:30px;">
             <a asp-controller="Inventory" asp-action="CreateInventoryTransferRBB">
                 <div style="width:100%;height:100%;background:#f0eff1">
@@ -56,21 +57,6 @@
                     </div>
                 </div>
             </a>
-        </div>
+        </div>*@
     </div>
-
-    @*<div class="row">
-        <div class="col-lg-3" style="width: 250px;height: 250px;margin-top:30px;">
-            <a asp-controller="Inventory" asp-action="CreateInventoryCounting">
-                <div style="width:100%;height:100%;background:#f0eff1">
-                    <div style="text-align:center">
-                        <p style="text-align:center;padding-top:15px;"><b>Inventory Counting</b></p>
-                    </div>
-                    <div style="width:100%;height:100%;text-align:center">
-                        <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
-                    </div>
-                </div>
-            </a>
-        </div>
-    </div>*@
 </div>

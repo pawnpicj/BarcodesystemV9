@@ -34,8 +34,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Views\" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="SAPBusinessOneSDK">
-      <HintPath>..\..\SAPBusinessOneSDK(2)\SAPBusinessOneSDK(2)\SAPBusinessOneSDK.dll</HintPath>
+      <HintPath>..\..\plugin\SAPBusinessOneSDK.dll</HintPath>
     </Reference>
   </ItemGroup>
 

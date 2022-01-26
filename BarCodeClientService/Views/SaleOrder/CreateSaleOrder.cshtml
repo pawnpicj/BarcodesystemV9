@@ -102,7 +102,7 @@
                 <button type="button" class="btn btn-primary" id="findCustomer">
                     <i class="fas fa-search"></i>
                 </button>
-            </div>            
+            </div>
             Customer name :
             <div class="input-group">
                 <input type="text" class="form-control" id="CustomerName" readonly>
@@ -110,6 +110,13 @@
             Doc date :
             <div class="input-group">
                 <input type="date" class="form-control" id="DocDate">
+            </div>
+            SO Number
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="" id="SONumber" readonly>
+                <button type="button" class="btn btn-primary" id="SelectSO">
+                    <i>Select SO</i>
+                </button>
             </div>
         </div>
         <div class="col-sm-6">
@@ -133,139 +140,10 @@
                     </button>
                 </div>
             </div>
-        </div>
-
-
-        <!--
-        Uom Name :
-        <div class="input-group">
-            <select id="UomID" class="form-control">
-            </select>
-        </div>
+        </div>            
     </div>
-    <div class="col-sm-6">
-            <div>
-                VAT Code :
-                <div class="input-group">
-                    <select id="TaxCode" class="form-control">
-                    </select>
-                </div>
-            </div>
-
-            <div>
-                OcrCode :
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <button class="input-group-text" id="COcrCode"><i class="fa fa-check"></i></button>
-                    </div>
-                    <input type="text" class="form-control" placeholder="Search Code" value="" id="OcrCode">-->
-        @*<input type="text" class="form-control" placeholder="Search Code" value="C6" id="OcrCode">*@
-        <!--<div class="input-group-append">
-                <button class="input-group-text btnModelsOcrCode" data-toggle="modal" data-target="#ModalOcrCode"><i class="fa fa-search"></i></button>
-            </div>
-        </div>
-    </div>
-    <div>
-        OcrCode2 :
-        <div class="input-group">
-            <div class="input-group-prepend">
-                <button class="input-group-text" id="COcrCode2"><i class="fa fa-check"></i></button>
-            </div>
-            <input type="text" class="form-control" placeholder="Search Code" value="" id="OcrCode2">-->
-        @*<input type="text" class="form-control" placeholder="Search Code" value="C62" id="OcrCode2">*@
-        <!--<div class="input-group-append">
-                            <button class="input-group-text btnModelsOcrCode2" data-toggle="modal" data-target="#ModalOcrCode2"><i class="fa fa-search"></i></button>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    OcrCode3 :
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <button class="input-group-text" id="COcrCode3"><i class="fa fa-check"></i></button>
-                        </div>
-                        <input type="text" class="form-control" placeholder="Search Code" id="OcrCode3" value="">
-                        <div class="input-group-append">
-                            <button class="input-group-text btnModelsOcrCode3" data-toggle="modal" data-target="#ModalOcrCode3"><i class="fa fa-search"></i></button>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    OcrCode4 :
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <button class="input-group-text" id="COcrCode4"><i class="fa fa-check"></i></button>
-                        </div>
-                        <input type="text" class="form-control" placeholder="Search Code" id="OcrCode4" value="">
-                        <div class="input-group-append">
-                            <button class="input-group-text btnModelsOcrCode4" data-toggle="modal" data-target="#ModalOcrCode4"><i class="fa fa-search"></i></button>
-                        </div>
-                    </div>
-                </div>
-
-            Inventory Uom :
-            <div class="input-group">
-                <select id="InventoryID" class="form-control">
-                </select>
-            </div>
-                <div>
-                    Warehouse :
-                    <div class="input-group">
-                        <select id="whscode" class="form-control">
-                        </select>
-                    </div>
-                </div>
-            <div>
-                Total :
-                <div class="input-group">
-                    <input type="number" class="form-control" value="0" id="totalItem" disabled>
-                </div>
-            </div>
-        </div>
-    </div>-->
-
-        <div class="col-sm-6" style=" padding: 10px; ">
-            <div class="input-group">
-                <div class="col-sm-8">
-                    <input type="text" class="form-control" id="SONumber" readonly>
-                </div>
-                <div class="col-sm-4">
-                    <div class="nav navbar-nav ml-auto">
-                        <button class="btn btn-info" id="SelectSO" style="background:#f0eff1;color:#696969">Select SO</button>
-                    </div>
-                </div>
-            </div>
-        </div>     
-          @*<div class="col-sm-6" style=" padding: 10px; ">
-            <div class="float-right">
-                <div class="nav navbar-nav ml-auto">
-                    <button class="btn btn-info" id="DetailsSO" style="background:#f0eff1;color:#696969">Details</button>
-                </div>
-            </div>
-          </div>*@
-        
-    </div>
-    </div>
+    </div>     
        
-
-
-
-        @*<hr />
-            <div class="row" style="padding: 15px;margin-top:-20px;margin-bottom:-20px;">
-                <button class="btn btn-info" id="Save" style="background:#f0eff1;color:#696969">Add New</button>
-                <button class="btn btn-success" id="Save" type="button">Add New</button>
-                <input type="checkbox" id="cpayment" style="background:#f0eff1;color:#696969;margin-left:5px;margin-top:15px" /> <label>Auto Payment</label>
-
-                <div class="nav navbar-nav ml-auto">
-                        <div class="btn-group">
-                <button class="btn btn-info previous" style="background:#f0eff1;color:#696969">Previous</button>
-                <button class="btn btn-info next" style="background: #f0eff1;color: #696969;">Next</button>
-                <button class="btn btn-info" id="Save" style="background:#f0eff1;color:#696969;margin-left:5px;">Add New</button>
-                </div>
-            </div>
-
-            </div>
-            <hr />*@
 <div id="ListSO">
     <div class="row">
         <div class="col-sm-12" style=" padding: 3px; ">
@@ -288,7 +166,7 @@
         </div>
         <div class="row" style=" padding: 10px; ">            
             <div class="nav navbar-nav ml-auto"  style=" padding: 5px; " >
-                <button class="btn btn-info" id="ListSOChoose" style="background:#f0eff1;color:#696969">Choose</button>              
+                <button  class="btn btn-info" id="ListSOChoose" style="background:#f0eff1;color:#696969">Choose</button>              
             </div>            
                 <div class="nav navbar-nav ml-auto"  style=" padding: 5px; ">
                     <button class="btn btn-info" id="ListSOClose" style="background:#f0eff1;color:#696969">Close</button>
@@ -808,7 +686,7 @@
     <script src="~/js/Array.js"></script>
     <script type="text/javascript">
         var LDT = [];
-        $('#TbDT').DataTable({
+        $('#TblistSO').DataTable({
             responsive: true,
             bLengthChange: false,
             binfo: false,
@@ -825,6 +703,7 @@
                 { data: "taxAmount", autoWidth: true }
             ]
         });
+      
         var dtSOList = $('#TblistSO').DataTable()
         var dtLineSO = $('#TbSOLine').DataTable()
         var dtSNBT = $('#TbSNBT').DataTable()
@@ -839,8 +718,10 @@
         // $('#DLNline').hide();
 
         $('#SelectSO').click(function () {
+            alert(testDLN());
             $('#DLN').hide();
             $('#ListSO').show();
+            
         });
         $('#ListSOChoose').click(function () {
             $('#DLN').hide();
@@ -856,7 +737,28 @@
             $('#DLNline').hide();
             $('#Update_SNBT').hide();
             $('#Draft').show();
-            
-        });
+
+        });       
+       
+        function testDLN() {
+        $.ajax({
+        url: '@Url.Action("GetAPITesting", "Home")',
+        type: "GET",
+        //data: { ItemCode: Items },
+        dataType: "JSON",
+            beforeSend: function () {
+
+                    //$('#Modalloder').modal('show');
+        },
+        success: function (data) {
+            console.log(data);
+            if (data.errorCode == 0) {
+                alert("I can get Data from Restful Service");
+            } else {
+                alert("Oppp Maybe Internal Error Look Like this:" + data.errorMessage);
+            }
+        }
+    });
+    }
     </script>
 

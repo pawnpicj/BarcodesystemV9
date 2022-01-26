@@ -114,7 +114,7 @@
             Doc date :
             <div class="input-group">
                 <input type="date" class="form-control" id="DLNDocDate">
-            </div>
+            </div>            
         </div>
         <div class="col-sm-6">
             <div>
@@ -130,21 +130,14 @@
                     <input type="number" class="form-control" id="Remark" onchange="LineDiscountPer()">
                 </div>
             </div>
-        </div>
-
-        <div class="col-sm-6" style=" padding: 10px; ">
+            Select Delivery
             <div class="input-group">
-                <div class="col-sm-8">
-                    <input type="text" class="form-control" id="DLN_Return" readonly>
-                </div>
-                <div class="col-sm-4">
-                    <div class="nav navbar-nav ml-auto">
-                        <button class="btn btn-info" id="SelectDelivery" style="background:#f0eff1;color:#696969">Select Delivery</button>
-                    </div>
-                </div>
+                <input type="text" class="form-control" placeholder="" id="DLN_Return" readonly>
+                <button type="button" class="btn btn-primary" id="SelectDelivery">
+                    <i>Select Delivery</i>
+                </button>
             </div>
         </div>
-
     </div>
 </div>
 <div id="List_DLN">

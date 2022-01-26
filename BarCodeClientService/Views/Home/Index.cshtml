@@ -61,15 +61,16 @@
         type: "GET",
         //data: { ItemCode: Items },
         dataType: "JSON",
-        beforeSend: function () {
+            beforeSend: function () {
+          
                     //$('#Modalloder').modal('show');
         },
         success: function (data) {
             console.log(data);
-            if (data.errorCode == 0) {
+            if (data.errorCode == 0) {                
                 alert("I can get Data from Restful Service");
             } else {
-                alert("Oppp Maybe Internal Error Look Like this:" + data.errorMessage);
+                alert("Oppp Maybe Internal Error Look Like this:" + data.errorMessage);                
             }
         }
     });

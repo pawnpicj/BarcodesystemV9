@@ -11,7 +11,14 @@
 <script src="~/css/DataTable/jquery-3.3.1.js"></script>
 <script src="~/css/DataTable/jquery.dataTables.min.js"></script>
 <script src="~/css/DataTable/dataTables.rowReorder.min.js"></script>
+
 @*<script src="~/css/DataTable/dataTables.responsive.min.js"></script>*@
+
+@* URL
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" />
+*@
 
 <script type="text/javascript">
     /*DocDate*/
@@ -342,6 +349,10 @@
     </div>
 </div>
 
+<div class="table-responsive">
+    
+    <table id="myTable" class="table table-striped table-bordered table-condensed dt-responsive nowrap text-xsmall" style="width: 100%;"></table>
+
 </div>
 
 @*Create Models*@
@@ -469,7 +480,7 @@
     </div>
 </div>
 
-@*3. Search SaleEmployee*@
+@*4. Search SaleEmployee*@
 <div class="modal fade" id="ModalSaleEmployee">
     <div class="modal-dialog modal-xl">
         <div class="modal-content" style="background:#f0eff1;color:#696969;">
@@ -480,7 +491,7 @@
                 <div class="table-responsive">
                     <div class="row">
                         <div class="col-sm-12">
-                            <table id="TbCusCode" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                            <table id="TbSaleEmployee" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
                                 <thead>
                                     <tr>
                                         <th>SlpCode</th>
@@ -493,7 +504,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-info" data-dismiss="modal" id="ChooseCus" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseSaleEmployee" style="background:#f0eff1;color:#696969;">Choose</button>
                 <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
             </div>
         </div>
@@ -502,24 +513,103 @@
 
 <script src="~/js/Array.js"></script>
 <script type="text/javascript">
-    function test1() {
-        $.ajax({
-        url: '@Url.Action("GetAPITesting", "Home")',
-        type: "GET",
-        //data: { ItemCode: Items },
-        dataType: "JSON",
-        beforeSend: function () {
-                    //$('#Modalloder').modal('show');
+
+    //+++++ GetContactPerson +++++
+    var table = $('#TbCusCode').DataTable({
+        "ajax": {
+            "url": '@Url.Action("GetContactPerson", "Home")',
+            "type": "GET",
+            "dataType": "JSON",
+            "dataSrc": 'data'
         },
-        success: function (data) {
-            console.log(data);
-            if (data.errorCode == 0) {
-                alert("I can get Data from Restful Service");
-            } else {
-                alert("Oppp Maybe Internal Error Look Like this:" + data.errorMessage);
+        "columns": [
+            { "data": "cardCode" },
+            { "data": "name" },
+        ],
+        "order": [[1, 'asc']],
+        "select": true
+        });
+
+    $('#TbCusCode tbody').on('click', 'tr', function () {
+
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+        }
+        else {
+            table.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+
+            var cc = table.rows({ selected: true }).count();
+            const rowCardCode = [];
+            const rowCardName = [];
+            for (let i = 0; i < cc; i++) {
+                rowCardCode[i] = table.rows({ selected: true }).data()[i]['cardCode'];
+                rowCardName[i] = table.rows({ selected: true }).data()[i]['name'];
             }
+
+            var tr = $(this).closest("tr");
+            var rowindex = tr.index();
+
+            //alert(rowCardCode[rowindex]);
+            $('#ChooseCus').click(function () {
+                var CardCode = document.getElementById("CardCode");
+                var CardName = document.getElementById("CardName");
+                CardCode.value = rowCardCode[rowindex];
+                CardName.value = rowCardName[rowindex];
+            });
+
+        }
+
+
+
+
+    });
+
+    //+++++ GetSaleEmployee +++++
+    var table2 = $('#TbSaleEmployee').DataTable({
+        "ajax": {
+            "url": '@Url.Action("GetSaleEmployee", "Home")',
+            "type": "GET",
+            "dataType": "JSON",
+            "dataSrc": 'data'
+        },
+        "columns": [
+
+            { "data": "slpCode" },
+            { "data": "slpName" },
+        ]
+    });
+
+    $('#TbSaleEmployee tbody').on('click', 'tr', function () {
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+        }
+        else {
+            table2.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+
+            var cc2 = table2.rows({ selected: true }).count();
+            const rowslpCode = [];
+            const rowslpName = [];
+            for (let i = 0; i < cc2; i++) {
+                rowslpCode[i] = table2.rows({ selected: true }).data()[i]['slpCode'];
+                rowslpName[i] = table2.rows({ selected: true }).data()[i]['slpName'];
+            }
+
+            var tr = $(this).closest("tr");
+            var rowindex2 = tr.index();
+
+            //alert(rowCardCode[rowindex]);
+            $('#ChooseSaleEmployee').click(function () {
+                var txtSlpCode = document.getElementById("SlpCode");
+                //var CardName = document.getElementById("CardName");
+                txtSlpCode.value = rowslpCode[rowindex2];
+                //CardName.value = rowCardName[rowindex];
+            });
         }
     });
-    }
+
+    //
+
 </script>
 

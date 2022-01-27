@@ -30,7 +30,7 @@ namespace BarCodeLibrary.APICall
             get
             {
                 HttpClient client = new HttpClient();
-                client.BaseAddress = new Uri("https://localhost:5001/");
+                client.BaseAddress = new Uri("http://localhost:5001/");
                 client.Timeout = new TimeSpan(0, 0, 500);
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

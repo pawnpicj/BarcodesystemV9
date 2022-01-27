@@ -45,7 +45,19 @@ namespace BarCodeClientService.Controllers
 
         public IActionResult GetAPITesting()
         {
-            var a = API.Read<List<ResponseOPDNGetGoodReceipt>>("GetGoodReceiptPO");
+            var a = API.Read<ResponseOPDNGetGoodReceipt>("api/GoodsReturn/GetGoodsReceiptPO");
+            return Ok(a);
+        }
+
+        public IActionResult GetContactPerson()
+        {
+            var a = API.Read<ResponseOCPRGetContactPerson>("api/ContactPerson");
+            return Ok(a);
+        }
+
+        public IActionResult GetSaleEmployee()
+        {
+            var a = API.Read<ResponseOSLPGetSalesEmployee>("api/SaleEmployee");
             return Ok(a);
         }
 

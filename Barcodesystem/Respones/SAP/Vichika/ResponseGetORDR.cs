@@ -19,7 +19,7 @@ namespace BarCodeLibrary.Respones.SAP
         public string CardCode { get; set; }
         public int CntctCode { get; set; }
         public string NumAtCard { get; set; }
-        public int DocNum { get; set; }
+        public string DocNum { get; set; }
         public string DocStatus { get; set; }
         public DateTime DocDate { get; set; }
         public DateTime DocDueDate { get; set; }

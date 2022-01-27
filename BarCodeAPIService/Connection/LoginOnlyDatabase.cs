@@ -57,7 +57,7 @@ namespace BarCodeAPIService.Models
             try
             {
 
-                connectionstr = "Driver={HDBODBC};UID=" + ConnectionString.DbUserName + ";PWD=" + ConnectionString.DbPassword + ";SERVERNODE=" + ConnectionString.Server + ";[DATABASE=" + ConnectionString.CompanyDB + "];";
+                connectionstr = "Driver={HDBODBC32};UID=" + ConnectionString.DbUserName + ";PWD=" + ConnectionString.DbPassword + ";SERVERNODE=" + ConnectionString.Server + ";[DATABASE=" + ConnectionString.CompanyDB + "];";
                 
                 CN = new OdbcConnection(connectionstr);
 

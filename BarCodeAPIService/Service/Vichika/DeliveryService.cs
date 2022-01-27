@@ -1,8 +1,10 @@
 ﻿using BarCodeAPIService.Connection;
+using BarCodeAPIService.Models;
 using BarCodeLibrary.Request.SAP;
 using BarCodeLibrary.Respones.SAP;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,34 +17,35 @@ namespace BarCodeAPIService.Service
 
         public Task<ResponseDelivery> PostDelivery(SendDelivery sendDelivery)
         {
+            
             try
             {
-                SAPbobsCOM.Documents Delivery;
+                SAPbobsCOM.Documents oDelivery;
                 SAPbobsCOM.Company oCompany;
                 int Retval = 0;
                 Login login = new();
                 if (login.LErrCode == 0)
                 {
                     oCompany = login.Company;
-                    Delivery = (SAPbobsCOM.Documents)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oDeliveryNotes);
-                    Delivery.CardCode = sendDelivery.CardCode;
-                    Delivery.NumAtCard = sendDelivery.NumAtCard;
-                    Delivery.DocDate = sendDelivery.DocDate;
-                    Delivery.ContactPersonCode = sendDelivery.ContactPersion;
-                   // Delivery.DocType = sendDelivery.DocType;
+                    oDelivery = (SAPbobsCOM.Documents)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oDeliveryNotes);
+                    oDelivery.CardCode = sendDelivery.CardCode;
+                    oDelivery.NumAtCard = sendDelivery.NumAtCard;
+                    oDelivery.DocDate = sendDelivery.DocDate;
+                    oDelivery.ContactPersonCode = sendDelivery.ContactPersion;
+                    //oDelivery.DocType = sendDelivery.DocType;
 
                     foreach (SendDeliveryLine l in sendDelivery.Lines)
                     {
-                        Delivery.Lines.ItemCode = l.ItemCode;
-                        Delivery.Lines.Quantity = l.Quantity;
-                        Delivery.Lines.UnitPrice = l.UnitPrice;
-                        Delivery.Lines.DiscountPercent = l.Discount;
-                        Delivery.Lines.TaxCode = l.TaxCode;
-                        Delivery.Lines.WarehouseCode = l.WarehouseCode;
-                        Delivery.Lines.NCMCode = l.UomCode;
-                        Delivery.Lines.Add();
+                        oDelivery.Lines.ItemCode = l.ItemCode;
+                        oDelivery.Lines.Quantity = l.Quantity;
+                        oDelivery.Lines.UnitPrice = l.UnitPrice;
+                        oDelivery.Lines.DiscountPercent = l.Discount;
+                        oDelivery.Lines.TaxCode = l.TaxCode;
+                        oDelivery.Lines.WarehouseCode = l.WarehouseCode;
+                        //oDelivery.Lines.NCMCode = l.UomCode;                        
+                        oDelivery.Lines.Add();
                     }
-                    Retval = Delivery.Add();
+                    Retval = oDelivery.Add();
                     if (Retval != 0)
                     {
                         oCompany.GetLastError(out ErrCode, out ErrMsg);
@@ -86,66 +89,58 @@ namespace BarCodeAPIService.Service
         public Task<ResponseGetORDR> responseGetORDR()
         {
             var oRDRs = new List<ORDR>();
-            var rDR1s = new List<RDR1>();
-            SAPbobsCOM.Company oCompany;
+            var rDR1s = new List<RDR1>();            
+            DataTable dt = new DataTable();
+            DataTable dtline = new DataTable();
             try
             {
-                Login login = new();
-                if (login.LErrCode == 0)
-                {
-                    oCompany = login.Company;
-                    SAPbobsCOM.Recordset? oRS = null;
-                    SAPbobsCOM.Recordset? oRSLine = null;
-                    string sqlStr = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_SOUNTITYA('ORDR','','','','','')"; ;
-                    oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-                    oRSLine = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-                    oRS.DoQuery(sqlStr);
-                    while (!oRS.EoF)
+                LoginOnlyDatabase login = new LoginOnlyDatabase();
+                if (login.lErrCode == 0)
+                {                   
+                    string query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_SOUNTITYA('ORDR','','','','','')"; ;
+                    login.AD = new System.Data.Odbc.OdbcDataAdapter(query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach(DataRow row in dt.Rows)
                     {
-                        //oRSLine.DoQuery("EXEC USP_Get_Transcation_Data 'PDN1','"+ oRS.Fields.Item(0).Value+"','','','',''");
-                        oRSLine.DoQuery("CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_SOUNTITYA('RDR1','" + oRS.Fields.Item(0).Value + "','','','','')");
-                        rDR1s = new List<RDR1>();
-                        while (!oRSLine.EoF)
+                        dtline = new DataTable();
+                        string query1 = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_SOUNTITYA('RDR1','" + row["DocEntry"].ToString() + "','','','','')";
+                        login.AD = new System.Data.Odbc.OdbcDataAdapter(query1, login.CN);
+                        login.AD.Fill(dtline);
+                        rDR1s = new List<RDR1>();                        
+                        foreach (DataRow rowline in dtline.Rows)
                         {
                             rDR1s.Add(new RDR1
                             {
-                                ItemCode = oRSLine.Fields.Item(0).Value.ToString(),
-                                Description = oRSLine.Fields.Item(1).Value.ToString(),
-                                Quatity = Convert.ToInt32(oRSLine.Fields.Item(2).Value),
-                                Price = Convert.ToDouble(oRSLine.Fields.Item(3).Value),
-                                DiscPrcnt = Convert.ToDouble(oRSLine.Fields.Item(4).Value),
-                                VatGroup = oRSLine.Fields.Item(5).Value.ToString(),
-                                LineTotal = Convert.ToDouble(oRSLine.Fields.Item(6).Value),
-                                WhsCode = oRSLine.Fields.Item(6).Value.ToString(),
-                            });
-                            oRSLine.MoveNext();
+                                
+                                Description =rowline["Dscription"].ToString(),
+                                DiscPrcnt = Convert.ToDouble(rowline["DiscPrcnt"].ToString()),
+                                ItemCode = rowline["ItemCode"].ToString(),
+                                Quatity = Convert.ToDouble(rowline["Quantity"].ToString()),
+                                Price = Convert.ToDouble(rowline["Price"].ToString()),                                
+                                VatGroup = rowline["VatGroup"].ToString(),
+                                LineTotal = Convert.ToDouble(rowline["LineTotal"].ToString()),
+                                WhsCode = rowline["WhsCode"].ToString()
+                            });                           
                         }
                         oRDRs.Add(new ORDR
                         {
-                            CardCode = oRS.Fields.Item(1).Value.ToString(),
-                            CardName = oRS.Fields.Item(2).Value.ToString(),
-                            CntctCode = Convert.ToInt32(oRS.Fields.Item(3).Value.ToString()),
-                            NumAtCard = oRS.Fields.Item(4).Value.ToString(),
-                            DocStatus = oRS.Fields.Item(5).Value.ToString(),
-                            Line = rDR1s.ToList()
-                        });
-                        oRS.MoveNext();
+                            CardName = row["CardName"].ToString(),
+                            CardCode = row["CardCode"].ToString(),                         
+                            CntctCode = Convert.ToInt32(row["CntctCode"].ToString()),
+                            NumAtCard = row["NumAtCard"].ToString(),
+                            DocNum = row["DocNum"].ToString(),
+                            DocStatus = row["DocStatus"].ToString(),
+                            Line = rDR1s.ToList(),
+                        });                       
                     }
-                    return Task.FromResult(new ResponseGetORDR
-                    {
-                        ErrorCode = 0,
-                        ErrorMessage = "",
-                        Data = oRDRs.ToList()
-                    });
+                    ErrCode = login.lErrCode;
+                    ErrMsg = login.sErrMsg;                   
                 }
                 else
                 {
-                    return Task.FromResult(new ResponseGetORDR
-                    {
-                        ErrorCode = login.LErrCode,
-                        ErrorMessage = login.SErrMsg,
-                        Data = null
-                    });
+                    ErrCode = login.lErrCode;
+                    ErrMsg = login.sErrMsg;
+
                 }
             }
             catch (Exception ex)
@@ -157,6 +152,12 @@ namespace BarCodeAPIService.Service
                     Data = null
                 });
             }
+            return Task.FromResult(new ResponseGetORDR
+            {
+                Data = oRDRs,
+                ErrorCode = 0,
+                ErrorMessage = ""
+            });
         }
     }
 }

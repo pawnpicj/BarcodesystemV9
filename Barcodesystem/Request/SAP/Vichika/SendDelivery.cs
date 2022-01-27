@@ -12,7 +12,7 @@ namespace BarCodeLibrary.Request.SAP
         public string NumAtCard { get; set; }
         public DateTime DocDate { get; set; }
         public int ContactPersion { get; set; }
-        public string DocType { get; set; }
+        //public string DocType { get; set; }
         public List<SendDeliveryLine> Lines { get; set; }
        
     }
@@ -24,6 +24,6 @@ namespace BarCodeLibrary.Request.SAP
         public double Discount { get; set; }
         public string TaxCode { get; set; }
         public string WarehouseCode { get; set; }
-        public int UomCode { get; set; }
+        public string UomCode { get; set; }
     }
 }

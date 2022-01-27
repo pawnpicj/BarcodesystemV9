@@ -61,6 +61,18 @@ namespace BarCodeClientService.Controllers
             return Ok(a);
         }
 
+        public IActionResult GetWarehouse()
+        {
+            var a = API.Read<ResponseOWHSGetWarehouse>("api/Warehouse/GetWarehouse");
+            return Ok(a);
+        }
+
+        public IActionResult GetBinLocation()
+        {
+            var a = API.Read<ResponseOBINGetBinCode>("api/BinCode");
+            return Ok(a);
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

@@ -73,6 +73,12 @@ namespace BarCodeClientService.Controllers
             return Ok(a);
         }
 
+        public IActionResult hGetOWTQ()
+        {
+            var a = API.Read<ResponseGetOWTQ>("api/InventoryTransferRequest/GetIFR");
+            return Ok(a);
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

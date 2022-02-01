@@ -60,6 +60,7 @@ namespace BarCodeAPIService
 
             services.AddScoped<IInventoryTransferService, InventoryTransferService>();
             services.AddScoped<IInventoryCountingService, InventoryCountingService>();
+            services.AddScoped<IInventoryTransferRequestService, InventoryTransferRequestService>();
             services.AddScoped<IDeliveryService, DeliveryService>();
             #endregion
             #region ConfigureJWTToken

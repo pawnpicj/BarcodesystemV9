@@ -39,10 +39,10 @@ namespace BarCodeLibrary.Request.SAP
         public string ToWhsCode { get; set; }
 
         public string BatchNo { get; set; }
-        public string SeriesNo { get; set; }
+        public string SerialNo { get; set; }
 
         public List<SendInventoryTransferBatch> Batch { get; set; }
-        public List<SendInventoryTransferSeries> Series { get; set; }
+        public List<SendInventoryTransferSerial> Serial { get; set; }
         public List<InventoryTransferBinLocation> FromBinLocations { get; set; }
         public List<InventoryTransferBinLocation> ToBinLocations { get; set; }
     }
@@ -53,9 +53,9 @@ namespace BarCodeLibrary.Request.SAP
         public int Quantity { get; set; }
     }
 
-    public class SendInventoryTransferSeries
+    public class SendInventoryTransferSerial
     {
-        public string SeriesCode { get; set; }
+        public string SerialCode { get; set; }
         public int Quantity { get; set; }
     }
 

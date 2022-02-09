@@ -14,9 +14,9 @@
 <script src="~/css/DataTable/moment.min.js"></script>
 <script src="~/css/DataTable/datetime-moment.js"></script>
 
-@*<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
-<script src="https://editor.datatables.net/extensions/Editor/js/dataTables.editor.min.js"></script>*@
+<script src="https://editor.datatables.net/extensions/Editor/js/dataTables.editor.min.js"></script>
 
 <script type="text/javascript">
     /*DocDate*/
@@ -299,13 +299,13 @@
                                         Scan Barcode :
                                     </label>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" value="10132041-1" id="txtScanBarCode" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
+                                        <input type="text" class="form-control" value="" id="txtScanBarCode" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
                                     </div>
 
                                     <label>
                                         Scan Batch/Serial :
                                     </label><div class="input-group">
-                                        <input type="text" class="form-control" value="999" id="txtScanBatchSerial" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
+                                        <input type="text" class="form-control" value="" id="txtScanBatchSerial" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
                                     </div>
                                     <button class="input-group-text" id="addRow" style="display:none;"><i class="fa fa-plus"></i></button>
                                 </div>
@@ -326,13 +326,13 @@
                                         <th>ItemCode</th>
                                         <th>ItemName</th>
                                         <th>Quantity</th>
-                                        <th>Barcode</th>
                                     </tr>
                                 </thead>
                             </table>
 
                         </div>
                     </div>
+                    <hr>
                     <div class="row" style="padding: 15px;margin-top:-20px;margin-bottom:-20px;">
                         <div class="nav navbar-nav ml-auto">
                             <div class="btn-group">
@@ -540,7 +540,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-info" data-dismiss="modal" id="ChooseBinLocation" style="background:#f0eff1;color:#696969;">Choose</button>
+                    <button class="btn btn-info" data-dismiss="modal" id="ChooseToBinLocation" style="background:#f0eff1;color:#696969;">Choose</button>
                     <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
                 </div>
             </div>
@@ -581,7 +581,28 @@
     <script src="~/js/Array.js"></script>
     <script type="text/javascript">
 
-     //+++++ GetInventoryTransferRequestLine +++++
+     function test1() {
+        //$.ajax({
+            @*url: '@Url.Action("GetStcok_BatchSerial", "Inventory")',
+            data: { barcode: $('#txtScanBarCode').val(), batchserial: $('#txtScanBatchSerial').val()},
+            type: "GET",
+            dataType: "JSON",
+            beforeSend: function () {
+                },
+            success: function (data) {
+                    console.log(data);
+                    if (data.errorCode == 0) {
+                        alert("I can get Data from Restful Service");
+                    } else {
+                        alert("Oppp Maybe Internal Error Look Like this:" + data.errorMessage);
+                    }
+                }
+            });*@
+         alert("Coming Soon ...");
+         //data: { barcode: ""},
+    }
+
+    //+++++ GetInventoryTransferRequestLine +++++
     var table0 = $('#TbInf').DataTable({
         "ajax": {
             "url": '@Url.Action("GetOWTQ", "Inventory")',
@@ -642,6 +663,408 @@
             txtDocEntry.value = celldocEntry;
         });
     });
+
+    //Scan Bar Code
+    var input = document.getElementById("txtScanBarCode");
+    var input2 = document.getElementById("txtScanBatchSerial");
+    input.addEventListener("keyup", function (event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            document.getElementById("txtScanBatchSerial").focus();
+            input2.addEventListener("keyup", function (event) {
+                if (event.keyCode === 13) {
+                    event.preventDefault();
+                    document.getElementById("addRow").click();
+                }
+            });
+        }
+    });
+
+    //Add Data In Row
+    var t = $('#tbItemList').DataTable({
+         "columns": [
+            { "width": "10%" },
+            { "width": "20%" },
+            { "width": "5%" }
+        ],
+        "select": true,
+        "paging": false,
+        "ordering": false,
+        "info": false,
+        "searching": false
+    });
+
+    $('#addRow').on('click', function () {
+
+        if ($('#txtScanBatchSerial').val()!='') {
+
+            $.ajax({
+                url: '@Url.Action("GetStcok_BatchSerial", "Inventory")',
+                data: { barcode: $('#txtScanBarCode').val(), batchserial: $('#txtScanBatchSerial').val()},
+                type: "GET",
+                dataType: "JSON",
+                "dataSrc": 'data',
+                success: function (data) {
+                    var jqueryXml = $(data);
+                    $('#getItemCode').val(jqueryXml[0].data[0].itemCode);
+                    $('#getOnHand').val(jqueryXml[0].data[0].onHand);
+
+                    if ($('#getItemCode').val()!='') {
+                        t.row.add([$('#getItemCode').val(), $('#txtItemName').val(), $('#txtQuantity').val()]).draw(false);
+                    }
+                    
+                }
+            });
+            
+
+        }
+
+    });
+
+    $('#addRow').click();
+
+    function xComments() {
+    //+++++ GetContactPerson +++++
+    @*var table = $('#TbCusCode').DataTable({
+        "ajax": {
+            "url": '@Url.Action("GetContactPerson", "Home")',
+            "type": "GET",
+            "dataType": "JSON",
+            "dataSrc": 'data'
+        },
+        "columns": [
+            { "data": "cardCode" },
+            { "data": "name" },
+        ],
+        "order": [[1, 'asc']],
+        "select": true,
+        "paging": false,
+        "ordering": false,
+        "info": false
+        });
+
+    $('#TbCusCode tbody').on('click', 'tr', function () {
+
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+        }
+        else {
+            table.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+
+            var cc = table.rows({ selected: true }).count();
+            const rowCardCode = [];
+            const rowCardName = [];
+            for (let i = 0; i < cc; i++) {
+                rowCardCode[i] = table.rows({ selected: true }).data()[i]['cardCode'];
+                rowCardName[i] = table.rows({ selected: true }).data()[i]['name'];
+            }
+
+            var tr = $(this).closest("tr");
+            var rowindex = tr.index();
+
+            //alert(rowCardCode[rowindex]);
+            $('#ChooseCus').click(function () {
+                var CardCode = document.getElementById("CardCode");
+                var CardName = document.getElementById("CardName");
+                CardCode.value = rowCardCode[rowindex];
+                CardName.value = rowCardName[rowindex];
+            });
+
+        }
+    });*@
+
+    //+++++ GetSaleEmployee +++++
+    @*var table2 = $('#TbSaleEmployee').DataTable({
+        "ajax": {
+            "url": '@Url.Action("GetSaleEmployee", "Home")',
+            "type": "GET",
+            "dataType": "JSON",
+            "dataSrc": 'data'
+        },
+        "columns": [
+
+            { "data": "slpCode" },
+            { "data": "slpName" },
+        ],
+        "paging": false,
+        "ordering": false,
+        "info": false
+    });
+
+    $('#TbSaleEmployee tbody').on('click', 'tr', function () {
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+        }
+        else {
+            table2.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+
+            var cc2 = table2.rows({ selected: true }).count();
+            const rowslpCode = [];
+            const rowslpName = [];
+            for (let i = 0; i < cc2; i++) {
+                rowslpCode[i] = table2.rows({ selected: true }).data()[i]['slpCode'];
+                rowslpName[i] = table2.rows({ selected: true }).data()[i]['slpName'];
+            }
+
+            var tr = $(this).closest("tr");
+            var rowindex2 = tr.index();
+
+            //alert(rowCardCode[rowindex]);
+            $('#ChooseSaleEmployee').click(function () {
+                var txtSlpCode = document.getElementById("SlpCode");
+                //var CardName = document.getElementById("CardName");
+                txtSlpCode.value = rowslpCode[rowindex2];
+                //CardName.value = rowCardName[rowindex];
+            });
+        }
+    });*@
+
+    //+++++ GetFromWarehouse +++++
+    @*var table3 = $('#TbWhs').DataTable({
+        "ajax": {
+            "url": '@Url.Action("GetWarehouse", "Home")',
+            "type": "GET",
+            "dataType": "JSON",
+            "dataSrc": 'data'
+        },
+        "columns": [
+            { "data": "whsCode" },
+            { "data": "whsName" },
+        ],
+        "paging": false,
+        "ordering": false,
+        "info": false
+    });
+
+    $('#TbWhs tbody').on('click', 'tr', function () {
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+        }
+        else {
+            table3.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+
+            var cc3 = table3.rows({ selected: true }).count();
+            const rowwhsCode = [];
+            const rowwhsName = [];
+            for (let i = 0; i < cc3; i++) {
+                rowwhsCode[i] = table3.rows({ selected: true }).data()[i]['whsCode'];
+                rowwhsName[i] = table3.rows({ selected: true }).data()[i]['whsName'];
+            }
+
+            var tr = $(this).closest("tr");
+            var rowindex3 = tr.index();
+
+            //alert(rowCardCode[rowindex]);
+            $('#TbWhs').click(function () {
+                var txtFromWhsCode = document.getElementById("FromWhsCode");
+                txtFromWhsCode.value = rowwhsCode[rowindex3];
+            });
+        }
+    });*@
+
+    //+++++ GetFromBinLocation +++++
+    @*var table4 = $('#TbBinLocation').DataTable({
+        "ajax": {
+            "url": '@Url.Action("GetBinLocation", "Home")',
+            "type": "GET",
+            "dataType": "JSON",
+            "dataSrc": 'data'
+        },
+        "columns": [
+            { "data": "binCode" },
+            { "data": "whsCode" },
+        ],
+        "paging": false,
+        "ordering": false,
+        "info": false
+    });
+
+    $('#TbBinLocation tbody').on('click', 'tr', function () {
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+        }
+        else {
+            table4.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+
+            var cc4 = table4.rows({ selected: true }).count();
+            const rowbinCode = [];
+            const rowwhsCode = [];
+            for (let i = 0; i < cc4; i++) {
+                rowbinCode[i] = table4.rows({ selected: true }).data()[i]['binCode'];
+                rowwhsCode[i] = table4.rows({ selected: true }).data()[i]['whsCode'];
+            }
+
+            var tr = $(this).closest("tr");
+            var rowindex4 = tr.index();
+
+            //alert(rowCardCode[rowindex]);
+            $('#TbBinLocation').click(function () {
+                var txtFromBinCode = document.getElementById("FromBinCode");
+                txtFromBinCode.value = rowbinCode[rowindex4];
+            });
+        }
+    });*@
+    }
+    //+++++ GetToWarehouse +++++
+    var tableToWhs = $('#TbToWhs').DataTable({
+        "ajax": {
+            "url": '@Url.Action("GetWarehouse", "Home")',
+            "type": "GET",
+            "dataType": "JSON",
+            "dataSrc": 'data'
+        },
+        "columns": [
+            { "data": "whsCode" },
+            { "data": "whsName" },
+        ],
+        "paging": false,
+        "ordering": false,
+        "info": false
+    });
+
+    $('#TbToWhs tbody').on('click', 'tr', function () {
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+        }
+        else {
+            tableToWhs.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+
+            var cc4 = tableToWhs.rows({ selected: true }).count();
+            const rowwhsCode = [];
+            const rowwhsName = [];
+            for (let i = 0; i < cc4; i++) {
+                rowwhsCode[i] = tableToWhs.rows({ selected: true }).data()[i]['whsCode'];
+                rowwhsName[i] = tableToWhs.rows({ selected: true }).data()[i]['whsName'];
+            }
+
+            var tr = $(this).closest("tr");
+            var rowindex4 = tr.index();
+
+            //alert(rowCardCode[rowindex]);
+            $('#TbToWhs').click(function () {
+                var txtToWhsCode = document.getElementById("ToWhsCode");
+                txtToWhsCode.value = rowwhsCode[rowindex4];
+            });
+        }
+    });
+
+    //+++++ GetToBinLocation +++++
+    var tableToBin = $('#TbToBinLocation').DataTable({
+        "ajax": {
+            "url": '@Url.Action("GetBinLocation", "Home")',
+            "type": "GET",
+            "dataType": "JSON",
+            "dataSrc": 'data'
+        },
+        "columns": [
+            { "data": "binCode" },
+            { "data": "whsCode" },
+        ],
+        "select": true,
+        "paging": false,
+        "ordering": false,
+        "info": false
+    });
+
+        tableToBin.on('select', function () {
+            var cellbinCode = tableToBin.rows({ selected: true }).data()[0]['binCode'];
+            $('#ChooseToBinLocation').click(function () {
+                var txtToBinCode = document.getElementById("ToBinCode");
+                txtToBinCode.value = cellbinCode;
+            });
+        });
+
+    function ApplyDataTable(id) {
+
+        $.noConflict();
+        $.ajax({
+            url: '@Url.Action("GetWTQLine", "Inventory")',
+            data: { docentry: id },
+            type: "GET",
+            dataType: "JSON",
+            "dataSrc": 'data',
+            success: function (data) {
+                var tline = $('#TbDataLine').DataTable({
+                    "bDestroy": true,
+                    "aaData": data.data,
+                    "autoWidth": true,
+                    "responsive": true,
+                    "lengthChange": true,
+                    "ordering": true,
+                    "columns": [
+                        { "data": "itemCode", "autoWidth": true },
+                        { "data": "dscription", "autoWidth": true },
+                        { "data": "quantity", "autoWidth": true },
+                        { "data": "fromWhsCod", "autoWidth": true },
+                        { "data": "whsCode", "autoWidth": true },
+                        { "data": "uomCode", "autoWidth": true },
+                        { "data": "u_unitprice", "autoWidth": true }
+                    ],
+                    "language": { "emptyTable": "No Events Found Related To This User" },
+                    "order": [[0, 'desc']],
+                    "select": true,
+                    "paging": false,
+                    "ordering": false,
+                    "info": false,
+                    "searching": false
+                });
+                alert("Download Data Complete");
+
+                tline.on('select', function () {
+                    var celldscription = tline.rows({ selected: true }).data()[0]['dscription'];
+                    var cellquantity = tline.rows({ selected: true }).data()[0]['quantity'];
+
+                    var txtItemName = document.getElementById("txtItemName");
+                    var txtQuantity = document.getElementById("txtQuantity");
+                    txtItemName.value = celldscription;
+                    txtQuantity.value = cellquantity;
+
+                    document.getElementById("txtScanBarCode").focus();
+                    document.getElementById("txtScanBarCode").value = "";
+                    document.getElementById("txtScanBatchSerial").value = "";
+                });
+
+            }
+        });
+
+        }
+
+        function fncLoadData() {
+        var docentry = $("#txtDocEntry").val();
+            if (docentry != '') {
+                ApplyDataTable(docentry);
+            } else {
+                alert("Please Select DocNum");
+            }
+        }
+
+        $('#btnClear').on('click', function () {
+            location.reload();
+        });
+
+
+        //var tableLine = $('#TbDataLine').on('select', function () {
+
+        //    var celldscription = tableLine.rows({ selected: true }).data()[0]['dscription'];
+        //    var cellquantity = tableLine.rows({ selected: true }).data()[0]['quantity'];
+        //    //console.log(rowData);
+
+        //    var txtItemName = document.getElementById("txtItemName");
+        //    var txtQuantity = document.getElementById("txtQuantity");
+
+        //    txtItemName.value = celldscription;
+        //    txtQuantity.value = cellquantity;
+
+        //    document.getElementById("txtScanBarCode").focus();
+        //});
+
+
+
 
     </script>
 

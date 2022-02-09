@@ -50,10 +50,10 @@ namespace BarCodeAPIService.Service
                         }
                         else
                         {
-                            if (l.SeriesNo != "")
+                            if (l.SerialNo != "")
                             {
                                 oStockTransfer.Lines.SerialNumbers.SetCurrentLine(0);
-                                oStockTransfer.Lines.SerialNumbers.ManufacturerSerialNumber = l.SeriesNo;
+                                oStockTransfer.Lines.SerialNumbers.ManufacturerSerialNumber = l.SerialNo;
                                 oStockTransfer.Lines.SerialNumbers.Quantity = l.Quantity;
                                 oStockTransfer.Lines.SerialNumbers.Add();
                             }

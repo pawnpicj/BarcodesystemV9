@@ -18,6 +18,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Serilog;
 using BarCodeAPIService.Service.Tengkimleang;
+using BarCodeAPIService.Service.Pannreaksmey;
 
 namespace BarCodeAPIService
 {
@@ -50,11 +51,12 @@ namespace BarCodeAPIService
             services.AddScoped<ICostCenterService, CostCenterService>();
             services.AddScoped<IBatchNumberService, BatchNumberService>();
             services.AddScoped<ISerialNumberService, SerialNumberService>();
+            services.AddScoped<ISeriesIMService, SeriesIMService>();
             services.AddScoped<IGLAccountService, GLAccountService>();
             services.AddScoped<IContactPersonService, ContactPersonService>();
             services.AddScoped<IBPAddressService, BPAddressService>();
             services.AddScoped<ISaleEmployeeService, SaleEmployeeService>();
-            //services.AddScoped<IDocumentSeriesService, DocumentSeriesService>();
+            services.AddScoped<IDocumentSeriesService, DocumentSeriesService>();
             services.AddScoped<IPriceListService, PriceListService>();
             services.AddScoped<IUserService, UserService>();
 

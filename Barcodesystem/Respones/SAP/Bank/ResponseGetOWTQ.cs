@@ -19,6 +19,10 @@ namespace BarCodeLibrary.Respones.SAP
         public string DocDate { get; set; }
         public string CardCode { get; set; }
         public string CardName { get; set; }
+        public string SlpCode { get; set; }
+        public string SlpName { get; set; }
+        public string FromWhs { get; set; }
+        public string ToWhs { get; set; }
         public List<WTQ1> Line { get; set; }
     }
     public class WTQ1

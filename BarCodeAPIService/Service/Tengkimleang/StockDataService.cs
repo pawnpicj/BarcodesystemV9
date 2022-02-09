@@ -9,7 +9,7 @@ namespace BarCodeAPIService.Service.Tengkimleang
 {
     public class StockDataService : IStockDataService
     {
-        public Task<ResponseGetStockBatchSerial> responseGetStockBatchSerial(string BatchCode, string Serail, string BarCode)
+        public Task<ResponseGetStockBatchSerial> responseGetStockBatchSerial(string BatchCode, string Serial, string BarCode)
         {
             var getStockBatchSerials = new List<GetStockBatchSerial>();
             SAPbobsCOM.Company oCompany;
@@ -21,7 +21,7 @@ namespace BarCodeAPIService.Service.Tengkimleang
                     oCompany = login.Company;
                     SAPbobsCOM.Recordset? oRS = null;
                     SAPbobsCOM.Recordset? oRSLine = null;
-                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_TENGKIMLEANG('GetStcok_Batch_Serial','{BarCode}','{Serail}','{BatchCode}','','')"; ;
+                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_TENGKIMLEANG('GetStcok_Batch_Serial','{BarCode}','{Serial}','{BatchCode}','','')"; ;
                     oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRSLine = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRS.DoQuery(sqlStr);
@@ -31,7 +31,7 @@ namespace BarCodeAPIService.Service.Tengkimleang
                         {
                             ItemCode = oRS.Fields.Item(0).Value.ToString(),
                             OnHand = Convert.ToInt32(oRS.Fields.Item(1).Value.ToString()),
-                            SerailNumber = oRS.Fields.Item(2).Value.ToString(),
+                            SerialNumber = oRS.Fields.Item(2).Value.ToString(),
                             BatchNumber = oRS.Fields.Item(3).Value.ToString()
                         });
                         oRS.MoveNext();
@@ -85,7 +85,7 @@ namespace BarCodeAPIService.Service.Tengkimleang
                         {
                             ItemCode = oRS.Fields.Item(0).Value.ToString(),
                             OnHand = Convert.ToInt32(oRS.Fields.Item(1).Value.ToString()),
-                            SerailNumber = oRS.Fields.Item(2).Value.ToString(),
+                            SerialNumber = oRS.Fields.Item(2).Value.ToString(),
                             BatchNumber = oRS.Fields.Item(3).Value.ToString()
                         });
                         oRS.MoveNext();
@@ -139,7 +139,7 @@ namespace BarCodeAPIService.Service.Tengkimleang
                         {
                             ItemCode = oRS.Fields.Item(0).Value.ToString(),
                             OnHand = Convert.ToInt32(oRS.Fields.Item(1).Value.ToString()),
-                            SerailNumber = oRS.Fields.Item(2).Value.ToString(),
+                            SerialNumber = oRS.Fields.Item(2).Value.ToString(),
                             BatchNumber = oRS.Fields.Item(3).Value.ToString()
                         });
                         oRS.MoveNext();
@@ -171,7 +171,7 @@ namespace BarCodeAPIService.Service.Tengkimleang
                 });
             }
         }
-        public Task<ResponseGetStcokBatchSerialBinCode> responseGetStockBatchSerialBinCode(string BatchCode, string Serail, string BarCode, string Warehouse,string BinCode)
+        public Task<ResponseGetStcokBatchSerialBinCode> responseGetStockBatchSerialBinCode(string BatchCode, string Serial, string BarCode, string Warehouse,string BinCode)
         {
             var getStockBatchSerialBinCodes = new List<GetStockBatchSerialBinCode>();
             SAPbobsCOM.Company oCompany;
@@ -183,7 +183,7 @@ namespace BarCodeAPIService.Service.Tengkimleang
                     oCompany = login.Company;
                     SAPbobsCOM.Recordset? oRS = null;
                     SAPbobsCOM.Recordset? oRSLine = null;
-                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_TENGKIMLEANG('GetStcok_Batch_Serial','{BarCode}','{Serail}','{BatchCode}','{Warehouse}','')"; ;
+                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_TENGKIMLEANG('GetStcok_Batch_Serial','{BarCode}','{Serial}','{BatchCode}','{Warehouse}','')"; ;
                     oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRSLine = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRS.DoQuery(sqlStr);
@@ -193,7 +193,7 @@ namespace BarCodeAPIService.Service.Tengkimleang
                         {
                             ItemCode = oRS.Fields.Item(0).Value.ToString(),
                             OnHand = Convert.ToInt32(oRS.Fields.Item(1).Value.ToString()),
-                            SerailNumber = oRS.Fields.Item(2).Value.ToString(),
+                            SerialNumber = oRS.Fields.Item(2).Value.ToString(),
                             BatchNumber = oRS.Fields.Item(3).Value.ToString()
                         });
                         oRS.MoveNext();
@@ -247,7 +247,7 @@ namespace BarCodeAPIService.Service.Tengkimleang
                         {
                             ItemCode = oRS.Fields.Item(0).Value.ToString(),
                             OnHand = Convert.ToInt32(oRS.Fields.Item(1).Value.ToString()),
-                            SerailNumber = oRS.Fields.Item(2).Value.ToString(),
+                            SerialNumber = oRS.Fields.Item(2).Value.ToString(),
                             BatchNumber = oRS.Fields.Item(3).Value.ToString()
                         });
                         oRS.MoveNext();
@@ -279,7 +279,7 @@ namespace BarCodeAPIService.Service.Tengkimleang
                 });
             }
         }
-        public Task<ResponseGetStockBatchSerialWarehouse> responseGetStockBatchSerialWarehouse(string BatchCode, string Serail, string BarCode, string Warehouse)
+        public Task<ResponseGetStockBatchSerialWarehouse> responseGetStockBatchSerialWarehouse(string BatchCode, string Serial, string BarCode, string Warehouse)
         {
             var getStockBatchSerials = new List<GetStockBatchSerialWarehouse>();
             SAPbobsCOM.Company oCompany;
@@ -291,7 +291,7 @@ namespace BarCodeAPIService.Service.Tengkimleang
                     oCompany = login.Company;
                     SAPbobsCOM.Recordset? oRS = null;
                     SAPbobsCOM.Recordset? oRSLine = null;
-                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_TENGKIMLEANG('GetStcok_Batch_Serial','{BarCode}','{Serail}','{BatchCode}','{Warehouse}','')"; ;
+                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_TENGKIMLEANG('GetStcok_Batch_Serial','{BarCode}','{Serial}','{BatchCode}','{Warehouse}','')"; ;
                     oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRSLine = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRS.DoQuery(sqlStr);
@@ -301,7 +301,7 @@ namespace BarCodeAPIService.Service.Tengkimleang
                         {
                             ItemCode = oRS.Fields.Item(0).Value.ToString(),
                             OnHand = Convert.ToInt32(oRS.Fields.Item(1).Value.ToString()),
-                            SerailNumber = oRS.Fields.Item(2).Value.ToString(),
+                            SerialNumber = oRS.Fields.Item(2).Value.ToString(),
                             BatchNumber = oRS.Fields.Item(3).Value.ToString()
                         });
                         oRS.MoveNext();
@@ -355,7 +355,7 @@ namespace BarCodeAPIService.Service.Tengkimleang
                         {
                             ItemCode = oRS.Fields.Item(0).Value.ToString(),
                             OnHand = Convert.ToInt32(oRS.Fields.Item(1).Value.ToString()),
-                            SerailNumber = oRS.Fields.Item(2).Value.ToString(),
+                            SerialNumber = oRS.Fields.Item(2).Value.ToString(),
                             BatchNumber = oRS.Fields.Item(3).Value.ToString()
                         });
                         oRS.MoveNext();
@@ -409,7 +409,7 @@ namespace BarCodeAPIService.Service.Tengkimleang
                         {
                             ItemCode = oRS.Fields.Item(0).Value.ToString(),
                             OnHand = Convert.ToInt32(oRS.Fields.Item(1).Value.ToString()),
-                            SerailNumber = oRS.Fields.Item(2).Value.ToString(),
+                            SerialNumber = oRS.Fields.Item(2).Value.ToString(),
                             BatchNumber = oRS.Fields.Item(3).Value.ToString()
                         });
                         oRS.MoveNext();

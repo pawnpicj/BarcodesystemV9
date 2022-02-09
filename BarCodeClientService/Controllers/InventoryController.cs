@@ -2,6 +2,7 @@
 using BarCodeLibrary.APICall;
 using BarCodeLibrary.Request.SAP;
 using BarCodeLibrary.Respones.SAP;
+using BarCodeLibrary.Respones.SAP.Tengkimleang;
 using Barcodesystem.Contract.RouteApi;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -59,9 +60,19 @@ namespace BarCodeClientService.Controllers
             return Ok(a);
         }
 
-        public IActionResult GetWTQLine()
+        public IActionResult GetWTQLine(string docentry)
         {
-            var a = API.Read<ResponseGetWTQLine>("GetWTQLine/6126");
+            string xDocEntry = docentry;
+            var a = API.Read<ResponseGetWTQLine>("GetWTQLine/"+ xDocEntry);
+            return Ok(a);
+        }
+
+        public IActionResult GetStcok_BatchSerial(string barcode, string batchserial)
+        {
+            string xBatchSerial = batchserial;
+            string xScanBarcode = barcode;
+
+            var a = API.Read<ResponseGetStockBatchSerial>("GetStcokBatchSerial/" + xScanBarcode + "/" + xBatchSerial + "/" + xBatchSerial);
             return Ok(a);
         }
 

@@ -57,7 +57,11 @@ namespace BarCodeAPIService.Service
                             DocEntry = Convert.ToInt32(oRS.Fields.Item(1).Value.ToString()),
                             DocDate = oRS.Fields.Item(2).Value.ToString(),
                             CardCode = oRS.Fields.Item(3).Value.ToString(),
-                            CardName = oRS.Fields.Item(4).Value.ToString()
+                            CardName = oRS.Fields.Item(4).Value.ToString(),
+                            SlpCode = oRS.Fields.Item(5).Value.ToString(),
+                            SlpName = oRS.Fields.Item(6).Value.ToString(),
+                            FromWhs = oRS.Fields.Item(7).Value.ToString(),
+                            ToWhs = oRS.Fields.Item(8).Value.ToString()
                         });
                         oRS.MoveNext();
                         //DocDate = Convert.ToDateTime(oRS.Fields.Item(2).Value.ToString()),

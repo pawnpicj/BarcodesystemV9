@@ -16,7 +16,7 @@ namespace BarCodeLibrary.Respones.SAP.Tengkimleang
     {
         public string ItemCode { get; set; }
         public double OnHand { get; set; }
-        public string SerailNumber { get; set; }
+        public string SerialNumber { get; set; }
         public string BatchNumber { get; set; }
     }
 }

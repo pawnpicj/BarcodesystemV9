@@ -61,7 +61,8 @@ namespace BarCodeAPIService.Service
                             SlpCode = oRS.Fields.Item(5).Value.ToString(),
                             SlpName = oRS.Fields.Item(6).Value.ToString(),
                             FromWhs = oRS.Fields.Item(7).Value.ToString(),
-                            ToWhs = oRS.Fields.Item(8).Value.ToString()
+                            ToWhs = oRS.Fields.Item(8).Value.ToString(),
+                            SeriesName = oRS.Fields.Item(9).Value.ToString()
                         });
                         oRS.MoveNext();
                         //DocDate = Convert.ToDateTime(oRS.Fields.Item(2).Value.ToString()),

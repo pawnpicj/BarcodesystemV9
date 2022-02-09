@@ -23,6 +23,7 @@ namespace BarCodeLibrary.Respones.SAP
         public string SlpName { get; set; }
         public string FromWhs { get; set; }
         public string ToWhs { get; set; }
+        public string SeriesName { get; set; }
         public List<WTQ1> Line { get; set; }
     }
     public class WTQ1

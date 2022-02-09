@@ -137,11 +137,13 @@
                         </div>
                         Series :
                         <div class="input-group">
-                            <select id="ddl_Series" class="form-control" disabled>
-                                <option selected>Select Series</option>
-                                <option value="CV">CV</option>
-                                <option value="IM" selected>IM</option>
-                            </select>
+                            <div class="input-group-prepend">
+                                <button class="input-group-text" id="Cifr"><i class="fa fa-check"></i></button>
+                            </div>
+                            <input type="text" class="form-control" placeholder="" id="txtSeries" value="">
+                            <div class="input-group-append">
+                                <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalSeries"><i class="fa fa-search"></i></button>
+                            </div>
                         </div>
                         Customer Code :
                         <div class="input-group">
@@ -377,6 +379,7 @@
                                             <th>fromWhs</th>
                                             <th>toWhs</th>
                                             <th>DocEntry</th>
+                                            <th>SeriesName</th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -578,6 +581,38 @@
         </div>
     </div>
 
+    @*7. Search Series IM*@
+    <div class="modal fade" id="ModalSeries">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content" style="background:#f0eff1;color:#696969;">
+                <div class="modal-header">
+                    <b>List of Series</b>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table id="TbSeries" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                    <thead>
+                                        <tr>
+                                            <th>Series</th>
+                                            <th>SeriesName</th>
+                                            <th>YYYY-MM</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-info" data-dismiss="modal" id="ChooseSeries" style="background:#f0eff1;color:#696969;">Choose</button>
+                    <button class="btn btn-info" data-dismiss="modal" id="CloseSeries" style="background:#f0eff1;color:#696969;">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="~/js/Array.js"></script>
     <script type="text/javascript">
 
@@ -623,6 +658,7 @@
             { "data": "fromWhs" },
             { "data": "toWhs" },
             { "data": "docEntry" },
+            { "data": "seriesName"}
         ],
         "order": [[0, 'desc']],
         "select": true,
@@ -712,10 +748,10 @@
                     if ($('#getItemCode').val()!='') {
                         t.row.add([$('#getItemCode').val(), $('#txtItemName').val(), $('#txtQuantity').val()]).draw(false);
                     }
-                    
+
                 }
             });
-            
+
 
         }
 
@@ -1048,22 +1084,37 @@
         });
 
 
-        //var tableLine = $('#TbDataLine').on('select', function () {
+        //Dropdown Series IM
+        var tableSeriesIM = $('#TbSeries').DataTable({
+            "ajax": {
+            "url": '@Url.Action("GetSeriesIM", "Inventory")',
+            "type": "GET",
+            "dataType": "JSON",
+            "dataSrc": 'data',
+            "complete": function (data) {
+                console.log("GetSeriesIM Complete.");
+            }
+        },
+        "columns": [
+            { "data": "series" },
+            { "data": "seriesName" },
+            { "data": "indicator" }
+        ],
+        "select": true,
+        "paging": false,
+        "ordering": false,
+        "info": false,
+        "searching": false
+        });
 
-        //    var celldscription = tableLine.rows({ selected: true }).data()[0]['dscription'];
-        //    var cellquantity = tableLine.rows({ selected: true }).data()[0]['quantity'];
-        //    //console.log(rowData);
+        tableSeriesIM.on('select', function () {
 
-        //    var txtItemName = document.getElementById("txtItemName");
-        //    var txtQuantity = document.getElementById("txtQuantity");
-
-        //    txtItemName.value = celldscription;
-        //    txtQuantity.value = cellquantity;
-
-        //    document.getElementById("txtScanBarCode").focus();
-        //});
-
-
+            var cellSeries = tableSeriesIM.rows({ selected: true }).data()[0]['series'];
+            $('#ChooseSeries').click(function () {
+                var txtSeries = document.getElementById("txtSeries");
+                txtSeries.value = cellSeries;
+            });
+        });
 
 
     </script>

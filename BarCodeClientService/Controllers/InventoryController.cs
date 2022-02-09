@@ -60,6 +60,12 @@ namespace BarCodeClientService.Controllers
             return Ok(a);
         }
 
+        public IActionResult GetSeriesIM()
+        {
+            var a = API.Read<ResponseNNM1_IM>("api/SeriesIM");
+            return Ok(a);
+        }
+
         public IActionResult GetWTQLine(string docentry)
         {
             string xDocEntry = docentry;

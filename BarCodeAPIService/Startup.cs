@@ -64,6 +64,7 @@ namespace BarCodeAPIService
             services.AddScoped<IInventoryCountingService, InventoryCountingService>();
             services.AddScoped<IInventoryTransferRequestService, InventoryTransferRequestService>();
             services.AddScoped<IDeliveryService, DeliveryService>();
+            services.AddScoped<IGenerateBinCodeServices, GenerateBinCodeService>();
             #endregion
             #region ConfigureJWTToken
             var tokenvalidationParameters = new TokenValidationParameters

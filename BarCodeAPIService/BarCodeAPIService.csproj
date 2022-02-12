@@ -39,7 +39,7 @@
 
   <ItemGroup>
     <Reference Include="SAPBusinessOneSDK">
-      <HintPath>..\..\plugin\SAPBusinessOneSDK.dll</HintPath>
+      <HintPath>G:\1- Projects\_BarCode OUDOM\SAPBusinessOneSDK\SAPBusinessOneSDK.dll</HintPath>
     </Reference>
   </ItemGroup>
 

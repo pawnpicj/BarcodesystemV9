@@ -26,10 +26,12 @@ namespace BarCodeAPIService.Service
                     string Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('OBIN','','','','','')";
                     oRS.DoQuery(Query);
                     while (!oRS.EoF) {
-                        oBIN.Add(new OBIN { 
-                            BinCode=oRS.Fields.Item(0).Value.ToString(),
-                            WhsCode=oRS.Fields.Item(1).Value.ToString()
-                        });
+                        oBIN.Add(new OBIN
+                        {
+                            BinCode = oRS.Fields.Item(0).Value.ToString(),
+                            WhsCode = oRS.Fields.Item(1).Value.ToString(),
+                            WhsName = oRS.Fields.Item(2).Value.ToString()
+                        }); 
                         oRS.MoveNext();
                     }
                     return Task.FromResult(new ResponseOBINGetBinCode

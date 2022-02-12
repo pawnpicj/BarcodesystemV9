@@ -2,8 +2,10 @@
 using BarCodeLibrary.Respones.SAP;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using BarCodeAPIService.Models;
 
 namespace BarCodeAPIService.Service
 {
@@ -12,16 +14,19 @@ namespace BarCodeAPIService.Service
         public Task<ResponseOBTNGetBatch> ResponseOIBTGetBatch()
         {
             var oBIN = new List<OBTN>();
-            SAPbobsCOM.Company oCompany;
+            DataTable dt = new DataTable();
+           // SAPbobsCOM.Company oCompany;
             try {
-                Login login = new();
-                if (login.LErrCode == 0) {
-                    oCompany = login.Company;
-                    SAPbobsCOM.Recordset oRS = null;
-                    oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-                    string Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('OIBT','','','','','')";
-                    oRS.DoQuery(Query);
-                    while (!oRS.EoF)
+                // Login login = new();
+                LoginOnlyDatabase login = new LoginOnlyDatabase();
+
+                if (login.lErrCode == 0) {
+                  //  oCompany = login.Company;
+                  //  SAPbobsCOM.Recordset oRS = null;
+                  //  oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);                    
+                    // oRS.DoQuery(Query);
+                    
+                    /*while (!oRS.EoF)
                     {
                         oBIN.Add(new OBTN
                         {
@@ -32,6 +37,19 @@ namespace BarCodeAPIService.Service
                             
                         });
                         oRS.MoveNext();
+                    }*/
+                    string Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('OIBT','','','','','')";
+                    login.AD = new System.Data.Odbc.OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        oBIN.Add(new OBTN
+                        {
+                            ItemCode = row[0].ToString(),
+                            ItemName=row[1].ToString(),
+                            BatchNumber=row[2].ToString(),
+                            ExpDate=row[3].ToString()
+                        }) ;
                     }
                     return Task.FromResult(new ResponseOBTNGetBatch
                     {
@@ -43,8 +61,8 @@ namespace BarCodeAPIService.Service
                 else
                 {
                     return Task.FromResult(new ResponseOBTNGetBatch { 
-                        ErrorCode=login.LErrCode,
-                        ErrorMessage=login.SErrMsg,
+                        ErrorCode=login.lErrCode,
+                        ErrorMessage=login.sErrMsg,
                         Data=null
                     });
                 }

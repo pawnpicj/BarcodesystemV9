@@ -11,7 +11,12 @@
 <script src="~/css/DataTable/jquery-3.3.1.js"></script>
 <script src="~/css/DataTable/jquery.dataTables.min.js"></script>
 <script src="~/css/DataTable/dataTables.rowReorder.min.js"></script>
-@*<script src="~/css/DataTable/dataTables.responsive.min.js"></script>*@
+<script src="~/css/DataTable/moment.min.js"></script>
+<script src="~/css/DataTable/datetime-moment.js"></script>
+
+<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
+<script src="https://editor.datatables.net/extensions/Editor/js/dataTables.editor.min.js"></script>
 
 <script type="text/javascript">
     /*DocDate*/
@@ -125,36 +130,35 @@
                             <div class="input-group-prepend">
                                 <button class="input-group-text" id="Cifr"><i class="fa fa-check"></i></button>
                             </div>
-                            @{
-                                var txtDocNum = "123";
-                            }
-                            <input type="text" class="form-control" placeholder="" id="DocNum" value="">
+                            <input type="text" id="txtDocEntry" disabled size="7" autocomplete="off" />
+                            <input type="text" class="form-control" placeholder="" id="txtDocNum" value="" autocomplete="off">
                             <div class="input-group-append">
-                                <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalInfReq"><i class="fa fa-search"></i></button>
+                                <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalInfIM"><i class="fa fa-search"></i></button>
                             </div>
                         </div>
-                        Series :
+                        Series : <input type="text" id="txtSeriesIM" readonly />
                         <div class="input-group">
-                            <input type="text" class="form-control" placeholder="" id="SeriesCode" value="CV2112">
-                            @*<select id="ddl_Series" class="form-control">
-                                <option selected>Select Series</option>
-                                <option value="CV">CV</option>
-                                <option value="IM">IM</option>
-                            </select>*@
+                            <div class="input-group-prepend">
+                                <button class="input-group-text" id="Cifr"><i class="fa fa-check"></i></button>
+                            </div>
+                            <input type="text" class="form-control" placeholder="" id="txtSeries" value="" autocomplete="off">
+                            <div class="input-group-append">
+                                <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalSeries"><i class="fa fa-search"></i></button>
+                            </div>
                         </div>
                         Customer Code :
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <button class="input-group-text" id="CItemCode"><i class="fa fa-check"></i></button>
                             </div>
-                            <input type="text" class="form-control" placeholder="" id="CardCode">
+                            <input type="text" class="form-control" placeholder="" id="txtCardCode" readonly>
                             <div class="input-group-append">
                                 <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalCusCode"><i class="fa fa-search"></i></button>
                             </div>
                         </div>
                         Customer Name :
                         <div class="input-group">
-                            <input type="text" class="form-control" id="CardName" readonly>
+                            <input type="text" class="form-control" id="txtCardName" readonly>
                         </div>
 
                         <div>
@@ -180,24 +184,26 @@
                                     <button class="input-group-text" id="COcrCode"><i class="fa fa-check"></i></button>
                                 </div>
                                 <input type="text" class="form-control" placeholder="" value="" id="FromWhsCode">
-                                <div class="input-group-append">
-                                    <button class="input-group-text btnModelsOcrCode" data-toggle="modal" data-target="#ModalWarehouse"><i class="fa fa-search"></i></button>@*ModalFromWhsCode*@
-                                </div>
+                                <!--<div class="input-group-append">
+                                <button class="input-group-text btnModelsOcrCode" data-toggle="modal" data-target="#ModalWarehouse"><i class="fa fa-search"></i></button>-->
+                                @*ModalFromWhsCode*@
+                                <!--</div>-->
                             </div>
                         </div>
-                        <div>
-                            From Bin Location :
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <button class="input-group-text" id="COcrCode2"><i class="fa fa-check"></i></button>
-                                </div>
-                                <input type="text" class="form-control" placeholder="" value="" id="FromBinCode">
-                                @*<input type="text" class="form-control" placeholder="Search Code" value="C62" id="OcrCode2">*@
-                                <div class="input-group-append">
-                                    <button class="input-group-text btnModelsOcrCode2" data-toggle="modal" data-target="#ModalBinLocation"><i class="fa fa-search"></i></button>@*ModalFromBinCode*@
-                                </div>
+                        <!--<div>
+                        From Bin Location :
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <button class="input-group-text" id="COcrCode2"><i class="fa fa-check"></i></button>
                             </div>
-                        </div>
+                            <input type="text" class="form-control" placeholder="" value="" id="FromBinCode">-->
+                        @*<input type="text" class="form-control" placeholder="Search Code" value="C62" id="OcrCode2">*@
+                        <!--<div class="input-group-append">
+                        <button class="input-group-text btnModelsOcrCode2" data-toggle="modal" data-target="#ModalBinLocation"><i class="fa fa-search"></i></button>-->
+                        @*ModalFromBinCode*@
+                        <!--</div>
+                            </div>
+                        </div>-->
                         <div>
                             To Warehouse :
                             <div class="input-group">
@@ -205,13 +211,14 @@
                                     <button class="input-group-text" id="COcrCode3"><i class="fa fa-check"></i></button>
                                 </div>
                                 <input type="text" class="form-control" placeholder="" id="ToWhsCode" value="">
-                                <div class="input-group-append">
-                                    <button class="input-group-text btnModelsOcrCode3" data-toggle="modal" data-target="#ModalWarehouse"><i class="fa fa-search"></i></button>@*ModalToWhsCode*@
-                                </div>
+                                <!--<div class="input-group-append">
+                                <button class="input-group-text btnModelsOcrCode3" data-toggle="modal" data-target="#ModalWarehouse"><i class="fa fa-search"></i></button>-->
+                                @*ModalToWhsCode*@
+                                <!--</div>-->
                             </div>
                         </div>
                         <div>
-                            To Bin Location :
+                            To Bin Location : <input type="text" id="txtBinEntry" />
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <button class="input-group-text" id="COcrCode4"><i class="fa fa-check"></i></button>
@@ -222,26 +229,20 @@
                                 </div>
                             </div>
                         </div>
-                        <hr>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        Sale Employee :
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <button class="input-group-text" id="COcrCode4"><i class="fa fa-check"></i></button>
-                            </div>
-                            <input type="text" class="form-control" placeholder="" id="SlpCode" value="">
-                            <div class="input-group-append">
-                                <button class="input-group-text btnModelsOcrCode4" data-toggle="modal" data-target="#ModalSaleEmployee"><i class="fa fa-search"></i></button>
+                        <div>
+                            Sale Employee :
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <button class="input-group-text" id="COcrCode4"><i class="fa fa-check"></i></button>
+                                </div>
+                                <input type="text" size="7" placeholder="" id="SlpCode0" value="" disabled>
+                                <input type="text" class="form-control" placeholder="" id="SlpCode" value="" disabled>
                             </div>
                         </div>
                         <div>
                             Journal Remark :
                             <div class="input-group">
                                 <input type="text" class="form-control" value="" id="jrnlMemo">
-                                </select>
                             </div>
                         </div>
                         <div>
@@ -250,44 +251,92 @@
                                 <input type="text" class="form-control" value="" id="comments">
                             </div>
                         </div>
-                    </div>
-
-                    <div class="col-sm-6">
-                        Quantity :
-                        <div class="input-group">
-                            <input type="number" class="form-control" placeholder="" id="Quantity" value="1">
-                        </div>
-                        <div>
-                            Scan Barcode :
-                            <div class="input-group">
-                                <input type="text" class="form-control" value="" id="scanbarcode" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
-                            </div>
+                        <div align="center">
+                            <br>
+                            <div><button class="btn btn-primary btn-lg btn-block" id="btnSeatch" onclick="fncLoadData()"> Search </button></div>
+                            <div><button class="btn btn-danger btn-lg btn-block" id="btnClear"> Clear </button></div>
                         </div>
                     </div>
-
                 </div>
-
             </div>
 
-
-            <div class="row">
+            <br>
+            <div class="row" id="dataDocnum" style="display:block">
                 <div class="col-sm-12">
                     <div class="table-responsive">
-                        <table id="TbAR" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                        <table id="TbDataLine" class="table table-striped table-bordered table-condensed dt-responsive nowrap text-xsmall" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
                             <thead>
                                 <tr>
-                                    <th>No</th>
-                                    <th>Barcode</th>
                                     <th>ItemCode</th>
                                     <th>ItemName</th>
-                                    <th>Quantity</th>
+                                    <th>SAP-QTY</th>
                                     <th>FromWarehouse</th>
-                                    <th>FromBinLocation</th>
                                     <th>ToWarehouse</th>
-                                    <th>ToBinLocation</th>
+                                    <th>UomCode</th>
+                                    <th>Unit Price</th>
+                                    <th>FromBinCode</th>
+                                    <th>FromBinEntry</th>
                                 </tr>
                             </thead>
                         </table>
+                        <br />
+                        <div class="col-sm-6">
+                            <div>
+                                ItemCode : <input type="text" id="txtItemCode" class="form-control" value="" style="background-color: cornsilk;" readonly />
+                                ItemName : <input type="text" id="txtItemName" class="form-control" value="" style="background-color: cornsilk;" readonly />
+                                Quantity : <input type="text" id="txtQuantity" class="form-control" value="" style="background-color: cornsilk;" readonly />
+                                FromBinEntry : <input type="text" id="txtfBinEntry" class="form-control" value="" style="background-color: cornsilk;" readonly />
+                            </div>
+                            <hr>
+                            <div>
+                                <label>
+                                    Input Quantity :
+                                </label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" placeholder="" id="Quantity" value="1" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
+                                </div>
+
+                                <label>
+                                    Scan Barcode :
+                                </label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" value="" id="txtScanBarCode" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
+                                </div>
+
+                                <label>
+                                    Scan Batch/Serial :
+                                </label><div class="input-group">
+                                    <input type="text" class="form-control" value="" id="txtScanBatchSerial" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
+                                </div>
+                                <button class="input-group-text" id="addRow" style="display:none;"><i class="fa fa-plus"></i></button>
+                            </div>
+                        </div>
+                        <hr>
+
+                        <div><font size="+1" style="font-weight:bold"><u>List Data From Scan</u></font></div>
+                        <div id="GetStcokBatchSerial01">
+                            <input type="text" id="getItemCode" />
+                            <input type="text" id="getOnHand" />
+                            <input type="text" id="getSerialNumber" />
+                            <input type="text" id="getBatchNumber" />
+                        </div>
+                        <button id="btnDelRow">Delete selected row</button>
+                        <table id="tbItemList" class="display" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>ItemCode</th>
+                                    <th>ItemName</th>
+                                    <th>Quantity</th>
+                                    <th>fromWhsCode</th>
+                                    <th>fromBinEntry</th>
+                                    <th>toWhsCode</th>
+                                    <th>toBinEntry</th>
+                                    <th>batchNumber</th>
+                                    <th>serialNumber</th>
+                                </tr>
+                            </thead>
+                        </table>
+
                     </div>
                 </div>
             </div>
@@ -295,13 +344,8 @@
         </div>
     </div>
     <div class="row" style="padding: 15px;margin-top:-20px;margin-bottom:-20px;">
-        @*<button class="btn btn-info" id="Save" style="background:#f0eff1;color:#696969">Add New</button>*@
-        @*<button class="btn btn-success" id="Save" type="button">Add New</button>*@
-        @*<input type="checkbox" id="cpayment" style="background:#f0eff1;color:#696969;margin-left:5px;margin-top:15px" /> <label>Auto Payment</label>*@
         <div class="nav navbar-nav ml-auto">
             <div class="btn-group">
-                @*<button class="btn btn-info previous" style="background:#f0eff1;color:#696969">Previous</button>
-                    <button class="btn btn-info next" style="background: #f0eff1;color: #696969;">Next</button>*@
                 <button class="btn btn-success" id="Save" style="margin-left:5px;">Send To SAP</button>
             </div>
         </div>
@@ -312,7 +356,7 @@
 
 @*Create Models*@
 @*0. Search Inventory Transfer Request *@
-<div class="modal fade" id="ModalInfReq">
+<div class="modal fade" id="ModalInfIM">
     <div class="modal-dialog modal-xl">
         <div class="modal-content" style="background:#f0eff1;color:#696969;">
             <div class="modal-header">
@@ -468,24 +512,77 @@
 
 <script src="~/js/Array.js"></script>
 <script type="text/javascript">
-    //var LDT = [];
-    //$('#TbDT').DataTable({
-    //    responsive: true,
-    //    bLengthChange: false,
-    //    binfo: false,
-    //    data: LDT,
-    //    columns: [
-    //        { data: "docNum", autoWidth: true },
-    //        { data: "webID", autoWidth: true },
-    //        { data: "customerName", autoWidth: true },
-    //        { data: "posuser", autoWidth: true },
-    //        { data: "documentDate", autoWidth: true },
-    //        { data: "docTotal", autoWidth: true },
-    //        { data: "grossAmount", autoWidth: true },
-    //        { data: "drawAmount", autoWidth: true },
-    //        { data: "taxAmount", autoWidth: true }
-    //    ]
+
+    //+++++ GetInventoryTransferRequestLine +++++
+    var table0 = $('#TbInf').DataTable({
+        "ajax": {
+            "url": '@Url.Action("GetOWTR", "Inventory")',
+            "type": "GET",
+            "dataType": "JSON",
+            "dataSrc": 'data',
+            "complete": function (data) {
+                console.log("GetOWTQ Complete.");
+            }
+        },
+        "columns": [
+            { "data": "docNum" },
+            { "data": "docDate" },
+            { "data": "cardCode" },
+            { "data": "cardName" },
+            { "data": "slpCode" },
+            { "data": "slpName" },
+            { "data": "fromWhs" },
+            { "data": "toWhs" },
+            { "data": "docEntry" },
+            { "data": "seriesName"}
+        ],
+        "order": [[0, 'desc']],
+        "select": true,
+        "paging": false,
+        "ordering": false,
+        "info": false,
+        "searching": false
+    });
+
+    table0.columns([4, 5, 6, 7]).visible(false, false);
+
+    //table0.on('select', function () {
+
+    //    var celldocNum = table0.rows({ selected: true }).data()[0]['docNum'];
+    //    var cellcardCode = table0.rows({ selected: true }).data()[0]['cardCode'];
+    //    var cellcardName = table0.rows({ selected: true }).data()[0]['cardName'];
+    //    var cellSlpCode = table0.rows({ selected: true }).data()[0]['slpCode']
+    //    var cellSlp = table0.rows({ selected: true }).data()[0]['slpName'];
+    //    var cellfromWhs = table0.rows({ selected: true }).data()[0]['fromWhs'];
+    //    var celltoWhs = table0.rows({ selected: true }).data()[0]['toWhs'];
+    //    var celldocEntry = table0.rows({ selected: true }).data()[0]['docEntry'];
+    //    var cellseriesName = table0.rows({ selected: true }).data()[0]['seriesName'];
+    //    //console.log(rowData);
+
+    //    $('#ChooseInf').click(function () {
+    //        var txtDocNum = document.getElementById("DocNum");
+    //        var txtCardCode = document.getElementById("CardCode");
+    //        var txtCardName = document.getElementById("CardName");
+    //        var txtSlpCode0 = document.getElementById("SlpCode0");
+    //        var txtSlpCode = document.getElementById("SlpCode");
+    //        var txtFromWhsCode = document.getElementById("FromWhsCode");
+    //        var txtToWhsCode = document.getElementById("ToWhsCode");
+    //        var txtDocEntry = document.getElementById("txtDocEntry");
+    //        var txtSeriesTFR = document.getElementById("txtSeriesTFR");
+
+    //        txtDocNum.value = celldocNum;
+    //        txtCardCode.value = cellcardCode;
+    //        txtCardName.value = cellcardName;
+    //        txtSlpCode0.value = cellSlpCode;
+    //        txtSlpCode.value = cellSlp;
+    //        txtFromWhsCode.value = cellfromWhs;
+    //        txtToWhsCode.value = celltoWhs;
+    //        txtDocEntry.value = celldocEntry;
+    //        txtSeriesTFR.value = cellseriesName;
+    //    });
     //});
-    //var tbdtpayment = $('#TbAR').DataTable()
+
+
+
 </script>
 

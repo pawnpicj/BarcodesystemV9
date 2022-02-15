@@ -28,7 +28,8 @@ namespace BarCodeAPIService.Service
                     while (!oRS.EoF) {
                         oBIN.Add(new OBIN { 
                             BinCode=oRS.Fields.Item(0).Value.ToString(),
-                            WhsCode=oRS.Fields.Item(1).Value.ToString()
+                            WhsCode=oRS.Fields.Item(1).Value.ToString(),
+                            AbsEntry = Convert.ToInt32(oRS.Fields.Item(3).Value.ToString())
                         });
                         oRS.MoveNext();
                     }

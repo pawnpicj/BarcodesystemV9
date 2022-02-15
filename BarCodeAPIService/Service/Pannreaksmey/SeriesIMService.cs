@@ -21,7 +21,7 @@ namespace BarCodeAPIService.Service.Pannreaksmey
                     oCompany = login.Company;
                     SAPbobsCOM.Recordset oRS = null;
                     oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-                    string Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('NNM1IM','','','','','')";
+                    string Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_BANK ('NNM1IM','','','','','')";
                     oRS.DoQuery(Query);
                     while (!oRS.EoF)
                     {

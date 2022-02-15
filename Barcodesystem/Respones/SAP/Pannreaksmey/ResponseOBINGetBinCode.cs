@@ -16,5 +16,6 @@ namespace BarCodeLibrary.Respones.SAP
     {
         public string BinCode { get; set; }
         public string WhsCode { get; set; }
+        public int AbsEntry { get; set; }
     }
 }

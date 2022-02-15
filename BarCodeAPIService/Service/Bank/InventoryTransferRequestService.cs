@@ -123,7 +123,9 @@ namespace BarCodeAPIService.Service
                             WhsCode = oRS.Fields.Item(5).Value.ToString(),
                             UomCode = oRS.Fields.Item(6).Value.ToString(),
                             unitMsr = oRS.Fields.Item(7).Value.ToString(),
-                            U_unitprice = Convert.ToDouble(oRS.Fields.Item(8).Value.ToString())
+                            U_unitprice = Convert.ToDouble(oRS.Fields.Item(8).Value.ToString()),
+                            BinCode = oRS.Fields.Item(9).Value.ToString(),
+                            FromBinEntry = Convert.ToInt32(oRS.Fields.Item(10).Value.ToString())
 
                             //OnHand = Convert.ToInt32(oRS.Fields.Item(1).Value.ToString()),
                             //SerailNumber = oRS.Fields.Item(2).Value.ToString(),

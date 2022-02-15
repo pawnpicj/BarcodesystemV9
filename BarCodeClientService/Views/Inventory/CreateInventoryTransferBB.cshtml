@@ -135,7 +135,7 @@
                                 <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalInfReq"><i class="fa fa-search"></i></button>
                             </div>
                         </div>
-                        Series :
+                        Series : <input type="text" id="txtSeriesTFR" readonly />
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <button class="input-group-text" id="Cifr"><i class="fa fa-check"></i></button>
@@ -215,7 +215,7 @@
                             </div>
                         </div>
                         <div>
-                            To Bin Location :
+                            To Bin Location : <input type="text" id="txtBinEntry"/>
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <button class="input-group-text" id="COcrCode4"><i class="fa fa-check"></i></button>
@@ -232,10 +232,11 @@
                             <div class="input-group-prepend">
                                 <button class="input-group-text" id="COcrCode4"><i class="fa fa-check"></i></button>
                             </div>
+                            <input type="text" size="7" placeholder="" id="SlpCode0" value="" disabled>
                             <input type="text" class="form-control" placeholder="" id="SlpCode" value="" disabled>
                             @*<div class="input-group-append">
-                                    <button class="input-group-text btnModelsOcrCode4" data-toggle="modal" data-target="#ModalSaleEmployee"><i class="fa fa-search"></i></button>
-                                </div>*@
+            <button class="input-group-text btnModelsOcrCode4" data-toggle="modal" data-target="#ModalSaleEmployee"><i class="fa fa-search"></i></button>
+        </div>*@
                         </div>
                         <div>
                             Journal Remark :
@@ -277,6 +278,8 @@
                                         <th>ToWarehouse</th>
                                         <th>UomCode</th>
                                         <th>Unit Price</th>
+                                        <th>FromBinCode</th>
+                                        <th>FromBinEntry</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -285,8 +288,10 @@
 
                             <div class="col-sm-6">
                                 <div>
+                                    ItemCode : <input type="text" id="txtItemCode" class="form-control" value="" style="background-color: cornsilk;" readonly />
                                     ItemName : <input type="text" id="txtItemName" class="form-control" value="" style="background-color: cornsilk;" readonly />
                                     Quantity : <input type="text" id="txtQuantity" class="form-control" value="" style="background-color: cornsilk;" readonly />
+                                    FromBinEntry : <input type="text" id="txtfBinEntry" class="form-control" value="" style="background-color: cornsilk;" readonly />
                                 </div>
                                 <hr>
                                 <div>
@@ -321,13 +326,19 @@
                                 <input type="text" id="getSerialNumber" />
                                 <input type="text" id="getBatchNumber" />
                             </div>
-
+                            <button id="btnDelRow">Delete selected row</button>
                             <table id="tbItemList" class="display" style="width:100%">
                                 <thead>
                                     <tr>
                                         <th>ItemCode</th>
                                         <th>ItemName</th>
                                         <th>Quantity</th>
+                                        <th>fromWhsCode</th>
+                                        <th>fromBinEntry</th>
+                                        <th>toWhsCode</th>
+                                        <th>toBinEntry</th>
+                                        <th>batchNumber</th>
+                                        <th>serialNumber</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -338,7 +349,7 @@
                     <div class="row" style="padding: 15px;margin-top:-20px;margin-bottom:-20px;">
                         <div class="nav navbar-nav ml-auto">
                             <div class="btn-group">
-                                <button class="btn btn-success" id="Save" style="margin-left:5px;" onclick="test1()">Send To SAP</button>
+                                <button class="btn btn-success" id="Save" style="margin-left:5px;" onclick="POSTDataAPI()">Send To SAP</button>
                             </div>
                         </div>
                     </div>
@@ -473,6 +484,7 @@
                                         <tr>
                                             <th>BinCode</th>
                                             <th>BinName</th>
+                                            <th>BinEntry</th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -535,6 +547,7 @@
                                         <tr>
                                             <th>BinCode</th>
                                             <th>BinName</th>
+                                            <th>BinEntry</th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -616,27 +629,6 @@
     <script src="~/js/Array.js"></script>
     <script type="text/javascript">
 
-     function test1() {
-        //$.ajax({
-            @*url: '@Url.Action("GetStcok_BatchSerial", "Inventory")',
-            data: { barcode: $('#txtScanBarCode').val(), batchserial: $('#txtScanBatchSerial').val()},
-            type: "GET",
-            dataType: "JSON",
-            beforeSend: function () {
-                },
-            success: function (data) {
-                    console.log(data);
-                    if (data.errorCode == 0) {
-                        alert("I can get Data from Restful Service");
-                    } else {
-                        alert("Oppp Maybe Internal Error Look Like this:" + data.errorMessage);
-                    }
-                }
-            });*@
-         alert("Coming Soon ...");
-         //data: { barcode: ""},
-    }
-
     //+++++ GetInventoryTransferRequestLine +++++
     var table0 = $('#TbInf').DataTable({
         "ajax": {
@@ -675,28 +667,34 @@
         var celldocNum = table0.rows({ selected: true }).data()[0]['docNum'];
         var cellcardCode = table0.rows({ selected: true }).data()[0]['cardCode'];
         var cellcardName = table0.rows({ selected: true }).data()[0]['cardName'];
-        var cellSlp = table0.rows({ selected: true }).data()[0]['slpCode'] + ' - ' + table0.rows({ selected: true }).data()[0]['slpName'];
+        var cellSlpCode = table0.rows({ selected: true }).data()[0]['slpCode']
+        var cellSlp = table0.rows({ selected: true }).data()[0]['slpName'];
         var cellfromWhs = table0.rows({ selected: true }).data()[0]['fromWhs'];
         var celltoWhs = table0.rows({ selected: true }).data()[0]['toWhs'];
         var celldocEntry = table0.rows({ selected: true }).data()[0]['docEntry'];
+        var cellseriesName = table0.rows({ selected: true }).data()[0]['seriesName'];
         //console.log(rowData);
 
         $('#ChooseInf').click(function () {
             var txtDocNum = document.getElementById("DocNum");
             var txtCardCode = document.getElementById("CardCode");
             var txtCardName = document.getElementById("CardName");
+            var txtSlpCode0 = document.getElementById("SlpCode0");
             var txtSlpCode = document.getElementById("SlpCode");
             var txtFromWhsCode = document.getElementById("FromWhsCode");
             var txtToWhsCode = document.getElementById("ToWhsCode");
             var txtDocEntry = document.getElementById("txtDocEntry");
+            var txtSeriesTFR = document.getElementById("txtSeriesTFR");
 
             txtDocNum.value = celldocNum;
             txtCardCode.value = cellcardCode;
             txtCardName.value = cellcardName;
+            txtSlpCode0.value = cellSlpCode;
             txtSlpCode.value = cellSlp;
             txtFromWhsCode.value = cellfromWhs;
             txtToWhsCode.value = celltoWhs;
             txtDocEntry.value = celldocEntry;
+            txtSeriesTFR.value = cellseriesName;
         });
     });
 
@@ -711,6 +709,8 @@
                 if (event.keyCode === 13) {
                     event.preventDefault();
                     document.getElementById("addRow").click();
+                    document.getElementById("getItemCode").value = "";
+                    document.getElementById("getOnHand").value = "";
                 }
             });
         }
@@ -720,7 +720,13 @@
     var t = $('#tbItemList').DataTable({
          "columns": [
             { "width": "10%" },
-            { "width": "20%" },
+            { "width": "50%" },
+            { "width": "5%" },
+            { "width": "5%" },
+            { "width": "5%" },
+            { "width": "5%" },
+            { "width": "5%" },
+            { "width": "5%" },
             { "width": "5%" }
         ],
         "select": true,
@@ -742,11 +748,39 @@
                 "dataSrc": 'data',
                 success: function (data) {
                     var jqueryXml = $(data);
-                    $('#getItemCode').val(jqueryXml[0].data[0].itemCode);
-                    $('#getOnHand').val(jqueryXml[0].data[0].onHand);
+                    if (jqueryXml[0].data[0].itemCode != '') {
 
-                    if ($('#getItemCode').val()!='') {
-                        t.row.add([$('#getItemCode').val(), $('#txtItemName').val(), $('#txtQuantity').val()]).draw(false);
+                        if (jqueryXml[0].data[0].itemCode == document.getElementById("txtItemCode").value) {
+                            //=========================
+                            $('#getItemCode').val(jqueryXml[0].data[0].itemCode);
+                            $('#getOnHand').val(jqueryXml[0].data[0].onHand);
+                            $('#getSerialNumber').val(jqueryXml[0].data[0].serialNumber);
+                            $('#getBatchNumber').val(jqueryXml[0].data[0].batchNumber);
+
+                            if ($('#getItemCode').val() != '') {
+                                t.row.add([
+                                    $('#getItemCode').val(),
+                                    $('#txtItemName').val(),
+                                    $('#txtQuantity').val(),
+                                    $('#FromWhsCode').val(),
+                                    $('#txtfBinEntry').val(),
+                                    $('#ToWhsCode').val(),
+                                    $('#txtBinEntry').val(),
+                                    $('#getBatchNumber').val(),
+                                    $('#getSerialNumber').val()
+                                ]).draw(false);
+                            } else {
+                                return false;
+                            }
+                            //=========================
+                        } else {
+                            alert("Itemcode don't match!");
+                        }
+                        
+
+
+                    } else {
+                        alert("No ItemCode");
                     }
 
                 }
@@ -759,192 +793,6 @@
 
     $('#addRow').click();
 
-    function xComments() {
-    //+++++ GetContactPerson +++++
-    @*var table = $('#TbCusCode').DataTable({
-        "ajax": {
-            "url": '@Url.Action("GetContactPerson", "Home")',
-            "type": "GET",
-            "dataType": "JSON",
-            "dataSrc": 'data'
-        },
-        "columns": [
-            { "data": "cardCode" },
-            { "data": "name" },
-        ],
-        "order": [[1, 'asc']],
-        "select": true,
-        "paging": false,
-        "ordering": false,
-        "info": false
-        });
-
-    $('#TbCusCode tbody').on('click', 'tr', function () {
-
-        if ($(this).hasClass('selected')) {
-            $(this).removeClass('selected');
-        }
-        else {
-            table.$('tr.selected').removeClass('selected');
-            $(this).addClass('selected');
-
-            var cc = table.rows({ selected: true }).count();
-            const rowCardCode = [];
-            const rowCardName = [];
-            for (let i = 0; i < cc; i++) {
-                rowCardCode[i] = table.rows({ selected: true }).data()[i]['cardCode'];
-                rowCardName[i] = table.rows({ selected: true }).data()[i]['name'];
-            }
-
-            var tr = $(this).closest("tr");
-            var rowindex = tr.index();
-
-            //alert(rowCardCode[rowindex]);
-            $('#ChooseCus').click(function () {
-                var CardCode = document.getElementById("CardCode");
-                var CardName = document.getElementById("CardName");
-                CardCode.value = rowCardCode[rowindex];
-                CardName.value = rowCardName[rowindex];
-            });
-
-        }
-    });*@
-
-    //+++++ GetSaleEmployee +++++
-    @*var table2 = $('#TbSaleEmployee').DataTable({
-        "ajax": {
-            "url": '@Url.Action("GetSaleEmployee", "Home")',
-            "type": "GET",
-            "dataType": "JSON",
-            "dataSrc": 'data'
-        },
-        "columns": [
-
-            { "data": "slpCode" },
-            { "data": "slpName" },
-        ],
-        "paging": false,
-        "ordering": false,
-        "info": false
-    });
-
-    $('#TbSaleEmployee tbody').on('click', 'tr', function () {
-        if ($(this).hasClass('selected')) {
-            $(this).removeClass('selected');
-        }
-        else {
-            table2.$('tr.selected').removeClass('selected');
-            $(this).addClass('selected');
-
-            var cc2 = table2.rows({ selected: true }).count();
-            const rowslpCode = [];
-            const rowslpName = [];
-            for (let i = 0; i < cc2; i++) {
-                rowslpCode[i] = table2.rows({ selected: true }).data()[i]['slpCode'];
-                rowslpName[i] = table2.rows({ selected: true }).data()[i]['slpName'];
-            }
-
-            var tr = $(this).closest("tr");
-            var rowindex2 = tr.index();
-
-            //alert(rowCardCode[rowindex]);
-            $('#ChooseSaleEmployee').click(function () {
-                var txtSlpCode = document.getElementById("SlpCode");
-                //var CardName = document.getElementById("CardName");
-                txtSlpCode.value = rowslpCode[rowindex2];
-                //CardName.value = rowCardName[rowindex];
-            });
-        }
-    });*@
-
-    //+++++ GetFromWarehouse +++++
-    @*var table3 = $('#TbWhs').DataTable({
-        "ajax": {
-            "url": '@Url.Action("GetWarehouse", "Home")',
-            "type": "GET",
-            "dataType": "JSON",
-            "dataSrc": 'data'
-        },
-        "columns": [
-            { "data": "whsCode" },
-            { "data": "whsName" },
-        ],
-        "paging": false,
-        "ordering": false,
-        "info": false
-    });
-
-    $('#TbWhs tbody').on('click', 'tr', function () {
-        if ($(this).hasClass('selected')) {
-            $(this).removeClass('selected');
-        }
-        else {
-            table3.$('tr.selected').removeClass('selected');
-            $(this).addClass('selected');
-
-            var cc3 = table3.rows({ selected: true }).count();
-            const rowwhsCode = [];
-            const rowwhsName = [];
-            for (let i = 0; i < cc3; i++) {
-                rowwhsCode[i] = table3.rows({ selected: true }).data()[i]['whsCode'];
-                rowwhsName[i] = table3.rows({ selected: true }).data()[i]['whsName'];
-            }
-
-            var tr = $(this).closest("tr");
-            var rowindex3 = tr.index();
-
-            //alert(rowCardCode[rowindex]);
-            $('#TbWhs').click(function () {
-                var txtFromWhsCode = document.getElementById("FromWhsCode");
-                txtFromWhsCode.value = rowwhsCode[rowindex3];
-            });
-        }
-    });*@
-
-    //+++++ GetFromBinLocation +++++
-    @*var table4 = $('#TbBinLocation').DataTable({
-        "ajax": {
-            "url": '@Url.Action("GetBinLocation", "Home")',
-            "type": "GET",
-            "dataType": "JSON",
-            "dataSrc": 'data'
-        },
-        "columns": [
-            { "data": "binCode" },
-            { "data": "whsCode" },
-        ],
-        "paging": false,
-        "ordering": false,
-        "info": false
-    });
-
-    $('#TbBinLocation tbody').on('click', 'tr', function () {
-        if ($(this).hasClass('selected')) {
-            $(this).removeClass('selected');
-        }
-        else {
-            table4.$('tr.selected').removeClass('selected');
-            $(this).addClass('selected');
-
-            var cc4 = table4.rows({ selected: true }).count();
-            const rowbinCode = [];
-            const rowwhsCode = [];
-            for (let i = 0; i < cc4; i++) {
-                rowbinCode[i] = table4.rows({ selected: true }).data()[i]['binCode'];
-                rowwhsCode[i] = table4.rows({ selected: true }).data()[i]['whsCode'];
-            }
-
-            var tr = $(this).closest("tr");
-            var rowindex4 = tr.index();
-
-            //alert(rowCardCode[rowindex]);
-            $('#TbBinLocation').click(function () {
-                var txtFromBinCode = document.getElementById("FromBinCode");
-                txtFromBinCode.value = rowbinCode[rowindex4];
-            });
-        }
-    });*@
-    }
     //+++++ GetToWarehouse +++++
     var tableToWhs = $('#TbToWhs').DataTable({
         "ajax": {
@@ -995,11 +843,15 @@
             "url": '@Url.Action("GetBinLocation", "Home")',
             "type": "GET",
             "dataType": "JSON",
-            "dataSrc": 'data'
+            "dataSrc": 'data',
+            "complete": function (data) {
+                console.log("GET ToBinLocation Complete.");
+            }
         },
         "columns": [
             { "data": "binCode" },
             { "data": "whsCode" },
+            { "data": "absEntry" },
         ],
         "select": true,
         "paging": false,
@@ -1009,9 +861,12 @@
 
         tableToBin.on('select', function () {
             var cellbinCode = tableToBin.rows({ selected: true }).data()[0]['binCode'];
+            var cellAbsEntry = tableToBin.rows({ selected: true }).data()[0]['absEntry'];
             $('#ChooseToBinLocation').click(function () {
                 var txtToBinCode = document.getElementById("ToBinCode");
+                var txtBinEntry = document.getElementById("txtBinEntry");
                 txtToBinCode.value = cellbinCode;
+                txtBinEntry.value = cellAbsEntry;
             });
         });
 
@@ -1039,7 +894,9 @@
                         { "data": "fromWhsCod", "autoWidth": true },
                         { "data": "whsCode", "autoWidth": true },
                         { "data": "uomCode", "autoWidth": true },
-                        { "data": "u_unitprice", "autoWidth": true }
+                        { "data": "u_unitprice", "autoWidth": true },
+                        { "data": "binCode", "autoWidth": true },
+                        { "data": "fromBinEntry", "autoWidth": true }
                     ],
                     "language": { "emptyTable": "No Events Found Related To This User" },
                     "order": [[0, 'desc']],
@@ -1052,13 +909,19 @@
                 alert("Download Data Complete");
 
                 tline.on('select', function () {
+                    var cellitemcode = tline.rows({ selected: true }).data()[0]['itemCode'];
                     var celldscription = tline.rows({ selected: true }).data()[0]['dscription'];
                     var cellquantity = tline.rows({ selected: true }).data()[0]['quantity'];
+                    var cellfromBinEntry = tline.rows({ selected: true }).data()[0]['fromBinEntry'];
 
+                    var txtItemCode = document.getElementById("txtItemCode");
                     var txtItemName = document.getElementById("txtItemName");
                     var txtQuantity = document.getElementById("txtQuantity");
+                    var txtfBinEntry = document.getElementById("txtfBinEntry");
+                    txtItemCode.value = cellitemcode;
                     txtItemName.value = celldscription;
                     txtQuantity.value = cellquantity;
+                    txtfBinEntry.value = cellfromBinEntry;
 
                     document.getElementById("txtScanBarCode").focus();
                     document.getElementById("txtScanBarCode").value = "";
@@ -1116,6 +979,95 @@
             });
         });
 
+        $('#btnDelRow').click(function () {
+            t.row('.selected').remove().draw(false);
+        });
+        //POST Data
+        function POSTDataAPI() {
+            //obj = {};
+            //arrayLine = {};
+            //line = [];
+
+            //obj.series = 738;
+            //obj.cardCode = "R221757";
+            //obj.docDate = "2021-12-25";
+            //obj.taxDate = "2021-12-25";
+            //obj.fromWhsCode = "01";
+            //obj.toWhsCode = "05";
+            //obj.toBinCode = 0;
+            //obj.salesEmployeeCode = "161";
+            //obj.comments = "test";
+            //obj.journalRemark = "test1";
+
+            //arrayLine.itemCode = "00-1121-140-01";
+            //arrayLine.quantity = 1;
+            //arrayLine.fromWhsCode = "01";
+            //arrayLine.toWhsCode = "05";
+            //arrayLine.batchNo = "";
+            //arrayLine.serialNo = "";
+
+            //line.push(arrayLine);
+            //obj.Lines = line;
+            //console.log(obj)
+            let regex = /\,(?!\s*?[\{\[\"\'\w])/g;
+            var str = '';
+           
+            if (!t.data().count()) {
+                alert('Empty table');
+            } else {
+
+                //console.log(t.column(0).data().length);
+                //let rowno = t.column(0).data().length;
+                //Head 2021-12-31
+                str = '{';
+                str = str + '"series": ' + document.getElementById("txtSeries").value + ',';
+                str = str + '"cardCode": "' + document.getElementById("CardCode").value + '",';
+                str = str + '"docDate": "' + document.getElementById("DocDate").value + '",';
+                str = str + '"taxDate": "' + document.getElementById("DocumentDate").value + '",';
+                str = str + '"fromWhsCode": "' + document.getElementById("FromWhsCode").value + '",';
+                str = str + '"toWhsCode": "' + document.getElementById("ToWhsCode").value + '",';
+                str = str + '"toBinCode": ' + document.getElementById("txtBinEntry").value + ',';
+                str = str + '"salesEmployeeCode": "' + document.getElementById("SlpCode0").value + '",';
+                str = str + '"comments": "' + document.getElementById("comments").value + '",';
+                str = str + '"journalRemark": "' + document.getElementById("jrnlMemo").value + '",';
+                str = str + '"line": [';
+                //Line
+                for (let rr = 0; rr < t.column(0).data().length; rr++) {
+                    var data = t.row(rr).data();
+                    str = str + '{';
+                    str = str + '"itemCode": "' + data[0] + '",';
+                    str = str + '"quantity": ' + data[2] + ',';
+                    str = str + '"fromWhsCode": "' + data[3] + '",';
+                    str = str + '"toWhsCode": "' + data[5] + '",';
+                    str = str + '"batchNo": "' + data[7] + '",';
+                    str = str + '"serialNo": "' + data[8] + '",';
+                    str = str + '"fromBinEntry" : ' + data[4] + ',';
+                    str = str + '"toBinEntry" : ' + data[6] + '';
+                    str = str + '},';
+                }
+                str = str + ']';
+                str = str + '}';
+                console.log(str);
+            }
+
+            let cStr = str.replace(regex, ''); // remove all trailing commas
+            let jStr = JSON.parse(cStr); // build a new JSON object based on correct string
+            //var jStr = JSON.parse(str);
+            //console.log(jStr);
+
+            //console.log(contact);
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("PostInventoryTransfer", "Inventory")',
+                data: { sendInventoryTransfer: jStr},
+                dataType: "JSON",
+                success: function (data) {
+                    //console.log(data);
+                    console.log(errorCode);
+                    //alert("success");
+            }
+        });
+    }
 
     </script>
 

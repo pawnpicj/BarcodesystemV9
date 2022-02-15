@@ -12,6 +12,7 @@ namespace BarCodeLibrary.Request.SAP
         public int Series { get; set; }
         //public int DocNum { get; set; }
         //public string DocEntry { get; set; }
+        public string CardCode { get; set; }
 
         public DateTime DocDate { get; set; }
         public DateTime TaxDate { get; set; }
@@ -40,6 +41,9 @@ namespace BarCodeLibrary.Request.SAP
 
         public string BatchNo { get; set; }
         public string SerialNo { get; set; }
+
+        public int fromBinEntry { get; set; }
+        public int toBinEntry { get; set; }
 
         public List<SendInventoryTransferBatch> Batch { get; set; }
         public List<SendInventoryTransferSerial> Serial { get; set; }

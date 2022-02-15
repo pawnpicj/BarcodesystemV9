@@ -60,6 +60,12 @@ namespace BarCodeClientService.Controllers
             return Ok(a);
         }
 
+        public IActionResult GetOWTR()
+        {
+            var a = API.Read<ResponseGetOWTR>("api/InventoryTransferRequest/GetIFR");
+            return Ok(a);
+        }
+
         public IActionResult GetSeriesIM()
         {
             var a = API.Read<ResponseNNM1_IM>("api/SeriesIM");
@@ -82,7 +88,14 @@ namespace BarCodeClientService.Controllers
             return Ok(a);
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        [HttpPost]
+        public IActionResult PostInventoryTransfer(SendInventoryTransfer sendInventoryTransfer)
+        {
+            var a = API.PostWithReturn<ResponseInventoryTransfer>("api/InventoryTransfer/SendInventoryTransfer", sendInventoryTransfer);
+            return Ok(a);
+        }
+
+       [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

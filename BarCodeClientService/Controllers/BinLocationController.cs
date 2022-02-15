@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BarCodeLibrary.APICall;
 using BarCodeLibrary.Respones.SAP;
+using BarCodeLibrary.Respones.SAP.Pannreaksmey;
 
 namespace BarCodeClientService.Controllers
 {
@@ -19,6 +20,18 @@ namespace BarCodeClientService.Controllers
         public IActionResult GetWarehouseWhs()
         {
             var a = API.Read<ResponseOWHSGetWarehouse>("api/Warehouse/GetWarehouse");
+            return Ok(a);
+        }
+        [HttpGet]
+        public IActionResult GetBinLocation()
+        {
+            var a = API.Read<ResponseOBINGetBinCode>("api/BinCode/GetBinCode");
+            return Ok(a);
+        }
+        [HttpGet]
+        public IActionResult GetGenerateBinCode()
+        {
+            var a = API.Read < ResponeNNG1GetGenerateBinCode > ("api/GenerateBinCode/GetGenerateBinCode");
             return Ok(a);
         }
     }

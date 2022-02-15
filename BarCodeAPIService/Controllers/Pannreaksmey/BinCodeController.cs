@@ -18,7 +18,7 @@ namespace BarCodeAPIService.Controllers
         {
             this.binCode = binCode;
         }
-        [HttpGet]
+        [HttpGet("GetBinCode")]
         public async Task<IActionResult> GetBinCodeAnsync()
         {
             var a = await binCode.ResponseOBINGetBinCode();

@@ -77,128 +77,138 @@
 </style>
 
 <div id="#main">
-
     <div class="row" style="margin-left:5px;margin-top:5px;color:#696969;">
-        <h5 style="margin-top:5px;color:#696969;">
-            @*  <a asp-action="GBinBarCode" asp-controller="BinLocation" onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fas fa-home"></i> Dashboard</a>
-                <span>
-                          <a asp-action="ShowAR" asp-controller="ARInvoice" onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fa fa-caret-right align-right"></i> Delivery </a>
-                          <i class="fa fa-caret-right align-right"></i> Create Delivery
-                      </span>*@
-        </h5>
+        <h5 style="margin-top:5px;color:#696969;"></h5>
     </div>
-
-    <div class="row" id="DLN">
-
-        <div class="col-sm-8" style="padding: 10px;">
-            Generate Code
-            <div class="input-group">
-                <div class="col-sm-8" style="padding:0px">
-                    <input type="text" class="form-control" id="GBarCodeNumbeer" readonly>
-                </div>
-                <div class="col-sm-4">
-                    <div class="nav navbar-nav ml-auto">
-                        <button class="btn btn-info" id="GenerateBarCode" style="background:#f0eff1;color:#696969">Generate Code</button>
-                    </div>
-                </div>
-            </div>
-            Warehouse :
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <button class="input-group-text" id="warehouse"><i class="fa fa-check"></i></button>
-                </div>
-                <input type="text" class="form-control" placeholder="" id="warehouse">
-                <div class="input-group-append">
-                    <button class="input-group-text btnwarehouse" data-toggle="modal" data-target="#ModalWHSCode" onclick="getWarehouse()"><i class="fa fa-search"></i></button>
-                </div>
-            </div>
-            Bin Location :
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <button class="input-group-text" id="binlocation"><i class="fa fa-check"></i></button>
-                </div>
-                <input type="text" class="form-control" placeholder="" id="warehouse">
-                <div class="input-group-append">
-                    <button class="input-group-text btnbinlocation" data-toggle="modal" data-target="#ModalBinCode"><i class="fa fa-search"></i></button>
-                </div>
-            </div>
-            <div class="row" style=" padding: 0px; ">
-                <div class="nav navbar-nav ml-auto" style=" padding: 5px; ">
-                    <button class="btn btn-info" id="Add" style="background:#f0eff1;color:#696969">Add Item</button>
-                </div>
-            </div>
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <a class="nav-item nav-link active" id="nav-create-tab" data-toggle="tab" href="#nav-create" role="tab" aria-controls="nav-home" aria-selected="true">Createting</a>
+            <a class="nav-item nav-link" id="nav-print-tab" data-toggle="tab" href="#nav-print" role="tab" aria-controls="nav-profile" aria-selected="false">Printing</a>
         </div>
+    </nav>
+    <div class="tab-pane fade show active" id="nav-print" role="tabpanel" aria-labelledby="nav-home-tab">
+        Hello
     </div>
-</div>
+    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+        <div class="row" id="BinCode">
 
-@*1. Search Warehouse*@
-<div class="modal fade" id="ModalWHSCode">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content" style="background:#f0eff1;color:#696969;">
-            <div class="modal-header">
-                <b>List of Warehouse</b>
-            </div>
-            <div class="modal-body">
-                <div class="table-responsive">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <table id="tbWarehouse" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
-                                <thead>
-                                    <tr>
-                                        <th>Warehouse Code</th>
-                                        <th>Warehouse Name</th>
-                                    </tr>
-                                </thead>
-                            </table>
+            <div class="col-sm-8" style="padding: 10px;">
+                Generate Code
+                <div class="input-group">
+                    <div class="col-sm-8" style="padding:0px">
+                        <input type="text" class="form-control" id="GBarCodeNumbeer" readonly>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="nav navbar-nav ml-auto">
+                            <button class="btn btn-info" id="GenerateBarCode" style="background:#f0eff1;color:#696969">Generate Code</button>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-info" data-dismiss="modal" id="ChooseCus" style="background:#f0eff1;color:#696969;">Choose</button>
-                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-@*1. Search Bin Location*@
-<div class="modal fade" id="ModalBinCode">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content" style="background:#f0eff1;color:#696969;">
-            <div class="modal-header">
-                <b>List of Bin Location</b>
-            </div>
-            <div class="modal-body">
-                <div class="table-responsive">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <table id="tbWarehouse" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
-                                <thead>
-                                    <tr>
-                                        <th>Bin Code</th>
-                                        <th>Warehouse</th>
-                                    </tr>
-                                </thead>
-
-                            </table>
-                        </div>
+                Warehouse Code :
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <button class="input-group-text" id="warehouse"><i class="fa fa-check"></i></button>
+                    </div>
+                    <input type="text" class="form-control" placeholder="" id="warehousecode">
+                    <div class="input-group-append">
+                        <button class="input-group-text btnwarehouse" data-toggle="modal" data-target="#ModalWHSCode"><i class="fa fa-search"></i></button>
+                    </div>
+                </div>
+                Warehouse Name:
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <button class="input-group-text" id="warehouse"><i class="fa fa-check"></i></button>
+                    </div>
+                    <input type="text" class="form-control" placeholder="" id="warehousename">
+                    <div class="input-group-append">
+                        <button class="input-group-text btnwarehouse" data-toggle="modal" data-target="#ModalWHSCode"><i class="fa fa-search"></i></button>
+                    </div>
+                </div>
+                Bin Location :
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <button class="input-group-text" id="binlocation"><i class="fa fa-check"></i></button>
+                    </div>
+                    <input type="text" class="form-control" placeholder="" id="binLocationCode">
+                    <div class="input-group-append">
+                        <button class="input-group-text btnbinLocation" data-toggle="modal" data-target="#ModalBinCode"><i class="fa fa-search"></i></button>
+                    </div>
+                </div>
+                <div class="row" style=" padding: 0px; ">
+                    <div class="nav navbar-nav ml-auto" style=" padding: 5px; ">
+                        <button class="btn btn-info" id="Add" style="background:#f0eff1;color:#696969">Add Item</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<div id="ListSO">
+
+    @*1. Search Warehouse*@
+    <div class="modal fade" id="ModalWHSCode">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content" style="background:#f0eff1;color:#696969;">
+                <div class="modal-header">
+                    <b>List of Warehouse</b>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table id="tbWarehouse" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                    <thead>
+                                        <tr>
+                                            <th>Warehouse Code</th>
+                                            <th>Warehouse Name</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-info" data-dismiss="modal" id="ChooseWhs" style="background:#f0eff1;color:#696969;">Choose</button>
+                    <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*1. Search Bin Location*@
+    <div class="modal fade" id="ModalBinCode">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content" style="background:#f0eff1;color:#696969;">
+                <div class="modal-header">
+                    <b>List of Bin Location</b>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table id="tbBinLocations" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                    <thead>
+                                        <tr>
+                                            <th>Bin Code</th>
+                                            <th>Warehouse</th>
+                                            <th>Warehouse Name</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-info" data-dismiss="modal" id="ChooseBinLocation" style="background:#f0eff1;color:#696969;">Choose</button>
+                    <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row">
-        <div class="col-sm-12" style=" padding: 3px; ">
-            @* <div class="input-group">
-                <input type="text" class="form-control" placeholder="List SO" style="color:#f0eff1">
-                </div>*@
-            <div class="row" style=" padding: 3px; ">
-            </div>
+        <div class="col-sm-12" style="padding-left: 5px;">
             <div class="table-responsive">
-                <table id="TblistSO" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                <table id="TbGBin" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;margin-bottom:10px;">
                     <thead>
                         <tr>
                             <th>Code </th>
@@ -210,118 +220,149 @@
                 </table>
             </div>
         </div>
-        <hr />
-        <div class="row" style="padding: 15px;margin-top:-10px;margin-bottom:-20px;">
-            @*<button class="btn btn-info" id="Save" style="background:#f0eff1;color:#696969">Add New</button>*@
-            @*<button class="btn btn-success" id="Save" type="button">Add New</button>*@
-            @*<input type="checkbox" id="cpayment" style="background:#f0eff1;color:#696969;margin-left:5px;margin-top:15px" /> <label>Auto Payment</label>*@
-            <div class="nav navbar-nav ml-auto">
-                <div class="btn-group">
-                    @*<button class="btn btn-info previous" style="background:#f0eff1;color:#696969">Previous</button>
-                        <button class="btn btn-info next" style="background: #f0eff1;color: #696969;">Next</button>*@
-                    <button class="btn btn-success" id="Save" style="margin-left:5px;">Send To SAP</button>
-                </div>
-            </div>
-        </div>
-        @*
-            <div class="row" style=" padding: 10px; ">
-                <div class="nav navbar-nav ml-auto" style=" padding: 5px; ">
-                    <button class="btn btn-info" id="ListSOChoose" style="background:#f0eff1;color:#696969">Choose</button>
-                </div>
-                <div class="nav navbar-nav ml-auto" style=" padding: 5px; ">
-                    <button class="btn btn-info" id="ListSOClose" style="background:#f0eff1;color:#696969">Close</button>
-                </div>*@
+        <br />
+        <button class="btn btn-success" id="Save" style="margin-left:5px;">Send To SAP</button>
     </div>
 </div>
-<script src="~/js/Array.js"></script>
-<script src="~/css/DataTable/jquery-3.3.1.js"></script>
-<script src="~/css/DataTable/jquery.dataTables.min.js"></script>
-<script type="text/javascript">
-        var LDT = [];
-        $('#TbDT').DataTable({
-            responsive: true,
-            bLengthChange: false,
-            binfo: false,
-            data: LDT,
-            columns: [
-                { data: "docNum", autoWidth: true },
-                { data: "webID", autoWidth: true },
-                { data: "customerName", autoWidth: true },
-                { data: "posuser", autoWidth: true },
-                { data: "documentDate", autoWidth: true },
-                { data: "docTotal", autoWidth: true },
-                { data: "grossAmount", autoWidth: true },
-                { data: "drawAmount", autoWidth: true },
-                { data: "taxAmount", autoWidth: true }
-            ]
-        });
-        var dtSOList = $('#TblistSO').DataTable()
-        var dtLineSO = $('#TbSOLine').DataTable()
-        var dtSNBT = $('#TbSNBT').DataTable()
-        var dtDraft = $('#TBDraft').dataTable()
-        var dtDNL_Line = $('#DNL_Line').dataTable()
-    var dtTbSNBT_Update = $('#TbSNBT_Update').dataTable()
- 
+    <script src="~/js/Array.js"></script>
+    <script src="~/css/DataTable/jquery-3.3.1.js"></script>
+    <script src="~/css/DataTable/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+        // 1. Get Warehouse
     $('#tbWarehouse').DataTable({
-       
         bLengthChange: false,
         binfo: false,
-        data: Whs,
+        data: LWhs,
         columns: [
-            /*{ data: "docEntry" },*/ /*render for number row of data A-Z*/
-            {
-                render: function (data, type, full, meta) {
-                    return meta.row + 1;
-                }
-            },
             { data: "whsCode", autoWidth: true },
             { data: "whsName", autoWidth: true },
-            //  { data:"expiredDate"},
-        
         ]
     });
-    var table = $('#tbWarehouse').DataTable();
-    var Whs = [];
 
-    function getWarehouse() {
+    var tbWhs = $('#tbWarehouse').DataTable();
+    var LWhs = [];
+    $('#tbWarehouse tbody').on('click', 'tr', function () {
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+        }
+        else {
+            tbWhs.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+        }
+    });
+    $(".btnWarehouse").click(function () {
+        $("#ModalWHSCode").modal({backdrop:"static"});
         $.ajax({
             url: '@Url.Action("GetWarehouseWhs", "BinLocation")',
             type: "GET",
-            dataType: "json",
+            dataType: "JSON",
             success: function (data) {
-
-                if (data.errorCode == 0) {
-                    //alert(data.errorCode);
-                    console.log(data);
-                    Whs = []
-                    Whs = data.data;
-                    table.clear();
-                    table.rows.add(Whs);
-                }
+                console.log(data);
+                LWhs=[]
+                LWhs = data.data
+                tbWhs.clear();
+                tbWhs.rows.add(LWhs);
+                tbWhs.draw();
             }
         });
-    }
+    });
+    $('#ChooseWhs').click(function () {
+        var index = tbWhs.row('.selected').index();
+        var data = tbWhs.row(index).data();
+        $('#warehousecode').val(data.whsCode);
+        $('#warehousename').val(data.whsName);
 
-    @*
-   function test1() {
-        $.ajax({
-        url: '@Url.Action("GBinBarCode", "BinLocation")',
-        type: "GET",
-        //data: { ItemCode: Items },
-        dataType: "JSON",
-        beforeSend: function () {
-                    //$('#Modalloder').modal('show');
-        },
-        success: function (data) {
-            console.log(data);
-            if (data.errorCode == 0) {
-                alert("I can get Data from Restful Service");
-            } else {
-                alert("Oppp Maybe Internal Error Look Like this:" + data.errorMessage);
-            }
+    });
+    // End Get Warehouse
+    // 2. Get BinLocation
+    $('#tbBinLocations').DataTable({
+        bLengthChange: false,
+        binfo: false,
+        data: LBins,
+        columns: [
+            { data: "binCode", autoWidth: true },
+            { data: "whsCode", autoWidth: true },
+            {data: "whsName",autoWidth:true}
+        ]
+    });
+
+    var tbBin = $('#tbBinLocations').DataTable();
+    var LBins = [];
+    $('#tbBinLocations tbody').on('click', 'tr', function () {
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
         }
-         });
-    }*@
+        else {
+            tbBin.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+        }
+    });
+       
+    $(".btnbinLocation").click(function () {
+        $("#ModalBinCode").modal({backdrop:"static"});
+        $.ajax({
+            url: '@Url.Action("GetBinLocation", "BinLocation")',
+            type: "GET",
+            dataType: "JSON",
+            success: function (data) {
+                console.log(data);
+                LBins=[]
+                LBins = data.data
+                tbBin.clear();
+                tbBin.rows.add(LBins);
+                tbBin.draw();
+            }
+        });
+    });
+    $('#ChooseBinLocation').click(function () {
+        var index = tbBin.row('.selected').index();
+        var data = tbBin.row(index).data();
+        $('#binLocationCode').val(data.binCode);
 
-</script>
+    });
+    // Get BinLocation
+    // 3. Get Genertating BinCode
+        var BinCode=[];
+        $('#GenerateBarCode').click(function () {
+            $.ajax({
+                url: '@Url.Action("GetGenerateBinCode", "BinLocation")',
+                type: "GET",
+                dataType: "JSON",
+                success: function (data) {
+                    BinCode = []
+                    BinCode = data.data
+                    $('#GBarCodeNumbeer').val(BinCode[0].seriesID);
+                    console.log(BinCode[0].seriesID);
+                }
+            });
+        });
+        //4. Add Bin Information into table
+        $('#TbGBin').DataTable({
+            bLengthChange: false,
+            binfo: false,
+            data: allbinLInes,
+            columns: [
+                { data: "GenerateCode", autoWidth: true },
+                { data: "Warehosue", autoWidth: true },
+                { data: "WarehouseName", autoWidth: true },
+                { data:"BinCode",autoWidth:true}
+            ]
+        });
+        var table = $('#TbGBin').DataTable();
+        var allbinLInes = [];
+        $('#Add').click(function () {            
+            var binLines = {};
+            allbinLInes=[]
+            binLines.GenerateCode = $('#GBarCodeNumbeer').val();
+            binLines.Warehosue = $('#warehousecode').val();
+            binLines.WarehouseName = $('#warehousename').val();
+            binLines.BinCode = $('#binLocationCode').val();
+            allbinLInes.push(binLines);
+            table.rows.add(allbinLInes);
+            table.draw();
+            console.log(allbinLInes);
+        });
+
+        
+    </script>
 

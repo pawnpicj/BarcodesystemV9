@@ -769,6 +769,7 @@
                                     $('#getBatchNumber').val(),
                                     $('#getSerialNumber').val()
                                 ]).draw(false);
+                                $('#txtScanBatchSerial').val("");
                             } else {
                                 return false;
                             }
@@ -859,7 +860,7 @@
         "info": false
     });
 
-        tableToBin.on('select', function () {
+    tableToBin.on('select', function () {
             var cellbinCode = tableToBin.rows({ selected: true }).data()[0]['binCode'];
             var cellAbsEntry = tableToBin.rows({ selected: true }).data()[0]['absEntry'];
             $('#ChooseToBinLocation').click(function () {
@@ -934,7 +935,7 @@
         }
 
         function fncLoadData() {
-        var docentry = $("#txtDocEntry").val();
+            var docentry = $("#txtDocEntry").val();
             if (docentry != '') {
                 ApplyDataTable(docentry);
             } else {
@@ -1042,7 +1043,8 @@
                     str = str + '"batchNo": "' + data[7] + '",';
                     str = str + '"serialNo": "' + data[8] + '",';
                     str = str + '"fromBinEntry" : ' + data[4] + ',';
-                    str = str + '"toBinEntry" : ' + data[6] + '';
+                    str = str + '"toBinEntry" : ' + data[6] + ',';
+                    str = str + '"u_TranferNo" : ""';
                     str = str + '},';
                 }
                 str = str + ']';
@@ -1063,8 +1065,8 @@
                 dataType: "JSON",
                 success: function (data) {
                     //console.log(data);
-                    console.log(errorCode);
-                    //alert("success");
+                    //console.log(errorCode);
+                    alert("success");
             }
         });
     }

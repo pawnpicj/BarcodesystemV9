@@ -9,6 +9,6 @@ namespace BarCodeAPIService.Service
     public interface IInventoryTransferIMService
     {
         Task<ResponseGetOWTR> responseGetOWTR();
-        //Task<ResponseGetWTRLine> responseGetWTRLine(int DocEntry);
+        Task<ResponseGetWTRLine> responseGetWTRLine(int DocEntry);
     }
 }

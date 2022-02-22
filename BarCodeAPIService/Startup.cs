@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using Serilog;
 using BarCodeAPIService.Service.Tengkimleang;
 using BarCodeAPIService.Service.Pannreaksmey;
+using BarCodeAPIService.Service.Bank;
 
 namespace BarCodeAPIService
 {
@@ -52,6 +53,7 @@ namespace BarCodeAPIService
             services.AddScoped<IBatchNumberService, BatchNumberService>();
             services.AddScoped<ISerialNumberService, SerialNumberService>();
             services.AddScoped<ISeriesIMService, SeriesIMService>();
+            services.AddScoped<ISeriesCVService, SeriesCVService>();
             services.AddScoped<IGLAccountService, GLAccountService>();
             services.AddScoped<IContactPersonService, ContactPersonService>();
             services.AddScoped<IBPAddressService, BPAddressService>();
@@ -63,6 +65,7 @@ namespace BarCodeAPIService
             services.AddScoped<IInventoryTransferService, InventoryTransferService>();
             services.AddScoped<IInventoryCountingService, InventoryCountingService>();
             services.AddScoped<IInventoryTransferRequestService, InventoryTransferRequestService>();
+            services.AddScoped<IInventoryTransferIMService, InventoryTransferIMService>();
             services.AddScoped<IDeliveryService, DeliveryService>();
             services.AddScoped<IGenerateBinCodeServices, GenerateBinCodeService>();
             #endregion

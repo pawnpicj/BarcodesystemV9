@@ -69,7 +69,7 @@ namespace BarCodeClientService.Controllers
 
         public IActionResult GetBinLocation()
         {
-            var a = API.Read<ResponseOBINGetBinCode>("api/BinCode");
+            var a = API.Read<ResponseOBINGetBinCode>("api/BinCode/GetBinCode");
             return Ok(a);
         }
 

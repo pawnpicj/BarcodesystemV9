@@ -2,6 +2,7 @@
 using BarCodeLibrary.APICall;
 using BarCodeLibrary.Request.SAP;
 using BarCodeLibrary.Respones.SAP;
+using BarCodeLibrary.Respones.SAP.Bank;
 using BarCodeLibrary.Respones.SAP.Tengkimleang;
 using Barcodesystem.Contract.RouteApi;
 using Microsoft.AspNetCore.Mvc;
@@ -62,7 +63,7 @@ namespace BarCodeClientService.Controllers
 
         public IActionResult GetOWTR()
         {
-            var a = API.Read<ResponseGetOWTR>("api/InventoryTransferRequest/GetIFR");
+            var a = API.Read<ResponseGetOWTR>("api/InventoryTransferIM/GetIFIM");
             return Ok(a);
         }
 
@@ -72,10 +73,24 @@ namespace BarCodeClientService.Controllers
             return Ok(a);
         }
 
+        public IActionResult GetSeriesCV()
+        {
+            var a = API.Read<ResponseNNM1_CV>("api/SeriesCV");
+            return Ok(a);
+        }
+
         public IActionResult GetWTQLine(string docentry)
         {
             string xDocEntry = docentry;
             var a = API.Read<ResponseGetWTQLine>("GetWTQLine/"+ xDocEntry);
+            return Ok(a);
+        }
+
+        //GetWTRLine
+        public IActionResult GetWTRLine(string docentry)
+        {
+            string xDocEntry = docentry;
+            var a = API.Read<ResponseGetWTRLine>("api/InventoryTransferIM/GetWTRLine/" + xDocEntry);
             return Ok(a);
         }
 

@@ -45,6 +45,8 @@ namespace BarCodeLibrary.Request.SAP
         public int fromBinEntry { get; set; }
         public int toBinEntry { get; set; }
 
+        public string U_TranferNo { get; set; }
+
         public List<SendInventoryTransferBatch> Batch { get; set; }
         public List<SendInventoryTransferSerial> Serial { get; set; }
         public List<InventoryTransferBinLocation> FromBinLocations { get; set; }

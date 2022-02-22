@@ -32,5 +32,19 @@ namespace BarCodeAPIService.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpGet("GetWTRLine/{DocEntry}")]
+        public async Task<IActionResult> GetWTRLineAsync(int DocEntry)
+        {
+            var a = await inventoryTransferIMService.responseGetWTRLine(DocEntry);
+            if (a.ErrorCode == 0)
+            {
+                return Ok(a);
+            }
+            else
+            {
+                return BadRequest(a);
+            }
+        }
     }
 }

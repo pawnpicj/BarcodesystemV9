@@ -44,9 +44,9 @@ namespace BarCodeAPIService.Service
                             oStockTransfer.Lines.Quantity = l.Quantity;
                             oStockTransfer.Lines.FromWarehouseCode = l.FromWhsCode;
                             oStockTransfer.Lines.WarehouseCode = l.ToWhsCode;
+                            oStockTransfer.Lines.UserFields.Fields.Item("U_TranferNo").Value = l.U_TranferNo;
 
-
-                            if (l.BatchNo != "")
+                        if (l.BatchNo != "")
                             {
                                 oStockTransfer.Lines.BatchNumbers.SetCurrentLine(0);
                                 oStockTransfer.Lines.BatchNumbers.BatchNumber = l.BatchNo;

@@ -130,22 +130,23 @@
                             <div class="input-group-prepend">
                                 <button class="input-group-text" id="Cifr"><i class="fa fa-check"></i></button>
                             </div>
-                            <input type="text" id="txtDocEntry" disabled size="7" autocomplete="off" />
-                            <input type="text" class="form-control" placeholder="" id="txtDocNum" value="" autocomplete="off">
+                            <input type="text" id="txtDocEntry" disabled size="7" autocomplete="off" value=""/>
+                            <input type="text" class="form-control" placeholder="" id="txtDocNum" value="" autocomplete="off" disabled>
                             <div class="input-group-append">
                                 <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalInfIM"><i class="fa fa-search"></i></button>
                             </div>
                         </div>
                         Series : <input type="text" id="txtSeriesIM" readonly />
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <button class="input-group-text" id="Cifr"><i class="fa fa-check"></i></button>
-                            </div>
-                            <input type="text" class="form-control" placeholder="" id="txtSeries" value="" autocomplete="off">
-                            <div class="input-group-append">
-                                <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalSeries"><i class="fa fa-search"></i></button>
-                            </div>
-                        </div>
+                                 <div class="input-group">
+                                     <div class="input-group-prepend">
+                                         <button class="input-group-text" id="Cifr"><i class="fa fa-check"></i></button>
+                                     </div>
+                                     <input type="text" placeholder="" id="txtSeries" value="" autocomplete="off" disabled size="7">
+                                     <input type="text" class="form-control" placeholder="" id="txtSeriesName" value="" autocomplete="off" disabled>
+                                     <div class="input-group-append">
+                                         <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalSeries"><i class="fa fa-search"></i></button>
+                                     </div>
+                                 </div>
                         Customer Code :
                         <div class="input-group">
                             <div class="input-group-prepend">
@@ -183,7 +184,7 @@
                                 <div class="input-group-prepend">
                                     <button class="input-group-text" id="COcrCode"><i class="fa fa-check"></i></button>
                                 </div>
-                                <input type="text" class="form-control" placeholder="" value="" id="FromWhsCode">
+                                <input type="text" class="form-control" placeholder="" value="" id="FromWhsCode" disabled>
                                 <!--<div class="input-group-append">
                                 <button class="input-group-text btnModelsOcrCode" data-toggle="modal" data-target="#ModalWarehouse"><i class="fa fa-search"></i></button>-->
                                 @*ModalFromWhsCode*@
@@ -210,7 +211,7 @@
                                 <div class="input-group-prepend">
                                     <button class="input-group-text" id="COcrCode3"><i class="fa fa-check"></i></button>
                                 </div>
-                                <input type="text" class="form-control" placeholder="" id="ToWhsCode" value="">
+                                <input type="text" class="form-control" placeholder="" id="ToWhsCode" value="" disabled>
                                 <!--<div class="input-group-append">
                                 <button class="input-group-text btnModelsOcrCode3" data-toggle="modal" data-target="#ModalWarehouse"><i class="fa fa-search"></i></button>-->
                                 @*ModalToWhsCode*@
@@ -218,14 +219,15 @@
                             </div>
                         </div>
                         <div>
-                            To Bin Location : <input type="text" id="txtBinEntry" />
+                            To Bin Location : 
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <button class="input-group-text" id="COcrCode4"><i class="fa fa-check"></i></button>
                                 </div>
-                                <input type="text" class="form-control" placeholder="" id="ToBinCode" value="">
+                                <input type="text" id="txtBinEntry" autocomplete="off" disabled size="7"/>
+                                <input type="text" class="form-control" placeholder="" id="ToBinCode" value="" disabled>
                                 <div class="input-group-append">
-                                    <button class="input-group-text btnModelsOcrCode4" data-toggle="modal" data-target="#ModalBinLocation"><i class="fa fa-search"></i></button>@*ModalToBinCode*@
+                                    <button class="input-group-text btnModelsOcrCode4" id="btnToBinLocation" data-toggle="modal" data-target="#ModalToBinLocation"><i class="fa fa-search"></i></button>@*ModalToBinCode*@
                                 </div>
                             </div>
                         </div>
@@ -346,7 +348,7 @@
     <div class="row" style="padding: 15px;margin-top:-20px;margin-bottom:-20px;">
         <div class="nav navbar-nav ml-auto">
             <div class="btn-group">
-                <button class="btn btn-success" id="Save" style="margin-left:5px;">Send To SAP</button>
+                <button class="btn btn-success" id="Save" style="margin-left:5px;" onclick="POSTDataAPI()">Send To SAP</button>
             </div>
         </div>
     </div>
@@ -355,12 +357,12 @@
 </div>
 
 @*Create Models*@
-@*0. Search Inventory Transfer Request *@
+@*0. Search Inventory Transfer IM *@
 <div class="modal fade" id="ModalInfIM">
     <div class="modal-dialog modal-xl">
         <div class="modal-content" style="background:#f0eff1;color:#696969;">
             <div class="modal-header">
-                <b>List of Inventory Transfer Request</b>
+                <b>List of Inventory Transfer IM</b>
             </div>
             <div class="modal-body">
                 <div class="table-responsive">
@@ -371,6 +373,14 @@
                                     <tr>
                                         <th>DocNum</th>
                                         <th>Posting Date</th>
+                                        <th>CardCode</th>
+                                        <th>CardName</th>
+                                        <th>slpCode</th>
+                                        <th>slpName</th>
+                                        <th>fromWhs</th>
+                                        <th>toWhs</th>
+                                        <th>DocEntry</th>
+                                        <th>SeriesName</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -380,7 +390,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-info" data-dismiss="modal" id="ChooseInf" style="background:#f0eff1;color:#696969;">Choose</button>
-                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
+                <button class="btn btn-info" data-dismiss="modal" id="CloseInf" style="background:#f0eff1;color:#696969;">Close</button>
             </div>
         </div>
     </div>
@@ -479,7 +489,7 @@
     </div>
 </div>
 
-@*3. Search SaleEmployee*@
+@*4. Search SaleEmployee*@
 <div class="modal fade" id="ModalSaleEmployee">
     <div class="modal-dialog modal-xl">
         <div class="modal-content" style="background:#f0eff1;color:#696969;">
@@ -510,10 +520,74 @@
     </div>
 </div>
 
+@*5. Search Series CV*@
+<div class="modal fade" id="ModalSeries">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+            <div class="modal-header">
+                <b>List of Series</b>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="TbSeries" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <thead>
+                                    <tr>
+                                        <th>Series</th>
+                                        <th>SeriesName</th>
+                                        <th>YYYY-MM</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseSeries" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" id="CloseSeries" style="background:#f0eff1;color:#696969;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*6. Search To Bin Location*@
+<div class="modal fade" id="ModalToBinLocation">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+            <div class="modal-header">
+                <b>List of Bin Location</b>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="TbToBinLocation" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <thead>
+                                    <tr>
+                                        <th>BinCode</th>
+                                        <th>BinName</th>
+                                        <th>BinEntry</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseToBinLocation" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="~/js/Array.js"></script>
 <script type="text/javascript">
 
-    //+++++ GetInventoryTransferRequestLine +++++
+    //+++++ GetInventoryTransferIMLine +++++
     var table0 = $('#TbInf').DataTable({
         "ajax": {
             "url": '@Url.Action("GetOWTR", "Inventory")',
@@ -521,7 +595,7 @@
             "dataType": "JSON",
             "dataSrc": 'data',
             "complete": function (data) {
-                console.log("GetOWTQ Complete.");
+                console.log("GetOWTR Complete.");
             }
         },
         "columns": [
@@ -546,43 +620,361 @@
 
     table0.columns([4, 5, 6, 7]).visible(false, false);
 
-    //table0.on('select', function () {
+    table0.on('select', function () {
 
-    //    var celldocNum = table0.rows({ selected: true }).data()[0]['docNum'];
-    //    var cellcardCode = table0.rows({ selected: true }).data()[0]['cardCode'];
-    //    var cellcardName = table0.rows({ selected: true }).data()[0]['cardName'];
-    //    var cellSlpCode = table0.rows({ selected: true }).data()[0]['slpCode']
-    //    var cellSlp = table0.rows({ selected: true }).data()[0]['slpName'];
-    //    var cellfromWhs = table0.rows({ selected: true }).data()[0]['fromWhs'];
-    //    var celltoWhs = table0.rows({ selected: true }).data()[0]['toWhs'];
-    //    var celldocEntry = table0.rows({ selected: true }).data()[0]['docEntry'];
-    //    var cellseriesName = table0.rows({ selected: true }).data()[0]['seriesName'];
-    //    //console.log(rowData);
+        var celldocNum = table0.rows({ selected: true }).data()[0]['docNum'];
+        var cellcardCode = table0.rows({ selected: true }).data()[0]['cardCode'];
+        var cellcardName = table0.rows({ selected: true }).data()[0]['cardName'];
+        var cellSlpCode = table0.rows({ selected: true }).data()[0]['slpCode']
+        var cellSlp = table0.rows({ selected: true }).data()[0]['slpName'];
+        var cellfromWhs = table0.rows({ selected: true }).data()[0]['fromWhs'];
+        var celltoWhs = table0.rows({ selected: true }).data()[0]['toWhs'];
+        var celldocEntry = table0.rows({ selected: true }).data()[0]['docEntry'];
+        var cellseriesName = table0.rows({ selected: true }).data()[0]['seriesName'];
+        //console.log(rowData);
 
-    //    $('#ChooseInf').click(function () {
-    //        var txtDocNum = document.getElementById("DocNum");
-    //        var txtCardCode = document.getElementById("CardCode");
-    //        var txtCardName = document.getElementById("CardName");
-    //        var txtSlpCode0 = document.getElementById("SlpCode0");
-    //        var txtSlpCode = document.getElementById("SlpCode");
-    //        var txtFromWhsCode = document.getElementById("FromWhsCode");
-    //        var txtToWhsCode = document.getElementById("ToWhsCode");
-    //        var txtDocEntry = document.getElementById("txtDocEntry");
-    //        var txtSeriesTFR = document.getElementById("txtSeriesTFR");
+        $('#ChooseInf').click(function () {
+            var txtDocNum = document.getElementById("txtDocNum");
+            var txtCardCode = document.getElementById("txtCardCode");
+            var txtCardName = document.getElementById("txtCardName");
+            var txtSlpCode0 = document.getElementById("SlpCode0");
+            var txtSlpCode = document.getElementById("SlpCode");
+            var txtFromWhsCode = document.getElementById("FromWhsCode");
+            var txtToWhsCode = document.getElementById("ToWhsCode");
+            var txtDocEntry = document.getElementById("txtDocEntry");
+            var txtSeriesIM = document.getElementById("txtSeriesIM");
 
-    //        txtDocNum.value = celldocNum;
-    //        txtCardCode.value = cellcardCode;
-    //        txtCardName.value = cellcardName;
-    //        txtSlpCode0.value = cellSlpCode;
-    //        txtSlpCode.value = cellSlp;
-    //        txtFromWhsCode.value = cellfromWhs;
-    //        txtToWhsCode.value = celltoWhs;
-    //        txtDocEntry.value = celldocEntry;
-    //        txtSeriesTFR.value = cellseriesName;
-    //    });
-    //});
+            txtDocNum.value = celldocNum;
+            txtCardCode.value = cellcardCode;
+            txtCardName.value = cellcardName;
+            txtSlpCode0.value = cellSlpCode;
+            txtSlpCode.value = cellSlp;
+            txtFromWhsCode.value = celltoWhs;
+            txtToWhsCode.value = cellfromWhs;
+            txtDocEntry.value = celldocEntry;
+            txtSeriesIM.value = cellseriesName;
+        });
+    });
+
+    //+++++ Series CV +++++
+    var tableSeriesCV = $('#TbSeries').DataTable({
+            "ajax": {
+            "url": '@Url.Action("GetSeriesCV", "Inventory")',
+            "type": "GET",
+            "dataType": "JSON",
+            "dataSrc": 'data',
+            "complete": function (data) {
+                console.log("GetSeriesCV Complete.");
+            }
+        },
+        "columns": [
+            { "data": "series" },
+            { "data": "seriesName" },
+            { "data": "indicator" }
+        ],
+        "select": true,
+        "paging": false,
+        "ordering": false,
+        "info": false,
+        "searching": false
+        });
+
+    tableSeriesCV.on('select', function () {
+
+        var cellSeries = tableSeriesCV.rows({ selected: true }).data()[0]['series'];
+        var cellSeriesName = tableSeriesCV.rows({ selected: true }).data()[0]['seriesName'];
+            $('#ChooseSeries').click(function () {
+                var txtSeries = document.getElementById("txtSeries");
+                var txtSeriesName = document.getElementById("txtSeriesName");
+                txtSeries.value = cellSeries;
+                txtSeriesName.value = cellSeriesName;
+            });
+        });
 
 
+    //+++++ GetToBinLocation +++++
+    //var xtoWhsCode = document.getElementById("ToWhsCode").value;
+
+    var tableToBin = $('#TbToBinLocation').DataTable({
+        "ajax": {
+            "url": '@Url.Action("GetBinLocation", "Home")',
+            "type": "GET",
+            "dataType": "JSON",
+            "dataSrc": 'data',
+            "complete": function (data) {
+                console.log("GET To BinLocation Complete.");
+            }
+        },
+        "columns": [
+            { "data": "binCode" },
+            { "data": "whsCode" },
+            { "data": "absEntry" },
+        ],
+        "select": true,
+        "paging": false,
+        "ordering": false,
+        "info": false,
+
+    });
+
+    //"oSearch": { "sSearch": xtoWhsCode }
+
+    tableToBin.on('select', function () {
+            var cellbinCode = tableToBin.rows({ selected: true }).data()[0]['binCode'];
+            var cellAbsEntry = tableToBin.rows({ selected: true }).data()[0]['absEntry'];
+            $('#ChooseToBinLocation').click(function () {
+                var txtToBinCode = document.getElementById("ToBinCode");
+                var txtBinEntry = document.getElementById("txtBinEntry");
+                txtToBinCode.value = cellbinCode;
+                txtBinEntry.value = cellAbsEntry;
+            });
+    });
+
+
+    //============== fncLoadData ==============
+
+    function ApplyDataTable(id) {
+
+        $.noConflict();
+        $.ajax({
+            url: '@Url.Action("GetWTRLine", "Inventory")',
+            data: { docentry: id },
+            type: "GET",
+            dataType: "JSON",
+            "dataSrc": 'data',
+            success: function (data) {
+                var tline = $('#TbDataLine').DataTable({
+                    "bDestroy": true,
+                    "aaData": data.data,
+                    "autoWidth": true,
+                    "responsive": true,
+                    "lengthChange": true,
+                    "ordering": true,
+                    "columns": [
+                        { "data": "itemCode", "autoWidth": true },
+                        { "data": "dscription", "autoWidth": true },
+                        { "data": "quantity", "autoWidth": true },
+                        { "data": "fromWhsCod", "autoWidth": true },
+                        { "data": "whsCode", "autoWidth": true },
+                        { "data": "uomCode", "autoWidth": true },
+                        { "data": "u_unitprice", "autoWidth": true },
+                        { "data": "binCode", "autoWidth": true },
+                        { "data": "fromBinEntry", "autoWidth": true }
+                    ],
+                    "language": { "emptyTable": "No Events Found Related To This User" },
+                    "order": [[0, 'desc']],
+                    "select": true,
+                    "paging": false,
+                    "ordering": false,
+                    "info": false,
+                    "searching": false
+                });
+                alert("Download Data Complete");
+
+                tline.on('select', function () {
+                    var cellitemcode = tline.rows({ selected: true }).data()[0]['itemCode'];
+                    var celldscription = tline.rows({ selected: true }).data()[0]['dscription'];
+                    var cellquantity = tline.rows({ selected: true }).data()[0]['quantity'];
+                    var cellfromBinEntry = tline.rows({ selected: true }).data()[0]['fromBinEntry'];
+
+                    var txtItemCode = document.getElementById("txtItemCode");
+                    var txtItemName = document.getElementById("txtItemName");
+                    var txtQuantity = document.getElementById("txtQuantity");
+                    var txtfBinEntry = document.getElementById("txtfBinEntry");
+                    txtItemCode.value = cellitemcode;
+                    txtItemName.value = celldscription;
+                    txtQuantity.value = cellquantity;
+                    txtfBinEntry.value = cellfromBinEntry;
+
+                    document.getElementById("txtScanBarCode").focus();
+                    document.getElementById("txtScanBarCode").value = "";
+                    document.getElementById("txtScanBatchSerial").value = "";
+                });
+
+            }
+        });
+
+    }
+
+    function fncLoadData() {
+        var docentry = $("#txtDocEntry").val();
+        if (docentry != '') {
+            ApplyDataTable(docentry);
+        } else {
+            alert("Please Select DocNum");
+        }
+    }
+
+    $('#btnClear').on('click', function () {
+        location.reload();
+    });
+
+
+    //function scan barcode
+    //Scan Bar Code
+    var input = document.getElementById("txtScanBarCode");
+    var input2 = document.getElementById("txtScanBatchSerial");
+    input.addEventListener("keyup", function (event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            document.getElementById("txtScanBatchSerial").focus();
+            input2.addEventListener("keyup", function (event) {
+                if (event.keyCode === 13) {
+                    event.preventDefault();
+                    document.getElementById("addRow").click();
+                    document.getElementById("getItemCode").value = "";
+                    document.getElementById("getOnHand").value = "";
+                    document.getElementById("getSerialNumber").value = "";
+                    document.getElementById("getBatchNumber").value = "";
+                }
+            });
+        }
+    });
+
+    //Add Data In Row
+    var t = $('#tbItemList').DataTable({
+         "columns": [
+            { "width": "10%" },
+            { "width": "50%" },
+            { "width": "5%" },
+            { "width": "5%" },
+            { "width": "5%" },
+            { "width": "5%" },
+            { "width": "5%" },
+            { "width": "5%" },
+            { "width": "5%" }
+        ],
+        "select": true,
+        "paging": false,
+        "ordering": false,
+        "info": false,
+        "searching": false
+    });
+
+    $('#addRow').on('click', function () {
+
+        if ($('#txtScanBatchSerial').val()!='') {
+
+            $.ajax({
+                url: '@Url.Action("GetStcok_BatchSerial", "Inventory")',
+                data: { barcode: $('#txtScanBarCode').val(), batchserial: $('#txtScanBatchSerial').val()},
+                type: "GET",
+                dataType: "JSON",
+                "dataSrc": 'data',
+                success: function (data) {
+                    var jqueryXml = $(data);
+                    if (jqueryXml[0].data[0].itemCode != '') {
+
+                        if (jqueryXml[0].data[0].itemCode == document.getElementById("txtItemCode").value) {
+                            //=========================
+                            $('#getItemCode').val(jqueryXml[0].data[0].itemCode);
+                            $('#getOnHand').val(jqueryXml[0].data[0].onHand);
+                            $('#getSerialNumber').val(jqueryXml[0].data[0].serialNumber);
+                            $('#getBatchNumber').val(jqueryXml[0].data[0].batchNumber);
+
+                            if ($('#getItemCode').val() != '') {
+                                t.row.add([
+                                    $('#getItemCode').val(),
+                                    $('#txtItemName').val(),
+                                    $('#txtQuantity').val(),
+                                    $('#FromWhsCode').val(),
+                                    $('#txtfBinEntry').val(),
+                                    $('#ToWhsCode').val(),
+                                    $('#txtBinEntry').val(),
+                                    $('#getBatchNumber').val(),
+                                    $('#getSerialNumber').val()
+                                ]).draw(false);
+
+                                $('#txtScanBatchSerial').val("");
+
+                            } else {
+                                return false;
+                            }
+                            //=========================
+                        } else {
+                            alert("Itemcode don't match!");
+                        }
+
+
+
+                    } else {
+                        alert("No ItemCode");
+                    }
+
+                }
+            });
+
+
+        }
+
+    });
+
+    $('#addRow').click();
+
+    //Delete Line Item From ScanBarCode
+    $('#btnDelRow').click(function () {
+        t.row('.selected').remove().draw(false);
+    });
+
+    //Add Data Head And Line -> SAP
+    function POSTDataAPI() {
+            let regex = /\,(?!\s*?[\{\[\"\'\w])/g;
+            var str = '';
+
+            if (!t.data().count()) {
+                alert('Empty table');
+            } else {
+
+                str = '{';
+                str = str + '"series": ' + document.getElementById("txtSeries").value + ',';
+                str = str + '"cardCode": "' + document.getElementById("txtCardCode").value + '",';
+                str = str + '"docDate": "' + document.getElementById("DocDate").value + '",';
+                str = str + '"taxDate": "' + document.getElementById("DocumentDate").value + '",';
+                str = str + '"fromWhsCode": "' + document.getElementById("FromWhsCode").value + '",';
+                str = str + '"toWhsCode": "' + document.getElementById("ToWhsCode").value + '",';
+                str = str + '"toBinCode": ' + document.getElementById("txtBinEntry").value + ',';
+                str = str + '"salesEmployeeCode": "' + document.getElementById("SlpCode0").value + '",';
+                str = str + '"comments": "' + document.getElementById("comments").value + '",';
+                str = str + '"journalRemark": "' + document.getElementById("jrnlMemo").value + '",';
+                str = str + '"line": [';
+                //Line
+                for (let rr = 0; rr < t.column(0).data().length; rr++) {
+                    var data = t.row(rr).data();
+                    str = str + '{';
+                    str = str + '"itemCode": "' + data[0] + '",';
+                    str = str + '"quantity": ' + data[2] + ',';
+                    str = str + '"fromWhsCode": "' + data[3] + '",';
+                    str = str + '"toWhsCode": "' + data[5] + '",';
+                    str = str + '"batchNo": "' + data[7] + '",';
+                    str = str + '"serialNo": "' + data[8] + '",';
+                    str = str + '"fromBinEntry" : ' + data[4] + ',';
+                    str = str + '"toBinEntry" : ' + data[6] + ',';
+                    str = str + '"u_TranferNo" : "' + document.getElementById("txtDocNum").value + '"';
+                    str = str + '},';
+                }
+                str = str + ']';
+                str = str + '}';
+                console.log(str);
+            }
+
+            let cStr = str.replace(regex, ''); // remove all trailing commas
+            let jStr = JSON.parse(cStr); // build a new JSON object based on correct string
+            //var jStr = JSON.parse(str);
+            //console.log(jStr);
+
+            //console.log(contact);
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("PostInventoryTransfer", "Inventory")',
+                data: { sendInventoryTransfer: jStr},
+                dataType: "JSON",
+                success: function (data) {
+                    //console.log(errorCode);
+                    alert("success");
+                    //location.reload();
+            }
+        });
+    }
 
 </script>
 

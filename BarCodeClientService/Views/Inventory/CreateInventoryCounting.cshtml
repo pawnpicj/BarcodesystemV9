@@ -4,6 +4,7 @@
     ViewData["Date"] = dt.ToShortDateString();
 }
 
+<link href="~/css/styles.css" rel="stylesheet" />
 <link href="~/css/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="~/css/DataTable/rowReorder.dataTables.min.css" rel="stylesheet" />
 @*<link href="~/css/DataTable/responsive.dataTables.min.css" rel="stylesheet" />*@
@@ -11,7 +12,13 @@
 <script src="~/css/DataTable/jquery-3.3.1.js"></script>
 <script src="~/css/DataTable/jquery.dataTables.min.js"></script>
 <script src="~/css/DataTable/dataTables.rowReorder.min.js"></script>
+<script src="~/css/DataTable/moment.min.js"></script>
+<script src="~/css/DataTable/datetime-moment.js"></script>
 @*<script src="~/css/DataTable/dataTables.responsive.min.js"></script>*@
+
+<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
+<script src="https://editor.datatables.net/extensions/Editor/js/dataTables.editor.min.js"></script>
 
 <style>
     tr.selected {
@@ -81,6 +88,18 @@
     }
 </style>
 
+<script type="text/javascript">
+    /*DocDate*/
+    $(document).ready(function () {
+        var now = new Date();
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+        var today = now.getFullYear() + "-" + (month) + "-" + (day);
+        $('#DocDate').val(today);
+        $('#DocumentDate').val(today);
+    });
+</script>
+
 <div id="#main">
     @* TimeLine *@
     <div class="row" style="margin-left:5px;margin-top:5px;color:#696969;">
@@ -104,6 +123,7 @@
             </li>
         </ul>
         <div class="tab-content" id="myTabContent">
+            @* =============================================== *@
 
             <div class="tab-pane fade show active" id="item" role="tabpanel" aria-labelledby="item-tab" style="margin-top: 10px">
                 <div class="row">
@@ -120,25 +140,22 @@
                                 <input type="date" class="form-control" id="DocumentDate">
                             </div>
                         </div>
-                        <hr>
-                    </div>
 
-                    <div class="col-sm-6">
                         Sale Employee :
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <button class="input-group-text" id="COcrCode4"><i class="fa fa-check"></i></button>
                             </div>
-                            <input type="text" class="form-control" placeholder="" id="SlpCode" value="">
+                            <input type="text" id="txtSlpCode" autocomplete="off" disabled size="7" />
+                            <input type="text" class="form-control" placeholder="" id="txtSlpName" value="" disabled>
                             <div class="input-group-append">
-                                <button class="input-group-text btnModelsOcrCode4" data-toggle="modal" data-target="#ModalSaleEmployee"><i class="fa fa-search"></i></button>
+                                <button class="input-group-text" data-toggle="modal" data-target="#ModalSaleEmployee"><i class="fa fa-search"></i></button>
                             </div>
                         </div>
                         <div>
                             Ref2 :
                             <div class="input-group">
                                 <input type="text" class="form-control" value="" id="ref2">
-                                </select>
                             </div>
                         </div>
                         <div>
@@ -149,30 +166,36 @@
                         </div>
                     </div>
 
-                </div>
-                <div class="row">
                     <div class="col-sm-6">
                         <div>
                             Warehouse :
                             <div class="input-group">
-
-                                <input type="text" class="form-control" placeholder="" value="" id="FromWhsCode">
+                                <input type="text" autocomplete="off" disabled size="7" placeholder="" value="01" id="txtWhsCode">
+                                <input type="text" class="form-control" placeholder="" value="คลังอุดมฯ" id="txtWhsName" disabled>
                                 <div class="input-group-append">
-                                    <button class="input-group-text btnModelsOcrCode" data-toggle="modal" data-target="#ModalWarehouse"><i class="fa fa-search"></i></button>
+                                    <button class="input-group-text" data-toggle="modal" data-target="#ModalWarehouse">
+                                        <i class="fa fa-search"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
                         <div>
                             Bin Location :
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="" value="" id="FromBinCode">
-                                <button class="input-group-text btnModelsOcrCode" data-toggle="modal" data-target="#ModalBinLocation"><i class="fa fa-search"></i></button>
-                                <button class="btn btn-warning" id="btnSearch" style="margin-left:5px;">Search</button>
-                            </div>
-                        </div>
-                    </div>
+                                <input type="text" autocomplete="off" disabled size="7" placeholder="" value="" id="txtBinCode">
+                                <input type="text" class="form-control" placeholder="" value="" id="txtBinName" disabled>
+                                <div class="input-group-append">
+                                    <button class="input-group-text" data-toggle="modal" data-target="#ModalBinLocation">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                                    <button class="btn btn-danger" data-toggle="modal" id="btnClrBinCode" onclick="ClearBinCode();">
+                                        <i class="fa fa-times"></i>
+                                    </button>
 
-                    <div class="col-sm-6">
+                                </div>
+                            </div>
+                        <button class="btn btn-warning" id="btnSearch" style="width:100%" onclick="fncGetStockWhsBin();"><b>Search</b></button>
                         <div>
                             Scan Barcode :
                             <div class="input-group">
@@ -181,8 +204,8 @@
                         </div>
                         Quantity :
                         <div class="input-group">
-                            <input type="number" class="form-control" placeholder="" id="Quantity" value="">
-                            <button class="btn btn-warning" id="btnUpdateQty" style="margin-left:5px;">Update Qty</button>
+                            <input type="number" class="form-control" placeholder="" id="Quantity" value="1">
+                            @*<button class="btn btn-warning" id="btnUpdateQty" style="margin-left:5px;">Update Qty</button>*@
                         </div>
                     </div>
 
@@ -190,7 +213,7 @@
 
             </div>
 
-
+            @* =============================================== *@
             <div class="row">
                 <div class="col-sm-12">
                     <div class="table-responsive">
@@ -215,20 +238,14 @@
         </div>
     </div>
     <div class="row" style="padding: 15px;margin-top:-20px;margin-bottom:-20px;">
-        @*<button class="btn btn-info" id="Save" style="background:#f0eff1;color:#696969">Add New</button>*@
-        @*<button class="btn btn-success" id="Save" type="button">Add New</button>*@
-        @*<input type="checkbox" id="cpayment" style="background:#f0eff1;color:#696969;margin-left:5px;margin-top:15px" /> <label>Auto Payment</label>*@
         <div class="nav navbar-nav ml-auto">
             <div class="btn-group">
-                @*<button class="btn btn-info previous" style="background:#f0eff1;color:#696969">Previous</button>
-                    <button class="btn btn-info next" style="background: #f0eff1;color: #696969;">Next</button>*@
                 <button class="btn btn-success" id="Save" style="margin-left:5px;">Send To SAP</button>
             </div>
         </div>
     </div>
 </div>
 
-</div>
 
 @*Create Models*@
 @*1. Search Customer Code*@
@@ -273,7 +290,7 @@
                 <div class="table-responsive">
                     <div class="row">
                         <div class="col-sm-12">
-                            <table id="TbCusCode" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                            <table id="TbWhs" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
                                 <thead>
                                     <tr>
                                         <th>WhsCode</th>
@@ -286,7 +303,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-info" data-dismiss="modal" id="ChooseCus" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseWhs" style="background:#f0eff1;color:#696969;">Choose</button>
                 <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
             </div>
         </div>
@@ -304,11 +321,12 @@
                 <div class="table-responsive">
                     <div class="row">
                         <div class="col-sm-12">
-                            <table id="TbCusCode" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                            <table id="TbBinLocation" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
                                 <thead>
                                     <tr>
                                         <th>BinCode</th>
                                         <th>BinName</th>
+                                        <th>BinEntry</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -317,14 +335,14 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-info" data-dismiss="modal" id="ChooseCus" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseBinLocation" style="background:#f0eff1;color:#696969;">Choose</button>
                 <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
             </div>
         </div>
     </div>
 </div>
 
-@*3. Search SaleEmployee*@
+@*4. Search SaleEmployee*@
 <div class="modal fade" id="ModalSaleEmployee">
     <div class="modal-dialog modal-xl">
         <div class="modal-content" style="background:#f0eff1;color:#696969;">
@@ -335,7 +353,7 @@
                 <div class="table-responsive">
                     <div class="row">
                         <div class="col-sm-12">
-                            <table id="TbCusCode" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                            <table id="TbSaleEmployee" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
                                 <thead>
                                     <tr>
                                         <th>SlpCode</th>
@@ -348,7 +366,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-info" data-dismiss="modal" id="ChooseCus" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseSlp" style="background:#f0eff1;color:#696969;">Choose</button>
                 <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
             </div>
         </div>
@@ -357,24 +375,120 @@
 
 <script src="~/js/Array.js"></script>
 <script type="text/javascript">
-    var LDT = [];
-    $('#TbDT').DataTable({
-        responsive: true,
-        bLengthChange: false,
-        binfo: false,
-        data: LDT,
-        columns: [
-            { data: "docNum", autoWidth: true },
-            { data: "webID", autoWidth: true },
-            { data: "customerName", autoWidth: true },
-            { data: "posuser", autoWidth: true },
-            { data: "documentDate", autoWidth: true },
-            { data: "docTotal", autoWidth: true },
-            { data: "grossAmount", autoWidth: true },
-            { data: "drawAmount", autoWidth: true },
-            { data: "taxAmount", autoWidth: true }
-        ]
+
+    function ClearBinCode() {
+        document.getElementById("txtBinCode").value = '';
+        document.getElementById("txtBinName").value = '';
+    }
+
+    // Get SaleEmployee
+    var tableSlp = $('#TbSaleEmployee').DataTable({
+        "ajax": {
+            "url": '@Url.Action("GetSaleEmployee", "Inventory")',
+            "type": "GET",
+            "dataType": "JSON",
+            "dataSrc": 'data',
+            "complete": function (data) {
+                console.log("GET SaleEmployee Complete.");
+            }
+        },
+        "columns": [
+            { "data": "slpCode" },
+            { "data": "slpName" },
+        ],
+        "paging": false,
+        "ordering": false,
+        "info": false,
+        "select": true
     });
-    var tbdtpayment = $('#TbAR').DataTable()
+    tableSlp.on('select', function () {
+        var cellCode = tableSlp.rows({ selected: true }).data()[0]['slpCode'];
+        var cellName = tableSlp.rows({ selected: true }).data()[0]['slpName'];
+
+        $('#ChooseSlp').click(function () {
+            var xCode = document.getElementById("txtSlpCode");
+            var xName = document.getElementById("txtSlpName");
+            xCode.value = cellCode;
+            xName.value = cellName;
+        });
+    });
+
+    //+++++ Get Warehouse +++++
+    var tableWhs = $('#TbWhs').DataTable({
+        "ajax": {
+            "url": '@Url.Action("GetWarehouse", "Home")',
+            "type": "GET",
+            "dataType": "JSON",
+            "dataSrc": 'data',
+            "complete": function (data) {
+                console.log("GET Warehouse Complete.");
+            }
+        },
+        "columns": [
+            { "data": "whsCode" },
+            { "data": "whsName" },
+        ],
+        "paging": false,
+        "ordering": false,
+        "info": false,
+        "select": true
+    });
+    tableWhs.on('select', function () {
+        var cellCode = tableWhs.rows({ selected: true }).data()[0]['whsCode'];
+        var cellName = tableWhs.rows({ selected: true }).data()[0]['whsName'];
+
+        $('#ChooseWhs').click(function () {
+            var xCode = document.getElementById("txtWhsCode");
+            var xName = document.getElementById("txtWhsName");
+            xCode.value = cellCode;
+            xName.value = cellName;
+        });
+    });
+
+    //+++++ GetToBinLocation +++++
+    var tableBin = $('#TbBinLocation').DataTable({
+        "ajax": {
+            "url": '@Url.Action("GetBinLocation", "Home")',
+            "type": "GET",
+            "dataType": "JSON",
+            "dataSrc": 'data',
+            "complete": function (data) {
+                console.log("GET BinLocation Complete.");
+            }
+        },
+        "columns": [
+            { "data": "binCode" },
+            { "data": "whsCode" },
+            { "data": "absEntry" },
+        ],
+        "select": true,
+        "paging": false,
+        "ordering": false,
+        "info": false
+    });
+    tableBin.on('select', function () {
+        var cellbinCode = tableBin.rows({ selected: true }).data()[0]['binCode'];
+        var cellAbsEntry = tableBin.rows({ selected: true }).data()[0]['absEntry'];
+
+        $('#ChooseBinLocation').click(function () {
+            var BinCode = document.getElementById("txtBinCode");
+            var BinName = document.getElementById("txtBinName");
+            BinCode.value = cellAbsEntry;
+            BinName.value = cellbinCode;
+        });
+    });
+
+    //GET Stock Whs Bin
+    function fncGetStockWhsBin() {
+        
+        if (document.getElementById("txtWhsName").value != '') {
+
+
+
+
+        } else {
+            alert("Please Selete Warehouse");
+        }
+    }
 </script>
 

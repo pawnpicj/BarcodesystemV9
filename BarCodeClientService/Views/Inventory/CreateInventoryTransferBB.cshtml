@@ -3,7 +3,7 @@
     DateTime dt = DateTime.Now;
     ViewData["Date"] = dt.ToShortDateString();
 }
-
+<link href="~/css/styles.css" rel="stylesheet" />
 <link href="~/css/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="~/css/DataTable/rowReorder.dataTables.min.css" rel="stylesheet" />
 @*<link href="~/css/DataTable/responsive.dataTables.min.css" rel="stylesheet" />*@
@@ -125,22 +125,23 @@
             <div class="tab-pane fade show active" id="item" role="tabpanel" aria-labelledby="item-tab" style="margin-top: 10px">
                 <div class="row">
                     <div class="col-sm-6">
-                        Search IFR No. : <input type="text" id="txtDocEntry" readonly />
+                        Search IFR No. : 
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <button class="input-group-text" id="Cifr"><i class="fa fa-check"></i></button>
                             </div>
-                            <input type="text" class="form-control" placeholder="" id="DocNum" value="">
+                            <input type="text" id="txtDocEntry" disabled size="7" autocomplete="off" value="" />
+                            <input type="text" class="form-control" placeholder="" id="DocNum" value="" disabled>
                             <div class="input-group-append">
                                 <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalInfReq"><i class="fa fa-search"></i></button>
                             </div>
                         </div>
-                        Series : <input type="text" id="txtSeriesTFR" readonly />
+                        Series : <input type="text" id="txtSeriesTFR" readonly Class="hiddenAdmin"/>
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <button class="input-group-text" id="Cifr"><i class="fa fa-check"></i></button>
                             </div>
-                            <input type="text" class="form-control" placeholder="" id="txtSeries" value="">
+                            <input type="text" class="form-control" placeholder="" id="txtSeries" value="" readonly>
                             <div class="input-group-append">
                                 <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalSeries"><i class="fa fa-search"></i></button>
                             </div>
@@ -215,12 +216,13 @@
                             </div>
                         </div>
                         <div>
-                            To Bin Location : <input type="text" id="txtBinEntry"/>
+                            To Bin Location :
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <button class="input-group-text" id="COcrCode4"><i class="fa fa-check"></i></button>
                                 </div>
-                                <input type="text" class="form-control" placeholder="" id="ToBinCode" value="">
+                                <input type="text" id="txtBinEntry" autocomplete="off" disabled size="7" />
+                                <input type="text" class="form-control" placeholder="" id="ToBinCode" value="" readonly>
                                 <div class="input-group-append">
                                     <button class="input-group-text btnModelsOcrCode4" data-toggle="modal" data-target="#ModalToBinLocation"><i class="fa fa-search"></i></button>@*ModalToBinCode*@
                                 </div>
@@ -287,13 +289,14 @@
                             <br />
 
                             <div class="col-sm-6">
-                                <div>
+                                <div class="hiddenAdmin">
                                     ItemCode : <input type="text" id="txtItemCode" class="form-control" value="" style="background-color: cornsilk;" readonly />
                                     ItemName : <input type="text" id="txtItemName" class="form-control" value="" style="background-color: cornsilk;" readonly />
                                     Quantity : <input type="text" id="txtQuantity" class="form-control" value="" style="background-color: cornsilk;" readonly />
                                     FromBinEntry : <input type="text" id="txtfBinEntry" class="form-control" value="" style="background-color: cornsilk;" readonly />
+                                    <hr>
                                 </div>
-                                <hr>
+                                
                                 <div>
                                     <label>
                                         Input Quantity :
@@ -320,14 +323,14 @@
                             <hr>
                             @*Add Data From ScanItem*@
                             <div><font size="+1" style="font-weight:bold"><u>List Data From Scan</u></font></div>
-                            <div id="GetStcokBatchSerial01">
+                            <div id="GetStcokBatchSerial01" class="hiddenAdmin">
                                 <input type="text" id="getItemCode" />
                                 <input type="text" id="getOnHand" />
                                 <input type="text" id="getSerialNumber" />
                                 <input type="text" id="getBatchNumber" />
                             </div>
-                            <button id="btnDelRow">Delete selected row</button>
-                            <table id="tbItemList" class="display" style="width:100%">
+                            <button id="btnDelRow" class="btn btn-info">&nbsp;Delete Row&nbsp;</button>
+                            <table id="tbItemList" class="table table-striped table-bordered table-condensed dt-responsive nowrap text-xsmall" style="width: 100%; background: #f0eff1; color: #696969;">
                                 <thead>
                                     <tr>
                                         <th>ItemCode</th>
@@ -908,6 +911,7 @@
                     "searching": false
                 });
                 alert("Download Data Complete");
+                document.getElementById("txtScanBarCode").focus();
 
                 tline.on('select', function () {
                     var cellitemcode = tline.rows({ selected: true }).data()[0]['itemCode'];

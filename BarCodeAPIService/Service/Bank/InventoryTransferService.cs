@@ -37,6 +37,7 @@ namespace BarCodeAPIService.Service
                     oStockTransfer.JournalMemo = sendInventoryTransfer.JournalRemark;
                     oStockTransfer.FromWarehouse = sendInventoryTransfer.FromWhsCode;
                     oStockTransfer.ToWarehouse = sendInventoryTransfer.ToWhsCode;
+                    //oStockTransfer.ToBinCode = sendInventoryTransfer.ToBinCode;
 
                     foreach (SendInventoryTransferLine l in sendInventoryTransfer.Line)
                     {

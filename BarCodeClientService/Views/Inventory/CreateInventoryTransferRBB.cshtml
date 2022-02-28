@@ -136,7 +136,7 @@
                                 <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalInfIM"><i class="fa fa-search"></i></button>
                             </div>
                         </div>
-                        Series : <input type="text" id="txtSeriesIM" readonly />
+                        Series : <input type="text" id="txtSeriesIM" readonly class="hiddenAdmin"/>
                                  <div class="input-group">
                                      <div class="input-group-prepend">
                                          <button class="input-group-text" id="Cifr"><i class="fa fa-check"></i></button>
@@ -283,13 +283,14 @@
                         </table>
                         <br />
                         <div class="col-sm-6">
-                            <div>
+                            <div class="hiddenAdmin">
                                 ItemCode : <input type="text" id="txtItemCode" class="form-control" value="" style="background-color: cornsilk;" readonly />
                                 ItemName : <input type="text" id="txtItemName" class="form-control" value="" style="background-color: cornsilk;" readonly />
                                 Quantity : <input type="text" id="txtQuantity" class="form-control" value="" style="background-color: cornsilk;" readonly />
                                 FromBinEntry : <input type="text" id="txtfBinEntry" class="form-control" value="" style="background-color: cornsilk;" readonly />
+                                <hr>
                             </div>
-                            <hr>
+                            
                             <div>
                                 <label>
                                     Input Quantity :
@@ -316,14 +317,14 @@
                         <hr>
 
                         <div><font size="+1" style="font-weight:bold"><u>List Data From Scan</u></font></div>
-                        <div id="GetStcokBatchSerial01">
+                        <div id="GetStcokBatchSerial01" class="hiddenAdmin">
                             <input type="text" id="getItemCode" />
                             <input type="text" id="getOnHand" />
                             <input type="text" id="getSerialNumber" />
                             <input type="text" id="getBatchNumber" />
                         </div>
-                        <button id="btnDelRow">Delete selected row</button>
-                        <table id="tbItemList" class="display" style="width:100%">
+                        <button id="btnDelRow" class="btn btn-info">&nbsp;Delete Row&nbsp;</button>
+                        <table id="tbItemList" class="table table-striped table-bordered table-condensed dt-responsive nowrap text-xsmall" style="width: 100%; background: #f0eff1; color: #696969;">
                             <thead>
                                 <tr>
                                     <th>ItemCode</th>
@@ -770,7 +771,7 @@
                     "searching": false
                 });
                 alert("Download Data Complete");
-
+                document.getElementById("txtScanBarCode").focus();
                 tline.on('select', function () {
                     var cellitemcode = tline.rows({ selected: true }).data()[0]['itemCode'];
                     var celldscription = tline.rows({ selected: true }).data()[0]['dscription'];

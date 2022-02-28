@@ -261,6 +261,10 @@ body {
         border-color: transparent transparent #fff transparent;
     }
 
+/*hidden textbox*/
+.hiddenAdmin {
+    display:none;
+}
 
 /* Extra large devices (large desktops, 1200px and up) */
 

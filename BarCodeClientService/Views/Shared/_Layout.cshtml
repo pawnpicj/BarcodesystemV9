@@ -61,7 +61,8 @@
 <body style="background:#dce7f1">
     @*@if (@ViewBag.UserCode == "1")
         {*@
-    <div class="wrapper @*@HttpContextAccessor.HttpContext.Session.GetString("Layout")*@">
+    @*@HttpContextAccessor.HttpContext.Session.GetString("Layout")*@
+    <div class="wrapper active">
         <div class="top_navbar" style="background:#5f95c3;">
             <div class="hamburger" style="background:#f0eff1">
                 <div class="hamburger__inner">
@@ -72,25 +73,25 @@
             </div>
             <div class="menu">
                 <div class="logo" style="color:#f0eff1">
-                    VANs System
+                    <b>Barcode System</b>
                 </div>
                 <div class="right_menu">
                     <ul>
-                        <li style="margin-top:10px;margin-right:10px;">
-                            <a id="user" href="#"><i class="fas fa-user"></i></a>
-                            <div class="profile_dd">
+                        @*<li style="margin-top:10px;margin-right:10px;">
+                                <a id="user" href="#"><i class="fas fa-user"></i></a>
+                                <div class="profile_dd">
 
-                                <div class="dd_item" id="changepass">Change Password</div>
-                                <div class="dd_item" id="logout">Logout</div>
-                            </div>
-                        </li>
-                        @*<li style="margin-top:10px">
-                                <a id="setting" href="#"><i class="fas fa-cog"></i></a>
-                                <div class="profile_dd1">
-                                    <div class="dd_item1" id="CreateUser">Create User</div>
-                                    <div class="dd_item1" id="Quit">Quit</div>
+                                    <div class="dd_item" id="changepass">Change Password</div>
+                                    <div class="dd_item" id="logout">Logout</div>
                                 </div>
-                            </li>*@
+                            </li>
+                            <li style="margin-top:10px">
+                                    <a id="setting" href="#"><i class="fas fa-cog"></i></a>
+                                    <div class="profile_dd1">
+                                        <div class="dd_item1" id="CreateUser">Create User</div>
+                                        <div class="dd_item1" id="Quit">Quit</div>
+                                    </div>
+                                </li>*@
                     </ul>
                 </div>
             </div>

@@ -22,10 +22,9 @@ namespace BarCodeLibrary.Respones.SAP.Bank
         public string BinCode { get; set; }
         public int BinEntry { get; set; }
         public string BatchNo { get; set; }
-        public string LotNumber { get; set; }
         public double Quantity { get; set; }
-        public int UOMEntry { get; set; }
+        public string UOMEntry { get; set; }
         public string UOMCode { get; set; }
-        public DateTime ExpDate { get; set; }
+        public string SerialNo { get; set; }
     }
 }

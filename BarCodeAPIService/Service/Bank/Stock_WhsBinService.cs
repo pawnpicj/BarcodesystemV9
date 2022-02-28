@@ -35,11 +35,10 @@ namespace BarCodeAPIService.Service.Bank
                             BinCode = oRS.Fields.Item(4).Value.ToString(),
                             BinEntry = Convert.ToInt32(oRS.Fields.Item(5).Value.ToString()),
                             BatchNo = oRS.Fields.Item(6).Value.ToString(),
-                            LotNumber = oRS.Fields.Item(7).Value.ToString(),
-                            Quantity = Convert.ToDouble(oRS.Fields.Item(8).Value.ToString()),
-                            UOMEntry = Convert.ToInt32(oRS.Fields.Item(9).Value.ToString()),
-                            UOMCode = oRS.Fields.Item(10).Value.ToString(),
-                            ExpDate = Convert.ToDateTime(oRS.Fields.Item(11).Value.ToString())
+                            Quantity = Convert.ToDouble(oRS.Fields.Item(7).Value.ToString()),
+                            UOMEntry = oRS.Fields.Item(8).Value.ToString(),
+                            UOMCode = oRS.Fields.Item(9).Value.ToString(),
+                            SerialNo = oRS.Fields.Item(10).Value.ToString()
 
                             //BarCode = oRS.Fields.Item(3).Value.ToString(),
                         });

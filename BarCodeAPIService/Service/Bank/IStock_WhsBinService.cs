@@ -8,6 +8,6 @@ namespace BarCodeAPIService.Service.Bank
 {
     public interface IStock_WhsBinService
     {
-        Task<ResponseGetStockByWhsBin> responseGetStockByWhsBin();
+        Task<ResponseGetStockByWhsBin> responseGetStockByWhsBin(string whsCode, string binCode);
     }
 }

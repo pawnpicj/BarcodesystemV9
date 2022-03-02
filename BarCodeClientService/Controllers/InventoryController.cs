@@ -109,6 +109,15 @@ namespace BarCodeClientService.Controllers
             return Ok(a);
         }
 
+        public IActionResult GetStock_WhsBin(string whsCode, string binCode)
+        {
+            string xWhsCode = whsCode;
+            string xBinCode = binCode;
+
+            var a = API.Read<ResponseGetStockByWhsBin>("GetStockWhsBin/" + xWhsCode + "/" + xBinCode);
+            return Ok(a);
+        }
+
         [HttpPost]
         public IActionResult PostInventoryTransfer(SendInventoryTransfer sendInventoryTransfer)
         {

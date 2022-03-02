@@ -189,14 +189,15 @@
                                         <i class="fa fa-search"></i>
                                     </button>
                                 </div>
-                                    <button class="btn btn-danger" data-toggle="modal" id="btnClrBinCode" onclick="ClearBinCode();">
-                                        <i class="fa fa-times"></i>
-                                    </button>
+                                <button class="btn btn-danger" data-toggle="modal" id="btnClrBinCode" onclick="ClearBinCode();">
+                                    <i class="fa fa-times"></i>
+                                </button>
 
-                                </div>
                             </div>
+                        </div>
                         <button class="btn btn-warning" id="btnSearch" style="width:100%" onclick="fncGetStockWhsBin();"><b>Search</b></button>
-                        <div>
+                        <button class="btn btn-danger" id="btnClear" style="width:100%" onclick="ClearTb();"><b>Clear</b></button>
+                        <div>                            
                             Scan Barcode :
                             <div class="input-group">
                                 <input type="text" class="form-control" value="" id="scanbarcode" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
@@ -205,7 +206,7 @@
                         Quantity :
                         <div class="input-group">
                             <input type="number" class="form-control" placeholder="" id="Quantity" value="1">
-                            @*<button class="btn btn-warning" id="btnUpdateQty" style="margin-left:5px;">Update Qty</button>*@
+                            <button class="btn btn-warning" id="btnUpdateQty" style="margin-left:5px;" onclick="fncUpdateQty();">Update Qty</button>
                         </div>
                     </div>
 
@@ -217,17 +218,21 @@
             <div class="row">
                 <div class="col-sm-12">
                     <div class="table-responsive">
-                        <table id="TbAR" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                        <table id="TbLineStock" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
                             <thead>
                                 <tr>
-                                    <th>No</th>
-                                    <th>Barcode</th>
                                     <th>ItemCode</th>
                                     <th>ItemName</th>
+                                    <th>WarehouseCode</th>
+                                    <th>WarehouseName</th>
+                                    <th>BinLocationCode</th>
+                                    <th>BinLocationName</th>
                                     <th>Quantity</th>
-                                    <th>Warehouse</th>
-                                    <th>BinCode</th>
-                                    <th>BinName</th>
+                                    <th>UOMEntry</th>
+                                    <th>UOMCode</th>
+                                    <th>BatchNo</th>
+                                    <th>SerialNo</th>
+                                    <th>QTY</th>
                                 </tr>
                             </thead>
                         </table>
@@ -483,12 +488,68 @@
         
         if (document.getElementById("txtWhsName").value != '') {
 
+            $.noConflict();
+            $.ajax({
+            url: '@Url.Action("GetStock_WhsBin", "Inventory")',
+                data: { whsCode: '01', binCode: '01-A09-02-A62'},
+            type: "GET",
+            dataType: "JSON",
+            "dataSrc": 'data',
+            success: function (data) {
+                var tline = $('#TbLineStock').DataTable({
+                    "bDestroy": true,
+                    "aaData": data.data,
+                    "autoWidth": true,
+                    "responsive": true,
+                    "lengthChange": true,
+                    "ordering": true,
+                    "columns": [
+                        { "data": "itemCode", "autoWidth": true },
+                        { "data": "itemName", "autoWidth": true },
+                        { "data": "whsCode", "autoWidth": true },
+                        { "data": "whsName", "autoWidth": true },
+                        { "data": "binCode", "autoWidth": true },
+                        { "data": "binEntry", "autoWidth": true },                        
+                        { "data": "quantity", "autoWidth": true },
+                        { "data": "uomEntry", "autoWidth": true },
+                        { "data": "uomCode", "autoWidth": true },
+                        { "data": "batchNo", "autoWidth": true },
+                        { "data": "serialNo", "autoWidth": true },
+                        { "data": "qty", "defaultContent": '<input type="number" ID="txtUpdQty" step="1"/>', attr: { type: "number" }}
+                    ],                  
+                    "language": { "emptyTable": "No Data" },
+                    "order": [[1, 'desc']],
+                    "select": true,
+                    "paging": false,
+                    "ordering": false,
+                    "info": false,
+                    "searching": false
+                });
+                tline.columns([2, 4, 7, 8]).visible(false, false);
+                //alert("Download Data Complete");
+                console.log("Download Data Complete");
+            }
+            });
 
-
-
+            //$('#TbLineStock tbody').empty();
         } else {
             alert("Please Selete Warehouse");
         }
+    }
+
+    function ClearTb() {
+        //const table = $("#TbLineStock").DataTable();
+        //table.clear().draw();
+        location.reload();
+    }
+
+    function fncUpdateQty() {
+        document.getElementById("txtUpdQty").value = document.getElementById("Quantity").value;
+
+        var table = $('#TbLineStock').DataTable();
+
+        alert(table.cell(1,1).data());
+
     }
 </script>
 

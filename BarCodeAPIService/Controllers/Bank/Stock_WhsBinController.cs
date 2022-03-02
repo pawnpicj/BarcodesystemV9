@@ -10,21 +10,18 @@ using System.Threading.Tasks;
 
 namespace BarCodeAPIService.Controllers.Bank
 {
-    [ApiController]
-    [Route(APIRoute.Root)]
     public class Stock_WhsBinController : ControllerBase
     {
-        private IStock_WhsBinService stockWhsBin;
+        private IStock_WhsBinService stockWhsBinService;
 
-        public Stock_WhsBinController(IStock_WhsBinService stockWhsBin)
+        public Stock_WhsBinController(IStock_WhsBinService stockWhsBinService)
         {
-            this.stockWhsBin = stockWhsBin;
+            this.stockWhsBinService = stockWhsBinService;
         }
-
-        [HttpGet]
-        public async Task<IActionResult> GetStock_WhsBinAsync()
+        [HttpGet("GetStockWhsBin/{whsCode}/{binCode}")]
+        public async Task<IActionResult> GetStockWhsBinAsync(string whsCode, string binCode)
         {
-            var a = await stockWhsBin.responseGetStockByWhsBin();
+            var a = await stockWhsBinService.responseGetStockByWhsBin(whsCode, binCode);
             if (a.ErrorCode == 0)
             {
                 return Ok(a);

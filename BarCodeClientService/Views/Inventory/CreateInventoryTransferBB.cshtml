@@ -28,6 +28,17 @@
         $('#DocDate').val(today);
         $('#DocumentDate').val(today);
     });
+
+    function checkBarcodeUDOM() {
+        document.getElementById("divBarcodeUDOM").style.display = "block";
+        document.getElementById("divBarcodeProduct").style.display = "none";
+        document.getElementById("txtScanBarCode01").focus();
+    }
+    function checkBarcodeProduct() {
+        document.getElementById("divBarcodeUDOM").style.display = "none";
+        document.getElementById("divBarcodeProduct").style.display = "block";
+        document.getElementById("txtScanBarCode02").focus();
+    }
 </script>
 
 <style>
@@ -296,29 +307,86 @@
                                     FromBinEntry : <input type="text" id="txtfBinEntry" class="form-control" value="" style="background-color: cornsilk;" readonly />
                                     <hr>
                                 </div>
-                                
-                                <div>
+
+                                @*<div style="display:none;">
+            <label>
+                Input Quantity :
+            </label>
+            <div class="input-group">
+                <input type="number" class="form-control" placeholder="" id="Quantity" value="1" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
+            </div>
+
+            <label>
+                Scan Barcode :
+            </label>
+            <div class="input-group">
+                <input type="text" class="form-control" value="" id="txtScanBarCode" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
+            </div>
+
+            <label>
+                Scan Batch/Serial :
+            </label><div class="input-group">
+                <input type="text" class="form-control" value="" id="txtScanBatchSerial" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
+            </div>
+            <button class="input-group-text" id="addRow" style="display:none;"><i class="fa fa-plus"></i></button>
+        </div>*@
+
+                                @* =================== TabScanBarCode =================== *@
+                                <div id="TabScanBarCode" class="BoxScan">
                                     <label>
-                                        Input Quantity :
+                                        <input type="radio" id="rdoTypeScan" name="typeScan" value="01" style="height: 15px; width: 15px; vertical-align: middle;" onclick="checkBarcodeUDOM()" />
+                                        <font size="3" style="font-weight:bold">Barcode UDOM</font>
                                     </label>
-                                    <div class="input-group">
-                                        <input type="number" class="form-control" placeholder="" id="Quantity" value="1" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
+                                    &nbsp;&nbsp;&nbsp;
+                                    <label>
+                                        <input type="radio" id="rdoTypeScan" name="typeScan" value="02" style="height: 15px; width: 15px; vertical-align: middle; " onclick="checkBarcodeProduct()" />
+                                        <font size="3" style="font-weight:bold">Barcode Product</font>
+                                    </label>
+
+                                    <div id="divBarcodeUDOM" style="display:none; ">
+                                        <div id="TabQty" style="display:block;">
+                                            Input Quantity :
+                                            <div class="input-group">
+                                                <input type="number" class="form-control" placeholder="" id="txtQuantity01" value="1" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
+                                                <button class="btn btn-warning" id="btnUpdateQty" style="margin-left:5px; display:none" onclick="fncUpdateQty();">Update Qty</button>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            Scan Barcode :
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" value="" id="txtScanBarCode01" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
+                                            </div>
+                                            <button class="input-group-text" id="addRow01" style="display: none;"><i class="fa fa-plus"></i></button>
+                                        </div>
                                     </div>
 
-                                    <label>
-                                        Scan Barcode :
-                                    </label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" value="" id="txtScanBarCode" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
+                                    <div id="divBarcodeProduct" style="display:none; ">
+                                        <label>
+                                            Input Quantity :
+                                        </label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" placeholder="" id="txtQuantity02" value="1" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
+                                        </div>
+
+                                        <label>
+                                            Scan Barcode :
+                                        </label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" value="" id="txtScanBarCode02" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
+                                        </div>
+
+                                        <label>
+                                            Scan Batch/Serial :
+                                        </label><div class="input-group">
+                                            <input type="text" class="form-control" value="" id="txtScanBatchSerial02" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
+                                        </div>
+                                        <button class="input-group-text" id="addRow02" style="display:none;"><i class="fa fa-plus"></i></button>
                                     </div>
 
-                                    <label>
-                                        Scan Batch/Serial :
-                                    </label><div class="input-group">
-                                        <input type="text" class="form-control" value="" id="txtScanBatchSerial" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
-                                    </div>
-                                    <button class="input-group-text" id="addRow" style="display:none;"><i class="fa fa-plus"></i></button>
                                 </div>
+                                @* ================================================== *@
+
+
                             </div>
                             <hr>
                             @*Add Data From ScanItem*@

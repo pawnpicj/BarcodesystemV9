@@ -54,5 +54,18 @@ namespace BarCodeAPIService.Controllers.Tengkimleang
                 return BadRequest(a);
             }
         }
+        [HttpGet("GetStockItemBatchSerial/{ItemCode}/{BatchCode}/{Serial}")]
+        public async Task<IActionResult> GetStockItemBatchSerialAsync(string ItemCode, string BatchCode, string Serial)
+        {
+            var a = await stockDataService.responseGetStockItemBatchSerial(ItemCode, BatchCode, Serial);
+            if (a.ErrorCode == 0)
+            {
+                return Ok(a);
+            }
+            else
+            {
+                return BadRequest(a);
+            }
+        }
     }
 }

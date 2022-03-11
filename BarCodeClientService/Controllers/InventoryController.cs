@@ -50,10 +50,6 @@ namespace BarCodeClientService.Controllers
         {
             return View();
         }
-        public IActionResult GetDataX()
-        {
-            return View();
-        }
 
         public IActionResult GetOWTQ()
         {
@@ -82,6 +78,18 @@ namespace BarCodeClientService.Controllers
         public IActionResult GetSeriesCV()
         {
             var a = API.Read<ResponseNNM1_CV>("api/SeriesCV");
+            return Ok(a);
+        }
+
+        public IActionResult GetSeriesCode(string yyyy, string typeSeries)
+        {
+            string currentYear = DateTime.Now.Year.ToString();
+            string xYYYY = "2021";
+            string xTypeSeries = typeSeries;
+            //var a = API.Read<ResponseGetSeriesCode>("GetSeriesCode/"+ xYYYY + "/"+ xTypeSeries);
+            //var a = API.Read<ResponseGetSeriesCode>("GetSeriesCode/2021/IC");
+            var a = API.Read<ResponseGetSeriesCode>("api/SeriesCV/GetSeriesCode/" + xYYYY + "/IC");
+            
             return Ok(a);
         }
 
@@ -118,6 +126,14 @@ namespace BarCodeClientService.Controllers
             return Ok(a);
         }
 
+        public IActionResult GetStockItemBatchSerial(string barcode, string batchserial)
+        {
+            string xScanBarcode = barcode;
+            string xBatchSerial = batchserial;
+            var a = API.Read<ResponseGetStockItemBatchSerial>("GetStockItemBatchSerial/" + xScanBarcode + "/" + xBatchSerial + "/" + xBatchSerial);
+            return Ok(a);
+        }
+
         [HttpPost]
         public IActionResult PostInventoryTransfer(SendInventoryTransfer sendInventoryTransfer)
         {
@@ -125,7 +141,14 @@ namespace BarCodeClientService.Controllers
             return Ok(a);
         }
 
-       [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        [HttpPost]
+        public IActionResult PostInventoryCounting(SendInventoryCounting sendInventoryCounting)
+        {
+            var a = API.PostWithReturn<ResponseInventoryCounting>("api/InventoryCounting/SendInventoryCounting", sendInventoryCounting);
+            return Ok(a);
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

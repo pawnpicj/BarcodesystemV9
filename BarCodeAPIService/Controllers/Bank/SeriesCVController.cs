@@ -34,5 +34,19 @@ namespace BarCodeAPIService.Controllers.Bank
                 return BadRequest(a);
             }
         }
+
+        [HttpGet("GetSeriesCode/{yyyy}/{typeSeries}")]
+        public async Task<IActionResult> GetSeriesCodeAsync(string yyyy, string typeSeries)
+        {
+            var a = await seriesCV.responseGetSeriesCode(yyyy, typeSeries);
+            if (a.ErrorCode == 0)
+            {
+                return Ok(a);
+            }
+            else
+            {
+                return BadRequest(a);
+            }
+        }
     }
 }

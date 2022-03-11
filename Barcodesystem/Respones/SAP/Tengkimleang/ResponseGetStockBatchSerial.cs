@@ -18,5 +18,7 @@ namespace BarCodeLibrary.Respones.SAP.Tengkimleang
         public double OnHand { get; set; }
         public string SerialNumber { get; set; }
         public string BatchNumber { get; set; }
+        public string ItemName { get; set; }
+        public string UomCode { get; set; }
     }
 }

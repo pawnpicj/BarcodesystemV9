@@ -16,5 +16,6 @@ namespace BarCodeAPIService.Service.Tengkimleang
         Task<ResponseGetStcokBatchSerialBinCode> responseGetStockBatchSerialBinCode(string ItemCode,string WhsCode,string BinCode);
         Task<ResponseGetStcokBatchSerialBinCode> responseGetStockBatchSerialWarehouseCode(string WhsCode);
         Task<ResponseGetStcokBatchSerialBinCode> responseGetStockBatchSerialWarehouseCode(string WhsCode, string BinCode);
+        Task<ResponseGetStockItemBatchSerial> responseGetStockItemBatchSerial(string ItemCode, string BatchCode, string Serial);
     }
 }

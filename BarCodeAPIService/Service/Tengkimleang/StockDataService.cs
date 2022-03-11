@@ -32,7 +32,9 @@ namespace BarCodeAPIService.Service.Tengkimleang
                             ItemCode = oRS.Fields.Item(0).Value.ToString(),
                             OnHand = Convert.ToInt32(oRS.Fields.Item(1).Value.ToString()),
                             SerialNumber = oRS.Fields.Item(2).Value.ToString(),
-                            BatchNumber = oRS.Fields.Item(3).Value.ToString()
+                            BatchNumber = oRS.Fields.Item(3).Value.ToString(),
+                            ItemName = oRS.Fields.Item(4).Value.ToString(),
+                            UomCode = oRS.Fields.Item(5).Value.ToString()
                         });
                         oRS.MoveNext();
                     }
@@ -87,6 +89,7 @@ namespace BarCodeAPIService.Service.Tengkimleang
                             OnHand = Convert.ToInt32(oRS.Fields.Item(1).Value.ToString()),
                             SerialNumber = oRS.Fields.Item(2).Value.ToString(),
                             BatchNumber = oRS.Fields.Item(3).Value.ToString()
+
                         });
                         oRS.MoveNext();
                     }
@@ -434,6 +437,67 @@ namespace BarCodeAPIService.Service.Tengkimleang
             catch (Exception ex)
             {
                 return Task.FromResult(new ResponseGetStcokBatchSerialBinCode
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMessage = ex.Message,
+                    Data = null
+                });
+            }
+        }
+        public Task<ResponseGetStockItemBatchSerial> responseGetStockItemBatchSerial(string ItemCode, string BatchCode, string Serial)
+        {
+            var oLine = new List<GetStockItemBatchSerial>();
+            SAPbobsCOM.Company oCompany;
+            try
+            {
+                Login login = new();
+                if (login.LErrCode == 0)
+                {
+                    oCompany = login.Company;
+                    SAPbobsCOM.Recordset? oRS = null;
+                    SAPbobsCOM.Recordset? oRSLine = null;
+                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_TENGKIMLEANG('GetStock_Batch_Serial_2','{ItemCode}','{Serial}','{BatchCode}','','')";
+                    oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+                    oRSLine = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+                    oRS.DoQuery(sqlStr);
+                    while (!oRS.EoF)
+                    {
+                        oLine.Add(new GetStockItemBatchSerial
+                        {
+                            ItemCode = oRS.Fields.Item(0).Value.ToString(),
+                            ItemName = oRS.Fields.Item(1).Value.ToString(),
+                            Quantity = Convert.ToDouble(oRS.Fields.Item(2).Value.ToString()),
+                            UOMCode = oRS.Fields.Item(3).Value.ToString(),
+                            WhsEntry = Convert.ToInt32(oRS.Fields.Item(4).Value.ToString()),
+                            WhsCode = oRS.Fields.Item(5).Value.ToString(),
+                            BinEntry = Convert.ToInt32(oRS.Fields.Item(6).Value.ToString()),
+                            BinCode = oRS.Fields.Item(7).Value.ToString(),
+                            BatchNumber = oRS.Fields.Item(8).Value.ToString(),
+                            SerialNumber = oRS.Fields.Item(9).Value.ToString(),
+                            ExpDate = Convert.ToDateTime(oRS.Fields.Item(10).Value.ToString())
+                        });
+                        oRS.MoveNext();
+                    }
+                    return Task.FromResult(new ResponseGetStockItemBatchSerial
+                    {
+                        ErrorCode = 0,
+                        ErrorMessage = "",
+                        Data = oLine
+                    });
+                }
+                else
+                {
+                    return Task.FromResult(new ResponseGetStockItemBatchSerial
+                    {
+                        ErrorCode = login.LErrCode,
+                        ErrorMessage = login.SErrMsg,
+                        Data = null
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseGetStockItemBatchSerial
                 {
                     ErrorCode = ex.HResult,
                     ErrorMessage = ex.Message,

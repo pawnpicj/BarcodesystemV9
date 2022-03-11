@@ -65,7 +65,60 @@ namespace BarCodeAPIService.Service.Bank
             }
         }
 
-        
+        public Task<ResponseGetSeriesCode> responseGetSeriesCode(string yyyy, string typeSeries)
+        {
+            var oLine = new List<GetSeriesCode>();
+            SAPbobsCOM.Company oCompany;
+            try
+            {
+                Login login = new();
+                if (login.LErrCode == 0)
+                {
+                    oCompany = login.Company;
+                    SAPbobsCOM.Recordset? oRS = null;
+                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('StrSeries','{yyyy}','{typeSeries}','','','')";
+                    oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+                    oRS.DoQuery(sqlStr);
+                    while (!oRS.EoF)
+                    {
+                        oLine.Add(new GetSeriesCode
+                        {
+                            ObjectCode = oRS.Fields.Item(0).Value.ToString(),
+                            Series = Convert.ToInt32(oRS.Fields.Item(1).Value.ToString()),
+                            SeriesName = oRS.Fields.Item(2).Value.ToString(),
+                            Indicator = oRS.Fields.Item(3).Value.ToString(),
+                            BeginStr = oRS.Fields.Item(4).Value.ToString(),                            
+                        });
+                        oRS.MoveNext();
+                    }
+                    return Task.FromResult(new ResponseGetSeriesCode
+                    {
+                        ErrorCode = 0,
+                        ErrorMessage = "",
+                        Data = oLine
+                    });
+                }
+                else
+                {
+                    return Task.FromResult(new ResponseGetSeriesCode
+                    {
+                        ErrorCode = login.LErrCode,
+                        ErrorMessage = login.SErrMsg,
+                        Data = null
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseGetSeriesCode
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMessage = ex.Message,
+                    Data = null
+                });
+            }
+        }
+
     }
-    
-    }
+
+}

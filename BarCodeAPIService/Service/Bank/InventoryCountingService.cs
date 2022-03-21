@@ -53,42 +53,36 @@ namespace BarCodeAPIService.Service
                         oICL.BinEntry = l.BinEntry;
                         oICL.UoMCode = l.UomCode;
                         oICL.Counted = SAPbobsCOM.BoYesNoEnum.tYES;
+                        
+                            if (l.BatchNo != "")
+                            {
+                                SAPbobsCOM.InventoryCountingBatchNumber oInventoryCountingBatchNumber = oICL.InventoryCountingBatchNumbers.Add();
+                                oInventoryCountingBatchNumber.BatchNumber = l.BatchNo;
+                                oInventoryCountingBatchNumber.Quantity = l.Quantity;
+                            }
+                            else
+                            {
+                                if (l.SerialNo != "")
+                                {
+                                    SAPbobsCOM.InventoryCountingSerialNumber oInventoryCountingSerialNumber = oICL.InventoryCountingSerialNumbers.Add();
+                                    oInventoryCountingSerialNumber.InternalSerialNumber = l.SerialNo;
+                                    oInventoryCountingSerialNumber.ManufacturerSerialNumber = l.SerialNo;
+                                    oInventoryCountingSerialNumber.Quantity = l.Quantity;
+                                }
+                            }                        
 
-                        //SAPbobsCOM.InventoryCountingParams oICP = oICS.Add(oIC);
-
-                        //SAPbobsCOM.InventoryCountingBatchNumber oICB = (SAPbobsCOM.InventoryCountingBatchNumber)oIC.InventoryCountingLines;
-                        //System.Collections.IList list = sendInventoryCounting.Line;
-
-                        foreach (SendInventoryCountingBatch b in sendInventoryCounting.BatchLine)
-                        {
-                            SAPbobsCOM.InventoryCountingBatchNumber oInventoryCountingBatchNumber = oICL.InventoryCountingBatchNumbers.Add();
-                            oInventoryCountingBatchNumber.BatchNumber = b.BatchNumber;
-                            oInventoryCountingBatchNumber.Quantity = b.Quantity;
-                        }
-                        //System.Collections.IList list = sendInventoryCounting.Line;
-                        //for (int i = 0; i < list.Count; i++)
+                        //foreach (SendInventoryCountingBatch b in sendInventoryCounting.BatchLine)
                         //{
-                        //    SendInventoryCountingBatch b = (SendInventoryCountingBatch)list[i];
                         //    SAPbobsCOM.InventoryCountingBatchNumber oInventoryCountingBatchNumber = oICL.InventoryCountingBatchNumbers.Add();
                         //    oInventoryCountingBatchNumber.BatchNumber = b.BatchNumber;
                         //    oInventoryCountingBatchNumber.Quantity = b.Quantity;
                         //}
-
-                        //if (l.BatchNo != "")
+                        //foreach (SendInventoryCountingSerial s in sendInventoryCounting.SerialLine)
                         //{
-                        //    SAPbobsCOM.InventoryCountingBatchNumber oInventoryCountingBatchNumber = oICL.InventoryCountingBatchNumbers.Add();
-                        //    oInventoryCountingBatchNumber.BatchNumber = l.BatchNo;
-                        //    oInventoryCountingBatchNumber.Quantity = l.Quantity;
-                        //}
-                        //else
-                        //{
-                        //    if (l.SerialNo != "")
-                        //    {
-                        //        SAPbobsCOM.InventoryCountingSerialNumber oInventoryCountingSerialNumber = oICL.InventoryCountingSerialNumbers.Add();
-                        //        oInventoryCountingSerialNumber.InternalSerialNumber = l.SerialNo;
-                        //        oInventoryCountingSerialNumber.ManufacturerSerialNumber = l.SerialNo;
-                        //        oInventoryCountingSerialNumber.Quantity = l.Quantity;
-                        //    }
+                        //    SAPbobsCOM.InventoryCountingSerialNumber oInventoryCountingSerialNumber = oICL.InventoryCountingSerialNumbers.Add();
+                        //    oInventoryCountingSerialNumber.InternalSerialNumber = s.SerialNumber;
+                        //    oInventoryCountingSerialNumber.ManufacturerSerialNumber = s.SerialNumber;
+                        //    oInventoryCountingSerialNumber.Quantity = s.Quantity;
                         //}
 
                     }                    

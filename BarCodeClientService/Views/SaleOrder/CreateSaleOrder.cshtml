@@ -1,18 +1,25 @@
 ﻿
 @{
-    ViewData["Title"] = "O2O";
+    ViewData["Title"] = "Delivery";
     DateTime dt = DateTime.Now;
     ViewData["Date"] = dt.ToShortDateString();
 }
 
+<link href="~/css/styles.css" rel="stylesheet" />
 <link href="~/css/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="~/css/DataTable/rowReorder.dataTables.min.css" rel="stylesheet" />
 @*<link href="~/css/DataTable/responsive.dataTables.min.css" rel="stylesheet" />*@
 
 <script src="~/css/DataTable/jquery-3.3.1.js"></script>
+@*<script src="~/css/DataTable/jquery-3.5.1.js"></script>*@
 <script src="~/css/DataTable/jquery.dataTables.min.js"></script>
 <script src="~/css/DataTable/dataTables.rowReorder.min.js"></script>
-@*<script src="~/css/DataTable/dataTables.responsive.min.js"></script>*@
+<script src="~/css/DataTable/dataTables.responsive.min.js"></script>
+<script src="~/css/DataTable/moment.min.js"></script>
+<script src="~/css/DataTable/datetime-moment.js"></script>
+<script src="~/css/DataTable/dataTables.buttons.min.js"></script>
+<script src="~/css/DataTable/dataTables.select.min.js"></script>
+<script src="~/css/DataTable/dataTables.dateTime.min.js"></script>
 
 <style>
     tr.selected {
@@ -80,7 +87,67 @@
     .clsinput:focus {
         outline: none;
     }
+
+    table.dataTable th {
+        font-size: 12px;
+        white-space: pre-wrap;
+        background-color: skyblue;
+        color: white;
+    }
+
+    table.dataTable td {
+        font-size: 12px;
+        white-space: pre-wrap;
+        font-weight: bold;
+    }
+
+    .BoxScan {
+        /*display: none;*/
+        border: 3px solid black;
+        border-radius: 3px 3px;
+    }
 </style>
+
+<script type="text/javascript">
+    /*DocDate*/
+    $(document).ready(function () {
+        var now = new Date();
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+        var today = now.getFullYear() + "-" + (month) + "-" + (day);
+        $('#DocDate').val(today);
+        $('#DocumentDate').val(today);
+    
+});
+        function checkBarcodeUDOM() {
+            document.getElementById("divBarcodeUDOM").style.display = "block";
+            document.getElementById("divBarcodeProduct").style.display = "none";
+            document.getElementById("txtScanBarCode01").focus();
+
+            document.getElementById("rdoTypeItem1").checked = false;
+            document.getElementById("rdoTypeItem2").checked = false;
+            document.getElementById("txtQuantity02").disabled = true;
+            document.getElementById("txtScanBarCode02").disabled = true;
+            document.getElementById("txtScanBatchSerial02").disabled = true;
+
+        }
+        function checkBarcodeProduct() {
+            document.getElementById("divBarcodeUDOM").style.display = "none";
+            document.getElementById("divBarcodeProduct").style.display = "block";
+            document.getElementById("txtScanBarCode02").focus();
+        }
+
+        function chTypeItem() {
+            document.getElementById("txtQuantity02").disabled = false;
+            document.getElementById("txtScanBarCode02").disabled = false;
+            document.getElementById("txtScanBatchSerial02").disabled = false;
+            document.getElementById("txtScanBarCode02").focus();
+            document.getElementById("txtQuantity02").value = "1";
+            document.getElementById("txtScanBarCode02").value = "";
+            document.getElementById("txtScanBatchSerial02").value = "";
+        }
+    
+</script>
 
 <div id="#main">
 
@@ -96,651 +163,879 @@
     <hr />
     <div class="row" id="DLN">
         <div class="col-sm-6">
+            SO DocNum :
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="" id="txtSODocEntry" readonly>
+                <input type="text" class="form-control" placeholder="" id="txtSODocNum" readonly>
+                <button class="btn-primary input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalSaleOrder"><i>Select SO</i></button>
+            </div>
+
             Customer code :
             <div class="input-group">
-                <input type="text" class="form-control" placeholder="Search Customer" id="CustomerCode">
-                <button type="button" class="btn btn-primary" id="findCustomer">
-                    <i class="fas fa-search"></i>
-                </button>
+                <input type="text" class="form-control" placeholder="Search Customer" id="CardCode" readonly>
+                @*<button type="button" class="btn btn-primary" id="findCustomer">
+                        <i class="fas fa-search"></i>
+                    </button>*@
             </div>
             Customer name :
             <div class="input-group">
-                <input type="text" class="form-control" id="CustomerName" readonly>
+                <input type="text" class="form-control" id="CardName" readonly>
             </div>
-            Doc date :
+            Posting Date :
             <div class="input-group">
                 <input type="date" class="form-control" id="DocDate">
             </div>
-            SO Number
-            <div class="input-group">
-                <input type="text" class="form-control" placeholder="" id="SONumber" readonly>
-                <button type="button" class="btn btn-primary" id="SelectSO">
-                    <i>Select SO</i>
-                </button>
+
+            <div>
+                Series :
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <button class="input-group-text" id="Cifr"><i class="fa fa-check"></i></button>
+                    </div>
+                    <input type="text" placeholder="" id="txtSeries" value="" autocomplete="off" disabled size="7">
+                    <input type="text" class="form-control" placeholder="" id="txtSeriesName" value="" autocomplete="off" disabled>
+                    <div class="input-group-append">
+                        <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalSeries"><i class="fa fa-search"></i></button>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="col-sm-6">
+
+            Sale Employee :
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <button class="input-group-text" id="COcrCode4"><i class="fa fa-check"></i></button>
+                </div>
+                <input type="text" id="txtSlpCode" autocomplete="off" disabled size="7" />
+                <input type="text" class="form-control" placeholder="" id="txtSlpName" value="" disabled>
+                <div class="input-group-append">
+                    <button class="input-group-text" data-toggle="modal" data-target="#ModalSaleEmployee"><i class="fa fa-search"></i></button>
+                </div>
+            </div>
+
             <div>
                 Ref :
                 <div class="input-group">
-                    <input type="text" class="form-control" id="Price">
+                    <input type="text" class="form-control" id="txtRef">
                 </div>
             </div>
 
             <div>
                 Remark :
                 <div class="input-group">
-                    <input type="number" class="form-control" id="Remark" onchange="LineDiscountPer()">
-                </div>
-                Documents Draft :
-                <div class="input-group">
-                    <input type="number" class="form-control"  placeholder="Search Documents Draft" id="DocumentsDraft" onchange="LinDiscountAMT()" readonly>
-                    <button type="button" class="btn btn-primary" id="FindDraft">
-                        <i class="fas fa-search"></i>
-                    </button>
+                    <input type="text" class="form-control" id="txtRemark">
                 </div>
             </div>
-        </div>            
-    </div>
-    </div>     
-       
-<div id="ListSO">
-    <div class="row">
-        <div class="col-sm-12" style=" padding: 3px; ">
-            <div class="input-group">
-                <input type="text" class="form-control" placeholder="List SO" style="color:#f0eff1">
-            </div>
-            <div class="row" style=" padding: 3px; ">
-            </div>
-            <div class="table-responsive">
-                <table id="TblistSO" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
-                    <thead>
-                        <tr>
-                            <th>SO number </th>
-                            <th>Customer name </th>
-                            <th>Posting date </th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-        </div>
-        <div class="row" style=" padding: 10px; ">            
-            <div class="nav navbar-nav ml-auto"  style=" padding: 5px; " >
-                <button  class="btn btn-info" id="ListSOChoose" style="background:#f0eff1;color:#696969">Choose</button>              
-            </div>            
-                <div class="nav navbar-nav ml-auto"  style=" padding: 5px; ">
-                    <button class="btn btn-info" id="ListSOClose" style="background:#f0eff1;color:#696969">Close</button>
-                </div>            
-        </div>
-    </div>    
-</div>
-
-<div id="SOLine">
-    <div class="row">
-        <div class="col-sm-12" style=" padding: 3px; ">
-            <div class="input-group">
-                <input type="text" class="form-control" placeholder="OS Line" style="color:#f0eff1">
-            </div>
-            <div class="row" style=" padding: 3px; ">
-            </div>
-            <div class="table-responsive">
-                <table id="TbSOLine" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
-                    <thead>
-                        <tr>
-                            <th>Item Code</th>
-                            <th>Item name</th>
-                            <th>Barcode</th>
-                            <th>QTY</th>
-                            <th>UOM</th>
-                            <th>Bin-location</th>
-                            <th>Warehouse</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-        </div>
-        <div class="row" style=" padding: 10px; ">
-            <div class="input-group">
-                <div class="nav navbar-nav ml-auto" style=" padding: 5px; ">
-                    <button class="btn btn-info" id="SaveDraft" style="background:#f0eff1;color:#696969">Save Draft</button>
-                </div>
-                <div class="nav navbar-nav ml-auto" style=" padding: 5px; ">
-                    <button class="btn btn-info" id="btnSNBT" style="background:#f0eff1;color:#696969">Batch & serial</button>
-                </div>
-                <div class="nav navbar-nav ml-auto" style=" padding: 5px; ">
-                    <button class="btn btn-info" id="SOlineClose" style="background:#f0eff1;color:#696969">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="SNBT">
-    <div class="row">
-        <div class="col-sm-12" style=" padding: 3px; ">
-            <div class="input-group">
-                <input type="text" class="form-control" placeholder="Batch & serial" style="color:#f0eff1">
-            </div>
-            <div class="row" style=" padding: 3px; ">
-            </div>
-            <div class="table-responsive">
-                <table id="TbSNBT" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
-                    <thead>
-                        <tr>
-                            <th>Batch code & serial Number</th>                            
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-        </div>
-        <div class="row" style=" padding: 10px; ">            
-            <div class="nav navbar-nav ml-auto" style=" padding: 5px; ">
-                <button class="btn btn-info" id="SNBTClose" style="background:#f0eff1;color:#696969">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="Draft">
-    <div class="row">
-        <div class="col-sm-12" style=" padding: 3px; ">           
-            <div class="table-responsive">
-                <table id="TBDraft" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
-                    <thead>
-                        <tr>
-                            <th>Customer Code</th>
-                            <th>Customer Name</th>
-                            <th>Doc dater</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-        </div>
-        <div class="row" style=" padding: 10px; ">
-            <div class="nav navbar-nav ml-auto" style=" padding: 5px; ">
-                <button class="btn btn-info" id="DraftClose" style="background:#f0eff1;color:#696969">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="DLNline">
-    <div class="row">
-        <div class="col-sm-6">
-            Customer code :
-            <div class="input-group">
-                <input type="text" class="form-control" id="DLN_CustomerCode" readonly>
-            </div>
-            Customer name :
-            <div class="input-group">
-                <input type="text" class="form-control" id="DLN_CustomerName" readonly>
-            </div>
-            Doc date :
-            <div class="input-group">
-                <input type="date" class="form-control" id="DLN_DocDate">
-            </div>
-        </div>
-        <div class="col-sm-6">
+            <br>
             <div>
-                Ref :
-                <div class="input-group">
-                    <input type="text" class="form-control" id="DLN_Ref">
-                </div>
+                <button class="btn btn-warning" id="btnSearch" style="width:100%" onclick="fncGetSOLine();"><b>Search</b></button>
+                <button class="btn btn-danger" id="btnClear" style="width:100%" onclick="ClearTb();"><b>Clear</b></button>
             </div>
-            <div>
-                Remark :
-                <div class="input-group">
-                    <input type="number" class="form-control" id="DLN_Remark" onchange="LineDiscountPer()">
-                </div>
-                Scan
-                <div class="input-group">
-                    <input type="number" class="form-control" placeholder="Scan Barcode" id="DocumentsDraft" onchange="LinDiscountAMT()" readonly>
-                    <button type="button" class="btn btn-primary" id="findCustomer">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-upc-scan" viewBox="0 0 16 16">
-                            <path d="M1.5 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 1-1 0v-3A1.5 1.5 0 0 1 1.5 0h3a.5.5 0 0 1 0 1h-3zM11 .5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 16 1.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5zM.5 11a.5.5 0 0 1 .5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 1 0 1h-3A1.5 1.5 0 0 1 0 14.5v-3a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 1 .5-.5zM3 4.5a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0v-7zm2 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0v-7zm2 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0v-7zm2 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-7zm3 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0v-7z" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="col-sm-12" style=" padding: 15px; ">
-            <div class="table-responsive">
-                <table id="DNL_Line" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
-                    <thead>
-                        <tr>
-                            <th>Item Code</th>
-                            <th>Item name</th>
-                            <th>Barcode</th>
-                            <th>QTY</th>
-                            <th>serial</th>
-                            <th>Batch</th>
-                            <th>EXP</th>
-                            <th>Waranty</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-        </div>
-        <div class="row" style=" padding: 10px; ">
-            <div class="nav navbar-nav ml-auto" style=" padding: 5px; ">
-                <button class="btn btn-info" id="DLN_Save" style="background:#f0eff1;color:#696969">Save</button>
-            </div>
+            <hr>
         </div>
     </div>
 </div>
 
-<div id="Update_SNBT">
+<div id="SOLine" style="display:none">
     <div class="row">
-        <div class="col-sm-12" style=" padding: 5px; ">
-            <div class="input-group">
-                <input type="text" class="form-control" placeholder="Update Batch & serial" style="color:#f0eff1">
-            </div>
-            <div class="row" style=" padding: 5px; ">
-            </div>
+        <div class="col-sm-12" style=" padding: 3px; ">
             <div class="table-responsive">
-                <table id="TbSNBT_Update" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                <table id="TbSOLine" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" style="width:100%; background:#f0eff1;color:#696969;">
                     <thead>
                         <tr>
                             <th>Item Code</th>
-                            <th>Item name</th>
-                            <th>Barcode</th>
-                            <th>QTY</th>
-                            <th>serial</th>
-                            <th>Batch</th>
-                            <th>EXP</th>
-                            <th>Waranty</th>
-                            <th>Action</th>
+                            <th>Item Name</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>DiscPrcnt</th>
+                            <th>VatGroup</th>
+                            <th>Total</th>
+                            <th>WhsCode</th>
                         </tr>
                     </thead>
                 </table>
             </div>
+            <br>
+            @* =================== TabScanBarCode =================== *@
+            <div id="TabScanBarCode" class="BoxScan">
+                <center>
+                    <label>
+                        <input type="radio" id="rdoTypeScan" name="typeScan" value="01" style="height: 15px; width: 15px; vertical-align: middle;" onclick="checkBarcodeUDOM()" />
+                        <font size="3" style="font-weight:bold">Barcode UDOM</font>
+                    </label>
+                    &nbsp;&nbsp;&nbsp;
+                    <label>
+                        <input type="radio" id="rdoTypeScan" name="typeScan" value="02" style="height: 15px; width: 15px; vertical-align: middle; " onclick="checkBarcodeProduct()" />
+                        <font size="3" style="font-weight:bold">Barcode Product</font>
+                    </label>
+                </center>
+
+                <div id="divBarcodeUDOM" style="display:none; ">
+                    <div id="TabQty" style="display:block;">
+                        Input Quantity :
+                        <div class="input-group">
+                            <input type="number" class="form-control" placeholder="" id="txtQuantity01" value="1" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
+                            <button class="btn btn-warning" id="btnUpdateQty" style="margin-left:5px; display:none" onclick="fncUpdateQty();">Update Qty</button>
+                        </div>
+                    </div>
+                    <div>
+                        Scan Barcode :
+                        <div class="input-group">
+                            <input type="text" class="form-control" value="" id="txtScanBarCode01" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center;" autocomplete="off">
+                        </div>
+                        <button class="input-group-text" id="addRow01" style="display: none;" autocomplete="off"><i class="fa fa-plus"></i></button>
+                    </div>
+                </div>
+
+                <div id="divBarcodeProduct" style="display:none; ">
+
+                    <center>
+                        <label>
+                            <input type="radio" id="rdoTypeItem1" name="typeItem" value="Batch" style="height: 12px; width: 12px; vertical-align: middle;" onclick="chTypeItem()" />
+                            <font size="3" style="font-weight:bold">Batch</font>
+                        </label>
+                        &nbsp;&nbsp;&nbsp;
+                        <label>
+                            <input type="radio" id="rdoTypeItem2" name="typeItem" value="Serial" style="height: 12px; width: 12px; vertical-align: middle; " onclick="chTypeItem()" />
+                            <font size="3" style="font-weight:bold">Serial</font>
+                        </label><br>
+                    </center>
+                    <label>
+                        Input Quantity :
+                    </label>
+                    <div class="input-group">
+                        <input type="number" class="form-control" placeholder="" id="txtQuantity02" value="1" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center;" autocomplete="off" disabled>
+                    </div>
+
+                    <label>
+                        Scan Barcode :
+                    </label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" value="" id="txtScanBarCode02" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center;" autocomplete="off" disabled>
+                    </div>
+
+                    <label>
+                        Scan Batch/Serial :
+                    </label><div class="input-group">
+                        <input type="text" class="form-control" value="" id="txtScanBatchSerial02" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center;" autocomplete="off" disabled>
+                    </div>
+                    <button class="input-group-text" id="addRow02" style="display:none;"><i class="fa fa-plus"></i></button>
+                </div>
+
+            </div>
+            @* ================================================== *@
+
+
         </div>
 
+
         <div class="row" style=" padding: 10px; ">
-            <div class="nav navbar-nav ml-auto" style=" padding: 5px; ">
-                <button class="btn btn-info" id="SNBT_Update" style="background:#f0eff1;color:#696969">Close</button>
+            @*<div class="input-group">
+                    <div class="nav navbar-nav ml-auto" style=" padding: 5px; ">
+                        <button class="btn btn-info" id="SaveDraft" style="background:#f0eff1;color:#696969">Save Draft</button>
+                    </div>
+                    <div class="nav navbar-nav ml-auto" style=" padding: 5px; ">
+                        <button class="btn btn-info" id="btnSNBT" style="background:#f0eff1;color:#696969">Batch & serial</button>
+                    </div>
+                    <div class="nav navbar-nav ml-auto" style=" padding: 5px; ">
+                        <button class="btn btn-info" id="SOlineClose" style="background:#f0eff1;color:#696969">Close</button>
+                    </div>
+                </div>*@
+        </div>
+    </div>
+</div>
+
+
+@*Create Models*@
+@*0. Search List Sale Order *@
+<div class="modal fade" id="ModalSaleOrder">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+            <div class="modal-header">
+                <b>List of Sale Order</b>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="TbSaleOrder" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <thead>
+                                    <tr>
+                                        <th>DocNum</th>
+                                        <th>DocEntry</th>
+                                        <th>Posting Date</th>
+                                        <th>CardCode</th>
+                                        <th>CardName</th>
+                                        <th>SlpCode</th>
+                                        <th>SlpName</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseSO" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
             </div>
         </div>
     </div>
 </div>
 
-    @*Block Batch and Serails*@
-    <!--<div class="modal fade" id="ModalBatch" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content" style="background:#f0eff1;color:#696969;">
-                <div class="modal-header">
-                    <b>Batch Number</b>
-                </div>
-                <div class="modal-body">
-                    <div class="row" style="margin-bottom:5px">
-                        <div class="col-sm-6">
-                            Totals Needs :
-                            <input type="number" class="form-control" readonly id="TotalsNeeds" />
-                        </div>
-                        <div class="col-sm-6">
-                            Totals Selected :
-                            <input type="number" class="form-control" readonly id="TotalsSelected" />
-                        </div>
-                    </div>
-                    <div class="table-responsive">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <table id="tbBatch" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
-                                    <thead>
-                                        <tr>
-                                            <th>Batch Number</th>
-                                            <th>Quantity</th>
-                                            <th>Available Quantity</th>
-                                            <th>Expired Date</th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                            </div>
+@*5. Search Series*@
+<div class="modal fade" id="ModalSeries">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+            <div class="modal-header">
+                <b>List of Series</b>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="TbSeries" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <thead>
+                                    <tr>
+                                        <th>Series</th>
+                                        <th>SeriesName</th>
+                                        <th>YYYY-MM</th>
+                                    </tr>
+                                </thead>
+                            </table>
                         </div>
                     </div>
-                    <div class="row" style="padding:10px;margin-left:1px">
-                        <strong>Batch Selected</strong>
-                    </div>
-                    <div class="table-responsive">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <table id="tbBatchSelected" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
-                                    <thead>
-                                        <tr>
-                                            <th>Batch Number</th>
-                                            <th>Quantity</th>
-                                            <th>Command</th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button class="btn btn-info" id="BatchOk" style="background:#f0eff1;color:#696969;">OK</button>
-                    <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;" id="CloseBatch">Close</button>
                 </div>
             </div>
-        </div>
-    </div>-->
-    @*Block Models*@
-    <!--<div class="modal modal-backdrop" id="Modalloder" role="dialog" data-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered modal-sm">
-            <div class="modal-content" style="background:#f0eff1;color:#696969;">
-                <div class="modal-body">
-                    <div class="text-center">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="sr-only">Loading...</span>
-                        </div>
-                    </div>
-                </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseSeries" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" id="CloseSeries" style="background:#f0eff1;color:#696969;">Close</button>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="modal" id="ModalSuccess" role="dialog" data-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered modal-sm">
-            <div class="modal-content" style="background:#f0eff1;color:#696969;">
-                <div class="modal-header">
-                    <b>Information</b>
-                </div>
-                <div class="modal-body">
-                    <p id="ErrMsg"> - </p>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn-sm btn-success" data-dismiss="modal" style="color:#696969;">OK</button>
-                </div>
+@*4. Search SaleEmployee*@
+<div class="modal fade" id="ModalSaleEmployee">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+            <div class="modal-header">
+                <b>List of Sale Employee</b>
             </div>
-        </div>
-    </div>-->
-    @*Create Models*@
-    @*1. Search Customer Code*@
-    <!--<div class="modal fade" id="ModalCusCode">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content" style="background:#f0eff1;color:#696969;">
-                <div class="modal-header">
-                    <b>List of Customer</b>
-                </div>
-                <div class="modal-body">
-                    <div class="table-responsive">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <table id="TbCusCode" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
-                                    <thead>
-                                        <tr>
-                                            <th>Customer Code</th>
-                                            <th>Cusetomer Name</th>
-                                            <th>Phone</th>
-                                            <th>Address</th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="TbSaleEmployee" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <thead>
+                                    <tr>
+                                        <th>SlpCode</th>
+                                        <th>SlpName</th>
+                                    </tr>
+                                </thead>
+                            </table>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button class="btn btn-info" data-dismiss="modal" id="ChooseCus" style="background:#f0eff1;color:#696969;">Choose</button>
-                    <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseSlp" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
             </div>
         </div>
-    </div>-->
-    @*2. Search ItemCode*@
-    <!--<div class="modal fade" id="ModalItem">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content" style="background:#f0eff1;color:#696969;">
-                <div class="modal-header">
-                    <b>List of Items</b>
-                </div>
-                <div class="modal-body">
-                    <div class="table-responsive">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <table id="TbItem" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
-                                    <thead>
-                                        <tr>
-                                            <th>Item Code</th>
-                                            <th>Item Descrition</th>
-                                            <th>Gross Price</th>
-                                            <th>In Stock</th>
-                                            <th>BarCode</th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-info" data-dismiss="modal" id="ChooseItem" style="background:#f0eff1;color:#696969;">Choose</button>
-                    <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>-->
-    @*3. Search OcrCode*@
-    <!--<div class="modal fade" id="ModalOcrCode">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content" style="background:#f0eff1;color:#696969;">
-                <div class="modal-header">
-                    <b>List of OcrCode</b>
-                </div>
-                <div class="modal-body">
-                    <div class="table-responsive">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <table id="TbOcrCode" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
-                                    <thead>
-                                        <tr>
-                                            <th>PrcCode</th>
-                                            <th>PrcName</th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-info" data-dismiss="modal" id="ChooseOcrCode" style="background:#f0eff1;color:#696969;">Choose</button>
-                    <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>-->
-    @*4. Search OcrCode2*@
-    <!--<div class="modal fade" id="ModalOcrCode2">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content" style="background:#f0eff1;color:#696969;">
-                <div class="modal-header">
-                    <b>List of OcrCode2</b>
-                </div>
-                <div class="modal-body">
-                    <div class="table-responsive">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <table id="TbOcrCode2" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
-                                    <thead>
-                                        <tr>
-                                            <th>PrcCode</th>
-                                            <th>PrcName</th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-info" data-dismiss="modal" id="ChooseOcrCode2" style="background:#f0eff1;color:#696969;">Choose</button>
-                    <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>-->
-    @*5. Search OcrCode3*@
-    <!--<div class="modal fade" id="ModalOcrCode3">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content" style="background:#f0eff1;color:#696969;">
-                <div class="modal-header">
-                    <b>List of OcrCode3</b>
-                </div>
-                <div class="modal-body">
-                    <div class="table-responsive">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <table id="TbOcrCode3" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
-                                    <thead>
-                                        <tr>
-                                            <th>PrcCode</th>
-                                            <th>PrcName</th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-info" data-dismiss="modal" id="ChooseOcrCode3" style="background:#f0eff1;color:#696969;">Choose</button>
-                    <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>-->
-    @*6. Search OcrCode4*@
-    <!--<div class="modal fade" id="ModalOcrCode4">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content" style="background:#f0eff1;color:#696969;">
-                <div class="modal-header">
-                    <b>List of OcrCode4</b>
-                </div>
-                <div class="modal-body">
-                    <div class="table-responsive">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <table id="TbOcrCode4" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
-                                    <thead>
-                                        <tr>
-                                            <th>PrcCode</th>
-                                            <th>PrcName</th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-info" data-dismiss="modal" id="ChooseOcrCode4" style="background:#f0eff1;color:#696969;">Choose</button>
-                    <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>-->
-    @*DT Payment*@
-    <!--<div class="modal fade" id="ModalDT" data-backdrop="static">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content" style="background:#f0eff1;color:#696969;">
-                <div class="modal-header">
-                    <b>A/R DownPayment</b>
-                </div>
-                <div class="modal-body">
-                    <div class="table-responsive">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <table id="TbDT" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
-                                    <thead>
-                                        <tr>
-                                            <th>Receipt No(SAP)</th>
-                                            <th>Web Reference</th>
-                                            <th>Customer Name</th>
-                                            <th>Create By</th>
-                                            <th>Document Date</th>
-                                            <th>DocTotal</th>
-                                            <th>Available Amount</th>
-                                            <th>Amount To Draw</th>
-                                            <th>Tax Amount To Draw</th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-info" data-dismiss="modal" id="ChooseDT" style="background:#f0eff1;color:#696969;">Choose</button>
-                    <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>-->
+    </div>
+</div>
 
-    <script src="~/js/Array.js"></script>
-    <script type="text/javascript">
-        var LDT = [];
-        $('#TblistSO').DataTable({
-            responsive: true,
-            bLengthChange: false,
-            binfo: false,
-            data: LDT,
-            columns: [
-                { data: "docNum", autoWidth: true },
-                { data: "webID", autoWidth: true },
-                { data: "customerName", autoWidth: true },
-                { data: "posuser", autoWidth: true },
-                { data: "documentDate", autoWidth: true },
-                { data: "docTotal", autoWidth: true },
-                { data: "grossAmount", autoWidth: true },
-                { data: "drawAmount", autoWidth: true },
-                { data: "taxAmount", autoWidth: true }
-            ]
+<script src="~/js/Array.js"></script>
+<script type="text/javascript">
+
+    function ClearTb() {
+        //const table = $("#TbLineStock").DataTable();
+        //table.clear().draw();
+        location.reload();
+    }
+
+    //+++++ Series Code +++++
+    var tableSeries = $('#TbSeries').DataTable({
+            "ajax": {
+            "url": '@Url.Action("GetSeriesCode", "SaleOrder")',
+            "type": "GET",
+            "dataType": "JSON",
+            "dataSrc": 'data',
+            "complete": function (data) {
+                console.log("GET Series Complete.");
+            }
+        },
+        "columns": [
+            { "data": "series" },
+            { "data": "seriesName" },
+            { "data": "indicator" }
+        ],
+        "select": true,
+        "paging": false,
+        "ordering": false,
+        "info": false,
+        "searching": false
         });
-      
-        var dtSOList = $('#TblistSO').DataTable()
-        var dtLineSO = $('#TbSOLine').DataTable()
-        var dtSNBT = $('#TbSNBT').DataTable()
-        var dtDraft = $('#TBDraft').dataTable()
-        var dtDNL_Line = $('#DNL_Line').dataTable()
-        var dtTbSNBT_Update = $('#TbSNBT_Update').dataTable()
+    tableSeries.on('select', function () {
+        var cellCode = tableSeries.rows({ selected: true }).data()[0]['series'];
+        var cellName = tableSeries.rows({ selected: true }).data()[0]['seriesName'];
 
-        $('#ListSO').hide();
-        $('#SOLine').hide();
-        $('#SNBT').hide();
-        $('#Draft').hide();
+        $('#ChooseSeries').click(function () {
+            var xCode = document.getElementById("txtSeries");
+            var xName = document.getElementById("txtSeriesName");
+            xCode.value = cellCode;
+            xName.value = cellName;
+        });
+    });
+
+    // Get SaleEmployee
+    var tableSlp = $('#TbSaleEmployee').DataTable({
+        "ajax": {
+            "url": '@Url.Action("GetSaleEmployee", "Inventory")',
+            "type": "GET",
+            "dataType": "JSON",
+            "dataSrc": 'data',
+            "complete": function (data) {
+                console.log("GET SaleEmployee Complete.");
+            }
+        },
+        "columns": [
+            { "data": "slpCode" },
+            { "data": "slpName" },
+        ],
+        "paging": false,
+        "ordering": false,
+        "info": false,
+        "select": true
+    });
+    tableSlp.on('select', function () {
+        var cellCode = tableSlp.rows({ selected: true }).data()[0]['slpCode'];
+        var cellName = tableSlp.rows({ selected: true }).data()[0]['slpName'];
+
+        $('#ChooseSlp').click(function () {
+            var xCode = document.getElementById("txtSlpCode");
+            var xName = document.getElementById("txtSlpName");
+            xCode.value = cellCode;
+            xName.value = cellName;
+        });
+    });
+
+    //+++++ GetSaleOrder +++++
+    var tbListSO = $('#TbSaleOrder').DataTable({
+        "ajax": {
+            "url": '@Url.Action("GetSO", "SaleOrder")',
+            "type": "GET",
+            "dataType": "JSON",
+            "dataSrc": 'data',
+            "complete": function (data) {
+                console.log("GetSO Complete.");
+            }
+        },
+        "columns": [
+            { "data": "docNum" },
+            { "data": "docEntry" },
+            { "data": "docDate" },
+            { "data": "cardCode" },
+            { "data": "cardName" },
+            { "data": "slpCode" },
+            { "data": "slpName" },
+        ],
+        "order": [[0, 'desc']],
+        "select": true,
+        "paging": false,
+        "ordering": false,
+        "info": false,
+        "searching": false,
+        "responsive": false
+    });
+
+    tbListSO.columns([1]).visible(false, false);
+
+    tbListSO.on('select', function () {
+
+        var celldocNum = tbListSO.rows({ selected: true }).data()[0]['docNum'];
+        var cellcardCode = tbListSO.rows({ selected: true }).data()[0]['cardCode'];
+        var cellcardName = tbListSO.rows({ selected: true }).data()[0]['cardName'];
+        var celldocEntry = tbListSO.rows({ selected: true }).data()[0]['docEntry'];
+        var cellslpCode = tbListSO.rows({ selected: true }).data()[0]['slpCode'];
+        var cellslpName = tbListSO.rows({ selected: true }).data()[0]['slpName'];
+
+        $('#ChooseSO').click(function () {
+            var txtDocEntry = document.getElementById("txtSODocEntry");
+            var txtDocNum = document.getElementById("txtSODocNum");
+            var txtCardCode = document.getElementById("CardCode");
+            var txtCardName = document.getElementById("CardName");
+            var txtSlpCode = document.getElementById("txtSlpCode");
+            var txtSlpName = document.getElementById("txtSlpName");
+
+            txtDocNum.value = celldocNum;
+            txtCardCode.value = cellcardCode;
+            txtCardName.value = cellcardName;
+            txtDocEntry.value = celldocEntry;
+            txtSlpCode.value = cellslpCode;
+            txtSlpName.value = cellslpName;
+        });
+    });
+
+    //GET DataLine From SO
+    function fncGetSOLine() {
+
+        if (document.getElementById("txtSODocNum").value != '') {
+            var txtDocEntry = document.getElementById("txtSODocEntry");
+            //var BinName = document.getElementById("txtBinName");
+            $.noConflict();
+            $.ajax({
+            url: '@Url.Action("GetSOLine", "SaleOrder")',
+            data: { docEntry: txtDocEntry.value },
+            type: "GET",
+            dataType: "JSON",
+            "dataSrc": 'data',
+                success: function (data) {
+                    //document.getElementById("tbDataLine").style.display = "block";
+                    //document.getElementById("btnSave").style.display = "block";
+                    document.getElementById("SOLine").style.display = "block";
+
+                    var tline = $('#TbSOLine').DataTable({
+                    "dom": "Bfrltip",
+                    "bDestroy": true,
+                    "aaData": data.data,
+                    "autoWidth": false,
+                    "lengthChange": true,
+                    "ordering": true,
+                    "pageLength": 20,
+                    "lengthMenu": [
+                            [20, 50, 100, 200, -1],
+                            [20, 50, 100, 200, "All"]
+                    ],
+                    "columns": [
+                        { "data": "itemCode", "width": "5%" },
+                        { "data": "itemName", "width": "5%"},
+                        { "data": "quatity", "width": "5%"},
+                        { "data": "price", "width": "5%"},
+                        { "data": "discPrcnt", "width": "5%"},
+                        { "data": "vatGroup", "width": "5%"},
+                        { "data": "lineTotal", "width": "5%"},
+                        { "data": "whsCode", "width": "5%"}
+                    ],
+                        "language": { "emptyTable": "No Data" },
+                        "order": [[1, 'desc']],
+                        "info": false,
+                        "searching": false,
+                        "responsive": false
+                    });
+
+                //tline.columns([2, 4, 7, 8]).visible(false, false);
+                console.log("Download Data Line Complete");
+            }
+            });
+
+
+
+        } else {
+            alert("Please Selete SO DocNum!");
+        }
+    }
+
+    //Add Data In Row
+    var t = $('#TbLineScan').DataTable({
+        "dom": "Bfrltip",
+        "bDestroy": true,
+        "autoWidth": true,
+        "responsive": true,
+        "lengthChange": true,
+        "ordering": true,
+        "pageLength": 20,
+         "columns": [
+            { "width": "20%", "targets": 0 },
+            { "width": "20%", "targets": 0 },
+            { "width": "20%", "targets": 0 },
+            { "width": "20%", "targets": 0 },
+            { "width": "20%", "targets": 0 },
+            { "width": "20%", "targets": 0 },
+            { "width": "20%", "targets": 0 },
+            { "width": "20%", "targets": 0 },
+            { "width": "20%", "targets": 0 },
+            { "width": "20%", "targets": 0 }
+        ],
+        "select": true,
+        "ordering": false,
+        "info": false,
+        "searching": false,
+        "scrollX": true,
+        "scrollY": false
+    });
+
+    //BarcodeUDOM
+    $('#addRow01').on('click', function () {
+
+        if ($('#txtScanBarCode01').val() != '') {
+
+            var txtScanBarCode = document.getElementById("txtScanBarCode01").value;
+            const strArr = txtScanBarCode.split(";");
+            //document.getElementById("demo").innerHTML = StrBarCodeArr[4];
+            var sItemCode = strArr[0];
+            var sBatch = strArr[1];
+            var sSerial = strArr[2];
+            var sBatchSerial;
+
+            if (sBatch != '') {
+                sBatchSerial = sBatch;
+                $.ajax({
+                url: '@Url.Action("GetStockItemBatch", "Inventory")',
+                    data: { itemcode: sItemCode, batchnumber: sBatchSerial},
+                type: "GET",
+                dataType: "JSON",
+                "dataSrc": 'data',
+                success: function (data) {
+                        var jqueryXml = $(data);
+                        console.log(jqueryXml[0].data[0].itemCode);
+
+                        //=========================
+                        //jqueryXml[0].data[0].quantity
+                        //jqueryXml[0].data[0].batchNumber
+                        //jqueryXml[0].data[0].serialNumber
+                        var bItemCode = jqueryXml[0].data[0].itemCode;
+                        var bItemName = jqueryXml[0].data[0].itemName;
+                        var bQuantity = document.getElementById("txtQuantity01").value;
+                        var bWhsCode = jqueryXml[0].data[0].whsCode;
+                        var bBinEntry = jqueryXml[0].data[0].binEntry;
+                        var bBinCode = jqueryXml[0].data[0].binCode;
+                        var bUOMCode = jqueryXml[0].data[0].uomCode;
+                        var bBatchNumber = jqueryXml[0].data[0].batchNumber;
+                        var bSerialNumber = jqueryXml[0].data[0].serialNumber;
+                        //if (bSerialNumber != '') { bSerialNumber = bSerialNumber } else { bSerialNumber = '' }
+                        var bExpDate = jqueryXml[0].data[0].expDate;
+                        if (bExpDate == '1899-12-30T00:00:00') {
+                            bExpDate = '';
+                        } else {
+                            bExpDate = bExpDate;
+                        }
+                        t.row.add([
+                            bItemCode,
+                            bItemName,
+                            bQuantity,
+                            bWhsCode,
+                            bBinEntry,
+                            bBinCode,
+                            bUOMCode,
+                            bExpDate,
+                            bBatchNumber,
+                            ''
+                        ]).draw(false);
+
+                    $('#txtScanBarCode01').val("");
+                    $('#txtScanBarCode01').focus();
+                    }
+                });
+            } else if (sSerial != '') {
+                sBatchSerial = sSerial;
+                $.ajax({
+                url: '@Url.Action("GetStockItemSerial", "Inventory")',
+                    data: { itemcode: sItemCode, serialnumber: sBatchSerial},
+                type: "GET",
+                dataType: "JSON",
+                "dataSrc": 'data',
+                success: function (data) {
+                        var jqueryXml = $(data);
+                        console.log(jqueryXml[0].data[0].itemCode);
+
+                        //=========================
+                        //jqueryXml[0].data[0].quantity
+                        //jqueryXml[0].data[0].batchNumber
+                        //jqueryXml[0].data[0].serialNumber
+                        var bItemCode = jqueryXml[0].data[0].itemCode;
+                        var bItemName = jqueryXml[0].data[0].itemName;
+                        var bQuantity = document.getElementById("txtQuantity01").value;
+                        var bWhsCode = jqueryXml[0].data[0].whsCode;
+                        var bBinEntry = jqueryXml[0].data[0].binEntry;
+                        var bBinCode = jqueryXml[0].data[0].binCode;
+                        var bUOMCode = jqueryXml[0].data[0].uomCode;
+                        var bBatchNumber = jqueryXml[0].data[0].batchNumber;
+                        var bSerialNumber = jqueryXml[0].data[0].serialNumber;
+                        //if (bSerialNumber != '') { bSerialNumber = bSerialNumber } else { bSerialNumber = '' }
+                        var bExpDate = jqueryXml[0].data[0].expDate;
+                        if (bExpDate == '1899-12-30T00:00:00') {
+                            bExpDate = '';
+                        } else {
+                            bExpDate = bExpDate;
+                        }
+                        t.row.add([
+                            bItemCode,
+                            bItemName,
+                            bQuantity,
+                            bWhsCode,
+                            bBinEntry,
+                            bBinCode,
+                            bUOMCode,
+                            bExpDate,
+                            '',
+                            bBatchNumber
+                        ]).draw(false);
+
+                    $('#txtScanBarCode01').val("");
+                    $('#txtScanBarCode01').focus();
+                    }
+                });
+            }
+        }
+    });
+    $('#addRow01').click();
+
+    var input01 = document.getElementById("txtScanBarCode01");
+    input01.addEventListener("keyup", function (event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            document.getElementById("addRow01").click();
+        }
+    });
+
+
+    //BarcodeProduct
+    $('#addRow02').on('click', function () {
+
+        if ($('#txtScanBatchSerial02').val()!='') {
+
+            var getSelectedValue = document.querySelector('input[name="typeItem"]:checked');
+            if (getSelectedValue != null) {
+                if (getSelectedValue.value == "Batch") {
+                     if ($('#txtScanBatchSerial02').val()!='') {
+                        $.ajax({
+                            url: '@Url.Action("GetStockItemBatch", "Inventory")',
+                            data: { itemcode: $('#txtScanBarCode02').val(), batchnumber: $('#txtScanBatchSerial02').val() },
+                            type: "GET",
+                            dataType: "JSON",
+                            "dataSrc": 'data',
+                            success: function (data) {
+                                var jqueryXml = $(data);
+                                if (jqueryXml[0].data[0].itemCode != '') {
+                                    //=========================
+                                    var bItemCode = jqueryXml[0].data[0].itemCode;
+                                    var bItemName = jqueryXml[0].data[0].itemName;
+                                    var bQuantity = document.getElementById("txtQuantity02").value;
+                                    var bWhsCode = jqueryXml[0].data[0].whsCode;
+                                    var bWhsEntry = jqueryXml[0].data[0].whsEntry;
+                                    var bBinCode = jqueryXml[0].data[0].binCode;
+                                    var bBinEntry = jqueryXml[0].data[0].binEntry;
+                                    var bUOMCode = jqueryXml[0].data[0].uomCode;
+                                    var bBatchNumber = jqueryXml[0].data[0].batchNumber;
+                                    var bSerialNumber = jqueryXml[0].data[0].serialNumber;
+                                    //if (bSerialNumber != '') { bSerialNumber = bSerialNumber } else { bSerialNumber = '' }
+                                    var bExpDate = jqueryXml[0].data[0].expDate;
+                                    if (bExpDate == '1899-12-30T00:00:00') {
+                                        bExpDate = '';
+                                    } else {
+                                        bExpDate = bExpDate;
+                                    }
+
+                                    if ($('#txtScanBarCode02').val() != '') {
+                                        t.row.add([
+                                            bItemCode,
+                                            bItemName,
+                                            bQuantity,
+                                            bWhsCode,
+                                            bBinEntry,
+                                            bBinCode,
+                                            bUOMCode,
+                                            bExpDate,
+                                            bBatchNumber,
+                                            ''
+                                        ]).draw(false);
+                                    } else {
+                                        return false;
+                                    }
+
+                                    $('#txtScanBarCode02').val("");
+                                    $('#txtScanBatchSerial02').val("");
+                                    $('#txtScanBarCode02').focus();
+                                    //=========================
+
+                                } else {
+                                    alert("No ItemCode");
+                                }
+
+                            }
+                        });
+        }
+                }
+                else if (getSelectedValue.value == "Serial") {
+                     if ($('#txtScanBatchSerial02').val()!='') {
+
+                        $.ajax({
+                            url: '@Url.Action("GetStockItemSerial", "Inventory")',
+                            data: { itemcode: $('#txtScanBarCode02').val(), serialnumber: $('#txtScanBatchSerial02').val() },
+                            type: "GET",
+                            dataType: "JSON",
+                            "dataSrc": 'data',
+                            success: function (data) {
+                                var jqueryXml = $(data);
+                                if (jqueryXml[0].data[0].itemCode != '') {
+                                    //=========================
+                                    var bItemCode = jqueryXml[0].data[0].itemCode;
+                                    var bItemName = jqueryXml[0].data[0].itemName;
+                                    var bQuantity = document.getElementById("txtQuantity02").value;
+                                    var bWhsCode = jqueryXml[0].data[0].whsCode;
+                                    var bWhsEntry = jqueryXml[0].data[0].whsEntry;
+                                    var bBinCode = jqueryXml[0].data[0].binCode;
+                                    var bBinEntry = jqueryXml[0].data[0].binEntry;
+                                    var bUOMCode = jqueryXml[0].data[0].uomCode;
+                                    var bBatchNumber = jqueryXml[0].data[0].batchNumber;
+                                    var bSerialNumber = jqueryXml[0].data[0].serialNumber;
+                                    //if (bSerialNumber != '') { bSerialNumber = bSerialNumber } else { bSerialNumber = '' }
+                                    var bExpDate = jqueryXml[0].data[0].expDate;
+                                    if (bExpDate == '1899-12-30T00:00:00') {
+                                        bExpDate = '';
+                                    } else {
+                                        bExpDate = bExpDate;
+                                    }
+
+                                    if ($('#txtScanBarCode02').val() != '') {
+                                            t.row.add([
+                                                bItemCode,
+                                                bItemName,
+                                                bQuantity,
+                                                bWhsCode,
+                                                bBinEntry,
+                                                bBinCode,
+                                                bUOMCode,
+                                                bExpDate,
+                                                '',
+                                                bBatchNumber
+                                            ]).draw(false);
+                                    } else {
+                                        return false;
+                                    }
+
+                                    $('#txtScanBarCode02').val("");
+                                    $('#txtScanBatchSerial02').val("");
+                                    $('#txtScanBarCode02').focus();
+                                    //=========================
+
+                                } else {
+                                    alert("No ItemCode");
+                                }
+
+                            }
+                        });
+
+
+        }
+                }
+            }
+            else {
+                return false;
+            }
+
+        }
+
+    });
+    $('#addRow02').click();
+
+    var input02 = document.getElementById("txtScanBarCode02");
+    var input12 = document.getElementById("txtScanBatchSerial02");
+    input02.addEventListener("keyup", function (event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            document.getElementById("txtScanBatchSerial02").focus();
+            input12.addEventListener("keyup", function (event) {
+                if (event.keyCode === 13) {
+                    event.preventDefault();
+                    document.getElementById("addRow02").click();
+                }
+            });
+        }
+    });
+
+
+    $('#btnDelRow').click(function () {
+        t.row('.selected').remove().draw(false);
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //var LDT = [];
+        //$('#TblistSO').DataTable({
+        //    responsive: true,
+        //    bLengthChange: false,
+        //    binfo: false,
+        //    data: LDT,
+        //    columns: [
+        //        { data: "docNum", autoWidth: true },
+        //        { data: "webID", autoWidth: true },
+        //        { data: "customerName", autoWidth: true },
+        //        { data: "posuser", autoWidth: true },
+        //        { data: "documentDate", autoWidth: true },
+        //        { data: "docTotal", autoWidth: true },
+        //        { data: "grossAmount", autoWidth: true },
+        //        { data: "drawAmount", autoWidth: true },
+        //        { data: "taxAmount", autoWidth: true }
+        //    ]
+        //});
+
+        //var dtSOList = $('#TblistSO').DataTable()
+        //var dtLineSO = $('#TbSOLine').DataTable()
+        //var dtSNBT = $('#TbSNBT').DataTable()
+        //var dtDraft = $('#TBDraft').dataTable()
+        //var dtDNL_Line = $('#DNL_Line').dataTable()
+        //var dtTbSNBT_Update = $('#TbSNBT_Update').dataTable()
+
+        //$('#ListSO').hide();
+        //$('#SOLine').hide();
+        //$('#SNBT').hide();
+        //$('#Draft').hide();
         // $('#DLNline').hide();
 
-        $('#SelectSO').click(function () {
-            alert(testDLN());
-            $('#DLN').hide();
-            $('#ListSO').show();
-            
-        });
-        $('#ListSOChoose').click(function () {
-            $('#DLN').hide();
-            $('#ListSO').hide();
-            $('#SOLine').show();
-        });
-        $('#btnSNBT').click(function () {
-            $('#SOLine').hide();
-            $('#SNBT').show();
-        });
-        $('#FindDraft').click(function () {
-            $('#DLN').hide();
-            $('#DLNline').hide();
-            $('#Update_SNBT').hide();
-            $('#Draft').show();
+        //$('#SelectSO').click(function () {
+        //    alert(testDLN());
+        //    $('#DLN').hide();
+        //    $('#ListSO').show();
 
-        });       
-       
-        function testDLN() {
+        //});
+
+        //$('#ListSOChoose').click(function () {
+        //    $('#DLN').hide();
+        //    $('#ListSO').hide();
+        //    $('#SOLine').show();
+        //});
+
+        //$('#btnSNBT').click(function () {
+        //    $('#SOLine').hide();
+        //    $('#SNBT').show();
+        //});
+
+        //$('#FindDraft').click(function () {
+        //    $('#DLN').hide();
+        //    $('#DLNline').hide();
+        //    $('#Update_SNBT').hide();
+        //    $('#Draft').show();
+
+        //});
+
+        @*function testDLN() {
         $.ajax({
         url: '@Url.Action("GetAPITesting", "Home")',
         type: "GET",
@@ -759,6 +1054,6 @@
             }
         }
     });
-    }
-    </script>
+    }*@
+</script>
 

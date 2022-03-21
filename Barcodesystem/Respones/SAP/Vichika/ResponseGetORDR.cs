@@ -15,17 +15,20 @@ namespace BarCodeLibrary.Respones.SAP
     }
     public class ORDR
     {
+        public string DocNum { get; set; }
+        public int DocEntry { get; set; }
         public string CardName { get; set; }
         public string CardCode { get; set; }
         public int CntctCode { get; set; }
-        public string NumAtCard { get; set; }
-        public string DocNum { get; set; }
+        public string NumAtCard { get; set; }        
         public string DocStatus { get; set; }
-        public DateTime DocDate { get; set; }
+        public string DocDate { get; set; }
         public DateTime DocDueDate { get; set; }
         public DateTime TaxDate { get; set; }
         public double DocTotal { get; set; }
         public double DiscPrcnt { get; set; }
+        public int SlpCode { get; set; }
+        public string SlpName { get; set; }
         public List<RDR1> Line { get; set; }
     }
     public class RDR1

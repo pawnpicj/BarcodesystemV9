@@ -28,6 +28,35 @@
         $('#DocDate').val(today);
         $('#DocumentDate').val(today);
     });
+
+    function checkBarcodeUDOM() {
+        document.getElementById("divBarcodeUDOM").style.display = "block";
+        document.getElementById("divBarcodeProduct").style.display = "none";
+        document.getElementById("txtScanBarCode01").focus();
+
+        document.getElementById("rdoTypeItem1").checked = false;
+        document.getElementById("rdoTypeItem2").checked = false;
+        document.getElementById("txtQuantity02").disabled = true;
+        document.getElementById("txtScanBarCode02").disabled = true;
+        document.getElementById("txtScanBatchSerial02").disabled = true;
+
+    }
+    function checkBarcodeProduct() {
+        document.getElementById("divBarcodeUDOM").style.display = "none";
+        document.getElementById("divBarcodeProduct").style.display = "block";
+        document.getElementById("txtScanBarCode02").focus();
+    }
+
+    function chTypeItem() {
+        document.getElementById("txtQuantity02").disabled = false;
+        document.getElementById("txtScanBarCode02").disabled = false;
+        document.getElementById("txtScanBatchSerial02").disabled = false;
+        document.getElementById("txtScanBarCode02").focus();
+        document.getElementById("txtQuantity02").value = "1";
+        document.getElementById("txtScanBarCode02").value = "";
+        document.getElementById("txtScanBatchSerial02").value = "";
+    }
+
 </script>
 
 <style>
@@ -290,29 +319,75 @@
                                 FromBinEntry : <input type="text" id="txtfBinEntry" class="form-control" value="" style="background-color: cornsilk;" readonly />
                                 <hr>
                             </div>
-                            
-                            <div>
-                                <label>
-                                    Input Quantity :
-                                </label>
-                                <div class="input-group">
-                                    <input type="number" class="form-control" placeholder="" id="Quantity" value="1" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
+
+                            @* =================== TabScanBarCode =================== *@
+                            <div id="TabScanBarCode" class="BoxScan">
+                                <center>
+                                    <label>
+                                        <input type="radio" id="rdoTypeScan" name="typeScan" value="01" style="height: 15px; width: 15px; vertical-align: middle;" onclick="checkBarcodeUDOM()" />
+                                        <font size="3" style="font-weight:bold">Barcode UDOM</font>
+                                    </label>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <label>
+                                        <input type="radio" id="rdoTypeScan" name="typeScan" value="02" style="height: 15px; width: 15px; vertical-align: middle; " onclick="checkBarcodeProduct()" />
+                                        <font size="3" style="font-weight:bold">Barcode Product</font>
+                                    </label>
+                                </center>
+
+                                <div id="divBarcodeUDOM" style="display:none; ">
+                                    <div id="TabQty" style="display:block;">
+                                        Input Quantity :
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" placeholder="" id="txtQuantity01" value="1" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
+                                            <button class="btn btn-warning" id="btnUpdateQty" style="margin-left:5px; display:none" onclick="fncUpdateQty();">Update Qty</button>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        Scan Barcode :
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" value="" id="txtScanBarCode01" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center;" autocomplete="off">
+                                        </div>
+                                        <button class="input-group-text" id="addRow01" style="display: none;" autocomplete="off"><i class="fa fa-plus"></i></button>
+                                    </div>
                                 </div>
 
-                                <label>
-                                    Scan Barcode :
-                                </label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" value="" id="txtScanBarCode" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
+                                <div id="divBarcodeProduct" style="display:none; ">
+
+                                    <center>
+                                        <label>
+                                            <input type="radio" id="rdoTypeItem1" name="typeItem" value="Batch" style="height: 12px; width: 12px; vertical-align: middle;" onclick="chTypeItem()" />
+                                            <font size="3" style="font-weight:bold">Batch</font>
+                                        </label>
+                                        &nbsp;&nbsp;&nbsp;
+                                        <label>
+                                            <input type="radio" id="rdoTypeItem2" name="typeItem" value="Serial" style="height: 12px; width: 12px; vertical-align: middle; " onclick="chTypeItem()" />
+                                            <font size="3" style="font-weight:bold">Serial</font>
+                                        </label><br>
+                                    </center>
+                                    <label>
+                                        Input Quantity :
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" placeholder="" id="txtQuantity02" value="1" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center;" autocomplete="off" disabled>
+                                    </div>
+
+                                    <label>
+                                        Scan Barcode :
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" value="" id="txtScanBarCode02" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center;" autocomplete="off" disabled>
+                                    </div>
+
+                                    <label>
+                                        Scan Batch/Serial :
+                                    </label><div class="input-group">
+                                        <input type="text" class="form-control" value="" id="txtScanBatchSerial02" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center;" autocomplete="off" disabled>
+                                    </div>
+                                    <button class="input-group-text" id="addRow02" style="display:none;"><i class="fa fa-plus"></i></button>
                                 </div>
 
-                                <label>
-                                    Scan Batch/Serial :
-                                </label><div class="input-group">
-                                    <input type="text" class="form-control" value="" id="txtScanBatchSerial" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
-                                </div>
-                                <button class="input-group-text" id="addRow" style="display:none;"><i class="fa fa-plus"></i></button>
                             </div>
+                            @* ====================================================== *@
                         </div>
                         <hr>
 
@@ -712,7 +787,7 @@
             { "data": "absEntry" },
         ],
         "select": true,
-        "paging": false,
+        "paging": true,
         "ordering": false,
         "info": false,
 
@@ -770,8 +845,8 @@
                     "info": false,
                     "searching": false
                 });
-                alert("Download Data Complete");
-                document.getElementById("txtScanBarCode").focus();
+                console.log("Download Data Complete");
+                //document.getElementById("txtScanBarCode").focus();
                 tline.on('select', function () {
                     var cellitemcode = tline.rows({ selected: true }).data()[0]['itemCode'];
                     var celldscription = tline.rows({ selected: true }).data()[0]['dscription'];
@@ -813,24 +888,24 @@
 
     //function scan barcode
     //Scan Bar Code
-    var input = document.getElementById("txtScanBarCode");
-    var input2 = document.getElementById("txtScanBatchSerial");
-    input.addEventListener("keyup", function (event) {
-        if (event.keyCode === 13) {
-            event.preventDefault();
-            document.getElementById("txtScanBatchSerial").focus();
-            input2.addEventListener("keyup", function (event) {
-                if (event.keyCode === 13) {
-                    event.preventDefault();
-                    document.getElementById("addRow").click();
-                    document.getElementById("getItemCode").value = "";
-                    document.getElementById("getOnHand").value = "";
-                    document.getElementById("getSerialNumber").value = "";
-                    document.getElementById("getBatchNumber").value = "";
-                }
-            });
-        }
-    });
+    //var input = document.getElementById("txtScanBarCode");
+    //var input2 = document.getElementById("txtScanBatchSerial");
+    //input.addEventListener("keyup", function (event) {
+    //    if (event.keyCode === 13) {
+    //        event.preventDefault();
+    //        document.getElementById("txtScanBatchSerial").focus();
+    //        input2.addEventListener("keyup", function (event) {
+    //            if (event.keyCode === 13) {
+    //                event.preventDefault();
+    //                document.getElementById("addRow").click();
+    //                document.getElementById("getItemCode").value = "";
+    //                document.getElementById("getOnHand").value = "";
+    //                document.getElementById("getSerialNumber").value = "";
+    //                document.getElementById("getBatchNumber").value = "";
+    //            }
+    //        });
+    //    }
+    //});
 
     //Add Data In Row
     var t = $('#tbItemList').DataTable({
@@ -852,65 +927,297 @@
         "searching": false
     });
 
-    $('#addRow').on('click', function () {
+    //BarcodeUDOM
+    $('#addRow01').on('click', function () {
 
-        if ($('#txtScanBatchSerial').val()!='') {
+        if ($('#txtScanBarCode01').val() != '') {
 
-            $.ajax({
-                url: '@Url.Action("GetStcok_BatchSerial", "Inventory")',
-                data: { barcode: $('#txtScanBarCode').val(), batchserial: $('#txtScanBatchSerial').val()},
+            var txtScanBarCode = document.getElementById("txtScanBarCode01").value;
+            const strArr = txtScanBarCode.split(";");
+            //document.getElementById("demo").innerHTML = StrBarCodeArr[4];
+            var sItemCode = strArr[0];
+            var sBatch = strArr[1];
+            var sSerial = strArr[2];
+            var sBatchSerial;
+
+            if (sBatch != '') {
+                sBatchSerial = sBatch;
+                $.ajax({
+                url: '@Url.Action("GetStockItemBatch", "Inventory")',
+                    data: { itemcode: sItemCode, batchnumber: sBatchSerial},
                 type: "GET",
                 dataType: "JSON",
                 "dataSrc": 'data',
-                success: function (data) {
-                    var jqueryXml = $(data);
-                    if (jqueryXml[0].data[0].itemCode != '') {
-
-                        if (jqueryXml[0].data[0].itemCode == document.getElementById("txtItemCode").value) {
+                    success: function (data) {
+                        var jqueryXml = $(data);
+                        if (jqueryXml[0].data[0].itemCode != '') {
                             //=========================
-                            $('#getItemCode').val(jqueryXml[0].data[0].itemCode);
-                            $('#getOnHand').val(jqueryXml[0].data[0].onHand);
-                            $('#getSerialNumber').val(jqueryXml[0].data[0].serialNumber);
-                            $('#getBatchNumber').val(jqueryXml[0].data[0].batchNumber);
+                            var bItemCode = jqueryXml[0].data[0].itemCode;
+                            var bItemName = jqueryXml[0].data[0].itemName;
+                            var bQuantity = document.getElementById("txtQuantity01").value;
+                            var bWhsCode = jqueryXml[0].data[0].whsCode;
+                            var bWhsEntry = jqueryXml[0].data[0].whsEntry;
+                            var bBinCode = jqueryXml[0].data[0].binCode;
+                            var bBinEntry = jqueryXml[0].data[0].binEntry;
+                            var bUOMCode = jqueryXml[0].data[0].uomCode;
+                            var bBatchNumber = jqueryXml[0].data[0].batchNumber;
+                            var bSerialNumber = jqueryXml[0].data[0].serialNumber;
+                            //if (bSerialNumber != '') { bSerialNumber = bSerialNumber } else { bSerialNumber = '' }
+                            var bExpDate = jqueryXml[0].data[0].expDate;
+                            if (bExpDate == '1899-12-30T00:00:00') {
+                                bExpDate = '';
+                            } else {
+                                bExpDate = bExpDate;
+                            }
 
-                            if ($('#getItemCode').val() != '') {
+                            if ($('#txtScanBarCode01').val() != '') {
                                 t.row.add([
-                                    $('#getItemCode').val(),
-                                    $('#txtItemName').val(),
-                                    $('#txtQuantity').val(),
+                                    bItemCode,
+                                    bItemName,
+                                    $('#txtQuantity01').val(),
                                     $('#FromWhsCode').val(),
-                                    $('#txtfBinEntry').val(),
+                                    bBinEntry,
                                     $('#ToWhsCode').val(),
                                     $('#txtBinEntry').val(),
-                                    $('#getBatchNumber').val(),
-                                    $('#getSerialNumber').val()
+                                    bBatchNumber,
+                                    ''
                                 ]).draw(false);
-
-                                $('#txtScanBatchSerial').val("");
-
                             } else {
                                 return false;
                             }
+
+                            $('#txtScanBarCode01').val("");
+                            $('#txtScanBarCode01').focus();
                             //=========================
+
                         } else {
-                            alert("Itemcode don't match!");
+                            alert("No ItemCode");
                         }
 
-
-
-                    } else {
-                        alert("No ItemCode");
                     }
+                });
+            } else if (sSerial != '') {
+                sBatchSerial = sSerial;
+                $.ajax({
+                url: '@Url.Action("GetStockItemSerial", "Inventory")',
+                    data: { itemcode: sItemCode, serialnumber: sBatchSerial},
+                type: "GET",
+                dataType: "JSON",
+                "dataSrc": 'data',
+                    success: function (data) {
+                        var jqueryXml = $(data);
+                        if (jqueryXml[0].data[0].itemCode != '') {
+                            //=========================
+                            var bItemCode = jqueryXml[0].data[0].itemCode;
+                            var bItemName = jqueryXml[0].data[0].itemName;
+                            var bQuantity = document.getElementById("txtQuantity01").value;
+                            var bWhsCode = jqueryXml[0].data[0].whsCode;
+                            var bWhsEntry = jqueryXml[0].data[0].whsEntry;
+                            var bBinCode = jqueryXml[0].data[0].binCode;
+                            var bBinEntry = jqueryXml[0].data[0].binEntry;
+                            var bUOMCode = jqueryXml[0].data[0].uomCode;
+                            var bBatchNumber = jqueryXml[0].data[0].batchNumber;
+                            var bSerialNumber = jqueryXml[0].data[0].serialNumber;
+                            //if (bSerialNumber != '') { bSerialNumber = bSerialNumber } else { bSerialNumber = '' }
+                            var bExpDate = jqueryXml[0].data[0].expDate;
+                            if (bExpDate == '1899-12-30T00:00:00') {
+                                bExpDate = '';
+                            } else {
+                                bExpDate = bExpDate;
+                            }
 
+                            if ($('#txtScanBarCode01').val() != '') {
+                                t.row.add([
+                                    bItemCode,
+                                    bItemName,
+                                    $('#txtQuantity01').val(),
+                                    $('#FromWhsCode').val(),
+                                    bBinEntry,
+                                    $('#ToWhsCode').val(),
+                                    $('#txtBinEntry').val(),
+                                    '',
+                                    bBatchNumber
+                                ]).draw(false);
+                            } else {
+                                return false;
+                            }
+
+                            $('#txtScanBarCode01').val("");
+                            $('#txtScanBarCode01').focus();
+                            //=========================
+
+                        } else {
+                            alert("No ItemCode");
+                        }
+
+                    }
+                });
+            }
+        //var batchSerial;
+        //let position = txtScanBarCode.search(";");
+        //let slenth = txtScanBarCode.length;
+        //let batchSerial = txtScanBarCode.substring(position + 1, slenth);
+        //console.log(batchSerial);
+        }
+    });
+    $('#addRow01').click();
+
+    var input01 = document.getElementById("txtScanBarCode01");
+    input01.addEventListener("keyup", function (event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            document.getElementById("addRow01").click();
+        }
+    });
+
+    //BarcodeProduct
+    $('#addRow02').on('click', function () {
+
+            var getSelectedValue = document.querySelector('input[name="typeItem"]:checked');
+            if (getSelectedValue != null) {
+                if (getSelectedValue.value == "Batch") {
+                     if ($('#txtScanBatchSerial02').val()!='') {
+                        $.ajax({
+                            url: '@Url.Action("GetStockItemBatch", "Inventory")',
+                            data: { itemcode: $('#txtScanBarCode02').val(), batchnumber: $('#txtScanBatchSerial02').val() },
+                            type: "GET",
+                            dataType: "JSON",
+                            "dataSrc": 'data',
+                            success: function (data) {
+                                var jqueryXml = $(data);
+                                if (jqueryXml[0].data[0].itemCode != '') {
+                                    //=========================
+                                    var bItemCode = jqueryXml[0].data[0].itemCode;
+                                    var bItemName = jqueryXml[0].data[0].itemName;
+                                    var bQuantity = document.getElementById("txtQuantity02").value;
+                                    var bWhsCode = jqueryXml[0].data[0].whsCode;
+                                    var bWhsEntry = jqueryXml[0].data[0].whsEntry;
+                                    var bBinCode = jqueryXml[0].data[0].binCode;
+                                    var bBinEntry = jqueryXml[0].data[0].binEntry;
+                                    var bUOMCode = jqueryXml[0].data[0].uomCode;
+                                    var bBatchNumber = jqueryXml[0].data[0].batchNumber;
+                                    var bSerialNumber = jqueryXml[0].data[0].serialNumber;
+                                    //if (bSerialNumber != '') { bSerialNumber = bSerialNumber } else { bSerialNumber = '' }
+                                    var bExpDate = jqueryXml[0].data[0].expDate;
+                                    if (bExpDate == '1899-12-30T00:00:00') {
+                                        bExpDate = '';
+                                    } else {
+                                        bExpDate = bExpDate;
+                                    }
+
+                                    if ($('#txtScanBarCode02').val() != '') {
+                                        t.row.add([
+                                            bItemCode,
+                                            bItemName,
+                                            $('#txtQuantity02').val(),
+                                            $('#FromWhsCode').val(),
+                                            bBinEntry,
+                                            $('#ToWhsCode').val(),
+                                            $('#txtBinEntry').val(),
+                                            bBatchNumber,
+                                            ''
+                                        ]).draw(false);
+                                    } else {
+                                        return false;
+                                    }
+
+                                    $('#txtScanBarCode02').val("");
+                                    $('#txtScanBatchSerial02').val("");
+                                    $('#txtScanBarCode02').focus();
+                                    //=========================
+
+                                } else {
+                                    alert("No ItemCode");
+                                }
+
+                            }
+                        });
+        }
                 }
-            });
+                else if (getSelectedValue.value == "Serial") {
+                     if ($('#txtScanBatchSerial02').val()!='') {
+
+                        $.ajax({
+                            url: '@Url.Action("GetStockItemSerial", "Inventory")',
+                            data: { itemcode: $('#txtScanBarCode02').val(), serialnumber: $('#txtScanBatchSerial02').val() },
+                            type: "GET",
+                            dataType: "JSON",
+                            "dataSrc": 'data',
+                            success: function (data) {
+                                var jqueryXml = $(data);
+                                if (jqueryXml[0].data[0].itemCode != '') {
+                                    //=========================
+                                    var bItemCode = jqueryXml[0].data[0].itemCode;
+                                    var bItemName = jqueryXml[0].data[0].itemName;
+                                    var bQuantity = document.getElementById("txtQuantity02").value;
+                                    var bWhsCode = jqueryXml[0].data[0].whsCode;
+                                    var bWhsEntry = jqueryXml[0].data[0].whsEntry;
+                                    var bBinCode = jqueryXml[0].data[0].binCode;
+                                    var bBinEntry = jqueryXml[0].data[0].binEntry;
+                                    var bUOMCode = jqueryXml[0].data[0].uomCode;
+                                    var bBatchNumber = jqueryXml[0].data[0].batchNumber;
+                                    var bSerialNumber = jqueryXml[0].data[0].serialNumber;
+                                    //if (bSerialNumber != '') { bSerialNumber = bSerialNumber } else { bSerialNumber = '' }
+                                    var bExpDate = jqueryXml[0].data[0].expDate;
+                                    if (bExpDate == '1899-12-30T00:00:00') {
+                                        bExpDate = '';
+                                    } else {
+                                        bExpDate = bExpDate;
+                                    }
+
+                                    if ($('#txtScanBarCode02').val() != '') {
+                                        t.row.add([
+                                            bItemCode,
+                                            bItemName,
+                                            $('#txtQuantity02').val(),
+                                            $('#FromWhsCode').val(),
+                                            bBinEntry,
+                                            $('#ToWhsCode').val(),
+                                            $('#txtBinEntry').val(),
+                                            '',
+                                            bBatchNumber
+                                        ]).draw(false);
+                                    } else {
+                                        return false;
+                                    }
+
+                                    $('#txtScanBarCode02').val("");
+                                    $('#txtScanBatchSerial02').val("");
+                                    $('#txtScanBarCode02').focus();
+                                    //=========================
+
+                                } else {
+                                    alert("No ItemCode");
+                                }
+
+                            }
+                        });
 
 
         }
+                }
+            }
+            else {
+                return false;
+            }
 
     });
+    $('#addRow02').click();
 
-    $('#addRow').click();
+    var input02 = document.getElementById("txtScanBarCode02");
+    var input12 = document.getElementById("txtScanBatchSerial02");
+    input02.addEventListener("keyup", function (event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            document.getElementById("txtScanBatchSerial02").focus();
+            input12.addEventListener("keyup", function (event) {
+                if (event.keyCode === 13) {
+                    event.preventDefault();
+                    document.getElementById("addRow02").click();
+                }
+            });
+        }
+    });
 
     //Delete Line Item From ScanBarCode
     $('#btnDelRow').click(function () {

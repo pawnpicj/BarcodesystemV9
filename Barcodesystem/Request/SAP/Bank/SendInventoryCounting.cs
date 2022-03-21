@@ -10,7 +10,6 @@ namespace BarCodeLibrary.Request.SAP
     public class SendInventoryCounting
     {
         public int Series { get; set; }
-        //public string DocEntry { get; set; }
 
         public string CountingDate { get; set; } // Posting Date (YYYY-MM-DD)
         public string CountingTime { get; set; } // 15:37 
@@ -25,8 +24,6 @@ namespace BarCodeLibrary.Request.SAP
         public string Comments { get; set; }
 
         public List<SendInventoryCountingLine> Line { get; set; }
-        public List<SendInventoryCountingBatch> BatchLine { get; set; }
-        public List<SendInventoryCountingSerial> SerialLine { get; set; }
     }
 
 
@@ -43,7 +40,9 @@ namespace BarCodeLibrary.Request.SAP
         public string Counted { get; } = "Y";
         public string BatchNo { get; set; }
         public string SerialNo { get; set; }
-        public long Quantity { get; set; }        
+        public long Quantity { get; set; }
+        public List<SendInventoryCountingBatch> BatchLine { get; set; }
+        public List<SendInventoryCountingSerial> SerialLine { get; set; }
     }
 
     public class SendInventoryCountingBatch 

@@ -31,5 +31,62 @@ namespace BarCodeAPIService.Controllers.Bank
                 return BadRequest(a);
             }
         }
+
+        [HttpGet("GetStockItemBatchBin/{itemCode}/{batchNumber}/{binEntry}")]
+        public async Task<IActionResult> GetStockItemBatchBinAsync(string itemCode, string batchNumber, string binEntry)
+        {
+            var a = await stockWhsBinService.responseGetStockItemBatchBin(itemCode, batchNumber, binEntry);
+            if (a.ErrorCode == 0)
+            {
+                return Ok(a);
+            }
+            else
+            {
+                return BadRequest(a);
+            }
+        }
+
+        [HttpGet("GetStockItemSerialBin/{itemCode}/{serialNumber}/{binEntry}")]
+        public async Task<IActionResult> GetStockItemSerialBinAsync(string itemCode, string serialNumber, string binEntry)
+        {
+            var a = await stockWhsBinService.responseGetStockItemSerialBin(itemCode, serialNumber, binEntry);
+            if (a.ErrorCode == 0)
+            {
+                return Ok(a);
+            }
+            else
+            {
+                return BadRequest(a);
+            }
+        }
+
+        [HttpGet("GetStockItemBatch/{itemCode}/{batchNumber}")]
+        public async Task<IActionResult> GetStockItemBatchAsync(string itemCode, string batchNumber)
+        {
+            var a = await stockWhsBinService.responseGetStockItemBatch(itemCode, batchNumber);
+            if (a.ErrorCode == 0)
+            {
+                return Ok(a);
+            }
+            else
+            {
+                return BadRequest(a);
+            }
+        }
+
+        [HttpGet("GetStockItemSerial/{itemCode}/{serialNumber}")]
+        public async Task<IActionResult> GetStockItemSerialAsync(string itemCode, string serialNumber)
+        {
+            var a = await stockWhsBinService.responseGetStockItemSerial(itemCode, serialNumber);
+            if (a.ErrorCode == 0)
+            {
+                return Ok(a);
+            }
+            else
+            {
+                return BadRequest(a);
+            }
+        }
+
     }
 }

@@ -23,6 +23,7 @@ namespace BarCodeAPIService.Controllers
         {
             this.Delivery = Delivery;
         }
+
         [HttpGet("GetSO")]
         public async Task<IActionResult> GetDeliveryAsyc()
         {
@@ -36,6 +37,21 @@ namespace BarCodeAPIService.Controllers
                 return BadRequest(a);
             }
         }
+
+        [HttpGet("GetSOLine/{DocEntry}")]
+        public async Task<IActionResult> GetSOLineAsync(int DocEntry)
+        {
+            var a = await Delivery.responseGetORDRLine(DocEntry);
+            if (a.ErrorCode == 0)
+            {
+                return Ok(a);
+            }
+            else
+            {
+                return BadRequest(a);
+            }
+        }
+
         [HttpPost("SendDelivery")]
         public async Task<IActionResult> PostDeliveryAsync(SendDelivery sendDelivery)
         {

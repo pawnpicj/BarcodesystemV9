@@ -134,6 +134,40 @@ namespace BarCodeClientService.Controllers
             return Ok(a);
         }
 
+        public IActionResult GetStockItemBatch(string itemcode, string batchnumber)
+        {
+            string xitemcode = itemcode;
+            string xbatchnumber = batchnumber;
+            var a = API.Read<ResponseGetStockItemBatchSerial>("GetStockItemBatch/" + xitemcode + "/" + xbatchnumber);
+            return Ok(a);
+        }
+
+        public IActionResult GetStockItemBatchBin(string itemcode, string batchnumber, string binentry)
+        {
+            string xitemcode = itemcode;
+            string xbatchnumber = batchnumber;
+            string xbinentry = binentry;
+            var a = API.Read<ResponseGetStockItemBatchSerial>("GetStockItemBatchBin/" + xitemcode + "/" + xbatchnumber + "/" + xbinentry);
+            return Ok(a);
+        }
+
+        public IActionResult GetStockItemSerial(string itemcode, string serialnumber)
+        {
+            string xitemcode = itemcode;
+            string xserialnumber = serialnumber;
+            var a = API.Read<ResponseGetStockItemBatchSerial>("GetStockItemSerial/" + xitemcode + "/" + xserialnumber);
+            return Ok(a);
+        }
+
+        public IActionResult GetStockItemSerialBin(string itemcode, string serialnumber, string binentry)
+        {
+            string xitemcode = itemcode;
+            string xserialnumber = serialnumber;
+            string xbinentry = binentry;
+            var a = API.Read<ResponseGetStockItemBatchSerial>("GetStockItemSerialBin/" + xitemcode + "/" + xserialnumber + "/" + xbinentry);
+            return Ok(a);
+        }
+
         [HttpPost]
         public IActionResult PostInventoryTransfer(SendInventoryTransfer sendInventoryTransfer)
         {

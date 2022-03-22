@@ -84,7 +84,7 @@ namespace BarCodeClientService.Controllers
         public IActionResult GetSeriesCode(string yyyy, string typeSeries)
         {
             string currentYear = DateTime.Now.Year.ToString();
-            string xYYYY = "2021";
+            string xYYYY = "2022";
             string xTypeSeries = typeSeries;
             //var a = API.Read<ResponseGetSeriesCode>("GetSeriesCode/"+ xYYYY + "/"+ xTypeSeries);
             //var a = API.Read<ResponseGetSeriesCode>("GetSeriesCode/2021/IC");

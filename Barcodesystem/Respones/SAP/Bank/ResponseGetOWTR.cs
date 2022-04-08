@@ -24,6 +24,8 @@ namespace BarCodeLibrary.Respones.SAP
         public string FromWhs { get; set; }
         public string ToWhs { get; set; }
         public string SeriesName { get; set; }
+        public int ToBinEntry { get; set; }
+        public string ToBinCode { get; set; }
         public List<WTR1> Line { get; set; }
     }
     public class WTR1

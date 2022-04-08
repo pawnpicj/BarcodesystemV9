@@ -38,7 +38,6 @@ namespace BarCodeAPIService.Service
                     oStockTransfer.JournalMemo = sendInventoryTransfer.JournalRemark;
                     oStockTransfer.FromWarehouse = sendInventoryTransfer.FromWhsCode;
                     oStockTransfer.ToWarehouse = sendInventoryTransfer.ToWhsCode;
-                    //oStockTransfer.ToBinCode = sendInventoryTransfer.ToBinCode;
 
                     foreach (SendInventoryTransferLine l in sendInventoryTransfer.Line)
                     {
@@ -61,22 +60,24 @@ namespace BarCodeAPIService.Service
                                 {
                                     oStockTransfer.Lines.SerialNumbers.SetCurrentLine(0);
                                     oStockTransfer.Lines.SerialNumbers.ManufacturerSerialNumber = l.SerialNo;
+                                    oStockTransfer.Lines.SerialNumbers.InternalSerialNumber = l.SerialNo;
                                     oStockTransfer.Lines.SerialNumbers.Quantity = l.Quantity;
                                     oStockTransfer.Lines.SerialNumbers.Add();
                                 }
                             }
 
-                            oStockTransfer.Lines.BinAllocations.BinActionType = SAPbobsCOM.BinActionTypeEnum.batFromWarehouse;
-                            oStockTransfer.Lines.BinAllocations.SerialAndBatchNumbersBaseLine = 0;
-                            oStockTransfer.Lines.BinAllocations.BinAbsEntry = l.fromBinEntry;
-                            oStockTransfer.Lines.BinAllocations.Quantity = l.Quantity;
-                            oStockTransfer.Lines.BinAllocations.Add();
+                        oStockTransfer.Lines.BinAllocations.BinActionType = SAPbobsCOM.BinActionTypeEnum.batFromWarehouse;
+                        oStockTransfer.Lines.BinAllocations.SerialAndBatchNumbersBaseLine = 0;
+                        //fromBinEntry
+                        oStockTransfer.Lines.BinAllocations.BinAbsEntry = l.fromBinEntry;
+                        oStockTransfer.Lines.BinAllocations.Quantity = l.Quantity;
+                        oStockTransfer.Lines.BinAllocations.Add();
 
-                            oStockTransfer.Lines.BinAllocations.BinActionType = SAPbobsCOM.BinActionTypeEnum.batToWarehouse;
-                            oStockTransfer.Lines.BinAllocations.SerialAndBatchNumbersBaseLine = 0;
-                            oStockTransfer.Lines.BinAllocations.BinAbsEntry = l.toBinEntry;
-                            oStockTransfer.Lines.BinAllocations.Quantity = l.Quantity;
-                            oStockTransfer.Lines.BinAllocations.Add();
+                        oStockTransfer.Lines.BinAllocations.BinActionType = SAPbobsCOM.BinActionTypeEnum.batToWarehouse;
+                        oStockTransfer.Lines.BinAllocations.SerialAndBatchNumbersBaseLine = 0;
+                        oStockTransfer.Lines.BinAllocations.BinAbsEntry = l.toBinEntry;
+                        oStockTransfer.Lines.BinAllocations.Quantity = l.Quantity;
+                        oStockTransfer.Lines.BinAllocations.Add();
                         
                         oStockTransfer.Lines.Add();
                     }

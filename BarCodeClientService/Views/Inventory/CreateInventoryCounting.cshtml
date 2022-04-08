@@ -812,13 +812,9 @@
                 dataType: "JSON",
                 "dataSrc": 'data',
                 success: function (data) {
-                    var jqueryXml = $(data);
-                        //console.log(jqueryXml);
-                        //console.log(jqueryXml[0].data[0].itemCode);
-                        //=========================
-                        //jqueryXml[0].data[0].quantity
-                        //jqueryXml[0].data[0].batchNumber
-                        //jqueryXml[0].data[0].serialNumber
+                var jqueryXml = $(data);
+                    if (jqueryXml[0].data.length != 0) {
+
                         var bItemCode = jqueryXml[0].data[0].itemCode;
                         var bItemName = jqueryXml[0].data[0].itemName;
                         var bQuantity = document.getElementById("txtQuantity01").value;
@@ -850,28 +846,29 @@
                             ''
                         ]).draw(false);
 
-                    $('#txtScanBarCode01').val("");
-                    $('#txtScanBarCode01').focus();
-                    },
-                    error: function (data) {
-                        alert("Error");
+                        $('#txtScanBarCode01').val("");
+                        $('#txtScanBarCode01').focus();
+
+                    } else {
+                            alert("Batch Number does not exist.");
+                            $('#txtScanBarCode01').val("");
+                            $('#txtScanBarCode01').focus();
                     }
-                    //, error: function (data) {
-                    //    alert('No ItemCode Here!');
-                    //}
+
+                }
+
                 });
             } else if (sSerial != '') {
                 sBatchSerial = sSerial;
                 $.ajax({
-                url: '@Url.Action("GetStockItemSerial", "Inventory")',
-                    data: { itemcode: sItemCode, serialnumber: sBatchSerial},
+                url: '@Url.Action("GetStockItemSerialBin", "Inventory")',
+                    data: { itemcode: sItemCode, serialnumber: sBatchSerial, binentry: sBinEntry},
                 type: "GET",
                 dataType: "JSON",
                 "dataSrc": 'data',
                 success: function (data) {
-                        var jqueryXml = $(data);
-                        console.log(jqueryXml[0].data[0].itemCode);
-
+                    var jqueryXml = $(data);
+                    if (jqueryXml[0].data.length != 0) {
                         //=========================
                         //jqueryXml[0].data[0].quantity
                         //jqueryXml[0].data[0].batchNumber
@@ -906,8 +903,15 @@
                             bBatchNumber
                         ]).draw(false);
 
-                    $('#txtScanBarCode01').val("");
-                    $('#txtScanBarCode01').focus();
+                        $('#txtScanBarCode01').val("");
+                        $('#txtScanBarCode01').focus();
+                    }
+                    else {
+                        alert("Serial Number does not exist.");
+                        $('#txtScanBarCode01').val("");
+                        $('#txtScanBarCode01').focus();
+                    }
+                        
                     }
                 });
             }
@@ -934,14 +938,14 @@
                 if (getSelectedValue.value == "Batch") {
                      if ($('#txtScanBatchSerial02').val()!='') {
                         $.ajax({
-                            url: '@Url.Action("GetStockItemBatch", "Inventory")',
-                            data: { itemcode: $('#txtScanBarCode02').val(), batchnumber: $('#txtScanBatchSerial02').val() },
+                            url: '@Url.Action("GetStockItemBatchBin", "Inventory")',
+                            data: { itemcode: $('#txtScanBarCode02').val(), batchnumber: $('#txtScanBatchSerial02').val(), binentry: $('#txtBinName').val()},
                             type: "GET",
                             dataType: "JSON",
                             "dataSrc": 'data',
                             success: function (data) {
                                 var jqueryXml = $(data);
-                                if (jqueryXml[0].data[0].itemCode != '') {
+                                if (jqueryXml[0].data.length != 0) {
                                     //=========================
                                     var bItemCode = jqueryXml[0].data[0].itemCode;
                                     var bItemName = jqueryXml[0].data[0].itemName;
@@ -984,7 +988,11 @@
                                     //=========================
 
                                 } else {
-                                    alert("No ItemCode");
+                                    alert("Batch Number does not exist.");
+                                    $('#txtScanBarCode02').val("");
+                                    $('#txtScanBatchSerial02').val("");
+                                    $('#txtScanBarCode02').focus();
+                                    return false;
                                 }
 
                             }
@@ -995,14 +1003,14 @@
                      if ($('#txtScanBatchSerial02').val()!='') {
 
                         $.ajax({
-                            url: '@Url.Action("GetStockItemSerial", "Inventory")',
-                            data: { itemcode: $('#txtScanBarCode02').val(), serialnumber: $('#txtScanBatchSerial02').val() },
+                            url: '@Url.Action("GetStockItemSerialBin", "Inventory")',
+                            data: { itemcode: $('#txtScanBarCode02').val(), serialnumber: $('#txtScanBatchSerial02').val(), binentry: $('#txtBinName').val()},
                             type: "GET",
                             dataType: "JSON",
                             "dataSrc": 'data',
                             success: function (data) {
                                 var jqueryXml = $(data);
-                                if (jqueryXml[0].data[0].itemCode != '') {
+                                if (jqueryXml[0].data.length != 0) {
                                     //=========================
                                     var bItemCode = jqueryXml[0].data[0].itemCode;
                                     var bItemName = jqueryXml[0].data[0].itemName;
@@ -1045,7 +1053,11 @@
                                     //=========================
 
                                 } else {
-                                    alert("No ItemCode");
+                                    alert("Serial Number does not exist.");
+                                    $('#txtScanBarCode02').val("");
+                                    $('#txtScanBatchSerial02').val("");
+                                    $('#txtScanBarCode02').focus();
+                                    return false;
                                 }
 
                             }
@@ -1144,11 +1156,14 @@
                 url: '@Url.Action("PostInventoryCounting", "Inventory")',
                 data: { sendInventoryCounting: jStr},
                 dataType: "JSON",
-                success: function (data) {
-                    //console.log(errorCode);
-                    alert("success");
+                error: function (request, error) {
+                    console.log(arguments);
+                    alert(" Can't do because: " + error);
+                },
+                success: function () {
+                    alert(" Done ! ");
                     location.reload();
-            }
+                }
         });
     }
 

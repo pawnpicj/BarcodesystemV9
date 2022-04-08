@@ -69,26 +69,74 @@ namespace BarCodeClientService.Controllers
             return Ok(a);
         }
 
-        public IActionResult GetSeriesIM()
+        public IActionResult GetSeriesIM(string yymm, string typeSeries)
         {
-            var a = API.Read<ResponseNNM1_IM>("api/SeriesIM");
-            return Ok(a);
-        }
+            string yyyy = DateTime.Now.Year.ToString();
+            string cmm;
+            int mm = Convert.ToInt32(DateTime.Now.Month.ToString());
 
-        public IActionResult GetSeriesCV()
-        {
-            var a = API.Read<ResponseNNM1_CV>("api/SeriesCV");
-            return Ok(a);
-        }
+            if (mm < 10)
+            {
+                cmm = "0" + mm;
+            }
+            else
+            {
+                cmm = "" + mm;
+            }
 
-        public IActionResult GetSeriesCode(string yyyy, string typeSeries)
-        {
-            string currentYear = DateTime.Now.Year.ToString();
-            string xYYYY = "2022";
+            string xyymm = yyyy + "-" + cmm;
             string xTypeSeries = typeSeries;
             //var a = API.Read<ResponseGetSeriesCode>("GetSeriesCode/"+ xYYYY + "/"+ xTypeSeries);
             //var a = API.Read<ResponseGetSeriesCode>("GetSeriesCode/2021/IC");
-            var a = API.Read<ResponseGetSeriesCode>("api/SeriesCV/GetSeriesCode/" + xYYYY + "/IC");
+            var a = API.Read<ResponseGetSeriesCode>("api/SeriesCV/GetSeriesCode/" + xyymm + "/IM");
+
+            return Ok(a);
+        }
+
+        public IActionResult GetSeriesCV(string yymm, string typeSeries)
+        {
+            string yyyy = DateTime.Now.Year.ToString();
+            string cmm;
+            int mm = Convert.ToInt32(DateTime.Now.Month.ToString());
+
+            if (mm < 10)
+            {
+                cmm = "0" + mm;
+            }
+            else
+            {
+                cmm = "" + mm;
+            }
+
+            string xyymm = yyyy + "-" + cmm;
+            string xTypeSeries = typeSeries;
+            //var a = API.Read<ResponseGetSeriesCode>("GetSeriesCode/"+ xYYYY + "/"+ xTypeSeries);
+            //var a = API.Read<ResponseGetSeriesCode>("GetSeriesCode/2021/IC");
+            var a = API.Read<ResponseGetSeriesCode>("api/SeriesCV/GetSeriesCode/" + xyymm + "/CV");
+
+            return Ok(a);
+        }
+
+        public IActionResult GetSeriesCode(string yymm, string typeSeries)
+        {
+            string yyyy = DateTime.Now.Year.ToString();
+            string cmm;
+            int mm = Convert.ToInt32(DateTime.Now.Month.ToString());
+
+            if (mm < 10)
+            {
+                cmm = "0" + mm;
+            }
+            else
+            {
+                cmm = "" + mm;
+            }
+
+            string xyymm = yyyy + "-" + cmm;
+            string xTypeSeries = typeSeries;
+            //var a = API.Read<ResponseGetSeriesCode>("GetSeriesCode/"+ xYYYY + "/"+ xTypeSeries);
+            //var a = API.Read<ResponseGetSeriesCode>("GetSeriesCode/2021/IC");
+            var a = API.Read<ResponseGetSeriesCode>("api/SeriesCV/GetSeriesCode/" + xyymm + "/IC");
             
             return Ok(a);
         }
@@ -141,13 +189,17 @@ namespace BarCodeClientService.Controllers
             var a = API.Read<ResponseGetStockItemBatchSerial>("GetStockItemBatch/" + xitemcode + "/" + xbatchnumber);
             return Ok(a);
         }
-
         public IActionResult GetStockItemBatchBin(string itemcode, string batchnumber, string binentry)
         {
             string xitemcode = itemcode;
             string xbatchnumber = batchnumber;
             string xbinentry = binentry;
             var a = API.Read<ResponseGetStockItemBatchSerial>("GetStockItemBatchBin/" + xitemcode + "/" + xbatchnumber + "/" + xbinentry);
+            return Ok(a);
+        }
+        public IActionResult GetStockItemBatchW(string itemcode, string batchnumber, string whscode)
+        {
+            var a = API.Read<ResponseGetStockItemBatchSerial>("GetStockItemBatchW/" + itemcode + "/" + batchnumber + "/" + whscode);
             return Ok(a);
         }
 
@@ -158,13 +210,17 @@ namespace BarCodeClientService.Controllers
             var a = API.Read<ResponseGetStockItemBatchSerial>("GetStockItemSerial/" + xitemcode + "/" + xserialnumber);
             return Ok(a);
         }
-
         public IActionResult GetStockItemSerialBin(string itemcode, string serialnumber, string binentry)
         {
             string xitemcode = itemcode;
             string xserialnumber = serialnumber;
             string xbinentry = binentry;
             var a = API.Read<ResponseGetStockItemBatchSerial>("GetStockItemSerialBin/" + xitemcode + "/" + xserialnumber + "/" + xbinentry);
+            return Ok(a);
+        }
+        public IActionResult GetStockItemSerialW(string itemcode, string serialnumber, string whsCode)
+        {
+            var a = API.Read<ResponseGetStockItemBatchSerial>("GetStockItemSerialW/" + itemcode + "/" + serialnumber + "/" + whsCode);
             return Ok(a);
         }
 

@@ -25,12 +25,13 @@ namespace BarCodeLibrary.APICall
         public static System.Net.HttpStatusCode StatusCode { get { return Response.StatusCode; } }
         public static string ErrorMessage { get { return errorMessage; } }
         public static string BaseAddress { get { return server; } set { server = value; } }
+        public static string Url { get; set; }
         public static HttpClient Client
         {
             get
             {
                 HttpClient client = new HttpClient();
-                client.BaseAddress = new Uri("http://localhost:5001/");
+                client.BaseAddress = new Uri(Url);
                 client.Timeout = new TimeSpan(0, 0, 500);
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

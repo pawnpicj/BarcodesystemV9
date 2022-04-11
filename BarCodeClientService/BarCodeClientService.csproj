@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BarCodeAPIService\BarCodeAPIService.csproj" />
     <ProjectReference Include="..\Barcodesystem\BarCodeLibrary.csproj" />
   </ItemGroup>
 </Project>

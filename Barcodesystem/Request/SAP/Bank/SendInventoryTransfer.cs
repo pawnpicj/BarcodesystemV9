@@ -19,7 +19,8 @@ namespace BarCodeLibrary.Request.SAP
 
         public string FromWhsCode { get; set; }
         public string ToWhsCode { get; set; }
-        public int ToBinCode { get; set; }
+        public string ToBinCode { get; set; }
+        public int ToBinEntry { get; set; }
 
         public string SalesEmployeeCode { get; set; }
 

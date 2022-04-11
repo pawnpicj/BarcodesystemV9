@@ -62,7 +62,9 @@ namespace BarCodeAPIService.Service
                             SlpName = oRS.Fields.Item(6).Value.ToString(),
                             FromWhs = oRS.Fields.Item(7).Value.ToString(),
                             ToWhs = oRS.Fields.Item(8).Value.ToString(),
-                            SeriesName = oRS.Fields.Item(9).Value.ToString()
+                            SeriesName = oRS.Fields.Item(9).Value.ToString(),
+                            ToBinEntry = Convert.ToInt32(oRS.Fields.Item(11).Value.ToString()),
+                            ToBinCode = oRS.Fields.Item(12).Value.ToString()
                         });
                         oRS.MoveNext();
                         //DocDate = Convert.ToDateTime(oRS.Fields.Item(2).Value.ToString()),

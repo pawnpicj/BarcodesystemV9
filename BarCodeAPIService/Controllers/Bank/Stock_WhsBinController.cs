@@ -88,5 +88,34 @@ namespace BarCodeAPIService.Controllers.Bank
             }
         }
 
+        [HttpGet("GetStockItemBatchW/{itemCode}/{batchNumber}/{whsCode}")]
+        public async Task<IActionResult> GetStockItemBatchWAsync(string itemCode, string batchNumber, string whsCode)
+        {
+            var a = await stockWhsBinService.responseGetStockItemBatchW(itemCode, batchNumber, whsCode);
+            if (a.ErrorCode == 0)
+            {
+                return Ok(a);
+            }
+            else
+            {
+                return BadRequest(a);
+            }
+        }
+
+        [HttpGet("GetStockItemSerialW/{itemCode}/{serialNumber}/{whsCode}")]
+        public async Task<IActionResult> GetStockItemSerialWAsync(string itemCode, string serialNumber, string whsCode)
+        {
+            var a = await stockWhsBinService.responseGetStockItemSerialW(itemCode, serialNumber, whsCode);
+            if (a.ErrorCode == 0)
+            {
+                return Ok(a);
+            }
+            else
+            {
+                return BadRequest(a);
+            }
+        }
+
+
     }
 }

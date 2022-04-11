@@ -35,10 +35,10 @@ namespace BarCodeAPIService.Controllers.Bank
             }
         }
 
-        [HttpGet("GetSeriesCode/{yyyy}/{typeSeries}")]
-        public async Task<IActionResult> GetSeriesCodeAsync(string yyyy, string typeSeries)
+        [HttpGet("GetSeriesCode/{yymm}/{typeSeries}")]
+        public async Task<IActionResult> GetSeriesCodeAsync(string yymm, string typeSeries)
         {
-            var a = await seriesCV.responseGetSeriesCode(yyyy, typeSeries);
+            var a = await seriesCV.responseGetSeriesCode(yymm, typeSeries);
             if (a.ErrorCode == 0)
             {
                 return Ok(a);

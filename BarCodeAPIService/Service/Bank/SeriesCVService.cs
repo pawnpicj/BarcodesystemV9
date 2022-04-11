@@ -65,7 +65,7 @@ namespace BarCodeAPIService.Service.Bank
             }
         }
 
-        public Task<ResponseGetSeriesCode> responseGetSeriesCode(string yyyy, string typeSeries)
+        public Task<ResponseGetSeriesCode> responseGetSeriesCode(string yymm, string typeSeries)
         {
             var oLine = new List<GetSeriesCode>();
             SAPbobsCOM.Company oCompany;
@@ -76,7 +76,7 @@ namespace BarCodeAPIService.Service.Bank
                 {
                     oCompany = login.Company;
                     SAPbobsCOM.Recordset? oRS = null;
-                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('StrSeries','{yyyy}','{typeSeries}','','','')";
+                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('StrSeries','{yymm}','{typeSeries}','','','')";
                     oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRS.DoQuery(sqlStr);
                     while (!oRS.EoF)

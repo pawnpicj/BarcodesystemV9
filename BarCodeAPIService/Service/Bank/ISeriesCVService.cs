@@ -10,6 +10,6 @@ namespace BarCodeAPIService.Service.Bank
     public interface ISeriesCVService
     {
         Task<ResponseNNM1_CV> responseNNM1_CV();
-        Task<ResponseGetSeriesCode> responseGetSeriesCode(string yyyy, string typeSeries);
+        Task<ResponseGetSeriesCode> responseGetSeriesCode(string yymm, string typeSeries);
     }
 }

@@ -140,6 +140,17 @@
                 <button class="input-group-text btnbinLocation" data-toggle="modal" data-target="#ModalBinCode"><i class="fa fa-search"></i></button>
             </div>*@
                     </div>
+                    Sticker Size :
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="col-sm-4">
+                                <select size="1" class="c16" id="labelSize" style="width:210px;height:30px">
+                                    <option value="0">4.5x7 cm</option>
+                                    <option value="1">7x6 cm</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                     <div class="row" style=" padding: 0px; ">
                         <div class="nav navbar-nav ml-auto" style=" padding: 5px; ">
                             <button class="btn btn-info" id="Add" style="background:#f0eff1;color:#696969">Add Item</button>
@@ -385,17 +396,33 @@
         var print = {};
         print.Data = HeaderLs;
         console.log(print);
-        $.ajax({
-            url: '@Url.Action("PrintItemLablePDFAction", "BinLocation")',
+        if ($('#labelSize').val() == 0) {
+            $.ajax({
+                url: '@Url.Action("PrintItemLablePDFAction", "BinLocation")',
                 type: "POST",
                 data: { print: print},
                 dataType: "JSON",
-            success: function (data) {
+                success: function (data) {
                 if (data == 1) {
-                   window.location.href = "@Url.Action("PrintItemLablePDF", "BinLocation")";
+                    window.location.href = "@Url.Action("PrintItemLablePDF", "BinLocation")?width=170&&height=264";
                 }
-            }
-        });
+                }
+            });
+        }
+        if ($('#labelSize').val() == 1) {
+            $.ajax({
+                url: '@Url.Action("PrintItemLablePDFAction", "BinLocation")',
+                type: "POST",
+                data: { print: print},
+                dataType: "JSON",
+                success: function (data) {
+                if (data == 1) {
+                    window.location.href = "@Url.Action("PrintItemLablePDF", "BinLocation")?width=264&&height=226";
+                }
+                }
+            });
+        }
+
         });
     function PrintPDF() {
         window.location.href = '@Url.Action("PrintItemLablePDF", "BinLocation")';

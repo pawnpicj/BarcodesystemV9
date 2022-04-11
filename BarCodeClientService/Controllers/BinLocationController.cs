@@ -50,22 +50,26 @@ namespace BarCodeClientService.Controllers
             var a = API.Read < ResponeNNG1GetGenerateBinCode > ("api/GenerateBinCode/GetGenerateBinCode");
             return Ok(a);
         }
- 
-        public IActionResult PrintItemLablePDF()
+        // Method for Pint Label's size 
+        public IActionResult PrintItemLablePDF(int width,int height)
         {
             ResponsePrintItemLable responsePrintItemLable = new ResponsePrintItemLable();
             responsePrintItemLable.Data = PrintItemLableStatic.Data;
             PrintItemLableStatic.Data = null;
+            //4.5cm=170.0787401575px
+            //7cm=264.5669291339px
+            //6cm=226.7716535433px
             return new ViewAsPdf(responsePrintItemLable)
             {
                 PageSize = Rotativa.AspNetCore.Options.Size.A4,
                 PageMargins = { Left = 5, Bottom = 0, Right = 5, Top = 20 },
-                PageWidth = 264,
-                PageHeight = 170,
+                PageWidth = width,
+                PageHeight = height,
                 CustomSwitches = "--page-offset 0 --footer-center [page] --footer-font-size 12"
             };
         }
-       [HttpPost]
+       
+        [HttpPost]
         public IActionResult PrintItemLablePDFAction(ResponsePrintItemLable print)
         {
             PrintItemLableStatic.Data = print.Data;

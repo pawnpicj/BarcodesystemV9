@@ -53,6 +53,7 @@ namespace BarCodeClientService
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
         }
     }
 }

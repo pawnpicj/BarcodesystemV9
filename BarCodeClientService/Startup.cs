@@ -1,3 +1,4 @@
+using BarCodeLibrary.APICall;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -53,7 +54,8 @@ namespace BarCodeClientService
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
-
+            API.Url = Configuration.GetSection("API").Value;
+            RotativaConfiguration.Setup((Microsoft.AspNetCore.Hosting.IHostingEnvironment)env);
         }
     }
 }

@@ -6,35 +6,33 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Data;
-
+using BarCodeAPIService.Models;
 
 namespace BarCodeAPIService.Service
 {
+   
     public class BinCodeService : IBinCodeService
     {
+
         public Task<ResponseOBINGetBinCode> ResponseOBINGetBinCode()
         {
             var oBIN = new List<OBIN>();
-            SAPbobsCOM.Company oCompany;
+            DataTable dt = new DataTable();
             try
             {
-                Login login = new();
-                if (login.LErrCode == 0)
-                {
-                    oCompany = login.Company;
-                    SAPbobsCOM.Recordset oRS = null;
-                    oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+                LoginOnlyDatabase login = new LoginOnlyDatabase();
+                if (login.lErrCode == 0)
+                {                    
                     string Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('OBIN','','','','','')";
-                    oRS.DoQuery(Query);
-                    while (!oRS.EoF)
+                    login.AD = new System.Data.Odbc.OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
                     {
-                        oBIN.Add(new OBIN
-                        {
-                            BinCode = oRS.Fields.Item(0).Value.ToString(),
-                            WhsCode = oRS.Fields.Item(1).Value.ToString(),
-                            AbsEntry = Convert.ToInt32(oRS.Fields.Item(3).Value.ToString())
+                        oBIN.Add(new OBIN { 
+                            BinCode=row[0].ToString(),
+                            WhsCode=row[1].ToString(),
+                            WhsName=row[2].ToString()
                         });
-                        oRS.MoveNext();
                     }
                     return Task.FromResult(new ResponseOBINGetBinCode
                     {
@@ -47,8 +45,8 @@ namespace BarCodeAPIService.Service
                 {
                     return Task.FromResult(new ResponseOBINGetBinCode
                     {
-                        ErrorCode = login.LErrCode,
-                        ErrorMessage = login.SErrMsg,
+                        ErrorCode = login.lErrCode,
+                        ErrorMessage = login.sErrMsg,
                         Data = null
                     });
                 }

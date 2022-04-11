@@ -22,5 +22,6 @@ namespace BarCodeLibrary.Respones.SAP
         public string ManBtchNum { get; set; }
         public string ManSerNum { get; set; }
         public string UoM { get; set; }
+        public string FDA { get; set; }
     }
 }

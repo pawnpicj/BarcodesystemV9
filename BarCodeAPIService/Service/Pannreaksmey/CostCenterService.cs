@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Data;
+using BarCodeAPIService.Models;
 
 namespace BarCodeAPIService.Service
 {
@@ -12,25 +14,22 @@ namespace BarCodeAPIService.Service
         public Task<ResponseOPRCGetCostCenter> ResponseOPRCGetCostCenter()
         {
             var oPRC = new List<OPRC>();
-            SAPbobsCOM.Company oCompany;
+            DataTable dt = new DataTable();
             try
             {
-                Login login = new();
-                if (login.LErrCode == 0)
+                LoginOnlyDatabase login = new LoginOnlyDatabase();
+                if (login.lErrCode == 0)
                 {
-                    oCompany = login.Company;
-                    SAPbobsCOM.Recordset oRS = null;
-                    oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);                    
                     string Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('OPRC','','','','','')";
-                    oRS.DoQuery(Query);
-                    while (!oRS.EoF)
+                    login.AD = new System.Data.Odbc.OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
                     {
                         oPRC.Add(new OPRC
                         {
-                            PrcCode = oRS.Fields.Item(0).Value.ToString(),
-                            PrcName = oRS.Fields.Item(1).Value.ToString()
+                            PrcCode=row[0].ToString(),
+                            PrcName=row[1].ToString()
                         });
-                        oRS.MoveNext();
                     }
                     return Task.FromResult(new ResponseOPRCGetCostCenter
                     {
@@ -41,8 +40,8 @@ namespace BarCodeAPIService.Service
                 }
                 else {
                     return Task.FromResult(new ResponseOPRCGetCostCenter { 
-                        ErrorCode=login.LErrCode,
-                        ErrorMessage=login.SErrMsg,
+                        ErrorCode=login.lErrCode,
+                        ErrorMessage=login.sErrMsg,
                         Data=null
                     });
                 }                

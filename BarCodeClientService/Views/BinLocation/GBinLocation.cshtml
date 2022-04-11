@@ -6,7 +6,7 @@
 }
 
 <link href="~/css/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
-
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 <style>
     tr.selected {
@@ -75,7 +75,7 @@
         outline: none;
     }
 </style>
-
+r
 <div id="#main">
     <div class="row" style="margin-left:5px;margin-top:5px;color:#696969;">
         <h5 style="margin-top:5px;color:#696969;"></h5>
@@ -93,15 +93,33 @@
             <div class="row" id="BinCode">
                 <div class="col-sm-8" style="padding: 10px;">
                     Generate Code
-                    <div class="input-group">
-                        <div class="col-sm-8" style="padding:0px">
-                            <input type="text" class="form-control" id="GBarCodeNumbeer" readonly>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="nav navbar-nav ml-auto">
-                                <button class="btn btn-info" id="GenerateBarCode" style="background:#f0eff1;color:#696969">Generate Code</button>
+                    <div class="row">
+                        <div class="input-group">
+                            <div class="col-6">
+                                <div class="col-sm-12" >
+                                    <input type="text" class="form-control" id="GBarCodeNumbeer" readonly>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="col-sm-12">
+                                    <div class="nav navbar-nav ml-auto">
+                                        <button class="btn btn-info" id="GenerateBarCode" style="background:#f0eff1;color:#696969;margin-right:5px;">
+                                            <i class="material-icons" style="font-size:26px">cached</i>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="col-3">
+                                <div class="col-sm-12">
+                                    <div class="nav navbar-nav ml-auto">
+                                        <button class="btn btn-success" id="IPrint" style=" margin-right: 5px;margin-right:5px; padding-right: 5px; background: #28a745; color: #ffffff">Print</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        
+
                     </div>
                     Warehouse Code :
                     <div class="input-group">
@@ -348,7 +366,7 @@
             $(this).addClass('selected');
         }
     });
-       
+
     $(".btnbinLocation").click(function () {
         $("#ModalBinCode").modal({backdrop:"static"});
         $.ajax({
@@ -401,7 +419,7 @@
         });
         var table = $('#TbGBin').DataTable();
         var allbinLInes = [];
-        $('#Add').click(function () {            
+        $('#Add').click(function () {
             var binLines = {};
             allbinLInes=[]
             binLines.gNumber = $('#GBarCodeNumbeer').val();
@@ -414,7 +432,37 @@
             console.log(allbinLInes);
         });
         // END Adding Bin Information
-       
-        
+        // Save Data To SAP
+        $('#Save').click(function () {
+            if ($('#warehousecode').val() == ""){
+                alert("Please fill Warehouse!!");
+            }
+            if ($('#warehousename').val()=="") {
+                alert("Please fill Warehouse Name!!");
+            }
+            if ($('#binLocationCode').val() == "") {
+                alert("Please fill Bin Location!!");
+            }
+            var Bin = [];
+            Bin.GID = $('#GenerateBarCode').val()
+            Bin.WhsCode = $('#warehousecode').val()
+            Bin.WhsName = $('#warehousename').val()
+            Bin.BinCode = $('#binLocationCode').val()
+             $.ajax({
+                url: '@Url.Action("PostGenerationCode", "GenerateBinCode")',
+                 type: "POST",
+                 data: { sendBinCode:Bin},
+                dataType: "JSON",
+                success: function (data) {
+                    BinCode = []
+                    BinCode = data.data
+                    $('#GBarCodeNumbeer').val(BinCode[0].seriesID);
+                    console.log(BinCode[0].seriesID);
+                }
+            });
+
+        });
+
+
     </script>
 

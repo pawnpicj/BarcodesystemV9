@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Data;
+using BarCodeAPIService.Models;
 
 namespace BarCodeAPIService.Service
 {
@@ -12,27 +14,23 @@ namespace BarCodeAPIService.Service
         public Task<ResponseOSLPGetSalesEmployee> ResponseOSLPGetSalesEmployee()
         {
             var oSLP = new List<OSLP>();
-            SAPbobsCOM.Company oCompany;
+            DataTable dt = new DataTable();
             try
             {
-                Login login = new();
-                if (login.LErrCode == 0)
+                LoginOnlyDatabase login = new LoginOnlyDatabase();
+                if (login.lErrCode == 0)
                 {
-                    oCompany = login.Company;
-                    SAPbobsCOM.Recordset oRS = null;
-                    oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     string Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('OSLP','','','','','')";
-                    oRS.DoQuery(Query);
-                    while (!oRS.EoF)
+                    login.AD = new System.Data.Odbc.OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
                     {
                         oSLP.Add(new OSLP
                         {
-                            SlpCode    = Convert.ToInt32(oRS.Fields.Item(0).Value.ToString()),
-                            SlpName     = oRS.Fields.Item(1).Value.ToString(),
-                           
+                            SlpCode=Convert.ToInt32(row[0].ToString()),
+                            SlpName=row[1].ToString()
                         });
-                        oRS.MoveNext();
-                    }
+                    }                   
                     return Task.FromResult(new ResponseOSLPGetSalesEmployee
                     {
                         ErrorCode = 0,
@@ -44,8 +42,8 @@ namespace BarCodeAPIService.Service
                 {
                     return Task.FromResult(new ResponseOSLPGetSalesEmployee
                     {
-                        ErrorCode = login.LErrCode,
-                        ErrorMessage = login.SErrMsg,
+                        ErrorCode = login.lErrCode,
+                        ErrorMessage = login.sErrMsg,
                         Data = null
                     });
                 }

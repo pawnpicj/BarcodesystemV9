@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Data;
+using BarCodeAPIService.Models;
 
 namespace BarCodeAPIService.Service.Pannreaksmey
 {
@@ -11,43 +13,40 @@ namespace BarCodeAPIService.Service.Pannreaksmey
     {
         public Task<ResponseNNM1_IM> responseNNM1_IM()
         {
-            var oSIM = new List<NNM1IM>();
-            SAPbobsCOM.Company oCompany;
+            var nNM1IM = new List<NNM1IM>();
+            DataTable dt = new DataTable();
             try
             {
-                Login login = new();
-                if (login.LErrCode == 0)
+                LoginOnlyDatabase login = new LoginOnlyDatabase();
+                if (login.lErrCode == 0)
                 {
-                    oCompany = login.Company;
-                    SAPbobsCOM.Recordset oRS = null;
-                    oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     string Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_BANK ('NNM1IM','','','','','')";
-                    oRS.DoQuery(Query);
-                    while (!oRS.EoF)
+                    login.AD = new System.Data.Odbc.OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
                     {
-                        oSIM.Add(new NNM1IM
+                        nNM1IM.Add(new NNM1IM
                         {
-                            ObjectCode = oRS.Fields.Item(0).Value.ToString(),
-                            Series = Convert.ToInt32(oRS.Fields.Item(1).Value.ToString()),
-                            SeriesName = oRS.Fields.Item(2).Value.ToString(),
-                            Indicator = oRS.Fields.Item(3).Value.ToString(),
-                            BeginStr = oRS.Fields.Item(4).Value.ToString()
+                            ObjectCode=row[0].ToString(),
+                            Series=Convert.ToInt32(row[1].ToString()),
+                            SeriesName=row[2].ToString(),
+                            Indicator=row[3].ToString(),
+                            BeginStr=row[4].ToString()
                         });
-                        oRS.MoveNext();
                     }
                     return Task.FromResult(new ResponseNNM1_IM
                     {
                         ErrorCode = 0,
                         ErrorMessage = "",
-                        Data = oSIM.ToList()
+                        Data = nNM1IM.ToList()
                     });
                 }
                 else
                 {
                     return Task.FromResult(new ResponseNNM1_IM
                     {
-                        ErrorCode = login.LErrCode,
-                        ErrorMessage = login.SErrMsg,
+                        ErrorCode = login.lErrCode,
+                        ErrorMessage = login.sErrMsg,
                         Data = null
                     });
                 }

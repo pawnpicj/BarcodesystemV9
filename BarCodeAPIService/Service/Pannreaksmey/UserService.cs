@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Data;
+using BarCodeAPIService.Models;
 
 namespace BarCodeAPIService.Service
 {
@@ -12,25 +14,22 @@ namespace BarCodeAPIService.Service
         public Task<ResponseOUSRGetUser> ResponseOUSRGetUser()
         {
             var oUSR = new List<OUSR>();
-            SAPbobsCOM.Company oCompany;
+            DataTable dt = new DataTable();
             try
             {
-                Login login = new();
-                if (login.LErrCode == 0)
+                LoginOnlyDatabase login = new LoginOnlyDatabase();
+                if (login.lErrCode == 0)
                 {
-                    oCompany = login.Company;
-                    SAPbobsCOM.Recordset oRS = null;
-                    oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     String Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('OUSR','','','','','')";
-                    oRS.DoQuery(Query);
-                    while (!oRS.EoF)
+                    login.AD = new System.Data.Odbc.OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
                     {
                         oUSR.Add(new OUSR
                         {
-                            UserCode = oRS.Fields.Item(0).Value.ToString(),
-                            UserName = oRS.Fields.Item(1).Value.ToString(),                            
+                            UserCode=row[0].ToString(),
+                            UserName=row[1].ToString()
                         });
-                        oRS.MoveNext();
                     }
                     return Task.FromResult(new ResponseOUSRGetUser
                     {
@@ -43,8 +42,8 @@ namespace BarCodeAPIService.Service
                 {
                     return Task.FromResult(new ResponseOUSRGetUser
                     {
-                        ErrorCode = login.LErrCode,
-                        ErrorMessage = login.SErrMsg,
+                        ErrorCode = login.lErrCode,
+                        ErrorMessage = login.sErrMsg,
                         Data = null
                     });
                 }

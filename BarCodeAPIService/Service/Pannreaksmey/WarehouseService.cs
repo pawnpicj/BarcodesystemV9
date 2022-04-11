@@ -4,7 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using System.Data;
+using BarCodeAPIService.Models;
 namespace BarCodeAPIService.Service
 {
     public class WarehouseService : IWarehouseService
@@ -12,27 +13,22 @@ namespace BarCodeAPIService.Service
         public Task<ResponseOWHSGetWarehouse> responseWHSGetWarehouse()
         {
             var oWHS = new List<OWHS>();
-            SAPbobsCOM.Company oCompany;
+            DataTable dt = new DataTable();
             try {
-                Login login = new();
-                
-                if (login.LErrCode == 0)
+                LoginOnlyDatabase login = new LoginOnlyDatabase();  
+                if (login.lErrCode == 0)
                 {
-                    oCompany = login.Company;
-                    SAPbobsCOM.Recordset? oRS=null;                  
-                    string sqlStr = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('OWHS','','','','','')";
-                    oRS =(SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-                    oRS.DoQuery(sqlStr);
-                    while (!oRS.EoF)
+                    string Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('OWHS','','','','','')";
+                    login.AD = new System.Data.Odbc.OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
                     {
                         oWHS.Add(new OWHS
                         {
-                            WhsCode=oRS.Fields.Item(0).Value.ToString(),
-                            WhsName=oRS.Fields.Item(1).Value.ToString()
-                        }
-                        );
-                        oRS.MoveNext();
-                    }
+                            WhsCode=row[0].ToString(),
+                            WhsName=row[1].ToString()
+                        });
+                    }                   
                     return Task.FromResult(new ResponseOWHSGetWarehouse
                     {
                         ErrorCode = 0,
@@ -44,8 +40,8 @@ namespace BarCodeAPIService.Service
                 {
                     return Task.FromResult(new ResponseOWHSGetWarehouse
                     {
-                        ErrorCode = login.LErrCode,
-                        ErrorMessage=login.SErrMsg,
+                        ErrorCode = login.lErrCode,
+                        ErrorMessage=login.sErrMsg,
                         Data=null
                     }) ;
                 }

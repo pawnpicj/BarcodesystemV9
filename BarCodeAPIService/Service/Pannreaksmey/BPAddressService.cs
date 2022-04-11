@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Data;
+using BarCodeAPIService.Models;
 
 namespace BarCodeAPIService.Service
 {
@@ -12,30 +14,27 @@ namespace BarCodeAPIService.Service
         public Task<ResponseCRD1Address> responseCRD1Address()
         {
             var cRD1 = new List<CRD1>();
-            SAPbobsCOM.Company oCompany;
+            DataTable dt = new DataTable();
             try
             {
-                Login login = new();
-                if (login.LErrCode == 0)
+                LoginOnlyDatabase login = new LoginOnlyDatabase();
+                if (login.lErrCode == 0)
                 {
-                    oCompany = login.Company;
-                    SAPbobsCOM.Recordset oRS = null;
-                    oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     string Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('CRD1','','','','','')";
-                    oRS.DoQuery(Query);
-                    while (!oRS.EoF)
+                    login.AD = new System.Data.Odbc.OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
                     {
                         cRD1.Add(new CRD1
                         {
-                            AdreType = oRS.Fields.Item(0).Value.ToString(),
-                            Address = oRS.Fields.Item(1).Value.ToString(),
-                            CardCode = oRS.Fields.Item(2).Value.ToString(),
-                            Street  = oRS.Fields.Item(3).Value.ToString(),
-                            Block     = oRS.Fields.Item(4).Value.ToString(),
-                            ZipCode     = oRS.Fields.Item(5).Value.ToString(),
-                            City = oRS.Fields.Item(6).Value.ToString(),
+                            AdreType=row[0].ToString(),
+                            Address=row[1].ToString(),
+                            CardCode=row[2].ToString(),
+                            Street=row[3].ToString(),
+                            Block=row[4].ToString(),
+                            ZipCode=row[5].ToString(),
+                            City=row[6].ToString()
                         });
-                        oRS.MoveNext();
                     }
                     return Task.FromResult(new ResponseCRD1Address
                     {
@@ -48,8 +47,8 @@ namespace BarCodeAPIService.Service
                 {
                     return Task.FromResult(new ResponseCRD1Address
                     {
-                        ErrorCode = login.LErrCode,
-                        ErrorMessage = login.SErrMsg,
+                        ErrorCode = login.lErrCode,
+                        ErrorMessage = login.sErrMsg,
                         Data = null
                     });
                 }

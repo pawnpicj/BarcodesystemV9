@@ -1,0 +1,169 @@
+﻿@model BarCodeLibrary.Respones.SAP.Pannreaksmey.ResponsePrintItemLable;
+@{
+    ViewData["Title"] = "ViewReceiptPDF";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/bootstrap-grid.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <!-- Font Awesome JS -->
+    <link href="~/css/styles.css" rel="stylesheet" />
+    <script src="~/font icon/fontaws.js"></script>
+    <script src="~/font icon/fonticons.js"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+</head>
+<style>
+    .container-fluid {
+        font-family: arial;
+        font-size: 6px;
+        margin-left: 5px;
+        margin-top: 10%;
+        width: 263.5669291339px;
+        height: 169.078740157px;
+        outline: solid 1px black;
+     /*   background-color:white;*/
+    }
+    #ImgFDA {
+        max-width: 50%;
+        max-height: 50%;
+    }
+    #img {
+        width: 80px;
+        height: 80px;
+        margin-left: 70px;
+    }
+    div.logo {
+        background-image: url("/Icon/FDA Number.jpg");
+      /*  -moz-transform:scale(0.75);
+        -webkit-transform:scale(0.75);
+        transform:scale(0.75);*/
+    }
+    .portrait {
+        height: 40px;
+        width: 700px;
+
+    }
+    /*  @@page {
+            size: auto;
+            size: A3;
+            margin: 0mm;
+        }
+
+        @@media print {
+            #header, #nav .noprint {
+                display: none;
+            }
+
+            body {
+                height: 75px;
+                width: 180px;
+                margin: 4px 7px 2px 4px;
+            }
+        }
+
+        @@media screen {
+            .hideonprint {
+                display: table-cell;
+            }
+        }*/
+</style>
+<body>
+    
+    <div class="row">
+        <div class="col-12">
+            <table>
+                <thead>
+                    <tr>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        @{ int i = 1;}
+                        @foreach (var l in Model.Data)
+                        {
+                            @*<td><img src="https://chart.googleapis.com/chart?chf=bg,s,65432100&cht=qr&chs=90x90&chl=@String.Concat(l.ItemCode,l.ItemName)" id="img2"@i></td>*@
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-10" style="margin-left:2px;font-size:8px;margin-bottom:-2px">
+                                        <strong style="text-decoration-line:underline">นำเข้าและจัดจำหน่ายโดย</strong>
+                                    </div>
+                                    <div class="col-11  " style="font-size:6px;margin-top:5px">
+                                        <img src="https://chart.googleapis.com/chart?chf=bg,s,65432100&cht=qr&chs=60x60&chl=@String.Concat(l.ItemCode,l.ItemName,l.ProductCode)" id="img1" style="float:right;margin-right:-20px;margin-top:-6%">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-10" style="margin-left:2px;font-size:8px;margin-bottom:2px">
+                                        <strong>บริษัท อุดมเมดิคอล อิควิปเม้นท์ จำกัด</strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12" style="margin-left: 2px; font-size: 8px; margin-bottom:2px">
+                                        <strong>เลขที่ 80 ซอยพัฒนาการ69 แขวงประเวศ</strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12" style="margin-left: 2px; font-size: 8px; margin-bottom:2px">
+                                        <strong> เขตประเวศ กรุงเทพฯ 10250</strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12" style="margin-left:2px;font-size:8px;margin-bottom:2px">
+                                        <strong>โทร.02-320-1234 , 085-344-3444</strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 portrait" style="margin-left:25%;margin-top:10px">
+                                        <img src="/Icon/FDA_Number1-removebg.png" id="ImgFDA">
+                                        <p style="margin-left:15%;margin-top:-13px">@l.fda</p>
+                                        @*<div class="centered">@l.fda</div>*@
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-1" style="margin-top:-10%;">
+                                        <img src="https://chart.googleapis.com/chart?chf=bg,s,65432100&cht=qr&chs=90x90&chl=@String.Concat(l.ItemCode,l.BatchSN,l.ExpDate)" id="img"@i>
+                                    </div>
+                                </div>
+                            </div>
+                            i = i + 1;
+                        }
+
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        //window.print();
+        //onafterprint = function () {
+        //    this.window.history.back();
+        //}
+        oncancel = function () {
+            this.window.history.back();
+        }
+        genQR();
+        function genQR() {
+            var gapi = "https://chart.googleapis.com/chart?chf=bg,s,65432100&cht=qr&chs=";
+            var myimg = document.getElementById("img");
+            var myimg1 = document.getElementById("img1");
+            var myimg2 = document.getElementById("img2");
+            var mytext = "Hello";
+            var mytext1 = "welcom";
+            var mytext2 = "Hi";
+            //myimg.src = gapi + "90x90&chl=" + mytext;
+            //myimg1.src = gapi + "60x60&chl=" + mytext1;
+           // myimg2.src = gapi + "60x60" + "&chl=" + mytext2;
+
+        }
+    </script>
+</body>
+</html>

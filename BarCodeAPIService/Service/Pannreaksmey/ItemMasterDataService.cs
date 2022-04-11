@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Data;
+using BarCodeAPIService.Models;
 
 namespace BarCodeAPIService.Service
 {
@@ -12,28 +14,28 @@ namespace BarCodeAPIService.Service
         public Task<ResponseOITMGetItemMaster> ResponseOITMGetItemMaster()
         {
             var oITM = new List<OITM>();
-            SAPbobsCOM.Company oCompany;
+            DataTable dt = new DataTable();
             try {
-                Login login = new();
-                if (login.LErrCode == 0)
+                LoginOnlyDatabase login = new LoginOnlyDatabase();
+                if (login.lErrCode == 0)
                 {
-                    oCompany = login.Company;
-                    SAPbobsCOM.Recordset oRS=null;
-                    oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     string Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('OITM','','','','','')";
-                    oRS.DoQuery(Query);
-                    while (!oRS.EoF)
+                    login.AD = new System.Data.Odbc.OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
                     {
-                        oITM.Add(new OITM { 
-                            ItemCode=oRS.Fields.Item(0).Value.ToString(),
-                            ItemName=oRS.Fields.Item(1).Value.ToString(),
-                            ItemFName=oRS.Fields.Item(2).Value.ToString(),
-                            ItemGroup=oRS.Fields.Item(3).Value.ToString(),
-                            ManBtchNum=oRS.Fields.Item(4).Value.ToString(),
-                            ManSerNum=oRS.Fields.Item(5).Value.ToString(),
-                            UoM=oRS.Fields.Item(6).Value.ToString(),                            
+                        oITM.Add(new OITM
+                        {
+                            ItemCode=row[0].ToString(),
+                            ItemName=row[1].ToString(),
+                            ItemFName=row[2].ToString(),
+                            ItemGroup=row[3].ToString(),
+                            ManBtchNum=row[4].ToString(),
+                            ManSerNum=row[5].ToString(),
+                            UoM=row[6].ToString(),
+                            FDA=row[7].ToString()
+
                         });
-                        oRS.MoveNext();
                     }
                     return Task.FromResult(new ResponseOITMGetItemMaster
                     {
@@ -45,8 +47,8 @@ namespace BarCodeAPIService.Service
                 else
                 {
                     return Task.FromResult(new ResponseOITMGetItemMaster { 
-                        ErrorCode=login.LErrCode,
-                        ErrorMessage=login.SErrMsg,
+                        ErrorCode=login.lErrCode,
+                        ErrorMessage=login.sErrMsg,
                         Data=null
                     });
                 }

@@ -8,7 +8,7 @@ using BarCodeLibrary.Respones.SAP;
 
 namespace BarCodeClientService.Controllers
 {
-    public class GenerateBarcodeController : Controller
+    public class QRBarcodeController : Controller
     {
         public IActionResult CreateBinLocation()
         {

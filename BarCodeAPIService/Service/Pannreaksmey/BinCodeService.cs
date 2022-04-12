@@ -30,8 +30,9 @@ namespace BarCodeAPIService.Service
                     {
                         oBIN.Add(new OBIN { 
                             BinCode=row[0].ToString(),
-                            WhsCode=row[1].ToString(),
-                            WhsName=row[2].ToString()
+                            Descr=row[1].ToString(),
+                            WhsCode=row[2].ToString(),
+                            WhsName=row[3].ToString()
                         });
                     }
                     return Task.FromResult(new ResponseOBINGetBinCode

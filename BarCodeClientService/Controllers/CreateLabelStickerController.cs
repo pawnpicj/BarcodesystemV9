@@ -15,7 +15,7 @@ using BarCodeClientService;
 
 namespace BarCodeClientService.Controllers
 {
-    public class BinLocationController : Controller
+    public class CreateLabelStickerController : Controller
     {
                                                                                                                                                 
         public IActionResult GBinLocation()
@@ -50,7 +50,7 @@ namespace BarCodeClientService.Controllers
             var a = API.Read < ResponeNNG1GetGenerateBinCode > ("api/GenerateBinCode/GetGenerateBinCode");
             return Ok(a);
         }
-        // Method for Pint Label's size 
+        // Method for Pint Item Label's size 
         public IActionResult PrintItemLablePDF(int width,int height)
         {
             ResponsePrintItemLable responsePrintItemLable = new ResponsePrintItemLable();
@@ -73,10 +73,29 @@ namespace BarCodeClientService.Controllers
         public IActionResult PrintItemLablePDFAction(ResponsePrintItemLable print)
         {
             PrintItemLableStatic.Data = print.Data;
-            //var json = new Rotativa.AspNetCore.ViewAsPdf("PrintItemLablePDF", printLabel);
-            //return json;
             return Ok(1);
-            // return View();
+        }
+        //Print Bin Label Sticker
+        //4cm=151.1811023622px
+        //10cm=377.9527559055px
+        public IActionResult PrintBinLabelPDF(int width,int height)
+        {
+            ResponsePrintBinLabel responsePrintBinLabel = new ResponsePrintBinLabel();
+            responsePrintBinLabel.Data = ResponsePrintLabelStatic.Data;
+            return new ViewAsPdf(responsePrintBinLabel)
+            {
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+                PageMargins = { Left = 5, Bottom = 0, Right = 5, Top = 20 },
+                PageWidth = width,
+                PageHeight = height,
+                CustomSwitches = "--page-offset 0 --footer-center [page] --footer-font-size 12"
+            };
+        }
+        [HttpPost]
+        public IActionResult PrintBinLabelPDFAction(ResponsePrintBinLabel print)
+        {
+            ResponsePrintLabelStatic.Data = print.Data;
+            return Ok(1);
         }
     }
 }

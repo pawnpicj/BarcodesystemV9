@@ -1,0 +1,110 @@
+﻿@model BarCodeLibrary.Respones.SAP.Pannreaksmey.ResponsePrintBinLabel;
+@{
+    ViewData["Title"] = "ViewReceiptPDF";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/bootstrap-grid.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <!-- Font Awesome JS -->
+    <link href="~/css/styles.css" rel="stylesheet" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery/dist/JsBarcode.all.min.js"></script>
+</head>
+<style>
+    .container-fluid {
+        font-family: arial;
+        font-size: 12px;
+        margin-left: 5px;
+        margin-top: 10px;
+        margin-bottom: -15px;
+        width: 263.5669291339px;
+        height: 169.078740157px;
+        outline: solid 1px black;
+    }
+</style>
+<body>
+    <div class="row">
+        <div class="col-12">
+            <table>
+                <thead>
+                    <tr>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            @{ int i = 1;}
+                            @foreach (var l in Model.Data)
+                            {
+                            <div class="container-fluid">
+                                <div class="row" >
+                                    <div class="col-12"><label>Bin Code : @l.BinCode</label></div>
+                                </div>
+                                <div class="row" >
+                                    <div class="col-12"><label>Bin Name : @l.Descr</label></div>
+                                </div>
+                                <img id="test" style="margin-top:20px" />
+                                <script>
+                                    var str;
+                                    str=@l.Code;
+                                    JsBarcode("#test", str, {
+                                        width: 2,
+                                        height: 35,
+                                        displayValue: true,
+                                        //fontOptions: "",
+                                        //font: "monospace",
+                                        //text: undefined,
+                                        //textAlign: "center",
+                                        textPosition: "bottom",
+                                        //textMargin: 2,
+                                        fontSize: 12,
+                                        background: "#ffffff",
+                                        lineColor: "#212529"
+
+                                    });
+                                </script>
+                            </div>
+                                
+                                i = i + 1;
+                            }
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        //$("#test").JsBarcode("jQuery Script", {
+        //    width: 2,
+        //    height: 100,
+        //    format: "auto",
+        //    displayValue: true,
+        //    fontOptions: "",
+        //    font: "monospace",
+        //    text: undefined,
+        //    textAlign: "center",
+        //    textPosition: "bottom",
+        //    textMargin: 2,
+        //    fontSize: 20,
+        //    background: "#ffffff",
+        //    lineColor: "#000000",
+        //    margin: 10,
+        //    marginTop: undefined,
+        //    marginBottom: undefined,
+        //    marginLeft: undefined,
+        //    marginRight: undefined,
+        //    valid: function valid() { }
+        //});
+    </script>
+</body>
+</html>

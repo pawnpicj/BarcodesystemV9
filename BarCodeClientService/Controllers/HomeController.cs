@@ -34,6 +34,10 @@ namespace BarCodeClientService.Controllers
         {
             return View();
         }
+        public IActionResult LoginAsync()
+        {
+            return View();
+        }
         public IActionResult SaleARCreation()
         {
             return View();

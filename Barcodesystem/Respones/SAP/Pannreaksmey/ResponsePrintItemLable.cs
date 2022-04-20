@@ -9,7 +9,7 @@ namespace BarCodeLibrary.Respones.SAP.Pannreaksmey
    public class ResponsePrintItemLable
    {
       public List<OITMLable> Data { get; set; }
-   }
+    }
     public static class PrintItemLableStatic
     {
         public static List<OITMLable> Data { get; set; }
@@ -24,5 +24,7 @@ namespace BarCodeLibrary.Respones.SAP.Pannreaksmey
         public string BatchSN { get; set; }
         public string ExpDate { get; set; }
         public string fda { get; set; }
+        public string ConcatText { get; set; }
+        public string ConcatText2 { get; set; }
     }
 }

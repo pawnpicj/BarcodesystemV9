@@ -33,10 +33,15 @@
         max-width: 50%;
         max-height: 50%;
     }
+    #img1 {
+        width: 35px;
+        height: 35px;
+    }
     #img {
-        width: 80px;
-        height: 80px;
-        margin-left: 70px;
+        width: 70px;
+        height: 70px;
+        margin-left: 78px;
+        margin-top:-17px;
     }
     div.logo {
         background-image: url("/Icon/FDA Number.jpg");
@@ -88,58 +93,85 @@
                         @{ int i = 1;}
                         @foreach (var l in Model.Data)
                         {
+                            @if (i == 1)
+                            {
+                                <div>
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <br />
+                                </div>
+                            }
+                            else
+                            {
+                                <div>
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <br />
+                                </div>
+                            }
+
                             @*<td><img src="https://chart.googleapis.com/chart?chf=bg,s,65432100&cht=qr&chs=90x90&chl=@String.Concat(l.ItemCode,l.ItemName)" id="img2"@i></td>*@
                             <div class="container-fluid">
-                                <div class="row">
-                                    <div class="col-10" style="margin-left:2px;font-size:8px;margin-bottom:-2px">
-                                        <strong style="text-decoration-line:underline">นำเข้าและจัดจำหน่ายโดย</strong>
+                                <div class="row" style="margin-bottom:2px">
+                                    <div class="col-10" style="margin-left:1px;font-size:8px;">
+                                        <label style="margin-top:2px;margin-bottom:0px"><strong>นำเข้าและจัดจำหน่ายโดย</strong></label>
                                     </div>
-                                    <div class="col-11  " style="font-size:6px;margin-top:5px">
-                                        <img src="https://chart.googleapis.com/chart?chf=bg,s,65432100&cht=qr&chs=60x60&chl=@String.Concat(l.ItemCode,l.ItemName,l.ProductCode)" id="img1" style="float:right;margin-right:-20px;margin-top:-6%">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-10" style="margin-left:2px;font-size:8px;margin-bottom:2px">
-                                        <strong>บริษัท อุดมเมดิคอล อิควิปเม้นท์ จำกัด</strong>
+                                    <div class="col-11  " style="font-size:6px;margin-top:2px;margin-bottom:0px">
+                                        @*<img src="https://chart.googleapis.com/chart?chf=bg,s,65432100&cht=qr&chs=60x60&chl=@String.Concat(l.ItemCode,l.ItemName,l.ProductCode)" id="img1" style="float:right;margin-right:-20px;margin-top:-6%">*@
+                                        <img src="@Url.Action("GenerateQRCode","QRBarcode")?itemcode=@l.ItemCode&&itemname=@l.ItemName&&fda=@l.fda&&str=@string.Empty" id="img1" style="float:right;margin-right:-20px;margin-top:-6%" />
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-12" style="margin-left: 2px; font-size: 8px; margin-bottom:2px">
-                                        <strong>เลขที่ 80 ซอยพัฒนาการ69 แขวงประเวศ</strong>
+                                    <div class="col-12" style="margin-left:1px;font-size:8px;">
+                                        <label style="margin-bottom:1px;margin-top:0px"><strong>บริษัท อุดมเมดิคอล อิควิปเม้นท์ จำกัด</strong></label>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-12" style="margin-left: 2px; font-size: 8px; margin-bottom:2px">
-                                        <strong> เขตประเวศ กรุงเทพฯ 10250</strong>
+                                    <div class="col-12" style="margin-left: 1px; font-size: 8px;">
+                                        <label style="margin-bottom:1px;margin-top:0px"><strong>เลขที่ 80 ซอยพัฒนาการ69 แขวงประเวศ</strong></label>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-12" style="margin-left:2px;font-size:8px;margin-bottom:2px">
-                                        <strong>โทร.02-320-1234 , 085-344-3444</strong>
+                                    <div class="col-12" style="margin-left: 1px; font-size: 8px;">
+                                        <label style="margin-top:0px;margin-bottom:1px"><strong> เขตประเวศ กรุงเทพฯ 10250</strong></label>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-12 portrait" style="margin-left:25%;margin-top:10px">
+                                    <div class="col-12" style="margin-left:1px;font-size:8px;">
+                                        <label style="margin-top:0px;margin-bottom:1px"><strong>โทร.02-320-1234 , 085-344-3444</strong></label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 portrait" style="margin-left:25%;margin-top:0px;margin-bottom:1px">
                                         <img src="/Icon/FDA_Number1-removebg.png" id="ImgFDA">
-                                        <p style="margin-left:15%;margin-top:-13px">@l.fda</p>
+                                        <p style="margin-left:15%;margin-top:-15px">@l.fda</p>
                                         @*<div class="centered">@l.fda</div>*@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-1" style="margin-top:-10%;">
-                                        <img src="https://chart.googleapis.com/chart?chf=bg,s,65432100&cht=qr&chs=90x90&chl=@String.Concat(l.ItemCode,l.BatchSN,l.ExpDate)" id="img"@i>
+                                    <div class="col-1">
+                                        @*<img src="https://chart.googleapis.com/chart?chf=bg,s,65432100&cht=qr&chs=90x90&chl=@String.Concat(l.ItemCode,l.BatchSN,l.ExpDate)" id="img"@i>*@
+                                        <img src="@Url.Action("GenerateQRCode","QRBarcode")?itemcode=@string.Empty&&itemname=@string.Empty&&fda=@string.Empty&&str=@l.ConcatText2" id="img" @i />
                                     </div>
                                 </div>
                             </div>
+
                             i = i + 1;
                         }
-
-
                     </tr>
                 </tbody>
             </table>
         </div>
+       
     </div>
+    
     <script>
         //window.print();
         //onafterprint = function () {

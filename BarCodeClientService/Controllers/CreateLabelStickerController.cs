@@ -62,10 +62,10 @@ namespace BarCodeClientService.Controllers
             return new ViewAsPdf(responsePrintItemLable)
             {
                 PageSize = Rotativa.AspNetCore.Options.Size.A4,
-                PageMargins = { Left = 5, Bottom = 0, Right = 5, Top = 10 },
-                PageWidth = 75,
-                PageHeight = 180,
-                CustomSwitches = "--page-offset 0 --footer-center [page] --footer-font-size 12"
+                PageMargins = { Left = 3, Bottom = 0,Right = 3, Top = 5 },
+                PageWidth = 65,
+                PageHeight = 70
+                //CustomSwitches = "--page-offset 0 --footer-center [page] --footer-font-size 12"
             };
         }
         // Method for Pint Item Label's size 4.5x7
@@ -80,9 +80,9 @@ namespace BarCodeClientService.Controllers
             return new ViewAsPdf(responsePrintItemLable)
             {
                 PageSize = Rotativa.AspNetCore.Options.Size.A4,
-                PageMargins = { Left = 5, Bottom = 0, Right = 5, Top = 10 },
-                PageWidth = 75,
-                PageHeight = 180,
+                PageMargins = { Left = 0, Bottom = 0 ,Right = 0, Top = 5 },
+                PageWidth = 65,
+                PageHeight = 70,
                 CustomSwitches = "--page-offset 0 --footer-center [page] --footer-font-size 12"
             };
         }

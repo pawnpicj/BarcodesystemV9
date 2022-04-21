@@ -39,6 +39,7 @@ namespace BarCodeAPIService.Service
                     oStockTransfer.FromWarehouse = sendInventoryTransfer.FromWhsCode;
                     oStockTransfer.ToWarehouse = sendInventoryTransfer.ToWhsCode;
 
+
                     foreach (SendInventoryTransferLine l in sendInventoryTransfer.Line)
                     {
                             oStockTransfer.Lines.ItemCode = l.ItemCode;
@@ -47,7 +48,7 @@ namespace BarCodeAPIService.Service
                             oStockTransfer.Lines.WarehouseCode = l.ToWhsCode;
                             oStockTransfer.Lines.UserFields.Fields.Item("U_TranferNo").Value = l.U_TranferNo;
 
-                        if (l.BatchNo != "")
+                        if (l.BatchNo != "" && l.ProductType == "b")
                             {
                                 oStockTransfer.Lines.BatchNumbers.SetCurrentLine(0);
                                 oStockTransfer.Lines.BatchNumbers.BatchNumber = l.BatchNo;
@@ -56,7 +57,7 @@ namespace BarCodeAPIService.Service
                             }
                             else
                             {
-                                if (l.SerialNo != "")
+                                if (l.SerialNo != "" && l.ProductType == "s")
                                 {
                                     oStockTransfer.Lines.SerialNumbers.SetCurrentLine(0);
                                     oStockTransfer.Lines.SerialNumbers.ManufacturerSerialNumber = l.SerialNo;
@@ -65,6 +66,8 @@ namespace BarCodeAPIService.Service
                                     oStockTransfer.Lines.SerialNumbers.Add();
                                 }
                             }
+
+                        break;
 
                         oStockTransfer.Lines.BinAllocations.BinActionType = SAPbobsCOM.BinActionTypeEnum.batFromWarehouse;
                         oStockTransfer.Lines.BinAllocations.SerialAndBatchNumbersBaseLine = 0;
@@ -80,7 +83,9 @@ namespace BarCodeAPIService.Service
                         oStockTransfer.Lines.BinAllocations.Add();
                         
                         oStockTransfer.Lines.Add();
+                        
                     }
+
                     Retval = oStockTransfer.Add();
                     if (Retval != 0)
                     {

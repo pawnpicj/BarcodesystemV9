@@ -1435,7 +1435,13 @@
                         res[value.batchNo] = {
                             itemCode: value.itemCode
                             , quantity: 0
+                            , fromBinEntry: value.fromBinEntry
+                            , fromWhsCode: value.fromWhsCode
+                            , toBinEntry: value.toBinEntry
+                            , toWhsCode: value.toWhsCode
+                            , u_TranferNo: value.u_TranferNo
                             , batchNo: value.batchNo
+                            , serialNo: ''
                             , productType: value.productType
                         }
                         gBatchNo.push(res[value.batchNo]);
@@ -1454,6 +1460,12 @@
                         res[value.serialNo] = {
                             itemCode: value.itemCode
                             , quantity: 0
+                            , fromBinEntry: value.fromBinEntry
+                            , fromWhsCode: value.fromWhsCode
+                            , toBinEntry: value.toBinEntry
+                            , toWhsCode: value.toWhsCode
+                            , u_TranferNo: value.u_TranferNo
+                            , batchNo: ''
                             , serialNo: value.serialNo
                             , productType: value.productType
                         }
@@ -1470,7 +1482,9 @@
             //console.log("= Serial Number =");
             //console.log(gSerialNo);
             //console.log("=================");
-
+            //var newArray = $.merge([], oldArray);
+            var newLine = [];
+            newLine = $.merge($.merge([], gBatchNo), gSerialNo);
             //Head
             sHead.series = $('#txtSeries').val();
             sHead.cardCode = $('#CardCode').val();
@@ -1482,12 +1496,11 @@
             sHead.toBinEntry = $('#txtBinEntry').val();
             sHead.salesEmployeeCode = $('#SlpCode0').val();
             sHead.comments = $('#comments').val();
-            sHead.journalRemark = $('#comments').val();
-            sHead.batch = gBatchNo;
-            sHead.serial = gSerialNo;
-            sHead.line = sLine;
+            sHead.journalRemark = $('#jrnlMemo').val();
+            sHead.line = newLine;
             console.log(sHead);
 
+            //sHead.line = sLine;
             //=================================================
             //let regex = /\,(?!\s*?[\{\[\"\'\w])/g;
             //var str = '';
@@ -1534,14 +1547,14 @@
 
             //let cStr = str.replace(regex, ''); // remove all trailing commas
             //let jStr = JSON.parse(cStr); // build a new JSON object based on correct string
-            //var jStr = JSON.parse(str);
+            //var jStr = JSON.parse(sHead);
             //console.log(jStr);
 
             //console.log(contact);
-            @*$.ajax({
+            $.ajax({
                 type: "POST",
                 url: '@Url.Action("PostInventoryTransfer", "Inventory")',
-                data: { sendInventoryTransfer: jStr},
+                data: { sendInventoryTransfer: sHead},
                 dataType: "JSON",
                 error: function (request, error) {
                     console.log(arguments);
@@ -1551,7 +1564,7 @@
                     alert(" Done ! ");
                     location.reload();
                 }
-        });*@
+        });
     }
 
     </script>

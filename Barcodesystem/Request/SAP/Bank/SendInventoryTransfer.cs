@@ -28,7 +28,9 @@ namespace BarCodeLibrary.Request.SAP
         public string JournalRemark { get; set; }
 
         public List<SendInventoryTransferLine> Line { get; set; }
-        
+        //public List<SendInventoryTransferBatch> Batch { get; set; }
+        //public List<SendInventoryTransferSerial> Serial { get; set; }
+
     }
 
     public class SendInventoryTransferLine
@@ -48,22 +50,25 @@ namespace BarCodeLibrary.Request.SAP
 
         public string U_TranferNo { get; set; }
 
-        public List<SendInventoryTransferBatch> Batch { get; set; }
-        public List<SendInventoryTransferSerial> Serial { get; set; }
+        public string ProductType { get; set; }
+        //public List<SendInventoryTransferBatch> Batch { get; set; }
+        //public List<SendInventoryTransferSerial> Serial { get; set; }
         public List<InventoryTransferBinLocation> FromBinLocations { get; set; }
         public List<InventoryTransferBinLocation> ToBinLocations { get; set; }
     }
 
     public class SendInventoryTransferBatch
     {
-        public string BatchCode { get; set; }
+        public string BatchNo { get; set; }
         public int Quantity { get; set; }
+        public string ProductType { get; set; }
     }
 
     public class SendInventoryTransferSerial
     {
-        public string SerialCode { get; set; }
+        public string SerialNo { get; set; }
         public int Quantity { get; set; }
+        public string ProductType { get; set; }
     }
 
     public class InventoryTransferBinLocation

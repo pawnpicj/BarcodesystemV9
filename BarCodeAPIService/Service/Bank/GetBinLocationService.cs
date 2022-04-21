@@ -4,19 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Data.SqlClient;
-using System.Data;
-using BarCodeAPIService.Models;
 
-namespace BarCodeAPIService.Service
+namespace BarCodeAPIService.Service.Bank
 {
-   
-    public class BinCodeService : IBinCodeService
+    public class GetBinLocationService : IGetBinLocationService
     {
-
-        public Task<ResponseOBINGetBinCode> ResponseOBINGetBinCode()
+        public Task<ResponseGetBinLocation> responseGetBinLocation(string whscode)
         {
-            var oBIN = new List<OBIN>();
+            var oBIN = new List<lBIN>();
             SAPbobsCOM.Company oCompany;
             try
             {
@@ -25,12 +20,12 @@ namespace BarCodeAPIService.Service
                 {
                     oCompany = login.Company;
                     SAPbobsCOM.Recordset? oRS = null;
-                    string Query = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_Smey('OBIN','','','','','')";
+                    string Query = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_Bank('GetBinLocationWhs','{whscode}','','','','')";
                     oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRS.DoQuery(Query);
                     while (!oRS.EoF)
                     {
-                        oBIN.Add(new OBIN
+                        oBIN.Add(new lBIN
                         {
                             BinCode = oRS.Fields.Item(0).Value.ToString(),
                             Descr = oRS.Fields.Item(1).Value.ToString(),
@@ -40,7 +35,7 @@ namespace BarCodeAPIService.Service
                         });
                         oRS.MoveNext();
                     }
-                    return Task.FromResult(new ResponseOBINGetBinCode
+                    return Task.FromResult(new ResponseGetBinLocation
                     {
                         ErrorCode = 0,
                         ErrorMessage = "",
@@ -49,7 +44,7 @@ namespace BarCodeAPIService.Service
                 }
                 else
                 {
-                    return Task.FromResult(new ResponseOBINGetBinCode
+                    return Task.FromResult(new ResponseGetBinLocation
                     {
                         ErrorCode = login.LErrCode,
                         ErrorMessage = login.SErrMsg,
@@ -59,7 +54,7 @@ namespace BarCodeAPIService.Service
             }
             catch (Exception ex)
             {
-                return Task.FromResult(new ResponseOBINGetBinCode
+                return Task.FromResult(new ResponseGetBinLocation
                 {
                     ErrorCode = ex.HResult,
                     ErrorMessage = ex.Message,

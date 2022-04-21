@@ -1,4 +1,5 @@
 ﻿using BarCodeAPIService.Connection;
+using SAPbobsCOM;
 using System;
 using System.Collections.Generic;
 using System.Data.Odbc;
@@ -43,6 +44,9 @@ namespace BarCodeAPIService.Models
                 return _lErrCode;
             }
         }
+
+        public Company Company { get; internal set; }
+
         public LoginOnlyDatabase()
         {
             Login();

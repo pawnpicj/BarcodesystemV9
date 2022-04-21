@@ -265,7 +265,9 @@
                                 <input type="text" id="txtBinEntry" autocomplete="off" disabled size="7" />
                                 <input type="text" class="form-control" placeholder="" id="ToBinCode" value="" readonly>
                                 <div class="input-group-append">
-                                    <button class="input-group-text btnModelsOcrCode4" data-toggle="modal" data-target="#ModalToBinLocation"><i class="fa fa-search"></i></button>@*ModalToBinCode*@
+                                    <button class="input-group-text btnModelsToBin" data-toggle="modal" data-target="#ModalToBinLocation">
+                                    <i class="fa fa-search"></i></button>
+                                    @*ModalToBinCode*@
                                 </div>
                             </div>
                         </div>
@@ -658,7 +660,7 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content" style="background:#f0eff1;color:#696969;">
                 <div class="modal-header">
-                    <b>List of Bin Location</b>
+                    <b>+++ List of Bin Location +++</b>
                 </div>
                 <div class="modal-body">
                     <div class="table-responsive">
@@ -874,7 +876,7 @@
                 dataType: "JSON",
                 "dataSrc": 'data',
                     success: function (data) {
-                        //console.log(data);                        
+                        //console.log(data);
                         jqueryXml = $(data);
 
                         if (jqueryXml[0].data.length != 0) {
@@ -921,7 +923,7 @@
                             $('#txtScanBarCode01').val("");
                             $('#txtScanBarCode01').focus();
                         }
-                        
+
                     }
                 });
             } else if (sSerial != '') {
@@ -1064,7 +1066,7 @@
                                     return false;
                                 }
 
-                            }                            
+                            }
                         });
         }
                 }
@@ -1158,7 +1160,7 @@
     });
 
     //+++++ GetToWarehouse +++++
-    var tableToWhs = $('#TbToWhs').DataTable({
+    @*var tableToWhs = $('#TbToWhs').DataTable({
         "ajax": {
             "url": '@Url.Action("GetWarehouse", "Home")',
             "type": "GET",
@@ -1199,33 +1201,69 @@
                 txtToWhsCode.value = rowwhsCode[rowindex4];
             });
         }
-    });
+    });*@
 
     //+++++ GetToBinLocation +++++
-    var tableToBin = $('#TbToBinLocation').DataTable({
-        "ajax": {
-            "url": '@Url.Action("GetBinLocation", "Home")',
-            "type": "GET",
-            "dataType": "JSON",
-            "dataSrc": 'data',
-            "complete": function (data) {
-                console.log("GET ToBinLocation Complete.");
-            }
-        },
-        "columns": [
-            { "data": "binCode" },
-            { "data": "whsCode" },
-            { "data": "absEntry" },
-        ],
-        "select": true,
-        "paging": true,
-        "ordering": false,
-        "info": false
-    });
+        //$('#ToWhsCode').val()data: { whscode: '05' },
+        var LBins = [];
 
-    tableToBin.on('select', function () {
-            var cellbinCode = tableToBin.rows({ selected: true }).data()[0]['binCode'];
-            var cellAbsEntry = tableToBin.rows({ selected: true }).data()[0]['absEntry'];
+        $('#TbToBinLocation').DataTable({
+            bLengthChange: false,
+            binfo: false,
+            data: LBins,
+            language: {
+                emptyTable: "Loading ..."
+            },
+            columns: [
+                { data: "binCode", autoWidth: true },
+                { data: "whsCode", autoWidth: true },
+                { data: "absEntry", autoWidth: true }
+            ],
+            select: true,
+            paging: true,
+            ordering: false,
+            info: false
+        });
+
+        var tbBin = $('#TbToBinLocation').DataTable();
+
+        $('#TbToBinLocation tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            }
+            else {
+                tbBin.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+
+        $(".btnModelsToBin").click(function () {
+            if ($('#ToWhsCode').val() != '') {
+                $("#ModalToBinLocation").modal({ backdrop: "static" });
+                $.ajax({
+                    url: '@Url.Action("GetBinLocationWhs", "Inventory")',
+                    data: { whscode: $('#ToWhsCode').val() },
+                    type: "GET",
+                    dataType: "JSON",
+                    success: function (data) {
+                        //console.log(data);
+                        LBins = []
+                        LBins = data.data
+                        tbBin.clear();
+                        tbBin.rows.add(LBins);
+                        tbBin.draw();
+                    }
+                });
+            } else {
+                alert('To Warehouse Empty!');
+                return false;
+            }
+
+        });
+
+        tbBin.on('select', function () {
+            var cellbinCode = tbBin.rows({ selected: true }).data()[0]['binCode'];
+            var cellAbsEntry = tbBin.rows({ selected: true }).data()[0]['absEntry'];
             $('#ChooseToBinLocation').click(function () {
                 var txtToBinCode = document.getElementById("ToBinCode");
                 var txtBinEntry = document.getElementById("txtBinEntry");
@@ -1407,7 +1445,7 @@
                 res[value.batchNo].quantity += value.quantity;
                 return res;
             }, {});
-            
+
             //For Serial Number
             var gSerialNo = [];
             dataLine.reduce(function (res, value) {
@@ -1427,11 +1465,11 @@
                 return res;
             }, {});
 
-            console.log("= Batch Number =");
-            console.log(gBatchNo);
-            console.log("= Serial Number =");
-            console.log(gSerialNo);
-            console.log("=================");
+            //console.log("= Batch Number =");
+            //console.log(gBatchNo);
+            //console.log("= Serial Number =");
+            //console.log(gSerialNo);
+            //console.log("=================");
 
             //Head
             sHead.series = $('#txtSeries').val();
@@ -1445,8 +1483,10 @@
             sHead.salesEmployeeCode = $('#SlpCode0').val();
             sHead.comments = $('#comments').val();
             sHead.journalRemark = $('#comments').val();
+            sHead.batch = gBatchNo;
+            sHead.serial = gSerialNo;
             sHead.line = sLine;
-            //console.log(sHead);
+            console.log(sHead);
 
             //=================================================
             //let regex = /\,(?!\s*?[\{\[\"\'\w])/g;

@@ -96,7 +96,7 @@
                         <div class="input-group-prepend">
                             <button class="input-group-text" id="GItemCode"><i class="fa fa-check"></i></button>
                         </div>
-                        <input type="text" class="form-control" value="0009912" placeholder="" id="ItemCode" readonly>
+                        <input type="text" class="form-control" placeholder="" id="ItemCode" readonly>
                         <div class="input-group-append">
                             <button class="input-group-text btnItemCode" data-toggle="modal" data-target="#ModalItemCode"><i class="fa fa-search"></i></button>
                         </div>
@@ -106,14 +106,14 @@
                         <div class="input-group-prepend">
                             <button class="input-group-text" id="GItemName"><i class="fa fa-check"></i></button>
                         </div>
-                        <input type="text" class="form-control" value="testing" placeholder="" id="ItemName" readonly>
+                        <input type="text" class="form-control"  placeholder="" id="ItemName" readonly>
                     </div>
                     Product Group :
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <button class="input-group-text" id="GProductGroup"><i class="fa fa-check"></i></button>
                         </div>
-                        <input type="text" class="form-control" value="03232" placeholder="" id="ProductGroup" readonly>
+                        <input type="text" class="form-control" placeholder="" id="ProductGroup" readonly>
                     </div>
                     Batch / SN:
                     @*<div class="input-group">
@@ -129,7 +129,7 @@
                                     <div class="input-group-prepend">
                                         <button class="input-group-text" id="GbatchSN"><i class="fa fa-check"></i></button>
                                     </div>
-                                    <input type="text" class="form-control" value="12345" placeholder="" id="batchSN" required>
+                                    <input type="text" class="form-control"  placeholder="" id="batchSN" required>
                                 </div>
                             </div>
                             <div class="col-2">
@@ -142,7 +142,7 @@
                         <div class="input-group-prepend">
                             <button class="input-group-text" id="GexpireDate"><i class="fa fa-check"></i></button>
                         </div>
-                        <input type="text" class="form-control" value="096543" placeholder="" id="expireDate" required>
+                        <input type="date" class="form-control"  placeholder="" id="expireDate" required>
 
                     </div>
                     Quantity :
@@ -150,7 +150,7 @@
                         <div class="input-group-prepend">
                             <button class="input-group-text" id="binlocation"><i class="fa fa-check"></i></button>
                         </div>
-                        <input type="number" class="form-control" value="12" placeholder="" id="Qty" required>
+                        <input type="number" value="1" class="form-control" placeholder="" id="Qty" required>
                         @*<div class="input-group-append">
                 <button class="input-group-text btnbinLocation" data-toggle="modal" data-target="#ModalBinCode"><i class="fa fa-search"></i></button>
             </div>*@
@@ -181,8 +181,6 @@
                     </div>
                 </div>
             </div>
-
-
             @*1. Search Warehouse*@
             <div class="modal fade" id="ModalItemCode">
                 <div class="modal-dialog modal-xl">
@@ -200,6 +198,8 @@
                                                     <th>Item Code</th>
                                                     <th>Item Name</th>
                                                     <th>Product Group</th>
+                                                    <th>Batch</th>
+                                                    <th>Serial</th>
                                                     <th>FDA</th>
                                                 </tr>
                                             </thead>
@@ -296,8 +296,8 @@
             { data: "itemName", autoWidth: true },
             //{ data: "itemFName", autoWidth: true },
             { data: "itemGroup", autoWidth: true },
-            //{ data: "manBtchNum", autoWidth: true },
-            //{ data: "manSerNum", autoWidth: true },
+            { data: "manBtchNum", autoWidth: true },
+            { data: "manSerNum", autoWidth: true },
             //{ data: "uoM", autoWidth: true }
             {data:"fda",autoWidth:true}
 
@@ -333,6 +333,8 @@
         });
     });
     var FDA;
+    var batch;
+    var serial;
     $('#ChooseItem').click(function () {
         var index = tbWhs.row('.selected').index();
         var data = tbWhs.row(index).data();
@@ -340,6 +342,8 @@
         $('#ItemName').val(data.itemName);
         $('#ProductGroup').val(data.itemGroup);
         FDA = "1234";
+        batch = data.manBtchNum;
+        serial = data.manSerNum;
         console.log();
 
     });
@@ -352,7 +356,7 @@
             {data:"no",autoWidth:true},
             { data: "itemCode", autoWidth: true },
             { data: "itemName", autoWidth: true },
-            { data: "quantity", autoWidth: true },
+            { data: "quantity", autoWidth: true},
             { data: "productCode", autoWidth: true },
             { data: "batchSN", autoWidth: true },
             { data: "expDate", autoWidth: true },
@@ -378,33 +382,80 @@
 /*    var tableprint = $('#TbListItemPrint').DataTable();*/
     var HeaderLs = [];
     var allbinLInes = [];
-
-    var No = 0;
+    var No = 1;
+    var Qty;
+    var itemLines = {};
         $('#Add').click(function () {
-            var itemLines = {};
+
+            allitemLInes = [];
             if ($('#ItemCode').val() != "" && $('#ItemName').val() != "" && $('#Qty').val() != "" && $('#ProductGroup').val() != "" && $('#batchSN').val() != "" && $('#expireDate').val()!="") {
-                No = No + 1;
-                allitemLInes = []
-                itemLines.no = No;
-                itemLines.itemCode = $('#ItemCode').val()+" ";
-                itemLines.itemName = $('#ItemName').val()+" ";
-                itemLines.quantity = $('#Qty').val()+" ";
-                itemLines.productCode = $('#ProductGroup').val()+" ";
-                itemLines.batchSN = $('#batchSN').val()+" ";
-                itemLines.expDate = $('#expireDate').val() + " ";
-                itemLines.fda = FDA;
-                allitemLInes.push(itemLines);
-                table.rows.add(allitemLInes);
-                table.draw();
-                HeaderLs.push(itemLines);
+                Qty = $('#Qty').val();
+                if (batch == "Y") {
+                    for (var i = 1; i <= Qty; i++) {
+                        itemLines.no = i.toString().padStart(4,'0')+"";
+                        itemLines.itemCode = $('#ItemCode').val() + " ";
+                        itemLines.itemName = $('#ItemName').val() + " ";
+                        itemLines.quantity = 1 + " ";
+                        itemLines.productCode = $('#ProductGroup').val() + " ";
+                        itemLines.batchSN = $('#batchSN').val() + " ";
+                        itemLines.expDate = $('#expireDate').val() + " ";
+                        itemLines.fda = FDA;
+                        itemLines.concatText = "- " + $('#ItemCode').val() + "\n- " + $('#ItemName').val() + "\n- " + $('#ProductGroup').val();
+                        itemLines.concatText2 = $('#ItemCode').val() + ";" + $('#batchSN').val() + "; ;" + $('#expireDate').val() + ";" +  i.toString().padStart(4, '0')+"";
+                        allitemLInes.push(itemLines);
+                        table.rows.add(allitemLInes);
+                        table.draw();
+                        HeaderLs.push(itemLines);
+                    }
+                }
+                if (serial == "Y") {
+                    for (var i = 1; i <= Qty;i++) {
+                        itemLines.no = i.toString().padStart(4, '0') + "";
+                        itemLines.itemCode = $('#ItemCode').val() + " ";
+                        itemLines.itemName = $('#ItemName').val() + " ";
+                        itemLines.quantity = 1 + " ";
+                        itemLines.productCode = $('#ProductGroup').val() + " ";
+                        itemLines.batchSN = $('#batchSN').val() + " ";
+                        itemLines.expDate = $('#expireDate').val() + " ";
+                        itemLines.fda = FDA;
+                        itemLines.concatText = "- " + $('#ItemCode').val() + "\n- " + $('#ItemName').val() + "\n- " + $('#ProductGroup').val();
+                        itemLines.concatText2 = $('#ItemCode').val() + "; ;" + $('#batchSN').val() + i.toString().padStart(2, '0') + ";" + $('#expireDate').val() + ";" + i.toString().padStart(4, '0') + "";
+                        allitemLInes.push(itemLines);
+                        table.rows.add(allitemLInes);
+                        table.draw();
+                        HeaderLs.push(itemLines);
+                    }
+                }
+                if (batch == "N" && serial == "N") {
+                        for ( var i = 1; i <= Qty; i++) {
+                            itemLines.no = i.toString().padStart(4, '0');
+                            itemLines.itemCode = $('#ItemCode').val() + " ";
+                            itemLines.itemName = $('#ItemName').val() + " ";
+                            itemLines.quantity = 1 + " ";
+                            itemLines.productCode = $('#ProductGroup').val() + " ";
+                            itemLines.batchSN = $('#batchSN').val() + " ";
+                            itemLines.expDate = $('#expireDate').val() + " ";
+                            itemLines.fda = FDA;
+                            itemLines.concatText = "- " + $('#ItemCode').val() + "\n\n-" + $('#ItemName').val() + "\n\n-" + $('#ProductGroup').val();
+                            itemLines.concatText2 = $('#ItemCode').val() + "; ; ;" + $('#expireDate').val() + ";" + i.toString().padStart(4, '0') + "";
+                            allitemLInes.push(itemLines);
+                            HeaderLs.push(itemLines);
+                            itemLines = {};
+                        }
+                    table.rows.add(allitemLInes);
+                    table.draw();
+                }
+                
+                $('#ItemCode').val("");
+                $('#ItemName').val("");
+                $('#Qty').val("1");
+                $('#ProductGroup').val("");
+                $('#batchSN').val("");
+                $('#expireDate').val("");
+                FDA = "";
+                
             }
-            $('#ItemCode').val("");
-            $('#ItemName').val("");
-            $('#Qty').val("");
-            $('#ProductGroup').val("");
-            $('#batchSN').val("");
-            $('#expireDate').val("");
-            FDA = "";
+            
         });
     //Table waitig for Print
 
@@ -414,9 +465,10 @@
         //var footstr = "</body>";
         //var item = document.getElementById("body1").innerHTML;
         //document.body.innerHTML = headstr + item + footstr;
+        console.log(HeaderLs);
         var print = {};
         print.Data = HeaderLs;
-        if ($('#labelSize').val() == 0) {
+        if ($('#labelSize').val() == '0') {
             $.ajax({
                 url: '@Url.Action("PrintItemLablePDFAction", "CreateLabelSticker")',
                 type: "POST",
@@ -424,12 +476,12 @@
                 dataType: "JSON",
                 success: function (data) {
                 if (data == 1) {
-                    window.location.href = "@Url.Action("PrintItemLablePDF", "CreateLabelSticker")?width=170&&height=264";
+                    window.location.href = "@Url.Action("PrintItemLablePDF", "CreateLabelSticker")";//170x264
                 }
                 }
             });
         }
-        if ($('#labelSize').val() == 1) {
+        if ($('#labelSize').val() == '1') {
             $.ajax({
                 url: '@Url.Action("PrintItemLablePDFAction", "CreateLabelSticker")',
                 type: "POST",
@@ -437,7 +489,7 @@
                 dataType: "JSON",
                 success: function (data) {
                 if (data == 1) {
-                    window.location.href = "@Url.Action("PrintItemLablePDF", "CreateLabelSticker")?width=264&&height=226";
+                    window.location.href = "@Url.Action("PrintItemLablePDFSecon", "CreateLabelSticker")";//264x226
                 }
                 }
             });

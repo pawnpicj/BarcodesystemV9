@@ -52,7 +52,7 @@ namespace BarCodeClientService
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=index}/{id?}");
             });
             API.Url = Configuration.GetSection("API").Value;
             RotativaConfiguration.Setup((Microsoft.AspNetCore.Hosting.IHostingEnvironment)env);

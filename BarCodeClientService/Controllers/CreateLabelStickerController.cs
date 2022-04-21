@@ -50,8 +50,8 @@ namespace BarCodeClientService.Controllers
             var a = API.Read < ResponeNNG1GetGenerateBinCode > ("api/GenerateBinCode/GetGenerateBinCode");
             return Ok(a);
         }
-        // Method for Pint Item Label's size 
-        public IActionResult PrintItemLablePDF(int width,int height)
+        // Method for Pint Item Label's size 6x7
+        public IActionResult PrintItemLablePDF()
         {
             ResponsePrintItemLable responsePrintItemLable = new ResponsePrintItemLable();
             responsePrintItemLable.Data = PrintItemLableStatic.Data;
@@ -62,13 +62,31 @@ namespace BarCodeClientService.Controllers
             return new ViewAsPdf(responsePrintItemLable)
             {
                 PageSize = Rotativa.AspNetCore.Options.Size.A4,
-                PageMargins = { Left = 5, Bottom = 0, Right = 5, Top = 20 },
-                PageWidth = width,
-                PageHeight = height,
+                PageMargins = { Left = 3, Bottom = 0,Right = 3, Top = 5 },
+                PageWidth = 65,
+                PageHeight = 70
+                //CustomSwitches = "--page-offset 0 --footer-center [page] --footer-font-size 12"
+            };
+        }
+        // Method for Pint Item Label's size 4.5x7
+        public IActionResult PrintItemLablePDFSecon()
+        {
+            ResponsePrintItemLable responsePrintItemLable = new ResponsePrintItemLable();
+            responsePrintItemLable.Data = PrintItemLableStatic.Data;
+            //PrintItemLableStatic.Data = null;
+            //4.5cm=170.0787401575px
+            //7cm=264.5669291339px
+            //6cm=226.7716535433px
+            return new ViewAsPdf(responsePrintItemLable)
+            {
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+                PageMargins = { Left = 0, Bottom = 0 ,Right = 0, Top = 5 },
+                PageWidth = 65,
+                PageHeight = 70,
                 CustomSwitches = "--page-offset 0 --footer-center [page] --footer-font-size 12"
             };
         }
-       
+
         [HttpPost]
         public IActionResult PrintItemLablePDFAction(ResponsePrintItemLable print)
         {

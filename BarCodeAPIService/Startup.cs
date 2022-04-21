@@ -67,6 +67,7 @@ namespace BarCodeAPIService
             services.AddScoped<IInventoryTransferRequestService, InventoryTransferRequestService>();
             services.AddScoped<IInventoryTransferIMService, InventoryTransferIMService>();
             services.AddScoped<IStock_WhsBinService, Stock_WhsBinService>();
+            services.AddScoped<IGetBinLocationService, GetBinLocationService>();
             services.AddScoped<IDeliveryService, DeliveryService>();
             services.AddScoped<IGenerateBinCodeServices, GenerateBinCodeService>();
             #endregion

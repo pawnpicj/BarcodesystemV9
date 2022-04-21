@@ -148,6 +148,12 @@ namespace BarCodeClientService.Controllers
             return Ok(a);
         }
 
+        public IActionResult GetBinLocationWhs(string whscode)
+        {
+            var xwhscode = whscode;
+            var a = API.Read<ResponseGetBinLocation>("api/GetBinLocation/GetBinLocationWhs/" + xwhscode);
+            return Ok(a);
+        }
         //GetWTRLine
         public IActionResult GetWTRLine(string docentry)
         {

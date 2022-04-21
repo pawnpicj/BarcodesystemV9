@@ -64,7 +64,7 @@ namespace BarCodeClientService.Controllers
                 PageSize = Rotativa.AspNetCore.Options.Size.A4,
                 PageMargins = { Left = 3, Bottom = 0,Right = 3, Top = 5 },
                 PageWidth = 65,
-                PageHeight = 70
+                PageHeight = 180000
                 //CustomSwitches = "--page-offset 0 --footer-center [page] --footer-font-size 12"
             };
         }
@@ -80,11 +80,12 @@ namespace BarCodeClientService.Controllers
             return new ViewAsPdf(responsePrintItemLable)
             {
                 PageSize = Rotativa.AspNetCore.Options.Size.A4,
-                PageMargins = { Left = 0, Bottom = 0 ,Right = 0, Top = 5 },
+                PageMargins = { Left = 0, Bottom = 0, Right = 0, Top = 5 },
                 PageWidth = 65,
-                PageHeight = 70,
-                CustomSwitches = "--page-offset 0 --footer-center [page] --footer-font-size 12"
+                PageHeight =180000
+                // CustomSwitches = "--page-offset 0 --footer-center [page] --footer-font-size 12"
             };
+            //return View(responsePrintItemLable);
         }
 
         [HttpPost]
@@ -96,18 +97,19 @@ namespace BarCodeClientService.Controllers
         //Print Bin Label Sticker
         //4cm=151.1811023622px
         //10cm=377.9527559055px
-        public IActionResult PrintBinLabelPDF(int width,int height)
+        public IActionResult PrintBinLabelPDF()
         {
             ResponsePrintBinLabel responsePrintBinLabel = new ResponsePrintBinLabel();
             responsePrintBinLabel.Data = ResponsePrintLabelStatic.Data;
             return new ViewAsPdf(responsePrintBinLabel)
             {
                 PageSize = Rotativa.AspNetCore.Options.Size.A4,
-                PageMargins = { Left = 5, Bottom = 0, Right = 5, Top = 20 },
-                PageWidth = width,
-                PageHeight = height,
+                PageMargins = { Left = 0, Bottom = 0, Right = 0, Top = 20 },
+                PageWidth = 65,
+                PageHeight = 1000000,
                 CustomSwitches = "--page-offset 0 --footer-center [page] --footer-font-size 12"
             };
+           // return View(responsePrintBinLabel);
         }
         [HttpPost]
         public IActionResult PrintBinLabelPDFAction(ResponsePrintBinLabel print)

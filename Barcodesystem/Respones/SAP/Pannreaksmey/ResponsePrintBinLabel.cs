@@ -16,7 +16,7 @@ namespace BarCodeLibrary.Respones.SAP.Pannreaksmey
     }
     public class OBINLabel
     {
-        public string Code { get; set; }
+       // public string Code { get; set; }
        public string WhsCode { get; set; }
        public string BinCode { get; set; }
        public string Descr { get; set; }

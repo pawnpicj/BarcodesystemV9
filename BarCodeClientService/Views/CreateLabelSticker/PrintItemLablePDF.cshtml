@@ -82,18 +82,18 @@
     
     <div class="row">
         <div class="col-12">
-            <table>
+            @*<table>
                 <thead>
                     <tr>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                    <tr>*@
                         @{ int i = 1;}
                         @foreach (var l in Model.Data)
                         {
-                            @if (i == 1)
+                            @*@if (i == 1)
                             {
                                 <div>
                                     <br />
@@ -115,7 +115,7 @@
                                     <br />
                                     <br />
                                 </div>
-                            }
+                            }*@
 
                             @*<td><img src="https://chart.googleapis.com/chart?chf=bg,s,65432100&cht=qr&chs=90x90&chl=@String.Concat(l.ItemCode,l.ItemName)" id="img2"@i></td>*@
                             <div class="container-fluid">
@@ -165,9 +165,9 @@
 
                             i = i + 1;
                         }
-                    </tr>
+                    @*</tr>
                 </tbody>
-            </table>
+            </table>*@
         </div>
        
     </div>

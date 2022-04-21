@@ -383,7 +383,7 @@
     var HeaderLs = [];
     var allbinLInes = [];
     var No = 1;
-    var Qty;
+    var Qty; var check = 0;
     var itemLines = {};
         $('#Add').click(function () {
 
@@ -445,7 +445,7 @@
                     table.rows.add(allitemLInes);
                     table.draw();
                 }
-                
+
                 $('#ItemCode').val("");
                 $('#ItemName').val("");
                 $('#Qty').val("1");
@@ -453,22 +453,21 @@
                 $('#batchSN').val("");
                 $('#expireDate').val("");
                 FDA = "";
-                
+
             }
-            
+
         });
     //Table waitig for Print
-
+    var print = {};
 
     $('#Print').click(function () {
         //var headstr = "<html><head><style>table.table-bordered{border:1px solid black;margin-top:20px;}table.table-bordered > thead > tr > th{border:1px solid black;}table.table-bordered > tbody > tr > td{border:1px solid black;}</style></head><body>";
         //var footstr = "</body>";
         //var item = document.getElementById("body1").innerHTML;
-        //document.body.innerHTML = headstr + item + footstr;
-        console.log(HeaderLs);
-        var print = {};
+        //document.body.innerHTML = headstr + item + footstr;dfdsd
         print.Data = HeaderLs;
-        if ($('#labelSize').val() == '0') {
+        if (HeaderLs.length) {
+            if ($('#labelSize').val() == '0') {
             $.ajax({
                 url: '@Url.Action("PrintItemLablePDFAction", "CreateLabelSticker")',
                 type: "POST",
@@ -494,7 +493,7 @@
                 }
             });
         }
-
+        }
     });
     //Button for Generate Batch/Serial
     $('#btnAuto').click(function () {

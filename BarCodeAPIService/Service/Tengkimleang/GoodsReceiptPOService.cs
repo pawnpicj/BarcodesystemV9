@@ -1,8 +1,11 @@
 ﻿using BarCodeAPIService.Connection;
-using BarCodeLibrary.Request.SAP;
-using BarCodeLibrary.Respones.SAP;
+using BarCodeAPIService.Models;
+using BarCodeLibrary.Contract.RouteProcedure;
+using BarCodeLibrary.Request.SAP.TengKimleang;
+using BarCodeLibrary.Respones.SAP.Tengkimleang;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -37,26 +40,26 @@ namespace BarCodeAPIService.Service
                         oGoodReceiptPO.Lines.UoMEntry = l.UomCode;
                         oGoodReceiptPO.Lines.Add();
                     }
-                        Retval = oGoodReceiptPO.Add();
-                        if (Retval != 0)
+                    Retval = oGoodReceiptPO.Add();
+                    if (Retval != 0)
+                    {
+                        oCompany.GetLastError(out ErrCode, out ErrMsg);
+                        return Task.FromResult(new ResponseGoodReceiptPO
                         {
-                            oCompany.GetLastError(out ErrCode, out ErrMsg);
-                            return Task.FromResult(new ResponseGoodReceiptPO
-                            {
-                                ErrorCode = ErrCode,
-                                ErrorMsg = ErrMsg,
-                                DocEntry = null
-                            });
-                        }
-                        else
+                            ErrorCode = ErrCode,
+                            ErrorMsg = ErrMsg,
+                            DocEntry = null
+                        });
+                    }
+                    else
+                    {
+                        return Task.FromResult(new ResponseGoodReceiptPO
                         {
-                            return Task.FromResult(new ResponseGoodReceiptPO
-                            {
-                                ErrorCode = 0,
-                                ErrorMsg = "",
-                                DocEntry = oCompany.GetNewObjectKey(),
-                            });
-                        }
+                            ErrorCode = 0,
+                            ErrorMsg = "",
+                            DocEntry = oCompany.GetNewObjectKey(),
+                        });
+                    }
 
                 }
                 else
@@ -78,52 +81,109 @@ namespace BarCodeAPIService.Service
             }
         }
 
-        public Task<ResponseOPORGetPO> responseOPORGetPO()
+        public Task<ResponseCustomerGet> responseCustomerGets()
+        {
+            var customerGets = new List<CustomerGet>();
+            DataTable dt = new DataTable();
+            try
+            {
+                LoginOnlyDatabase login = new LoginOnlyDatabase();
+                if (login.lErrCode == 0)
+                {
+                    string Query = $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.CustomerGet}','','','','','')";
+                    login.AD = new System.Data.Odbc.OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        customerGets.Add(new CustomerGet
+                        {
+                            CardCode = row["CardCode"].ToString(),
+                            CardName = row["CardName"].ToString(),
+                            Address = row["Address"].ToString(),
+                            Phone = row["Phone"].ToString()
+                        });
+                    }
+                    return Task.FromResult(new ResponseCustomerGet
+                    {
+                        ErrorCode = 0,
+                        ErrorMessage = "",
+                        Data = customerGets.ToList()
+                    });
+                }
+                else
+                {
+                    return Task.FromResult(new ResponseCustomerGet
+                    {
+                        ErrorCode = login.lErrCode,
+                        ErrorMessage = login.sErrMsg,
+                        Data = null
+                    });
+                }
+            }
+
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseCustomerGet
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMessage = ex.Message,
+                    Data = null
+                });
+            }
+        }
+
+        public Task<ResponseOPORGetPO> responseOPORGetPO(string cardName)
         {
             var oPORs = new List<OPOR>();
             var pOR1s = new List<POR1>();
-            SAPbobsCOM.Company oCompany;
+            DataTable dt = new DataTable();
+            DataTable dtLine = new DataTable();
             try
             {
-                Login login = new();
-                if (login.LErrCode == 0)
+                LoginOnlyDatabase login = new LoginOnlyDatabase();
+                if (login.lErrCode == 0)
                 {
-                    oCompany = login.Company;
-                    SAPbobsCOM.Recordset? oRS = null;
-                    SAPbobsCOM.Recordset? oRSLine = null;
-                    string sqlStr = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_TENGKIMLEANG('OPDN','','','','','')"; ;
-                    oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-                    oRSLine = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-                    oRS.DoQuery(sqlStr);
-                    while (!oRS.EoF)
+                    string Query = $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetPO}','{cardName}','','','','')";
+                    login.AD = new System.Data.Odbc.OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
                     {
-                        //oRSLine.DoQuery("EXEC USP_Get_Transcation_Data 'PDN1','"+ oRS.Fields.Item(0).Value+"','','','',''");
-                        oRSLine.DoQuery("CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_TENGKIMLEANG('POR1','" + oRS.Fields.Item(0).Value + "','','','','')");
+                        dtLine = new DataTable();
+                        Query = $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetPOLine}','{row["DocENtry"]}','','','','')";
+                        login.AD = new System.Data.Odbc.OdbcDataAdapter(Query, login.CN);
+                        login.AD.Fill(dtLine);
                         pOR1s = new List<POR1>();
-                        while (!oRSLine.EoF)
+                        foreach (DataRow drLine in dtLine.Rows)
                         {
                             pOR1s.Add(new POR1
                             {
-                                ItemCode = oRSLine.Fields.Item(0).Value.ToString(),
-                                Description = oRSLine.Fields.Item(1).Value.ToString(),
-                                Quatity = Convert.ToInt32(oRSLine.Fields.Item(2).Value),
-                                Price = Convert.ToDouble(oRSLine.Fields.Item(3).Value),
-                                DiscPrcnt = Convert.ToDouble(oRSLine.Fields.Item(4).Value),
-                                VatGroup = oRSLine.Fields.Item(5).Value.ToString(),
-                                LineTotal = Convert.ToDouble(oRSLine.Fields.Item(6).Value),
-                                WhsCode = oRSLine.Fields.Item(6).Value.ToString(),
+                                ItemCode = drLine["ItemCode"].ToString(),
+                                Description = drLine["Description"].ToString(),
+                                Quatity = Convert.ToDouble(drLine["Quantity"].ToString()),
+                                Price = Convert.ToDouble(drLine["Price"].ToString()),
+                                DiscPrcnt = Convert.ToDouble(drLine["DiscPrcnt"].ToString()),
+                                VatGroup = drLine["LineTotal"].ToString(),
+                                WhsCode = drLine["WhsCode"].ToString(),
+                                LineTotal = Convert.ToDouble(drLine["LineTotal"].ToString()),
+                                ManageItem = drLine["ManageItem"].ToString()
                             });
-                            oRSLine.MoveNext();
                         }
                         oPORs.Add(new OPOR
                         {
-                            CardCode = oRS.Fields.Item(1).Value.ToString(),
-                            CardName = oRS.Fields.Item(2).Value.ToString(),
-                            CntctCode = Convert.ToInt32(oRS.Fields.Item(3).Value.ToString()),
-                            NumAtCard = oRS.Fields.Item(4).Value.ToString(),
+                            DocEntry = Convert.ToInt32(row["DocENtry"].ToString()),
+                            CardCode = row["CardCode"].ToString(),
+                            CardName = row["CardName"].ToString(),
+                            CntctCode = Convert.ToInt32(row["CntctCode"].ToString()),
+                            NumAtCard = row["NumAtCard"].ToString(),
+                            DocNum = Convert.ToInt32(row["DocNum"].ToString()),
+                            DocStatus = row["DocStatus"].ToString(),
+                            DocDate = Convert.ToDateTime(row["DocDate"]).ToShortDateString(),
+                            DocDueDate = Convert.ToDateTime(row["DocDueDate"]).ToShortDateString(),
+                            TaxDate = Convert.ToDateTime(row["TaxDate"]).ToShortDateString(),
+                            DocTotal = Convert.ToDouble(row["DocTotal"]),
+                            DiscPrcnt = Convert.ToDouble(row["DiscPrcnt"]),
                             Line = pOR1s.ToList()
                         });
-                        oRS.MoveNext();
                     }
                     return Task.FromResult(new ResponseOPORGetPO
                     {
@@ -136,12 +196,13 @@ namespace BarCodeAPIService.Service
                 {
                     return Task.FromResult(new ResponseOPORGetPO
                     {
-                        ErrorCode = login.LErrCode,
-                        ErrorMessage = login.SErrMsg,
+                        ErrorCode = login.lErrCode,
+                        ErrorMessage = login.sErrMsg,
                         Data = null
                     });
                 }
             }
+
             catch (Exception ex)
             {
                 return Task.FromResult(new ResponseOPORGetPO

@@ -1,5 +1,5 @@
-﻿using BarCodeLibrary.Request.SAP;
-using BarCodeLibrary.Respones.SAP;
+﻿using BarCodeLibrary.Request.SAP.TengKimleang;
+using BarCodeLibrary.Respones.SAP.Tengkimleang;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,8 @@ namespace BarCodeAPIService.Service
 {
     public interface IGoodsReceiptPOService
     {
-        Task<ResponseOPORGetPO> responseOPORGetPO();
+        Task<ResponseOPORGetPO> responseOPORGetPO(string cardName);
         Task<ResponseGoodReceiptPO> PostGoodReceiptPO(SendGoodReceiptPO sendGoodReceiptPO);
+        Task<ResponseCustomerGet> responseCustomerGets();
     }
 }

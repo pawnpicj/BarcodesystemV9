@@ -1,10 +1,4 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-
-@{
+﻿@{
     ViewData["Title"] = "O2O";
     DateTime dt = DateTime.Now;
     ViewData["Date"] = dt.ToShortDateString();
@@ -13,7 +7,6 @@
 <link href="~/css/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="~/css/DataTable/rowReorder.dataTables.min.css" rel="stylesheet" />
 @*<link href="~/css/DataTable/responsive.dataTables.min.css" rel="stylesheet" />*@
-
 <script src="~/css/DataTable/jquery-3.3.1.js"></script>
 <script src="~/css/DataTable/jquery.dataTables.min.js"></script>
 <script src="~/css/DataTable/dataTables.rowReorder.min.js"></script>
@@ -91,228 +84,2001 @@
 
     <div class="row" style="margin-left:5px;margin-top:5px;color:#696969;">
         <h5 style="margin-top:5px;color:#696969;">
-            <a asp-action="DashboardPurchasingAP" asp-controller="Dashboard" onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fas fa-home"></i> Dashboard</a>
+            <a asp-action="DashboardAR" asp-controller="Dashboard" onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fas fa-home"></i> Dashboard</a>
             <span>
-                <a asp-action="ShowAP" asp-controller="APIvoice" onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fa fa-caret-right align-right"></i> Goods receipt PO </a>
-                <i class="fa fa-caret-right align-right"></i> Create Goods receipt PO
+                <a asp-action="ShowAR" asp-controller="ARInvoice" onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fa fa-caret-right align-right"></i> O2O</a>
+                <i class="fa fa-caret-right align-right"></i> Create O2O
             </span>
         </h5>
     </div>
     <hr />
-    <div class="row" id="DLN">
-        <div class="col-sm-6">
-            Customer code :
-            <div class="input-group">
-                <input type="text" class="form-control" placeholder="Search Vendor" id="VendorCode">
-                <button type="button" class="btn btn-primary" id="findVendor">
-                    <i class="fas fa-search"></i>
-                </button>
-            </div>
-            Vendor name :
-            <div class="input-group">
-                <input type="text" class="form-control" id="VendorName" readonly>
-            </div>
-            Doc date :
-            <div class="input-group">
-                <input type="date" class="form-control" id="DocDate">
-            </div>
-        </div>
-        <div class="col-sm-6">
-            <div>
-                Ref :
-                <div class="input-group">
-                    <input type="text" class="form-control" id="Ref">
+    <div style="padding: 10px; color: #696969;">
+        <ul class="nav nav-tabs Tap-PA" id="mytab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active color_tap" id="cus-tab" data-toggle="tab" href="#cus" role="tab" aria-controls="Customer" aria-selected="true">Customer</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link color_tap" id="item-tab" data-toggle="tab" href="#item" role="tab" aria-controls="Items" aria-selected="false">Items</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="cus" role="tabpanel" aria-labelledby="cus-tab" style="margin-top: 10px">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div>
+                            Vendor Code :
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <button class="input-group-text" id="CcusID"><i class="fa fa-check"></i></button>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Search Code" id="CusID" value="" readonly>
+                                <div class="input-group-append">
+                                    <button class="input-group-text btnModelsCus" data-toggle="modal" data-target="#ModalCusCode"><i class="fa fa-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            Branch Name :
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="CusName" value="" readonly>
+                            </div>
+                        </div>
+                        Order Number :
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="CusRef">
+                        </div>
+                        Remarks :
+                        <div class="input-group">
+                            <textarea class="form-control" id="Remark" rows="1"></textarea>
+                        </div>
+                        Payment O2O :
+                        <div class="input-group">
+                            <select id="paymentO2O" class="form-control">
+                                <option value="Y">Yes</option>
+                                <option value="N" selected>No</option>
+                            </select>
+                        </div>
+                        Customer Tax ID<span style="color:red;">*</span> :
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="TaxId">
+                        </div>
+                        Customer Type<span style="color:red;">*</span> :
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="CusType">
+                        </div>
+                        Customer Name :
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="CusRemark">
+                        </div>
+                        Address<span style="color:red;">*</span> :
+                        <div class="input-group">
+                            <textarea class="form-control" id="Address" rows="3"></textarea>
+                        </div>
+                        Tel :
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="CusTel">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div>
+                            Series :
+                            <div class="input-group">
+                                <select id="SeriesID" class="form-control" disabled>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            Posting Date :
+                            <div class="input-group">
+                                <input type="date" class="form-control" id="DocDate">
+                            </div>
+                        </div>
+                        <div>
+                            Document Date :
+                            <div class="input-group">
+                                <input type="date" class="form-control" id="DocumentDate">
+                            </div>
+                        </div>
+                        <div>
+                            BP Currency :
+                            <div class="input-group">
+                                <select class="form-control" id="BPDocCurr"></select>
+                            </div>
+                        </div>
+                        Sales Employees :
+                        <div class="input-group">
+                            <select class="form-control" id="SaleEmp"></select>
+                        </div>
+
+                    </div>
                 </div>
             </div>
 
-            <div>
-                Remark :
-                <div class="input-group">
-                    <input type="number" class="form-control" id="Remark" onchange="LineDiscountPer()">
+            <div class="tab-pane fade" id="item" role="tabpanel" aria-labelledby="item-tab" style="margin-top: 10px">
+                <div class="row">
+                    <div class="col-sm-6">
+                        Item Code :
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <button class="input-group-text" id="CItemCode"><i class="fa fa-check"></i></button>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Search Code" id="ItemCode">
+                            <div class="input-group-append">
+                                <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalItem"><i class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+                        Item Descrition :
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="ItemDescr" readonly>
+                        </div>
+                        Quantity :
+                        <div class="input-group">
+                            <input type="number" class="form-control" value="1" id="Qty">
+                        </div>
+
+                        <div>
+                            Gross Price :
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <input type="button" class="input-group-text" id="DocCurr" />
+                                </div>
+                                <input type="number" class="form-control" id="Price" value="0">
+                            </div>
+                        </div>
+
+                        <div>
+                            Discount(%) :
+                            <div class="input-group">
+                                <input type="number" class="form-control" value="0" id="Discount" onchange="LineDiscountPer()">
+                            </div>
+                            Discount Amount :
+                            <div class="input-group">
+                                <input type="number" class="form-control" value="0" id="DiscountAmt" onchange="LinDiscountAMT()">
+                            </div>
+                        </div>
+                        Uom Name :
+                        <div class="input-group">
+                            <select id="UomID" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div>
+                            VAT Code :
+                            <div class="input-group">
+                                <select id="TaxCode" class="form-control">
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            OcrCode :
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <button class="input-group-text" id="COcrCode"><i class="fa fa-check"></i></button>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Search Code" value="" id="OcrCode">
+                                @*<input type="text" class="form-control" placeholder="Search Code" value="C6" id="OcrCode">*@
+                                <div class="input-group-append">
+                                    <button class="input-group-text btnModelsOcrCode" data-toggle="modal" data-target="#ModalOcrCode"><i class="fa fa-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            OcrCode2 :
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <button class="input-group-text" id="COcrCode2"><i class="fa fa-check"></i></button>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Search Code" value="" id="OcrCode2">
+                                <div class="input-group-append">
+                                    <button class="input-group-text btnModelsOcrCode2" data-toggle="modal" data-target="#ModalOcrCode2"><i class="fa fa-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            OcrCode3 :
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <button class="input-group-text" id="COcrCode3"><i class="fa fa-check"></i></button>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Search Code" id="OcrCode3" value="">
+                                <div class="input-group-append">
+                                    <button class="input-group-text btnModelsOcrCode3" data-toggle="modal" data-target="#ModalOcrCode3"><i class="fa fa-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            OcrCode4 :
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <button class="input-group-text" id="COcrCode4"><i class="fa fa-check"></i></button>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Search Code" id="OcrCode4" value="">
+                                <div class="input-group-append">
+                                    <button class="input-group-text btnModelsOcrCode4" data-toggle="modal" data-target="#ModalOcrCode4"><i class="fa fa-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        Inventory Uom :
+                        <div class="input-group">
+                            <select id="InventoryID" class="form-control">
+                            </select>
+                        </div>
+                        <div>
+                            Warehouse :
+                            <div class="input-group">
+                                <select id="whscode" class="form-control">
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            Total :
+                            <div class="input-group">
+                                <input type="number" class="form-control" value="0" id="totalItem" disabled>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                PO Number
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="PO Number" id="PONumber" readonly>
-                    <button type="button" class="btn btn-primary" id="SelectPO">
-                        Select PO
+                <div class="row" style=" padding: 15px; ">
+                    <div class="nav navbar-nav ml-auto">
+                        <button class="btn btn-info" id="AddItem" style="background:#f0eff1;color:#696969">Add Item</button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="TbAR" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <thead>
+                                    <tr>
+                                        <th>ItemCode</th>
+                                        <th>UnitPrice</th>
+                                        <th>Discount(%)</th>
+                                        <th>Dis.Amount</th>
+                                        <th>Qty</th>
+                                        <th>Price Before Discount</th>
+                                        <th>Line Total</th>
+                                        <th>Uom Name</th>
+                                        <th>TaxCode</th>
+                                        @*<th>Tax Amount</th>*@
+                                        <th>Warehouse</th>
+                                        <th>Command</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top:5px;">
+                    <div class="col-sm-4">
+                    </div>
+                    <div class="col-sm-4">
+                        Discount % :
+                        <input type="number" class="form-control" value="0" id="DisPer" onchange="DisPer()" />
+                        Discount Amount :
+                        <input type="number" class="form-control" value="0" id="DisAmt" onchange="DisAmt()" />
+                    </div>
+                    <div class="col-sm-4">
+                        Before Discount :
+                        <input class="form-control" readonly id="BTax" />
+                        Discount By Items :
+                        <input class="form-control" readonly id="DisA" />
+                        @*Tax Amount :*@
+                        <input class="form-control d-none" readonly id="Tax" />
+                        <input class="d-none" id="TaxBeforeDis" />
+                        Total Amount :
+                        <input class="form-control" readonly id="Total" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="row" style="padding: 15px;margin-top:-20px;margin-bottom:-20px;">
+            <div class="nav navbar-nav ml-auto">
+                <div class="btn-group">
+                    @*<button class="btn btn-info previous" style="background:#f0eff1;color:#696969">Previous</button>
+                        <button class="btn btn-info next" style="background: #f0eff1;color: #696969;">Next</button>*@
+                    <button class="btn btn-info" id="CopyFromPO" style="background:#f0eff1;color:#696969;"
+                            data-toggle="modal" data-target="#ModalCopyFromPO" disabled>
+                        Copy From PO
                     </button>
-                </div>
-            </div>
-        </div>  
-    </div>
-</div>
-
-
-<div id="ListPO">
-    <div class="row">
-        <div class="col-sm-12" style=" padding: 3px; ">
-            <div class="input-group">
-                <input type="text" class="form-control" placeholder="List PO" style="color:#f0eff1">
-            </div>
-            <div class="row" style=" padding: 3px; ">
-            </div>
-            <div class="table-responsive">
-                <table id="TblistPO" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
-                    <thead>
-                        <tr>
-                            <th>PO number </th>
-                            <th>Vendor name </th>
-                            <th>Posting date </th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-        </div>
-        <div class="row" style=" padding: 10px; ">
-            <div class="nav navbar-nav ml-auto" style=" padding: 5px; ">
-                <button class="btn btn-info" id="ListPoChoose" style="background:#f0eff1;color:#696969">Choose</button>
-            </div>
-            <div class="nav navbar-nav ml-auto" style=" padding: 5px; ">
-                <button class="btn btn-info" id="ListPOClose" style="background:#f0eff1;color:#696969">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="POLine">
-    <div class="row">
-        <div class="col-sm-12" style=" padding: 3px; ">
-            <div class="input-group">
-                <input type="text" class="form-control" placeholder="PO Line" style="color:#f0eff1">
-            </div>
-            <div class="row" style=" padding: 3px; ">
-            </div>
-            <div class="table-responsive">
-                <table id="TbPOLine" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
-                    <thead>
-                        <tr>
-                            <th>Item Code</th>
-                            <th>Item name</th>
-                            <th>Input SN&BT</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-        </div>
-        <div class="row" style=" padding: 10px; ">
-            <div class="input-group">                
-                <div class="nav navbar-nav ml-auto" style=" padding: 5px; ">
-                    <button class="btn btn-info" id="SOlineClose" style="background:#f0eff1;color:#696969">Close</button>
+                    <button class="btn btn-info" id="Save" style="background:#f0eff1;color:#696969;margin-left:5px;">Add New</button>
                 </div>
             </div>
         </div>
     </div>
+    <hr />
 </div>
-<div id="DLNline">
-    <div class="row">
-        <div class="col-sm-6">
-            Barcode :
-            <div class="input-group">
-                <input type="text" class="form-control" id="DLN_CustomerCode">
-                <button type="button" class="btn btn-primary" id="DLN_findCustomer">
-                    <i>Generate</i>
-                </button>
-            </div>
-            Item Code :
-            <div class="input-group">
-                <input type="text" class="form-control" id="DLN_CustomerName">
-            </div>
-            Item name :
-            <div class="input-group">
-                <input type="text" class="form-control" id="DLN_DocDate">
-            </div>
-            Bin-location
-            <div class="input-group">
-                <input type="text" class="form-control" id="DLN_DocDate">
-            </div>
-            Warehouse
-            <div class="input-group">
-                <input type="text" class="form-control" id="DLN_DocDate">
-            </div>
-        </div>
-        <div class="col-sm-6">
-            <div>
-                Batch- SN :
-                <div class="input-group">
-                    <input type="text" class="form-control" id="DLN_Ref">
-                    <button type="button" class="btn btn-primary" id="DLN_findCustomer">
-                        <i>Generate</i>
-                    </button>
-                </div>
-            </div>
-            <div>
-                QTY :
-                <div class="input-group">
-                    <input type="number" class="form-control" id="DLN_Remark" onchange="LineDiscountPer()">
-                </div>
-                Max QTY
-                <div class="input-group">
-                    <input type="number" class="form-control" id="DocumentsDraft" onchange="LinDiscountAMT()">
-                </div>
-                EXP
-                <div class="input-group">
-                    <input type="number" class="form-control" id="DocumentsDraft" onchange="LinDiscountAMT()">
-                </div>
-                Waranty
-                <div class="input-group">
-                    <input type="number" class="form-control" id="DocumentsDraft" onchange="LinDiscountAMT()">
-                </div>
-            </div>
-        </div>
-        <div class="row" style=" padding: 10px; ">
-            <div class="input-group">
-                <div class="nav navbar-nav ml-auto" style=" padding: 5px; ">
-                    <button class="btn btn-info" id="SOlineClose" style="background:#f0eff1;color:#696969">Add</button>
-                </div>
-                <div class="nav navbar-nav ml-auto" style=" padding: 5px; ">
-                    <button class="btn btn-info" id="DLN_Save" style="background:#f0eff1;color:#696969">Cancel</button>
-                </div>
-            </div>
-        </div>
+</div>
 
-        <div class="col-sm-12" style=" padding: 15px; ">
-            <div class="table-responsive">
-                <table id="DNL_Line" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
-                    <thead>
-                        <tr>
-                            <th>Item Code</th>
-                            <th>Item name</th>
-                            <th>Barcode</th>
-                            <th>QTY</th>
-                            <th>Max QTY</th>
-                            <th>Bin-location</th>
-                            <th>Warehouse</th>
-                            <th>Batch</th>
-                            <th>EXP</th>
-                            <th>Waranty</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                </table>
+@*Block Batch and Serails*@
+<div class="modal fade" id="ModalBatch" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+            <div class="modal-header">
+                <b>Batch Number</b>
+            </div>
+            <div class="modal-body">
+                <div class="row" style="margin-bottom:5px">
+                    <div class="col-sm-6">
+                        Totals Needs :
+                        <input type="number" class="form-control" readonly id="TotalsNeeds" />
+                    </div>
+                    <div class="col-sm-6">
+                        Totals Selected :
+                        <input type="number" class="form-control" readonly id="TotalsSelected" />
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="tbBatch" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <thead>
+                                    <tr>
+                                        <th>Batch Number</th>
+                                        <th>Quantity</th>
+                                        <th>Available Quantity</th>
+                                        <th>Expired Date</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="padding:10px;margin-left:1px">
+                    <strong>Batch Selected</strong>
+                </div>
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="tbBatchSelected" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <thead>
+                                    <tr>
+                                        <th>Batch Number</th>
+                                        <th>Quantity</th>
+                                        <th>Command</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-info" id="BatchOk" style="background:#f0eff1;color:#696969;">OK</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;" id="CloseBatch">Close</button>
             </div>
         </div>
-        <div class="row" style=" padding: 10px; ">
-            <div class="nav navbar-nav ml-auto" style=" padding: 5px; ">
-                <button class="btn btn-info" id="DLN_Add" style="background:#f0eff1;color:#696969">Save</button>
-            </div>
-            <div class="nav navbar-nav ml-auto" style=" padding: 5px; ">
-                <button class="btn btn-info" id="DLN_Save" style="background:#f0eff1;color:#696969">Close</button>
+    </div>
+</div>
+@*Block Models*@
+<div class="modal modal-backdrop" id="Modalloder" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+            <div class="modal-body">
+                <div class="text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
+<div class="modal" id="ModalSuccess" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+            <div class="modal-header">
+                <b>Information</b>
+            </div>
+            <div class="modal-body">
+                <p id="ErrMsg"> - </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-sm btn-success" data-dismiss="modal" style="color:#696969;">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
 
+@*Create Models*@
+@*1. Search Customer Code*@
+<div class="modal fade" id="ModalCusCode">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+            <div class="modal-header">
+                <b>List of Customer</b>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="TbCusCode" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <thead>
+                                    <tr>
+                                        <th>Customer Code</th>
+                                        <th>Cusetomer Name</th>
+                                        <th>Phone</th>
+                                        <th>Address</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseCus" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
+@*2. Search ItemCode*@
+<div class="modal fade" id="ModalItem">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+            <div class="modal-header">
+                <b>List of Items</b>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="TbItem" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <thead>
+                                    <tr>
+                                        <th>Item Code</th>
+                                        <th>Item Descrition</th>
+                                        <th>Gross Price</th>
+                                        <th>In Stock</th>
+                                        <th>BarCode</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseItem" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*3. Search OcrCode*@
+<div class="modal fade" id="ModalOcrCode">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+            <div class="modal-header">
+                <b>List of OcrCode</b>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="TbOcrCode" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <thead>
+                                    <tr>
+                                        <th>PrcCode</th>
+                                        <th>PrcName</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseOcrCode" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*4. Search OcrCode2*@
+<div class="modal fade" id="ModalOcrCode2">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+            <div class="modal-header">
+                <b>List of OcrCode2</b>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="TbOcrCode2" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <thead>
+                                    <tr>
+                                        <th>PrcCode</th>
+                                        <th>PrcName</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseOcrCode2" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*5. Search OcrCode3*@
+<div class="modal fade" id="ModalOcrCode3">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+            <div class="modal-header">
+                <b>List of OcrCode3</b>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="TbOcrCode3" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <thead>
+                                    <tr>
+                                        <th>PrcCode</th>
+                                        <th>PrcName</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseOcrCode3" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*6. Search OcrCode4*@
+<div class="modal fade" id="ModalOcrCode4">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+            <div class="modal-header">
+                <b>List of OcrCode4</b>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="TbOcrCode4" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <thead>
+                                    <tr>
+                                        <th>PrcCode</th>
+                                        <th>PrcName</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseOcrCode4" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*DT Payment*@
+<div class="modal fade" id="ModalDT" data-backdrop="static">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+            <div class="modal-header">
+                <b>A/R DownPayment</b>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="TbDT" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <thead>
+                                    <tr>
+                                        <th>Receipt No(SAP)</th>
+                                        <th>Web Reference</th>
+                                        <th>Customer Name</th>
+                                        <th>Create By</th>
+                                        <th>Document Date</th>
+                                        <th>DocTotal</th>
+                                        <th>Available Amount</th>
+                                        <th>Amount To Draw</th>
+                                        <th>Tax Amount To Draw</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseDT" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*Copy From PO*@
+<div class="modal fade" id="ModalCopyFromPO" data-backdrop="static">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+            <div class="modal-header">
+                <b>Purchase Order</b>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="TbCopyFromPO" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <thead>
+                                    <tr>
+                                        <th>Receipt No(SAP)</th>
+                                        <th>Vendor Name</th>
+                                        <th>Document Date</th>
+                                        <th>DocTotal</th>
+                                        <th>Document Status</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" id="ChoosePO" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script src="~/js/Array.js"></script>
 <script type="text/javascript">
-    var LDT = [];
+
+    var LinesAR = [];
+    var i = 0;
+    var BatchSelected = [];
+    var TotalsNeeds = 0;
+    var TotalsSelected = 0;
+    var TmpLine = {}
+    var BatchUpdate = 0;
+    var Cus = 0, Itm = 0, Ocr = 0, Ocr2 = 0, Ocr3 = 0, Ocr4 = 0
+    @*var atest1=@HttpContextAccessor.HttpContext.Session.GetString("dbranch");
+        console.log(atest1);*@
+    $('.next').click(function () {
+        $('.nav-tabs > .nav-item > .active').parent().next('li').find('a').trigger('click');
+        $('.next').prop('hidden', true);
+        $('.previous').prop('hidden', false);
+        //$('#Save').prop('hidden', false);
+    });
+    $('.previous').click(function () {
+        $('.nav-tabs > .nav-item > .active').parent().prev('li').find('a').trigger('click');
+        $('.previous').prop('hidden', true);
+        $('.next').prop('hidden', false);
+        //$('#Save').prop('hidden', true);
+    });
+    if ($("#cus-tab").hasClass('active') == true) {
+        $('.previous').prop('hidden', true);
+    }
+    if ($("#item-tab").hasClass('active') == true) {
+        $('.next').prop('hidden', true);
+    }
+    $('#cus-tab').click(function () {
+        console.log("hello");
+        $('.previous').prop('hidden', true);
+        $('.next').prop('hidden', false);
+    });
+    $('#item-tab').click(function () {
+        $('.next').prop('hidden', true);
+        $('.previous').prop('hidden', false);
+    });
+    //$('#cus-tab').click(function () {
+    //    $('#Save').prop('hidden', true);
+    //});
+    //$('#item-tab').click(function () {
+    //    $('#Save').prop('hidden', false);
+    //});
+    // Control By Batch
+
+        $('#tbBatch').DataTable({
+            responsive: true,
+            bLengthChange: false,
+            pageLength:5,
+            data: lBatch,
+            columns: [
+                { data: "BatchNum" },
+                {
+                    render: function (data, type, full, meta) { return '<input type="number" class="form-control input-sm" onchange="QtyBatchChange('+meta.row+')" id="tbBatchQty'+meta.row+'" />'; }
+                },
+                { data: "Quantity" },
+                { data: "ExpirationDate" }
+            ],
+            rowCallback: function (row, data, index) {
+               //$('td', row).css('background-color', '#ffffff');
+               //$('td', row).css('color', '#717171');
+            }
+        });
+        $('#tbBatchSelected').DataTable({
+            responsive: true,
+            bLengthChange: false,
+            bFilter: false,
+            data: BatchSelected,
+            columns: [
+                { data: "BatchNum" },
+                { data: "Quantity" },
+                {
+                    render: function (data, type, full, meta) { return '<button class="btn-sm btn-danger" onClick="removebatch('+meta.row+')"><i class="fas fa-trash-alt"></i></button>'; }, autoWidth:true
+                }
+            ],
+            rowCallback: function (row, data, index) {
+                //$('td', row).css('background-color', '#ffffff');
+                //$('td', row).css('color', '#717171');
+            }
+        });
+
+    function LoadAR() {
+        $('#TbAR').dataTable({
+            bLengthChange: false,
+            bFilter: false,
+            bInfo: false,
+            bPaginate: false,
+            data:LinesAR,
+            columns:
+                [
+                    { data:"ItemCode", autoWidth: true },
+                    {
+                        data:"UnitPrice", autoWidth: true
+                        //render: function (data, type, full, meta) { return '<input type="number" class="clsinput" style="padding:0px; position:absolute;width:100px;border:none;" onchange="PriceChange(' + meta.row + ')" id="tbPrice' + meta.row + '" value="' + full.UnitPrice + '">'; }, autoWidth: true
+                    },
+                    {
+                        data:"Discount", autoWidth: true
+                        //render: function (data, type, full, meta) { return '<input type="number" class="clsinput" style="padding:0px; position:absolute;width:100px;border:none;" onchange="DisChange('+meta.row+')" value="'+full.Discount+'" id="tbDis'+meta.row+'" >'; }, autoWidth: true
+                    },
+                    {
+                        data:"DiscountAmount", autoWidth: true
+                        //render: function (data, type, full, meta) { return '<input type="number" class="clsinput" style="padding:0px; position:absolute;width:100px;border:none;" onchange="DisamtChange('+meta.row+')" value="'+full.DiscountAmount+'" id="tbDisamt'+meta.row+'" >'; }, autoWidth: true
+                    },
+                    {
+                        render: function (data, type, full, meta) { return '<input type="number" class="clsinput" style="padding:0px; position:absolute;width:40px;border:none;" onchange="QtyChange(' + meta.row + ')" id="tbQty' + meta.row + '" value="' + full.Quantity + '" readonly=true; >'; }, autoWidth: true
+                    },
+                    { data: "PriceBeforeDis", autoWidth: true },
+                    { data:"LineTotal", autoWidth: true },
+                    { data:"UomName", autoWidth: true },
+                    { data:"TaxCode", autoWidth: true },
+                    //{ data: "TaxAmount", autoWidth: true },
+                    { data: "Whs", autoWidth: true },
+                    //{ data:"OcrCode", autoWidth: true },
+                    //{ data:"OcrCode2", autoWidth: true },
+                    //{ data:"OcrCode3", autoWidth: true },
+                    //{ data:"OcrCode4", autoWidth: true },
+                    {
+                        render: function (data, type, full, meta) { return '<button class="btn-sm btn-danger" style="margin-left: 40%;" onClick="Remove('+meta.row+')"><i class="fas fa-trash-alt"></i></button>'; }
+                    }
+                ],
+                rowCallback: function (row, data, index) {
+                    //$('td', row).css('background-color', '#ffffff');
+                    //$('td', row).css('color', '#717171');
+                }
+        });
+    }
+    LoadAR()
+    var lBatch = []
+    var tbBatch = $('#tbBatch').DataTable();
+    var tbSelectedBatch=$('#tbBatchSelected').DataTable();
+    var table = $('#TbAR').DataTable();
+    $('#AddItem').click(function () {
+        var Items=$('#ItemCode').val()
+        if (Itm == 1) {
+            if ($('#Price').val() > 0) {
+                $.ajax({
+                url: '@Url.Action("CheckBatch", "Master")',
+                type: "GET",
+                data: { ItemCode: Items },
+                dataType: "JSON",
+                beforeSend: function () {
+                    $('#Modalloder').modal('show');
+                },
+                success: function (data) {
+                    $('#Modalloder').modal('hide');
+                    if (data == 1) {
+                        $.ajax({
+                            url: '@Url.Action("GetBatch", "Master")',
+                            type: "GET",
+                            data: { ItemCode: Items },
+                            dataType: "JSON",
+                            success: function (Batch) {
+                                for (var j = 0; j < Batch.length; j++) {
+                                    var batch = {}
+                                    batch.BatchNum = Batch[j].batchNum
+                                    batch.Quantity = Batch[j].quantity
+                                    batch.ExpirationDate = Batch[j].expirationDate
+                                    lBatch.push(batch)
+                                }
+
+                                tbBatch.clear()
+                                tbBatch.rows.add(lBatch)
+                                tbBatch.draw()
+
+                                var YN = $("#InventoryID option:selected").text().substr(0, $("#InventoryID option:selected").text().indexOf("-"));
+                                if (YN == "YES") {
+                                    TotalsNeeds= Number($('#Qty').val());
+                                } else {
+                                    if ($("#UomID option:selected").text().substr(0, $("#UomID option:selected").text().indexOf("-")) == 0) {
+                                        TotalsNeeds = Number($('#Qty').val()) * Number($('#InventoryID').val());
+                                    } else {
+                                        TotalsNeeds = Number($('#Qty').val()) * Number($('#UomID').val());
+                                    }
+                                }
+                                $("#ModalBatch").modal({ backdrop: "static" });
+                                $('#TotalsNeeds').val(TotalsNeeds);
+                                $('#TotalsSelected').val(0);
+                                $('#ModalBatch').modal('show');
+                            }
+                        });
+                    } else {
+
+                        var Line = {};
+                        Line.ID = i;
+                        Line.Instock = Instock;
+                        Line.ItemCode = $("#ItemCode").val();
+                        Line.Quantity = $("#Qty").val();
+                        Line.UnitPrice = $("#Price").val()
+                        //Line.PriceAfter = Math.round(Math.round((Number(Line.UnitPrice) - (Number(Line.UnitPrice)*Number($("#Discount").val())/100))*1000)/10)/100
+                        Line.PriceBeforeDis = $('#Qty').val() * $('#Price').val();
+                        //Line.LineTotal = Math.round(Math.round((Number(Line.Quantity) * Number(Line.PriceAfter)) * 1000) / 10) / 100
+                        Line.LineTotal = $('#totalItem').val();
+                        Line.UnitPrice1 = Math.round(Math.round((Number($("#Price").val()) / (1 + (Number($("#TaxCode").val()) / 100))) * 1000) / 10) / 100;
+                        Line.Discount = $("#Discount").val();
+                        //Line.DiscountAmount = Math.round(Math.round(((Number($("#Discount").val()) / 100) * (Number($("#Qty").val()) * Line.UnitPrice)) * 1000) / 10) / 100
+                        Line.DiscountAmount = $("#DiscountAmt").val();
+                        Line.UomEntry = $("#UomID option:selected").text().substr(0, $("#UomID option:selected").text().indexOf("-"));
+                        Line.UomName = $("#UomID option:selected").text().substr(Number($("#UomID option:selected").text().indexOf("-")) + 1, 10000);
+                        Line.TaxCode = $("#TaxCode option:selected").text().substr(0, $("#TaxCode option:selected").text().indexOf("-"));
+                        Line.TaxAmount = Math.round(Math.round(((Number($("#TaxCode").val()) / 100) * ((Number($("#Qty").val()) * Line.UnitPrice1) - Number(Line.DiscountAmount))) * 1000) / 10) / 100
+                        Line.TaxRate = Math.round(Math.round((Number($("#TaxCode").val()) / 100) * 1000) / 10) / 100
+                        Line.InventryUom = $("#InventoryID option:selected").text().substr(0, $("#InventoryID option:selected").text().indexOf("-"));
+                        Line.Whs = $("#whscode").val()
+
+                        Line.OcrCode = $("#OcrCode").val();
+                        Line.OcrCode2 = $("#OcrCode2").val();
+                        Line.OcrCode3 = $("#OcrCode3").val();
+                        Line.OcrCode4 = $("#OcrCode4").val();
+                        //if (Ocr == 1) {
+
+                        //} else { Line.OcrCode = "" }
+                        //if (Ocr2 == 1) {
+
+                        //} else { Line.OcrCode2 = "" }
+                        //if (Ocr3 == 1) {
+
+                        //} else { Line.OcrCode3 = "" }
+                        //if (Ocr4 == 1) {
+
+                        //} else { Line.OcrCode4 = "" }
+                        LinesAR.push(Line);
+                        Recalculate(LinesAR);
+                        table.clear();
+                        table.rows.add(LinesAR);
+                        table.draw();
+                        ClearLine()
+                        i += 1;
+                    }
+                }
+                });
+            } else {
+                alert('Cannot Add Item Without Price');
+            }
+        }
+        else {
+            alert("Please choose Item")
+        }
+
+    });
+
+    $('#Save').click(function () {
+        if ($("#TaxId").val() == "") {
+            alert("Empty Customer Tax ID");
+        } else if ($('#CusType').val() == "") {
+            alert("Empty Customer Type");
+        } else if ($('#Address').val() == "") {
+            alert("Empty Address");
+        }else {
+            var text;
+            var Header = {};
+            if (Cus == 1) {
+                Header.CustomerCode = $("#CusID").val();
+                Header.CustomerName = $("#CusName").val();
+                Header.CusRef = $("#CusRef").val();
+                Header.Series = $("#SeriesID").val();
+                Header.PostingDate = $("#DocDate").val();
+                Header.DocumemtDate = $("#DocumentDate").val();
+                text = $("textarea#Remark").val();
+                Header.Remarks = text;
+                Header.Lines = LinesAR;
+                Header.DocTotal = $('#Total').val();
+                Header.CreateBy ="Admin"
+                Header.Currency = $('#BPDocCurr').val()
+                Header.Discount = $("#DisPer").val()
+                Header.DiscountAmount = $('#DisAmt').val();
+                Header.DocEntryDT = DocEntryDT
+                Header.DTAmount = DTAmount
+                Header.DTTaxAmount = DTTaxAmount
+                Header.Phone = $("#CusTel").val()
+                Header.Address = $("textarea#Address").val();
+                Header.TaxID = $('#TaxId').val()
+                Header.SaleMam = $('#SaleEmp').val()
+                Header.CusType = $('#CusType').val()
+                Header.CustomerRemark = $('#CusRemark').val()
+                $.ajax({
+                    url: '@Url.Action("SubmitAR", "ARInvoice")',
+                    type: "POST",
+                    data: { models: Header },
+                    dataType: "JSON",
+                    beforeSend: function () {
+                        $('#Modalloder').modal('show');
+                    },
+                    success: function (data) {
+                        $('#ModalSuccess').modal('show');
+                        $('#ErrMsg').html(data[0].errisMsg);
+                        $('#Modalloder').modal('hide');
+
+                        if (data[0].errorCode == 0) {
+                            Header = {};
+                            LinesAR = [];
+                            i = 0;
+                            window.location.replace('@Url.Action("DetailAR", "ARInvoice")?DocEntry='+data[0].docEntry);
+                        }
+                    }
+                });
+
+            } else {
+                alert("Please keyin Customer");
+            }
+        }
+
+    });
+
+    //Batch OnClick
+    $('#BatchOk').click(function () {
+        if (BatchSelected.length > 0) {
+            if (TotalsSelected == TotalsNeeds) {
+                $('#ModalBatch').modal('hide');
+
+                var Line = {};
+                Line.ID = i;
+                Line.Instock = Instock;
+                Line.ItemCode = $("#ItemCode").val();
+                Line.Quantity = $("#Qty").val();
+                Line.UnitPrice = $("#Price").val()
+                Line.UnitPrice1 = Math.round(Math.round((Number($("#Price").val()) / (1 + (Number($("#TaxCode").val()) / 100))) * 1000) / 10) / 100;
+                Line.Discount = $("#Discount").val();
+                Line.DiscountAmount = Math.round(Math.round(((Number($("#Discount").val()) / 100) * (Number($("#Qty").val()) * Line.UnitPrice)) * 1000) / 10) / 100
+                Line.UomEntry = $("#UomID option:selected").text().substr(0, $("#UomID option:selected").text().indexOf("-"));
+                Line.UomName = $("#UomID option:selected").text().substr(Number($("#UomID option:selected").text().indexOf("-")) + 1, 10000);
+                Line.TaxCode = $("#TaxCode option:selected").text().substr(0, $("#TaxCode option:selected").text().indexOf("-"));
+                Line.TaxAmount = Math.round(Math.round(((Number($("#TaxCode").val()) / 100) * ((Number($("#Qty").val()) * Line.UnitPrice1) - Number(Line.DiscountAmount))) * 1000) / 10) / 100
+                Line.TaxRate = Math.round(Math.round((Number($("#TaxCode").val()) / 100) * 1000) / 10) / 100
+                Line.InventryUom = $("#InventoryID option:selected").text().substr(0, $("#InventoryID option:selected").text().indexOf("-"));
+                Line.Batch = BatchSelected
+                Line.Whs = $("#whscode").val()
+
+                Line.OcrCode = $("#OcrCode").val();
+                Line.OcrCode2 = $("#OcrCode2").val();
+                Line.OcrCode3 = $("#OcrCode3").val();
+                Line.OcrCode4 = $("#OcrCode4").val();
+
+                //if (Ocr == 1) {
+                //    Line.OcrCode = $("#OcrCode").val();
+                //} else { Line.OcrCode = "" }
+                //if (Ocr2 == 1) {
+                //    Line.OcrCode2 = $("#OcrCode2").val();
+                //} else { Line.OcrCode2 = "" }
+                //if (Ocr3 == 1) {
+                //    Line.OcrCode3 = $("#OcrCode3").val();
+                //} else { Line.OcrCode3 = "" }
+                //if (Ocr4 == 1) {
+                //    Line.OcrCode4 = $("#OcrCode4").val();
+                //} else { Line.OcrCode4 = "" }
+
+                LinesAR.push(Line);
+                Recalculate(LinesAR);
+                table.clear();
+                table.rows.add(LinesAR);
+                table.draw();
+                ClearLine()
+                i += 1;
+                BatchSelected = [];
+                lBatch = [];
+                tbBatch.clear()
+                tbSelectedBatch.clear()
+                tbSelectedBatch.draw()
+                TotalsNeeds = 0;
+                TotalsSelected = 0;
+            } else {
+                alert("Quantity total selected not enough !")
+            }
+        } else {
+            alert("Please Select Batch !")
+        }
+    });
+
+    // Item Code
+    var LItm = [];
+    $('#TbItem').DataTable({
+        responsive: true,
+        bLengthChange: false,
+        binfo: false,
+        data:LItm,
+        columns: [
+            { data: "itemCode", autoWidth: true },
+            { data: "itemName", autoWidth: true },
+            { data: "price", autoWidth: true },
+            { data: "onHand", autoWidth: true },
+            { data: "bcdCode", autoWidth: true }
+        ],
+        rowCallback: function (row, data, index) {
+            //$('td', row).css('background-color', '#ffffff');
+            //$('td', row).css('color', '#717171');
+        }
+    });
+
+    var tbItem = $('#TbItem').DataTable();
+    $('#TbItem tbody').on('click', 'tr', function () {
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+        }
+        else {
+            tbItem.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+        }
+    });
+
+    $(".btnModelsItem").click(function () {
+        $("#ModalItem").modal({ backdrop: "static" });
+        $.ajax({
+            url: '@Url.Action("GetItems", "Master")',
+            type: "GET",
+            dataType: "JSON",
+            data: { cardCode: $('#CusID').val()},
+            success: function (data) {
+                LItm = data
+                tbItem.clear();
+                tbItem.rows.add(LItm);
+                tbItem.search('').draw();
+            }
+        });
+    });
+
+    var Instock=0;
+    $('#ChooseItem').click(function () {
+        if (Cus == 1) {
+            var index = tbItem.row('.selected').index();
+            var data = tbItem.row(index).data();
+            $('#ItemCode').val(data.itemCode);
+            $('#ItemDescr').val(data.itemName);
+            Instock = Number(data.onHand);
+            $('#CItemCode').css('background-color', '#4CAF50')
+            Itm = 1
+            $.ajax({
+                url: '@Url.Action("GetUom", "Master")',
+                type: "GET",
+                dataType: "JSON",
+                data: {UgpEnty:data.ugpEntry},
+                success: function (data) {
+                    $("#UomID").empty();
+                    for (k = 0; k < data.length; k++) {
+                        $('#UomID').append(new Option(data[k].uomentry+'-'+data[k].uomName, data[k].baseqty));
+                    }
+                }
+            });
+            $.ajax({
+               url: '@Url.Action("getPrice","Master")',
+               type: "GET",
+               data: { BPCode: $('#CusID').val(), ItemCode: $('#ItemCode').val(),BPCurr:$('#BPDocCurr').val() },
+               dataType: "JSON",
+               success: function (price) {
+                   $('#Price').val(price[0].price);
+                   if ($('#Qty').val() != '') {
+                       $('#totalItem').val(($('#Qty').val() * price[0].price) - $('#DiscountAmt').val());
+                   }
+                  $('#DocCurr').val(price[0].currency);
+               }
+            });
+            $.ajax({
+               url: '@Url.Action("GetInventoryUom","Master")',
+               type: "GET",
+               data: { ItemCode: $('#ItemCode').val() },
+               dataType: "JSON",
+               success: function (data) {
+                  $("#InventoryID").empty();
+                  for (k = 0; k < data.length; k++) {
+                    $('#InventoryID').append(new Option(data[k].id+'-('+data[k].uomName+')', data[k].unit));
+                  }
+               }
+            });
+            $("#UomID").prop("disabled", false);
+        } else {
+            alert("Please choose Customer !")
+        }
+
+    });
+
+    $('#InventoryID').change(function () {
+        var YN = $("#InventoryID option:selected").text().substr(0, $("#InventoryID option:selected").text().indexOf("-"));
+        if (YN == "YES") {
+            $("#UomID").prop("disabled", true);
+            TotalsNeeds= Number($('#Qty').val());
+        } else {
+            $("#UomID").prop("disabled", false);
+            if ($('#UomID').val() == -1) {
+                TotalsNeeds = Number($('#Qty').val()) * Number($('#InventoryID').val());
+            }
+        }
+    });
+
+    var BaseUnit = 1;
+    $('#ItemCode').change(function () {
+        if (Cus == 1) {
+            $.ajax({
+            url: '@Url.Action("CheckItemCode", "Master")',
+            type: "GET",
+            data: {code: $('#ItemCode').val()},
+            dataType: "JSON",
+            beforeSend: function () {
+                $('#Modalloder').modal('show');
+            },
+            success: function (data) {
+                if (data.length>0) {
+                    $('#CItemCode').css('background-color', '#4CAF50')
+                    $('#ItemDescr').val(data[0].itemName);
+                    $('#ItemCode').val(data[0].itemCode);
+                    Instock = Number(data[0].onHand);
+                    Itm = 1
+                    $.ajax({
+                        url: '@Url.Action("getPrice","Master")',
+                        type: "GET",
+                        data: { BPCode: $('#CusID').val(), ItemCode: $('#ItemCode').val(),BPCurr:$('#BPDocCurr').val() },
+                        dataType: "JSON",
+                        success: function (price) {
+                            $('#Price').val(price[0].price);
+                            $('#DocCurr').val(price[0].currency);
+                        }
+                    });
+                    $.ajax({
+                        url: '@Url.Action("GetUom", "Master")',
+                        type: "GET",
+                        dataType: "JSON",
+                        data: {UgpEnty:data[0].ugpEntry},
+                        success: function (data) {
+                            $("#UomID").empty();
+                            for (k = 0; k < data.length; k++) {
+                                $('#UomID').append(new Option(data[k].uomentry+'-'+data[k].uomName, data[k].baseqty));
+                            }
+                        }
+                    });
+
+
+                    $.ajax({
+                        url: '@Url.Action("GetInventoryUom","Master")',
+                            type: "GET",
+                            data: { ItemCode: $('#ItemCode').val() },
+                            dataType: "JSON",
+                            success: function (data) {
+                               $("#InventoryID").empty();
+                                for (k = 0; k < data.length; k++) {
+                                    $('#InventoryID').append(new Option(data[k].id+'-('+data[k].uomName+')', data[k].unit));
+                                }
+                                //BaseUnit = Number($('#InventoryID').val());
+                                //$('#Price').val(Number($('#Price').val())*BaseUnit);
+                            }
+                    });
+
+                    $("#UomID").prop("disabled", false);
+                } else {
+                    $('#CItemCode').css('background-color', '#A52A2A')
+                    $('#ItemDescr').val("");
+                    Itm = 0
+                }
+                    $('#Modalloder').modal('hide');
+                }
+            });
+        } else {
+            alert("Pleas choose customer !")
+        }
+    });
+    if ($('#OcrCode').val() != "") Ocr = 1
+    else if ($('#OcrCode2').val() != "") Ocr2 = 1
+    else if ($('#OcrCode3').val() != "") Ocr3 = 1
+    else if ($('#OcrCode4').val() != "") Ocr4 = 1
+    // OcrCode
+    var LOcr = [];
+    $('#TbOcrCode').DataTable({
+        responsive: true,
+        bLengthChange: false,
+        binfo: false,
+        data:LOcr,
+        columns: [
+            { data: "prcCode", autoWidth: true },
+            { data: "prcName", autoWidth: true }
+        ],
+        rowCallback: function (row, data, index) {
+           //$('td', row).css('background-color', '#ffffff');
+           //$('td', row).css('color', '#717171');
+        }
+    });
+
+    var tbOcrCode = $('#TbOcrCode').DataTable();
+    $('#TbOcrCode tbody').on('click', 'tr', function () {
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+        }
+        else {
+            tbOcrCode.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+        }
+    });
+
+    $(".btnModelsOcrCode").click(function () {
+        $("#ModalOcrCode").modal({ backdrop: "static" });
+        $.ajax({
+            url: '@Url.Action("GetOcrCode", "Master")',
+            type: "GET",
+            data: {DimCode:1},
+            dataType: "JSON",
+            success: function (data) {
+                LOcr = data
+                tbOcrCode.clear();
+                tbOcrCode.rows.add(LOcr);
+                tbOcrCode.draw();
+            }
+        });
+    });
+
+    $('#ChooseOcrCode').click(function () {
+        var index = tbOcrCode.row('.selected').index();
+        var data = tbOcrCode.row(index).data();
+        $('#OcrCode').val(data.prcCode);
+        $('#COcrCode').css('background-color', '#4CAF50')
+        Ocr=1
+    });
+
+    $('#OcrCode').change(function () {
+        $.ajax({
+            url: '@Url.Action("CheckOcrCode", "Master")',
+            type: "GET",
+            data: { DimCode:1,code: $('#OcrCode').val()},
+            dataType: "JSON",
+            beforeSend: function () {
+                $('#Modalloder').modal('show');
+            },
+            success: function (data) {
+                if (data !="") {
+                    $('#COcrCode').css('background-color', '#4CAF50')
+                    Ocr=1
+                } else {
+                    $('#COcrCode').css('background-color', '#A52A2A')
+                    Ocr=0
+                }
+                $('#Modalloder').modal('hide');
+            }
+        });
+    });
+
+    // OcrCode2
+    var LOcr2 = [];
+    $('#TbOcrCode2').DataTable({
+        responsive: true,
+        bLengthChange: false,
+        binfo: false,
+        data:LOcr2,
+        columns: [
+            { data: "prcCode", autoWidth: true },
+            { data: "prcName", autoWidth: true }
+        ],
+        rowCallback: function (row, data, index) {
+           //$('td', row).css('background-color', '#ffffff');
+           //$('td', row).css('color', '#717171');
+        }
+    });
+
+    var tbOcrCode2 = $('#TbOcrCode2').DataTable();
+    $('#TbOcrCode2 tbody').on('click', 'tr', function () {
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+        }
+        else {
+            tbOcrCode2.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+        }
+    });
+
+    $(".btnModelsOcrCode2").click(function () {
+        $("#ModalOcrCode2").modal({ backdrop: "static" });
+        $.ajax({
+            url: '@Url.Action("GetOcrCode", "Master")',
+            type: "GET",
+            data: {DimCode:2},
+            dataType: "JSON",
+            success: function (data) {
+                LOcr2 = data
+                tbOcrCode2.clear();
+                tbOcrCode2.rows.add(LOcr2);
+                tbOcrCode2.draw();
+            }
+        });
+    });
+    $('#ChooseOcrCode2').click(function () {
+        var index = tbOcrCode2.row('.selected').index();
+        var data = tbOcrCode2.row(index).data();
+        $('#OcrCode2').val(data.prcCode);
+        $('#COcrCode2').css('background-color', '#4CAF50')
+        Ocr2=1
+    });
+
+    $('#OcrCode2').change(function () {
+        $.ajax({
+            url: '@Url.Action("CheckOcrCode", "Master")',
+            type: "GET",
+            data: { DimCode:2,code: $('#OcrCode2').val()},
+            dataType: "JSON",
+            beforeSend: function () {
+                $('#Modalloder').modal('show');
+            },
+            success: function (data) {
+                if (data !="") {
+                    $('#COcrCode2').css('background-color', '#4CAF50')
+                    Ocr2=1
+                } else {
+                    $('#COcrCode2').css('background-color', '#A52A2A')
+                    Ocr2=0
+                }
+                $('#Modalloder').modal('hide');
+            }
+        });
+    });
+
+    // OcrCode3
+    var LOcr3 = [];
+    $('#TbOcrCode3').DataTable({
+        responsive: true,
+        bLengthChange: false,
+        binfo: false,
+        data:LOcr3,
+        columns: [
+            { data: "prcCode", autoWidth: true },
+            { data: "prcName", autoWidth: true }
+        ],
+        rowCallback: function (row, data, index) {
+           //$('td', row).css('background-color', '#ffffff');
+           //$('td', row).css('color', '#717171');
+        }
+    });
+
+    var tbOcrCode3 = $('#TbOcrCode3').DataTable();
+    $('#TbOcrCode3 tbody').on('click', 'tr', function () {
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+        }
+        else {
+            tbOcrCode3.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+        }
+    });
+
+    $(".btnModelsOcrCode3").click(function () {
+        $("#ModalOcrCode3").modal({ backdrop: "static" });
+        $.ajax({
+            url: '@Url.Action("GetOcrCode", "Master")',
+            type: "GET",
+            data: {DimCode:3},
+            dataType: "JSON",
+            success: function (data) {
+                LOcr3 = data
+                tbOcrCode3.clear();
+                tbOcrCode3.rows.add(LOcr3);
+                tbOcrCode3.draw();
+            }
+        });
+    });
+    $('#ChooseOcrCode3').click(function () {
+        var index = tbOcrCode3.row('.selected').index();
+        var data = tbOcrCode3.row(index).data();
+        $('#OcrCode3').val(data.prcCode);
+        $('#COcrCode3').css('background-color', '#4CAF50')
+        Ocr3=1
+    });
+
+    $('#OcrCode3').change(function () {
+        $.ajax({
+            url: '@Url.Action("CheckOcrCode", "Master")',
+            type: "GET",
+            data: { DimCode:3,code: $('#OcrCode3').val()},
+            dataType: "JSON",
+            beforeSend: function () {
+                $('#Modalloder').modal('show');
+            },
+            success: function (data) {
+                if (data !="") {
+                    $('#COcrCode3').css('background-color', '#4CAF50')
+                    Ocr3=1
+                } else {
+                    $('#COcrCode3').css('background-color', '#A52A2A')
+                    Ocr3=0
+                }
+                 $('#Modalloder').modal('hide');
+            }
+        });
+    });
+
+    // OcrCode4
+    var LOcr4 = [];
+    $('#TbOcrCode4').DataTable({
+        responsive: true,
+        bLengthChange: false,
+        binfo: false,
+        data:LOcr4,
+        columns: [
+            { data: "prcCode", autoWidth: true },
+            { data: "prcName", autoWidth: true }
+        ],
+        rowCallback: function (row, data, index) {
+           $('td', row).css('background-color', '#ffffff');
+           //$('td', row).css('color', '#717171');
+        }
+    });
+
+    var tbOcrCode4 = $('#TbOcrCode4').DataTable();
+    $('#TbOcrCode4 tbody').on('click', 'tr', function () {
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+        }
+        else {
+            tbOcrCode4.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+        }
+    });
+
+    $(".btnModelsOcrCode4").click(function () {
+        $("#ModalOcrCode4").modal({ backdrop: "static" });
+        $.ajax({
+            url: '@Url.Action("GetOcrCode", "Master")',
+            type: "GET",
+            data: {DimCode:4},
+            dataType: "JSON",
+            success: function (data) {
+                LOcr4 = data
+                tbOcrCode4.clear();
+                tbOcrCode4.rows.add(LOcr4);
+                tbOcrCode4.draw();
+            }
+        });
+    });
+    $('#ChooseOcrCode4').click(function () {
+        var index = tbOcrCode4.row('.selected').index();
+        var data = tbOcrCode4.row(index).data();
+        $('#OcrCode4').val(data.prcCode);
+        $('#COcrCode4').css('background-color', '#4CAF50')
+        Ocr4=1
+    });
+
+    $('#OcrCode4').change(function () {
+        $.ajax({
+            url: '@Url.Action("CheckOcrCode", "Master")',
+            type: "GET",
+            data: { DimCode:4,code: $('#OcrCode4').val()},
+            dataType: "JSON",
+            beforeSend: function () {
+                $('#Modalloder').modal('show');
+            },
+            success: function (data) {
+                if (data !="") {
+                    $('#COcrCode4').css('background-color', '#4CAF50')
+                    Ocr4=1
+                } else {
+                    $('#COcrCode4').css('background-color', '#A52A2A')
+                    Ocr4=0
+                }
+                $('#Modalloder').modal('hide');
+            }
+        });
+    });
+
+    // Customer
+    var LCus=[];
+    $('#TbCusCode').DataTable({
+        responsive: true,
+        bLengthChange: false,
+        binfo: false,
+        data:LCus,
+        columns: [
+            { data: "cardCode", autoWidth: true },
+            { data: "cardName", autoWidth: true },
+            { data: "phone", autoWidth: true },
+            { data: "address", autoWidth: true }
+        ],
+        rowCallback: function (row, data, index) {
+           //$('td', row).css('background-color', '#ffffff');
+           //$('td', row).css('color', '#717171');
+        }
+    });
+
+    var tbCus = $('#TbCusCode').DataTable();
+    $('#TbCusCode tbody').on('click', 'tr', function () {
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+        }
+        else {
+            tbCus.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+        }
+    });
+
+    $(".btnModelsCus").click(function () {
+        $("#ModalCusCode").modal({ backdrop: "static" });
+        $.ajax({
+            url: '@Url.Action("GetCustomerCleint", "GoodsReceiptPO")',
+            type: "GET",
+            dataType: "JSON",
+            success: function (data) {
+                LCus = data
+                tbCus.clear();
+                tbCus.rows.add(LCus);
+                tbCus.search('').columns().search('').draw();
+            },
+            error:function (erro){
+                console.log(erro.responseText);
+            }
+        });
+    });
+    $('#ChooseCus').click(function () {
+        var index = tbCus.row('.selected').index();
+        var data = tbCus.row(index).data();
+        $('#CusID').val(data.cardCode);
+        $('#CusName').val(data.cardName);
+        $('#CcusID').css('background-color', '#4CAF50')
+        Cus = 1
+        $('#CopyFromPO').removeAttr("disabled");
+    });
+
+    function callTaxCode() {
+        var name
+        $.ajax({
+            url: '@Url.Action("GetTaxCode", "Master")',
+            type: "GET",
+            dataType: "JSON",
+            success: function (data) {
+                $('#TaxCode').empty()
+                for (var k = 0; k < data.length; k++) {
+                    if(data[k].code == '') $('#TaxCode').append(new Option(data[k].name, data[k].rate));
+                }
+                for (var k = 0; k < data.length; k++) {
+                    if(data[k].code != '') $('#TaxCode').append(new Option(data[k].name, data[k].rate));
+                }
+            }
+        });
+    }
+    //End Customer
+    // Copy From PO
+    
+    var temporyListPO=[];
+    var LCopyFromPO=[];
+    $('#TbCopyFromPO').DataTable({
+
+        responsive: true,
+        bLengthChange: false,
+        binfo: false,
+        data:LCopyFromPO,
+        columns: [
+            { data: "docNum", autoWidth: true },
+            { data: "cardName", autoWidth: true },
+            { data: "docDate", autoWidth: true },
+            { data: "docTotal", autoWidth: true },
+            { data: "docStatus", autoWidth: true }
+        ],
+        rowCallback: function (row, data, index) {
+        }
+    });
+    var TbCopyFromPO=$("#TbCopyFromPO").DataTable();
+    $('#TbCopyFromPO tbody').on('click', 'tr', function () {
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+            temporyListPO = arrayRemove(temporyListPO,$(this)[0]._DT_RowIndex);
+        }
+        else {
+            $(this).addClass('selected');
+            temporyListPO.push($(this)[0]._DT_RowIndex);
+        }
+    });
+    $('#ChoosePO').click(function () {
+        var remark="";
+        for(var i=0;i<temporyListPO.length;i++){
+            var data = TbCopyFromPO.row(temporyListPO[i]).data();
+            remark=remark+data.docNum+". ";
+        }
+        $('#Remark').val("Based On Purchase Orders "+remark);
+    });
+    $('#CopyFromPO').click(function(){
+        temporyListPO=[];
+        if($("#CusID").val()!=""){  
+            var cardCode=$("#CusID").val()
+            $.ajax({
+                url: '@Url.Action("GetPurchaseOrderByCardCode", "GoodsReceiptPO")',
+                type: "GET",
+                data: {CardCode:cardCode},
+                dataType: "JSON",
+                success: function (data) {
+                    LCopyFromPO = data
+                    TbCopyFromPO.clear();
+                    TbCopyFromPO.rows.add(LCopyFromPO);
+                    TbCopyFromPO.search('').columns().search('').draw();
+                },
+                error:function (erro){
+                    console.log(erro.responseText);
+                }
+            });
+        }else{
+            alert("Please Select Customer, if you don't select can bind data");
+        }
+    });
+
+    // End Copy From PO
+
+    // Clear Line
+    function ClearLine() {
+        $("#ItemCode").val("");
+        $("#CItemCode").css("background-color","#F5F5F5");
+        $("#ItemDescr").val("");
+        $("#Qty").val(1);
+        $("#Price").val(0);
+        $("#Discount").val(0)
+        $("#DiscountAmt").val(0)
+        $('#totalItem').val(0);
+        //$("#OcrCode").val("");
+        //$("#COcrCode").css("background-color", "#F5F5F5");
+        //$("#OcrCode2").val("");
+        //$("#COcrCode2").css("background-color", "#F5F5F5");
+        //$("#OcrCode3").val("");
+        //$("#COcrCode3").css("background-color", "#F5F5F5");
+        //$("#OcrCode4").val("");
+        //$("#COcrCode4").css("background-color","#F5F5F5");
+        Itm = 0
+        //Ocr = 0
+        //Ocr2 = 0
+        //Ocr3 = 0
+        //Ocr4 = 0
+
+    }
+
+    // Block Edit Line
+    function Remove(row) {
+        var data = table.row(row).data();
+        if (confirm("Do you want to delete?") == true) {
+            helper.removeOne(LinesAR, row => row.ID === data.ID);
+            Recalculate();
+            table.clear();
+            table.rows.add(LinesAR);
+            table.draw();
+        }
+    }
+    function QtyChange(row) {
+
+        var data1 = table.row(row).data();
+
+    }
+    function DisChange(row) {
+        var data = table.row(row).data();
+        if (Number($("#tbDis" + row).val()) > 100) {
+            data.Discount = 100
+            data.DiscountAmount = Math.round(Math.round((Number(data.Quantity) * Number(data.UnitPrice)) * 1000) / 10) / 100
+            data.TaxAmount =0
+        } else if (Number($("#tbDis" + row).val()) < 0) {
+            data.Discount = 0
+            data.DiscountAmount = 0
+            data.TaxAmount = Math.round(Math.round(((Number(data.Quantity) * Number(data.UnitPrice)) * Number(data.TaxRate))*1000)/10)/100
+        } else {
+            data.Discount = $("#tbDis" + row).val();
+            data.DiscountAmount = Math.round(Math.round((Number(data.Quantity) * Number(data.UnitPrice) * (Number($("#tbDis" + row).val()) / 100)) * 1000) / 10) / 100
+            data.TaxAmount = Math.round(Math.round((((Number(data.Quantity) * Number(data.UnitPrice))-Number(data.DiscountAmount)) * Number(data.TaxRate))*1000)/10)/100
+        }
+
+        helper.updateOne(LinesAR, row => row.ID === data.ID, data);
+        Recalculate();
+        table.clear();
+        table.rows.add(LinesAR);
+        table.draw();
+    }
+
+    function DisamtChange(row) {
+        var data = table.row(row).data();
+
+        if (Number($("#tbDisamt" + row).val()) > (Number(data.Quantity) * Number(data.UnitPrice))) {
+            data.DiscountAmount = Math.round(Math.round((Number(data.Quantity) * Number(data.UnitPrice))*1000)/10)/100
+            data.Discount = 100
+            data.TaxAmount = 0
+        } else if (Number($("#tbDisamt" + row).val()) < 0) {
+            data.DiscountAmount = 0
+            data.Discount = 0
+            data.TaxAmount = Math.round(Math.round(((Number(data.Quantity) * Number(data.UnitPrice)) * Number(data.TaxRate))*1000)/10)/100
+        } else {
+            data.DiscountAmount = $("#tbDisamt" + row).val();
+            var x= 100 - ((Number(data.Quantity) * Number(data.UnitPrice) - Number(data.DiscountAmount)) * 100/(Number(data.Quantity) * Number(data.UnitPrice)))
+            data.Discount = x.toFixed(4)//Math.round(Math.round(x * 1000) / 10) / 100
+            data.TaxAmount = Math.round(Math.round((((Number(data.Quantity) * Number(data.UnitPrice))-Number(data.DiscountAmount)) * Number(data.TaxRate))*1000)/10)/100
+        }
+
+        helper.updateOne(LinesAR, row => row.ID === data.ID, data);
+        Recalculate();
+        table.clear();
+        table.rows.add(LinesAR);
+        table.draw();
+    }
+
+    function PriceChange(row) {
+        var data = table.row(row).data();
+        data.UnitPrice = $("#tbPrice" + row).val();
+        data.DiscountAmount = Math.round(Math.round((Number(data.Quantity) * Number($("#tbPrice" + row).val()) * (Number(data.Discount)/100))*1000)/10)/100
+        data.TaxAmount = Math.round(Math.round((Number(data.TaxRate) * (Number(data.Quantity) * Number($("#tbPrice" + row).val())-Number(data.DiscountAmount)))*1000)/10)/100
+        helper.updateOne(LinesAR, row => row.ID === data.ID, data);
+        Recalculate();
+        table.clear();
+        table.rows.add(LinesAR);
+        table.draw();
+    }
+
+    function Recalculate() {
+
+        BTax = 0
+        Tax = 0
+        Total = 0
+        DisA = 0
+
+        for (var j = 0; j < LinesAR.length; j++) {
+            BTax += (Number(LinesAR[j].UnitPrice) * Number(LinesAR[j].Quantity))-Number(LinesAR[j].DiscountAmount);
+            DisA += Number(LinesAR[j].DiscountAmount)
+            Tax += Number(LinesAR[j].TaxAmount);
+        }
+        //TaxBeforeDis
+        $('#TaxBeforeDis').val(Math.round(Math.round(Tax * 1000) / 10) / 100);
+
+        if (Number($('#DisPer').val()) == 100) {
+            $('#DisAmt').val(BTax)
+        }
+        else {
+            Tax = Tax - Tax * (Number($('#DisPer').val()) / 100)
+            var x = BTax * (Number($('#DisPer').val()) / 100)
+            $('#DisAmt').val(Math.round(Math.round(x*1000)/10)/100)
+        }
+        Tax = Tax - DTTaxAmount
+        Total = BTax - Number($('#DisAmt').val()) - DTAmount
+        $('#BTax').val(Math.round(Math.round(BTax*1000)/10)/100);
+        $('#Tax').val(Math.round(Math.round(Tax*1000)/10)/100);
+        $('#DisA').val(Math.round(Math.round(DisA*1000)/10)/100);
+        $('#Total').val(Math.round(Math.round(Total * 1000) / 10) / 100);
+        $('#DTamount').val(Math.round(Math.round(DTAmount * 1000) / 10) / 100);
+        //TaxBeforeDis
+        //$('#TaxBeforeDis').val(Math.round(Math.round(Tax*1000)/10)/100);
+    }
+    // discount header
+    function DisPer() {
+        var x = Number($('#BTax').val())
+        var z = Number($('#TaxBeforeDis').val())
+
+        if (Number($('#DisPer').val()) > 100) {
+            $('#DisPer').val(100)
+            $('#DisAmt').val(x)
+            $('#Tax').val(0)
+        } else if (Number($('#DisPer').val()) < 0) {
+            $('#DisPer').val(0)
+            $('#DisAmt').val(0)
+            $('#Tax').val(z)
+        } else {
+            var y = x * (Number($('#DisPer').val()) / 100)
+            var dt = z - (z * (Number($('#DisPer').val()) / 100))
+            $('#DisAmt').val(Math.round(Math.round(y * 1000) / 10) / 100)
+            $('#Tax').val(Math.round(Math.round(dt * 1000) / 10) / 100)
+        }
+        var xy = x - Number($('#DisAmt').val()) - DTAmount//(x+Number($('#Tax').val())) - Number($('#DisAmt').val())
+        $('#Total').val(Math.round(Math.round(xy*1000)/10)/100)
+    }
+    function DisAmt() {
+        var x = Number($('#BTax').val())
+        var z = Number($('#TaxBeforeDis').val())
+        if (Number($('#DisAmt').val()) > x) {
+            $('#DisAmt').val(x)
+            $('#DisPer').val(100)
+            $('#Tax').val(0)
+        } else if (Number($('#DisAmt').val()) < 0) {
+            $('#DisAmt').val(0)
+            $('#DisPer').val(0)
+            $('#Tax').val(z)
+        } else {
+            var y = (Number($('#DisAmt').val()) * 100) / x
+            var dt = z- (z * (y / 100))
+            $('#Tax').val(Math.round(Math.round(dt*1000)/10)/100)
+            $('#DisPer').val(y.toFixed(4)) //Math.round(Math.round(y*1000)/10)/100
+        }
+
+        var xy = x - Number($('#DisAmt').val()) - DTAmount//(x+Number($('#Tax').val())) - Number($('#DisAmt').val())
+        $('#Total').val(Math.round(Math.round(xy*1000)/10)/100)
+    }
+    // Discount By Line Add
+    function LineDiscountPer() {
+
+        var x = Number($("#Price").val()) * Number($("#Qty").val())
+        if (Number($("#Discount").val()) > 100) {
+            $("#Discount").val(100)
+            var z = (Math.round(Math.round(x * 1000) / 10) / 100);
+            $("#DiscountAmt").val(z.toFixed(2))
+        } else if (Number($("#Discount").val()) < 0) {
+            $("#Discount").val(0)
+            $("#DiscountAmt").val(0)
+        } else {
+            var y = x * (Number($("#Discount").val() / 100))
+            var z = (Math.round(Math.round(y * 1000) / 10) / 100);
+            $("#DiscountAmt").val(z.toFixed(2))
+        }
+    }
+    function LinDiscountAMT() {
+        var x = Number($("#Price").val()) * Number($("#Qty").val())
+        if (Number($("#DiscountAmt").val()) > x) {
+            $("#Discount").val(100)
+            $("#DiscountAmt").val(Math.round(Math.round(x * 1000) / 10) / 100)
+        } else if (Number($("#DiscountAmt").val()) < 0) {
+            $("#Discount").val(0)
+            $("#DiscountAmt").val(0)
+        } else {
+            var y = (Number($("#DiscountAmt").val())*100)/x
+            $("#Discount").val(y.toFixed(2))//Math.round(Math.round(y * 1000) / 10) / 100
+        }
+    }
+
+    // Choose BatchNum
+    function QtyBatchChange(row) {
+        var Bselected = {}
+        var data = tbBatch.row(row).data();
+
+        if (Number(data.Quantity) < Number($("#tbBatchQty" + row).val()) || (Number($("#tbBatchQty" + row).val())+TotalsSelected) > TotalsNeeds  ) {
+            $("#tbBatchQty" + row).val("")
+            alert("Insufficient volume !")
+        } else {
+
+            data.Quantity = Number(data.Quantity) - Number($("#tbBatchQty" + row).val());
+            Bselected.BatchNum = data.BatchNum
+            Bselected.Quantity = Number($("#tbBatchQty" + row).val())
+
+            var find=findBatch.findOne(BatchSelected, row => row.BatchNum === data.BatchNum)
+            if (find >= 0) {
+
+                TotalsSelected = TotalsSelected + Number($("#tbBatchQty" + row).val())
+
+                if (TotalsSelected > TotalsNeeds) {
+                    alert("Quantity total selected is over total need !")
+                    TotalsSelected=TotalsSelected-Number($("#tbBatchQty" + row).val())
+                } else {
+                    Bselected.Quantity=Number(Bselected.Quantity) + Number(BatchSelected[find].Quantity)
+                    helper.updateOne(BatchSelected, row => row.BatchNum === data.BatchNum, Bselected)
+                }
+
+            } else {
+                TotalsSelected=TotalsSelected+ Number($("#tbBatchQty" + row).val())
+                if (TotalsSelected > TotalsNeeds) {
+                    alert("Quantity total selected is over total need !")
+                    TotalsSelected=TotalsSelected-Number($("#tbBatchQty" + row).val())
+                } else {
+                    BatchSelected.push(Bselected);
+                }
+            }
+
+            $("#tbBatchQty" + row).val("")
+            helper.updateOne(lBatch, row => row.BatchNum === data.BatchNum, data);
+
+            $('#TotalsSelected').val(TotalsSelected);
+            tbBatch.clear()
+            tbBatch.rows.add(lBatch)
+            tbBatch.draw()
+
+            tbSelectedBatch.clear()
+            tbSelectedBatch.rows.add(BatchSelected)
+            tbSelectedBatch.draw();
+        }
+
+    }
+    $('#CloseBatch').click(function () {
+        BatchSelected = [];
+        lBatch = [];
+        TmpLine = {}
+        TotalsNeeds = 0;
+        TotalsSelected = 0;
+        tbBatch.clear()
+        tbSelectedBatch.clear()
+        tbSelectedBatch.draw()
+    });
+
+    function removebatch(row) {
+        var data = tbSelectedBatch.row(row).data();
+        var Qty = Number(data.Quantity)
+        if (confirm("Do you want to delete?") == true) {
+
+            helper.removeOne(BatchSelected, row => row.BatchNum === data.BatchNum)
+            tbSelectedBatch.clear();
+            tbSelectedBatch.rows.add(BatchSelected);
+            tbSelectedBatch.draw();
+
+            var find=findBatch.findOne(lBatch, row => row.BatchNum === data.BatchNum)
+            if (find >= 0) {
+                TotalsSelected = Number(TotalsSelected) - Number(Qty)
+                var TmpBatch = {}
+                TmpBatch.BatchNum = lBatch[find].BatchNum
+                TmpBatch.Quantity = Number(lBatch[find].Quantity)+Number(Qty)
+                TmpBatch.ExpirationDate =  lBatch[find].ExpirationDate
+                helper.updateOne(lBatch, row => row.BatchNum === TmpBatch.BatchNum, TmpBatch)
+
+                $('#TotalsSelected').val(TotalsSelected)
+                tbBatch.clear();
+                tbBatch.rows.add(lBatch);
+                tbBatch.draw()
+            }
+        }
+    }
+
+     $(".modal-header").on("mousedown", function (mousedownEvt) {
+            var $draggable = $(this);
+            var x = mousedownEvt.pageX - $draggable.offset().left,
+                y = mousedownEvt.pageY - $draggable.offset().top;
+            $("body").on("mousemove.draggable", function (mousemoveEvt) {
+                $draggable.closest(".modal-dialog").offset({
+                    "left": mousemoveEvt.pageX - x,
+                    "top": mousemoveEvt.pageY - y
+                });
+            });
+            $("body").one("mouseup", function () {
+                $("body").off("mousemove.draggable");
+            });
+            $draggable.closest(".modal").one("bs.modal.hide", function () {
+                $("body").off("mousemove.draggable");
+            });
+     });
+
+    $('#DocDate').val(formatDate('@ViewData["Date"]'))
+    $('#DocumentDate').val(formatDate('@ViewData["Date"]'))
+    function formatDate(date) {
+        var d = new Date(date),
+            month = '' + (d.getMonth()+1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2)
+            month = '0' + month;
+        if (day.length < 2)
+            day = '0' + day;
+
+        return [year, month, day].join('-');
+    }
+
+    // Set Default Values
+
     $('#TbDT').DataTable({
         responsive: true,
         bLengthChange: false,
         binfo: false,
-        data: LDT,
+        data:LDT,
         columns: [
             { data: "docNum", autoWidth: true },
             { data: "webID", autoWidth: true },
@@ -324,30 +2090,105 @@
             { data: "drawAmount", autoWidth: true },
             { data: "taxAmount", autoWidth: true }
         ]
-    });
-    var dtlistPO = $('#TblistPO').DataTable()
-    var dtLinePO = $('#TbPOLine').DataTable()
-    var dtSNBT = $('#TbSNBT').DataTable()
-    var dtDraft = $('#TBDraft').dataTable()
-    var dtDNL_Line = $('#DNL_Line').dataTable()
-    var dtTbSNBT_Update = $('#TbSNBT_Update').dataTable()
+    })
 
-    $('#POLine').hide();
-    $('#ListPO').hide();
-    $('#SNBT').hide();
-    $('#DLNline').hide();
-    // $('#DLNline').hide();
+    var LDT = []
+    var tbdtpayment = $('#TbDT').DataTable()
+    $('#btnDT').click(function () {
+        if (Cus == 1) {
+            $.ajax({
+                url: '@Url.Action("GetDTToDraw", "ARDownPayment")',
+                type: "GET",
+                data: {CardCode:$('#CusID').val()},
+                dataType: "JSON",
+                success: function (data) {
+                    LDT = data
+                    tbdtpayment.clear();
+                    tbdtpayment.rows.add(LDT);
+                    tbdtpayment.search('').draw();
+                }
+            });
+        }
+    })
 
-    $('#SelectPO').click(function () {
-        $('#DLN').hide();
-        $('#DLNline').hide();
-        $('#ListPO').show();
+    $('#TbDT tbody').on('click', 'tr', function () {
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+        }
+        else {
+            tbdtpayment.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+        }
     });
-    $('#ListPoChoose').click(function () {        
-        $('#ListPO').hide();
-        $('#POLine').show();
-        $('#DLNline').show();
+    var DTAmount = 0
+    var DTTaxAmount = 0
+    var DocEntryDT
+    $('#ChooseDT').click(function () {
+
+        $('#ModalDT').modal('hide')
+        DTAmount = 0
+        Recalculate()
+        var index = tbdtpayment.row('.selected').index();
+        var data = tbdtpayment.row(index).data();
+        //if(Number($('#DTamount').val()) != 0) $('#Total').val(DTAmount)
+        if (Number(data.grossAmount) > Number($('#Total').val())) {
+
+            DTAmount = Number($('#Total').val())
+            DTTaxAmount =Math.round(Math.round((Number($('#Total').val())/(1+Number($('#TaxCode').val())/100))*1000)/10)/100
+            DocEntryDT = data.docEntry
+
+        } else {
+
+            DTAmount = data.grossAmount
+            DTTaxAmount = data.taxAmount
+            DocEntryDT = data.docEntry
+        }
+
+        $('#DTamount').val(DTAmount)
+        Recalculate()
+    })
+
+    $('#paymentO2O').change(function () {
+        if ($('#paymentO2O').val() == "Y") {
+            Ocr = 1
+            Ocr2 = 1
+            $('#CusRef').val('')
+            $('#OcrCode').val('')
+            $('#OcrCode2').val('')
+        } else {
+            $('#CusRef').val("")
+            $('#OcrCode').val('')
+            $('#OcrCode2').val('')
+        }
+    })
+
+    $('#Qty').change(function () {
+        if (Number($('#Qty').val()) > Instock) {
+            alert("Negative stock !");
+            $('#Qty').val(Instock)
+        }
+    })
+
+    //Function Change
+    //Change TotalItem When Qty Change
+    $('#Qty').change(function () {
+            $('#totalItem').val(($('#Qty').val() * $('#Price').val()) - $('#DiscountAmt').val());
     });
-  
+    $('#Price').change(function () {
+        $('#totalItem').val(($('#Qty').val() * $('#Price').val()) - $('#DiscountAmt').val());
+    });
+    $('#Discount').change(function () {
+        $('#totalItem').val(($('#Qty').val() * $('#Price').val()) - $('#DiscountAmt').val());
+    });
+    $('#DiscountAmt').change(function () {
+        $('#totalItem').val(($('#Qty').val() * $('#Price').val()) - $('#DiscountAmt').val());
+    });
+    //End Function Change
+    //Function Overal
+        function arrayRemove(arr, value) { 
+            return arr.filter(function(ele){ 
+                return ele != value; 
+            });
+        }
+    //End Function
 </script>
-

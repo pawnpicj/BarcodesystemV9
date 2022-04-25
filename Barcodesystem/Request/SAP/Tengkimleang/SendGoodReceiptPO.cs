@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BarCodeLibrary.Request.SAP
+namespace BarCodeLibrary.Request.SAP.TengKimleang
 {
     public class SendGoodReceiptPO
     {

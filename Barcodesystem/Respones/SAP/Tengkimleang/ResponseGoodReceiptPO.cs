@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BarCodeLibrary.Respones.SAP
+namespace BarCodeLibrary.Respones.SAP.Tengkimleang
 {
     public class ResponseGoodReceiptPO
     {

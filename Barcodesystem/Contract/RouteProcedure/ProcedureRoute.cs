@@ -14,6 +14,8 @@ namespace BarCodeLibrary.Contract.RouteProcedure
             public const string CustomerGet = "OCRD";
             public const string GetPO = "OPOR";
             public const string GetPOLine = "POR1";
+            public const string GetSeries = "NNM1";
+            public const string GetSaleEmployee = "OSLP";
         }
     }
 }

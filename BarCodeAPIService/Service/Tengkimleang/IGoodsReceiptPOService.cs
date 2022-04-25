@@ -12,5 +12,8 @@ namespace BarCodeAPIService.Service
         Task<ResponseOPORGetPO> responseOPORGetPO(string cardName);
         Task<ResponseGoodReceiptPO> PostGoodReceiptPO(SendGoodReceiptPO sendGoodReceiptPO);
         Task<ResponseCustomerGet> responseCustomerGets();
+        Task<ResponseGetSeries> responseGetSeries(string objectCode,string dateOfMonth);
+        Task<ResponseGetSaleEmployee> responseGetSaleEmployees();
+
     }
 }

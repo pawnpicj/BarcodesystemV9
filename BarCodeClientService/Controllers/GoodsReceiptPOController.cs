@@ -43,5 +43,18 @@ namespace BarCodeClientService.Controllers
                 return BadRequest(a.ErrorMessage);
             }
         }
+        [HttpGet]
+        public IActionResult GetSeries(string objectCode,string dateOfMonth)
+        {
+            var a = API.Read<ResponseGetSeries>(APIRoute.GoodReceiptPO.Controller + APIRoute.GoodReceiptPO.GetSeries + objectCode + "/" + dateOfMonth);
+            if(a.ErrorCode== 0)
+            {
+                return Ok(a.Data);
+            }
+            else
+            {
+                return BadRequest(a.ErrorMessage);
+            } 
+        }
     }
 }

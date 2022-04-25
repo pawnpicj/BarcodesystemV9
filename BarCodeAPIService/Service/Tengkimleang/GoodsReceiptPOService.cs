@@ -15,7 +15,7 @@ namespace BarCodeAPIService.Service
     {
         private int ErrCode;
         private string ErrMsg;
-
+        #region Post
         public Task<ResponseGoodReceiptPO> PostGoodReceiptPO(SendGoodReceiptPO sendGoodReceiptPO)
         {
             try
@@ -80,7 +80,8 @@ namespace BarCodeAPIService.Service
                 });
             }
         }
-
+        #endregion
+        #region Get
         public Task<ResponseCustomerGet> responseCustomerGets()
         {
             var customerGets = new List<CustomerGet>();
@@ -131,7 +132,6 @@ namespace BarCodeAPIService.Service
                 });
             }
         }
-
         public Task<ResponseOPORGetPO> responseOPORGetPO(string cardName)
         {
             var oPORs = new List<OPOR>();
@@ -213,5 +213,103 @@ namespace BarCodeAPIService.Service
                 });
             }
         }
+        public Task<ResponseGetSeries> responseGetSeries(string objectCode, string dateOfMonth)
+        {
+            var getSeries = new List<GetSeries>();
+            DataTable dt = new DataTable();
+            try
+            {
+                LoginOnlyDatabase login = new LoginOnlyDatabase();
+                if (login.lErrCode == 0)
+                {
+                    string Query = $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetSeries}','{objectCode}','{dateOfMonth}','','','')";
+                    login.AD = new System.Data.Odbc.OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        getSeries.Add(new GetSeries
+                        {
+                            Code = Convert.ToInt32(row["Code"].ToString()),
+                            Name=row["Name"].ToString(),
+                        });
+                    }
+                    return Task.FromResult(new ResponseGetSeries
+                    {
+                        ErrorCode = 0,
+                        ErrorMessage = "",
+                        Data = getSeries.ToList()
+                    });
+                }
+                else
+                {
+                    return Task.FromResult(new ResponseGetSeries
+                    {
+                        ErrorCode = login.lErrCode,
+                        ErrorMessage = login.sErrMsg,
+                        Data = null
+                    });
+                }
+            }
+
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseGetSeries
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMessage = ex.Message,
+                    Data = null
+                });
+            }
+        }
+
+        public Task<ResponseGetSaleEmployee> responseGetSaleEmployees()
+        {
+            var getSaleEmployees = new List<GetSaleEmployee>();
+            DataTable dt = new DataTable();
+            try
+            {
+                LoginOnlyDatabase login = new LoginOnlyDatabase();
+                if (login.lErrCode == 0)
+                {
+                    string Query = $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetSaleEmployee}','','','','','')";
+                    login.AD = new System.Data.Odbc.OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        getSaleEmployees.Add(new GetSaleEmployee
+                        {
+                            Code = Convert.ToInt32(row["Code"].ToString()),
+                            Name = row["Name"].ToString(),
+                        });
+                    }
+                    return Task.FromResult(new ResponseGetSaleEmployee
+                    {
+                        ErrorCode = 0,
+                        ErrorMessage = "",
+                        Data = getSaleEmployees.ToList()
+                    });
+                }
+                else
+                {
+                    return Task.FromResult(new ResponseGetSaleEmployee
+                    {
+                        ErrorCode = login.lErrCode,
+                        ErrorMessage = login.sErrMsg,
+                        Data = null
+                    });
+                }
+            }
+
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseGetSaleEmployee
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMessage = ex.Message,
+                    Data = null
+                });
+            }
+        }
+        #endregion
     }
 }

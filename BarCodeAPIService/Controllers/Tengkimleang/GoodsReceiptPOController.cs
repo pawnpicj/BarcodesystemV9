@@ -57,5 +57,16 @@ namespace BarCodeAPIService.Controllers
             var a = await goodsReceiptPO.responseCustomerGets();
             return Ok(a);
         }
+        [HttpGet(APIRoute.GoodReceiptPO.GetSeries+ "{objectCode}/{dateOfMonth}")]
+        public async Task<IActionResult> GetSeries(string objectCode,string dateOfMonth)
+        {
+            var a=await goodsReceiptPO.responseGetSeries(objectCode,dateOfMonth);
+            return Ok(a);
+        }
+        [HttpGet(APIRoute.GoodReceiptPO.GetSaleEmployee)]
+        public IActionResult GetSaleEmployee()
+        {
+            return Ok(null);
+        }
     }
 }

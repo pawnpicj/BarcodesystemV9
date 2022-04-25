@@ -14,6 +14,8 @@
             public const string GetCustomer = "GetCustomer";
             public const string GetPO = "GetPO/";
             public const string SendGoodReceiptPO = "SendGoodReceiptPO";
+            public const string GetSeries = "Series/";
+            public const string GetSaleEmployee = "SaleEmployee";
         }
     }
 }

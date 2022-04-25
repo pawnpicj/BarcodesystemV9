@@ -131,13 +131,6 @@
                         <div class="input-group">
                             <textarea class="form-control" id="Remark" rows="1"></textarea>
                         </div>
-                        Payment O2O :
-                        <div class="input-group">
-                            <select id="paymentO2O" class="form-control">
-                                <option value="Y">Yes</option>
-                                <option value="N" selected>No</option>
-                            </select>
-                        </div>
                         Customer Tax ID<span style="color:red;">*</span> :
                         <div class="input-group">
                             <input type="text" class="form-control" id="TaxId">
@@ -163,7 +156,7 @@
                         <div>
                             Series :
                             <div class="input-group">
-                                <select id="SeriesID" class="form-control" disabled>
+                                <select id="SeriesID" class="form-control">
                                 </select>
                             </div>
                         </div>
@@ -796,7 +789,7 @@
     //    $('#Save').prop('hidden', false);
     //});
     // Control By Batch
-
+    GetSeries("");
         $('#tbBatch').DataTable({
             responsive: true,
             bLengthChange: false,
@@ -2063,7 +2056,6 @@
             month = '' + (d.getMonth()+1),
             day = '' + d.getDate(),
             year = d.getFullYear();
-
         if (month.length < 2)
             month = '0' + month;
         if (day.length < 2)
@@ -2148,27 +2140,15 @@
         Recalculate()
     })
 
-    $('#paymentO2O').change(function () {
-        if ($('#paymentO2O').val() == "Y") {
-            Ocr = 1
-            Ocr2 = 1
-            $('#CusRef').val('')
-            $('#OcrCode').val('')
-            $('#OcrCode2').val('')
-        } else {
-            $('#CusRef').val("")
-            $('#OcrCode').val('')
-            $('#OcrCode2').val('')
-        }
-    })
-
     $('#Qty').change(function () {
         if (Number($('#Qty').val()) > Instock) {
             alert("Negative stock !");
             $('#Qty').val(Instock)
         }
     })
-
+    $("#DocDate").change(function(){
+        GetSeries($("#DocDate").val());
+    });
     //Function Change
     //Change TotalItem When Qty Change
     $('#Qty').change(function () {
@@ -2188,6 +2168,26 @@
         function arrayRemove(arr, value) { 
             return arr.filter(function(ele){ 
                 return ele != value; 
+            });
+        }
+        function GetSeries(dateOfMonth){
+            if(dateOfMonth==""){
+                dateOfMonth=formatDate('@ViewData["Date"]');
+            }
+            $.ajax({
+                url: '@Url.Action("GetSeries","GoodsReceiptPO")',
+                type: "GET",
+                data: {objectCode:"20",dateOfMonth:dateOfMonth},
+                dataType: "JSON",
+                success: function (data) {
+                   for(var i=0;i<data.length;i++){
+                        $("#SeriesID").empty();
+                        $("#SeriesID").append('<option value="'+data[i].code+'">'+data[i].name+'</option>');
+                   }
+                },
+                error:function (erro){
+                    console.log(erro.responseText);
+                }
             });
         }
     //End Function

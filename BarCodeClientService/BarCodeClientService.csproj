@@ -27,4 +27,10 @@
     <ProjectReference Include="..\BarCodeAPIService\BarCodeAPIService.csproj" />
     <ProjectReference Include="..\Barcodesystem\BarCodeLibrary.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="SAPBusinessOneSDK">
+      <HintPath>D:\7. Barcode System\SAPBusinessOneSDK.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>

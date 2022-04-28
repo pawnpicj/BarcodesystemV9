@@ -154,6 +154,8 @@ namespace BarCodeAPIService
             ConnectionString.CompanyDB = Configuration.GetSection("CompanyDB").Value.ToString();
             ConnectionString.UserName = Configuration.GetSection("UserNameSAP").Value.ToString();
             ConnectionString.Password = Configuration.GetSection("Password").Value.ToString();
+            ConnectionString.ConnHana = Configuration.GetSection("ConnectionStringHANA").Value.ToString();
+            ConnectionString.BarcodeDb = Configuration.GetSection("BarCodeDB").Value.ToString();
         }
     }
 }

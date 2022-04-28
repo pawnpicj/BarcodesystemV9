@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "O2O";
+    ViewData["Title"] = "Item";
     DateTime dt = DateTime.Now;
     ViewData["Date"] = dt.ToShortDateString();
 }
@@ -403,10 +403,11 @@
                         itemLines.concatText = "- " + $('#ItemCode').val() + "\n- " + $('#ItemName').val() + "\n- " + $('#ProductGroup').val();
                         itemLines.concatText2 = $('#ItemCode').val() + ";" + $('#batchSN').val() + "; ;" + $('#expireDate').val() + ";" +  i.toString().padStart(4, '0')+"";
                         allitemLInes.push(itemLines);
-                        table.rows.add(allitemLInes);
-                        table.draw();
                         HeaderLs.push(itemLines);
+                        itemLines = {};
                     }
+                    table.rows.add(allitemLInes);
+                    table.draw();
                 }
                 if (serial == "Y") {
                     for (var i = 1; i <= Qty;i++) {
@@ -420,11 +421,12 @@
                         itemLines.fda = FDA;
                         itemLines.concatText = "- " + $('#ItemCode').val() + "\n- " + $('#ItemName').val() + "\n- " + $('#ProductGroup').val();
                         itemLines.concatText2 = $('#ItemCode').val() + "; ;" + $('#batchSN').val() + i.toString().padStart(2, '0') + ";" + $('#expireDate').val() + ";" + i.toString().padStart(4, '0') + "";
-                        allitemLInes.push(itemLines);
-                        table.rows.add(allitemLInes);
-                        table.draw();
+                        allitemLInes.push(itemLines);                       
                         HeaderLs.push(itemLines);
+                        itemLines = {};
                     }
+                    table.rows.add(allitemLInes);
+                    table.draw();
                 }
                 if (batch == "N" && serial == "N") {
                         for ( var i = 1; i <= Qty; i++) {

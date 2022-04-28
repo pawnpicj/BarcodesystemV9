@@ -1,0 +1,74 @@
+﻿@{
+    ViewData["Title"] = "Aministrator";
+
+}
+<style type="text/css">
+    #Icon {
+        text-align: center;
+        margin-top: 60px;
+        font-size: 50px;
+        color: #5f95c3;
+    }
+
+        #Icon:hover {
+            margin-top: 55px;
+            font-size: 60px;
+        }
+</style>
+
+<div class="container">
+    <div class="row">
+        @*Bin Location *@
+        <div class="col-lg-3" style="width: 250px;height: 250px;margin-top:30px;">
+            <a asp-controller="Admin" asp-action="UserSetup">
+                <div style="width:100%;height:100%;background:#f0eff1">
+                    <div style="text-align:center">
+                        <p style="text-align:center;padding-top:15px;"><b>User</b></p>
+                    </div>
+                    <div style="width:100%;height:100%;text-align:center">
+                        <i id="Icon" class="fas fa-users" aria-hidden="true"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-3" style="width: 250px;height: 250px;margin-top:30px;">
+            <a asp-controller="CreateLabelSticker" asp-action="ItemMaster">
+                <div style="width:100%;height:100%;background:#f0eff1">
+                    <div style="text-align:center">
+                        <p style="text-align:center;padding-top:15px;"><b>Label Setup</b></p>
+                    </div>
+                    <div style="width:100%;height:100%;text-align:center">
+                        <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+        @*
+        InventoryTransfer (Return Borrow Bills)
+        <div class="col-lg-3" style="width: 250px;height: 250px;margin-top:30px;">
+            <a asp-controller="Inventory" asp-action="CreateInventoryTransferRBB">
+                <div style="width:100%;height:100%;background:#f0eff1">
+                    <div style="text-align:center">
+                        <p style="text-align:center;padding-top:15px;"><b>Inventory Tranfer (Return Borrow Bills)</b></p>
+                    </div>
+                    <div style="width:100%;height:100%;text-align:center">
+                        <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-lg-3" style="width: 250px;height: 250px;margin-top:30px;">
+            <a asp-controller="Inventory" asp-action="CreateInventoryCounting">
+                <div style="width:100%;height:100%;background:#f0eff1">
+                    <div style="text-align:center">
+                        <p style="text-align:center;padding-top:15px;"><b>Inventory Counting</b></p>
+                    </div>
+                    <div style="width:100%;height:100%;text-align:center">
+                        <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
+                    </div>
+                </div>
+            </a>
+        </div>*@
+    </div>
+</div>

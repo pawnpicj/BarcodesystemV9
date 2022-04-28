@@ -1,0 +1,323 @@
+﻿@{
+    ViewData["Title"] = "User Setup";
+}
+<link href="~/css/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
+
+<style>
+    tr.selected {
+        background: red;
+        color: red;
+    }
+
+    #main {
+        position: absolute;
+    }
+
+    .color_tap {
+        min-width: 60px;
+        background-color: #5f95c3;
+        color: #ffffff;
+        font-weight: 600;
+        margin-right: 1px;
+    }
+
+    .nav-tabs .nav-link {
+        border-radius: 0px 12px 0px 0px;
+        border: 1px solid rgb(193, 193, 193);
+        height: 40px;
+        line-height: 20px;
+    }
+
+    .modal {
+        z-index: 200000;
+    }
+
+    .modal-header {
+        background: #5f95c3;
+        height: 40px;
+        color: #ffffff;
+    }
+
+        .modal-header b {
+            margin-top: -10px;
+        }
+
+    #TbAR table tr td {
+        position: relative !important;
+        padding: 0px !important;
+        height: 35px;
+        margin-left: 15px;
+        margin-top: 10px;
+        background-color: none;
+    }
+
+    table tbody tr td {
+        background-color: #ffffff;
+        color: black;
+    }
+
+    table tbody tr.selected td {
+        background: #ffce99; /*#94d8e1*/
+        color: red;
+    }
+
+        table tbody tr.selected td .clsinput {
+            background: #ffce99;
+            color: red;
+        }
+
+    .clsinput:focus {
+        outline: none;
+    }
+    input.form-check-input {
+        width: 20px;
+        height: 20px;
+    }
+</style>
+<div id="#main">
+    <div class="row" style="margin-left:5px;margin-top:5px;color:#696969;">
+        <h5 style="margin-top:5px;color:#696969;"></h5>
+    </div>
+    <ul class="nav nav-tabs Tap-PA" id="mytab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active color_tap" id="create-tab" data-toggle="tab" href="#create" role="tab" aria-controls="Create" aria-selected="true">Create User</a>
+        </li>
+        @*<li class="nav-item">
+                <a class="nav-link color_tap" id="print-tab" data-toggle="tab" href="#print" role="tab" aria-controls="Print" aria-selected="false">Print</a>
+            </li>*@
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="create" role="tabpanel" aria-labelledby="create-tab">
+            <div class="row" id="BinCode">
+                <div class="col-sm-8" style="padding: 10px;">
+                    User Code :
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button class="input-group-text" id=""><i class="fa fa-check"></i></button>
+                        </div>
+                        <input type="text" class="form-control" placeholder="" value="ACT001" id="userCode">
+                        @*<div class="input-group-append">
+                                <button class="input-group-text btnItemCode" data-toggle="modal" data-target="#ModalItemCode"><i class="fa fa-search"></i></button>
+                            </div>*@
+                    </div>
+                    User Name :
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button class="input-group-text" id=""><i class="fa fa-check"></i></button>
+                        </div>
+                        <input type="text" class="form-control" value="ACT001" placeholder="" id="userName">
+                    </div>
+                    Phonse :
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button class="input-group-text" id=""><i class="fa fa-check"></i></button>
+                        </div>
+                        <input type="text" class="form-control" value="098743323" placeholder="" id="phone">
+                    </div>
+                    Email
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button class="input-group-text" id=""><i class="fa fa-check"></i></button>
+                        </div>
+                        <input type="text" class="form-control" placeholder="" value="abc" id="email" required>
+                    </div>
+                    Fax
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button class="input-group-text" id=""><i class="fa fa-check"></i></button>
+                        </div>
+                        <input type="text" class="form-control" placeholder="" value="abc" id="fax" required>
+
+                    </div>
+                    Department :
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button class="input-group-text" id=""><i class="fa fa-check"></i></button>
+                        </div>
+                        <select style="width:864px;height:30px" id="department">
+                            <option value="1">Admin</option>
+                        </select>
+                    </div>
+                    Password :
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button class="input-group-text" id=""><i class="fa fa-check"></i></button>
+                        </div>
+                        <input type="password" style="font-size:14px" class="form-control" value="1234" placeholder="" id="password" required>
+                        <div class="input-group-append">
+                            <button class="input-group-text btnbinLocation" data-toggle="modal" data-target="#ModalBinCode">
+                                <i class="fa fa-eye-slash" id="togglePassword" onclick="ShowPassword()"></i>
+                            </button>
+                        </div>
+                    </div>
+                    Administrator :
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button class="input-group-text"><i class="fa fa-check"></i></button>
+                        </div>
+                        <select style="width:864px;height:30px" id="admin">
+                            <option value="Y">Yes</option>
+                            <option value="N">No</option>
+                        </select>
+
+                    </div>
+                    <div class="form-check" style="margin-top:5px">
+                        <input class="form-check-input" type="checkbox" value="" id="active">
+                        <label class="form-check-label" style="margin-left:15px;margin-top:7px">
+                            Active
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12" style="padding-left: 5px;padding-top:20px;">
+                    <div class="table-responsive">
+                        <table id="TbListUser" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;margin-bottom:10px;">
+                            <thead>
+                                <tr>
+                                    <th>No. </th>
+                                    <th>User Code </th>
+                                    <th>User Name </th>
+                                    <th>Phone</th>
+                                    <th>Email</th>
+                                    <th>Fax</th>
+                                    <th>Department</th>
+                                    <th>Password</th>
+                                    <th>Admin</th>
+                                    <th>CreateDate</th>
+                                    <th>UpdateDate</th>
+                                    <th>Active</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+                <br />
+                <button class="btn btn-success" id="Save" style="margin-left:5px;">Save</button>
+            </div>
+        </div>
+    </div>
+    <div class="d-none" id="body1">
+        <div class="row">
+            <div class="col-12" style="text-align:center">
+                <h1>
+                    <label>Print Item Lable</label>
+                </h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <div class="col-6"><button onclick="window.history.back();" class="button">Back</button></div>
+            </div>
+            <div class="col-10">
+                <p align="right">
+                    @*<button class="button" onclick="@("window.location.href='" + @Url.Action("PrintItemLablePDF", "BinLocation") + "'");">PDF</button>*@
+                    <button class="button" onclick="PrintPDF();">PDF</button>
+                </p>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/Array.js"></script>
+    <script src="~/css/DataTable/jquery-3.3.1.js"></script>
+    <script src="~/css/DataTable/jquery.dataTables.min.js"></script>
+    <script>
+        function ShowPassword() {
+            const password = document.getElementById('password');
+            const icon = document.getElementById('togglePassword');
+            if (password.getAttribute('Type') === 'password') {
+                password.setAttribute('type', 'text');
+                icon.setAttribute('class', 'fa-eye');
+            } else{
+                password.setAttribute('type', 'password');
+                icon.setAttribute('class', 'fa-eye-slash');
+            }
+        }
+        var User = {};
+        $('#Save').click(function () {
+            var active;
+            var date = new Date();
+            var year = date.getFullYear().toString();
+            var mn = String(date.getMonth() + 1).padStart(2, '0');
+            var day = String(date.getDate()).padStart(2, '0');
+            var hr = date.getHours();
+            var min = date.getMinutes();
+            var ms = date.getSeconds();
+            if (document.getElementById('active').checked == true) active = 'Y';
+            else active = 'N';
+            User.UserID = '0';
+            User.UserCode = $('#userCode').val();
+            User.UserName = $('#userName').val();
+            User.Phone = $('#phone').val();
+            User.Email = $('#email').val();
+            User.Fax = $('#fax').val();
+            User.Department = $('#department').val();
+            User.Password = $('#password').val();
+            User.Admin = $('#admin').val();
+            User.CreateDate = day + "/" + mn + "/" + year;
+            User.UpdateDate = '';
+            User.Active = active;
+            console.log(User);
+
+            $.ajax({
+                url: '@Url.Action("PostUser", "Admin")',
+                type: 'POST',
+                dataType: 'JSON',
+                data: {send:User},
+                success: function (data) {
+                }
+            });
+         
+        });
+        $('#Save').mouseleave(function () {
+            location.reload();
+        });
+        $('#TbListUser').DataTable({
+            bLengthChange: false,
+            binfo: false,
+            data: LsUser,
+            columns: [
+                { data: "userID", autoWidth: true },
+                { data: "userCode", autoWidth: true },
+                { data: "userName", autoWidth: true },
+                { data: "phone", autoWidth: true },
+                { data: "email", autoWidth: true },
+                { data: "fax", autoWidth: true },
+                { data: "department", autoWidth: true },
+                { data: "password", autoWidth: true },
+                { data: "admin", autoWidth: true },
+                { data: "createDate", autoWidth: true },
+                { data: "updateDate", autoWidth: true },
+                { data: "active", autoWidth: true }
+            ]
+        });
+        var tbUser = $('#TbListUser').DataTable();
+        var LsUser = [];
+        $('#TbListUser tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+ 
+            }
+            else {
+                tbUser.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+        
+        Load();
+        function Load() {
+            $.ajax({
+                url: '@Url.Action("GetUserLogin", "Admin")',
+                type: 'GET',
+                dataType: 'JSON',
+                success: function (data) {
+                    LsUser = [];
+                    console.log(data);
+                    LsUser = data.data;
+                    tbUser.clear();
+                    tbUser.rows.add(LsUser);
+                    tbUser.draw();
+                }
+            });
+        }
+    </script>
+</div>

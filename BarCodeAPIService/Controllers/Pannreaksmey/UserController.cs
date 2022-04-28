@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BarCodeLibrary.Request.SAP.Pannreaksmey;
 
 namespace BarCodeAPIService.Controllers
 {
@@ -19,7 +20,7 @@ namespace BarCodeAPIService.Controllers
             this.user = user;
         }
         [HttpGet]
-        public async Task<IActionResult> GetUser()
+        public async Task<IActionResult> GetUserAsync()
         {
             var a = await user.ResponseOUSRGetUser();
             if (a.ErrorCode == 0)
@@ -30,6 +31,17 @@ namespace BarCodeAPIService.Controllers
             {
                 return BadRequest(a);
             }
+        }
+        [HttpPost("PostUser")]
+        public async Task<IActionResult> PostUserAsync(SendUser send)
+        {
+             return Ok(await user.ResponsePostUserAsync(send));
+        }
+        [HttpGet("GetUserLogin")]
+        public async Task<IActionResult> GetUserLoginAsync()
+        {
+            var a=await user.RespponseGetuser();
+            return Ok(a) ;
         }
     }
 }

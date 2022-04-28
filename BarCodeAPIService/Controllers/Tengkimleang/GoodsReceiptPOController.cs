@@ -1,5 +1,6 @@
 ﻿using BarCodeAPIService.Service;
 using BarCodeLibrary.Request.SAP;
+using BarCodeLibrary.Request.SAP.TengKimleang;
 using Barcodesystem.Contract.RouteApi;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -24,10 +25,10 @@ namespace BarCodeAPIService.Controllers
             this.goodsReceiptPO = goodsReceiptPO;
         }
 
-        [HttpGet("GetPO")]
-        public async Task<IActionResult> GetGoodsReceiptPOAsync()
+        [HttpGet(APIRoute.GoodReceiptPO.GetPO + "{cardName}")]
+        public async Task<IActionResult> GetGoodsReceiptPOAsync(string cardName)
         {
-            var a =await  goodsReceiptPO.responseOPORGetPO();
+            var a = await goodsReceiptPO.responseOPORGetPO(cardName);
             if (a.ErrorCode == 0)
             {
                 return Ok(a);
@@ -37,7 +38,7 @@ namespace BarCodeAPIService.Controllers
                 return BadRequest(a);
             }
         }
-        [HttpPost("SendGoodReceiptPO")]
+        [HttpPost(APIRoute.GoodReceiptPO.SendGoodReceiptPO)]
         public async Task<IActionResult> PostGoodReceiptPOAsync(SendGoodReceiptPO sendGoodReceiptPO)
         {
             var a = await goodsReceiptPO.PostGoodReceiptPO(sendGoodReceiptPO);
@@ -49,6 +50,23 @@ namespace BarCodeAPIService.Controllers
             {
                 return BadRequest(a);
             }
+        }
+        [HttpGet(APIRoute.GoodReceiptPO.GetCustomer)]
+        public async Task<IActionResult> GetCustomer()
+        {
+            var a = await goodsReceiptPO.responseCustomerGets();
+            return Ok(a);
+        }
+        [HttpGet(APIRoute.GoodReceiptPO.GetSeries+ "{objectCode}/{dateOfMonth}")]
+        public async Task<IActionResult> GetSeries(string objectCode,string dateOfMonth)
+        {
+            var a=await goodsReceiptPO.responseGetSeries(objectCode,dateOfMonth);
+            return Ok(a);
+        }
+        [HttpGet(APIRoute.GoodReceiptPO.GetSaleEmployee)]
+        public IActionResult GetSaleEmployee()
+        {
+            return Ok(null);
         }
     }
 }

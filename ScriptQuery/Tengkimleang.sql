@@ -1,0 +1,135 @@
+ALTER PROCEDURE "UDOM_BARCODEV2"._USP_CALLTRANS_TENGKIMLEANG(
+	in DTYPE NVARCHAR(30)
+	,in par1 NVARCHAR(250)
+	,in par2 NVARCHAR(250)
+	,in par3 NVARCHAR(250)
+	,in par4 NVARCHAR(250)
+	,in par5 NVARCHAR(250)
+)
+AS
+BEGIN
+	IF :DTYPE = 'OPOR' THEN 
+		SELECT TOP 20
+			"OPOR"."DocEntry" AS DocEntry,
+			"OPOR"."CardCode" AS CardCode, 
+			"OPOR"."CardName" AS CardName, 
+			"OPOR"."CntctCode" AS CntctCode, 
+			"OPOR"."NumAtCard"AS NumAtCard,
+			"OPOR"."DocNum" AS DocNum,
+			"OPOR"."DocStatus" AS DocStatus,
+			"OPOR"."DocDate" AS DocDate,
+			"OPOR"."DocDueDate" AS DocDueDate,
+			"OPOR"."TaxDate" AS TaxDate,
+			"OPOR"."DocTotal" AS DocTotal,
+			"OPOR"."DiscPrcnt" AS DiscPrcnt
+		FROM "UDOM_BARCODEV2"."OPOR"  WHERE "CardCode"=:Par1 AND "DocStatus"='O' AND "DocType"='I';
+	ELSE IF :DTYPE = 'POR1' THEN 
+		SELECT 
+			A."ItemCode" AS ItemCode, 
+			A."Dscription" AS Description, 
+			A."Quantity" AS Quantity, 
+			A."Price" AS Price, 
+			A."DiscPrcnt" AS DiscPrcnt, 
+			A."VatGroup" AS VatGroup, 
+			A."LineTotal" AS LineTotal, 
+			A."WhsCode" AS WhsCode,
+			A."LineTotal" AS LineTotal,
+			CASE 
+				WHEN B."ManSerNum"='Y' THEN 'S' 
+				WHEN B."ManBtchNum"='Y' THEN 'B'
+				ELSE 'N' 
+			END AS ManageItem
+		FROM "UDOM_BARCODEV2"."POR1" AS A 
+		LEFT JOIN UDOM_BARCODEV2."OITM" AS B ON A."ItemCode"=B."ItemCode"
+		WHERE A."DocEntry"=:par1;
+	ELSE IF :DTYPE = 'OPDN' THEN 
+		SELECT TOP 50
+			"OPDN"."DocEntry",
+			"OPDN"."CardCode", 
+			"OPDN"."CardName", 
+			IFNULL("OPDN"."CntctCode",0) AS "CntctCode", 
+			IFNULL("OPDN"."NumAtCard",'') AS "NumAtCard",
+			IFNULL("OPDN"."DocNum",0) AS "DocNum",
+			IFNULL("OPDN"."DocStatus",'') AS "DocStatus",
+			IFNULL("OPDN"."DocDate",'') AS "DocDate",
+			IFNULL("OPDN"."DocDueDate",'') AS "DocDueDate",
+			IFNULL("OPDN"."TaxDate",'') AS "TaxDate",
+			IFNULL("OPDN"."DocTotal",0) AS "DocTotal",
+			IFNULL("OPDN"."DiscPrcnt",0) AS "DiscPrcnt"
+		FROM "UDOM_BARCODEV2"."OPDN" WHERE "DocType"='I';
+	ELSE IF :DTYPE = 'PDN1' THEN 
+		SELECT 
+			A."ItemCode", 
+			A."Dscription", 
+			A."Quantity", 
+			A."Price", 
+			A."DiscPrcnt", 
+			A."VatGroup", 
+			A."LineTotal", 
+			A."WhsCode"
+		FROM "UDOM_BARCODEV2"."PDN1" AS A 
+		WHERE A."DocEntry"=:par1;
+	ELSE IF :DTYPE = 'PDN1' THEN 
+		SELECT 
+			A."ItemCode", 
+			A."Dscription", 
+			A."Quantity", 
+			A."Price", 
+			A."DiscPrcnt", 
+			A."VatGroup", 
+			A."LineTotal", 
+			A."WhsCode"
+		FROM "UDOM_BARCODEV2"."PDN1" AS A 
+		WHERE A."DocEntry"=:par1;
+	ELSE IF :DTYPE = 'GetStcok_Batch_Serial' THEN 
+	
+		SELECT 
+			 A."ItemCode"
+			,A."OnHand"
+			,B."DistNumber" AS SerailNumber
+			,C."DistNumber" AS BatchNumber
+			,A."ItemName"
+			,A."InvntryUom" As "UOMCode"
+		FROM "UDOM_BARCODEV2"."OITM" A
+		LEFT JOIN "UDOM_BARCODEV2"."OSRN" B ON A."ItemCode"=B."ItemCode" AND B."DataSource"='N'
+		LEFT JOIN "UDOM_BARCODEV2"."OBTN" C ON C."ItemCode"=A."ItemCode"
+		WHERE 
+			CASE WHEN :par1<>'' THEN A."CodeBars" ELSE '1' END = CASE WHEN :par1<>'' THEN :par1 ELSE '1' END
+		AND (CASE WHEN :par2<>'' THEN B."DistNumber" ELSE '1' END = CASE WHEN :par2<>'' THEN :par2 ELSE '1' END
+		OR CASE WHEN :par3<>'' THEN C."DistNumber" ELSE '1' END = CASE WHEN :par3<>'' THEN :par3 ELSE '1' END)
+		AND A."OnHand">0;
+	ELSE IF :DTYPE='OCRD' THEN
+		SELECT  --TOP 10
+				"CardCode" AS CardCode
+			   ,"CardName" AS CardName
+			   ,IFNULL("Building",'') AS Address
+			   ,IFNULL("Phone1",'') AS Phone
+		FROM "UDOM_BARCODEV2"."OCRD";
+	--Call Master Data
+	ELSE IF :DTYPE='NNM1' THEN
+		SELECT 
+			 "Series" AS Code
+			,"SeriesName" AS Name
+		FROM UDOM_BARCODEV2."NNM1" 
+		WHERE	  "ObjectCode"=:par1
+			  AND "Indicator"=TO_NVARCHAR(YEAR(:par2)) || '-' || CASE WHEN length(TO_NVARCHAR(MONTH(:par2)))=1 -- Count Lenght if 1= then we will plus 0 coz it 1-9 of month
+																		THEN 
+																			'0' || TO_NVARCHAR(MONTH(:par2)) 
+																		ELSE 
+																			TO_NVARCHAR(MONTH(:par2)) 
+																		END;
+	ELSE IF :DTYPE='OSLP' THEN
+		SELECT 	 "SlpCode"
+				,"Active" 
+		FROM UDOM_BARCODEV2."OSLP" 
+		WHERE "Active"='Y';
+	END IF;
+	END IF;
+	END IF;
+	END IF;
+	END IF;
+	END IF;
+	END IF;
+	END IF;
+	END IF;
+END;

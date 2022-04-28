@@ -26,6 +26,7 @@ namespace BarCodeLibrary.Respones.SAP.Tengkimleang
         public string TaxDate { get; set; }
         public double DocTotal { get; set; }
         public double DiscPrcnt { get; set; }
+        public double DiscountAMT { get; set; }
         public List<POR1> Line { get; set; }
     }
     public class POR1
@@ -34,10 +35,15 @@ namespace BarCodeLibrary.Respones.SAP.Tengkimleang
         public string Description { get; set; }
         public double Quatity { get; set; }
         public double Price { get; set; }
+        public double PriceBeforeDis { get; set; }
         public double DiscPrcnt { get; set; }
+        public double DiscountAMT { get; set; }
         public string VatGroup { get; set; }
         public double LineTotal { get; set; }
         public string WhsCode { get; set; }
         public string ManageItem { get; set; }
+        public string UomName { get; set; }
+        public string TaxCode { get; set; }
+        public int LineNum { get; set; }
     }
 }

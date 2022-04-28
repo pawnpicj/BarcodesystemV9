@@ -9,7 +9,7 @@ ALTER PROCEDURE "UDOM_BARCODEV2"._USP_CALLTRANS_TENGKIMLEANG(
 AS
 BEGIN
 	IF :DTYPE = 'OPOR' THEN 
-		SELECT TOP 20
+		SELECT
 			"OPOR"."DocEntry" AS DocEntry,
 			"OPOR"."CardCode" AS CardCode, 
 			"OPOR"."CardName" AS CardName, 
@@ -21,7 +21,9 @@ BEGIN
 			"OPOR"."DocDueDate" AS DocDueDate,
 			"OPOR"."TaxDate" AS TaxDate,
 			"OPOR"."DocTotal" AS DocTotal,
-			"OPOR"."DiscPrcnt" AS DiscPrcnt
+			"OPOR"."DiscPrcnt" AS DiscPrcnt,
+			"OPOR"."DiscSum" AS DiscSum
+			--"OPOR"."DiscSum" AS TEST1.
 		FROM "UDOM_BARCODEV2"."OPOR"  WHERE "CardCode"=:Par1 AND "DocStatus"='O' AND "DocType"='I';
 	ELSE IF :DTYPE = 'POR1' THEN 
 		SELECT 
@@ -29,16 +31,20 @@ BEGIN
 			A."Dscription" AS Description, 
 			A."Quantity" AS Quantity, 
 			A."Price" AS Price, 
-			A."DiscPrcnt" AS DiscPrcnt, 
+			A."PriceBefDi" AS PriceBefDi,
+			A."DiscPrcnt" AS DiscPrcnt,
+			CAST((A."PriceBefDi"- A."Price") * A."Quantity" AS DECIMAL(18,2)) AS DiscountAmt, 
 			A."VatGroup" AS VatGroup, 
-			A."LineTotal" AS LineTotal, 
-			A."WhsCode" AS WhsCode,
 			A."LineTotal" AS LineTotal,
+			A."LineNum" AS LineNum,
+			A."WhsCode" AS WhsCode,
 			CASE 
 				WHEN B."ManSerNum"='Y' THEN 'S' 
 				WHEN B."ManBtchNum"='Y' THEN 'B'
 				ELSE 'N' 
-			END AS ManageItem
+			END AS ManageItem,
+			A."unitMsr" AS UomName,
+			A."VatGroup" AS TaxCode
 		FROM "UDOM_BARCODEV2"."POR1" AS A 
 		LEFT JOIN UDOM_BARCODEV2."OITM" AS B ON A."ItemCode"=B."ItemCode"
 		WHERE A."DocEntry"=:par1;
@@ -119,10 +125,37 @@ BEGIN
 																			TO_NVARCHAR(MONTH(:par2)) 
 																		END;
 	ELSE IF :DTYPE='OSLP' THEN
-		SELECT 	 "SlpCode"
-				,"Active" 
+		SELECT 	 "SlpCode" AS Code
+				,"SlpName" AS Name
 		FROM UDOM_BARCODEV2."OSLP" 
 		WHERE "Active"='Y';
+	ELSE IF :DTYPE='OCRN' THEN
+		DECLARE currency NVARCHAR(10);
+		Declare currencyBP NVARCHAR(10);
+		SELECT 
+			CASE WHEN "DscntRel"='L' THEN 
+				(SELECT "MainCurncy" FROM UDOM_BARCODEV2."OADM") 
+			ELSE 
+				(SELECT "SysCurrncy" FROM UDOM_BARCODEV2."OADM") 
+			END
+		INTO  currencyBP
+		FROM UDOM_BARCODEV2."OCRD" 
+		WHERE "CardCode"=:par1;
+		SELECT "Currency" INTO currency FROM UDOM_BARCODEV2."OCRD" WHERE "CardCode"=:par1; 
+		IF :currency='##' THEN
+			SELECT 	 "CurrCode" AS Code
+					,"CurrName" AS Name
+					,CASE WHEN "CurrCode"=currencyBP THEN 1 ELSE 0 END AS DefaultCurrency
+			FROM UDOM_BARCODEV2."OCRN" ORDER BY DefaultCurrency DESC ;
+		ELSE
+			SELECT   "CurrCode" AS Code
+					,"CurrName" AS Name
+					,CASE WHEN "CurrCode"=currencyBP THEN 1 ELSE 0 END AS DefaultCurrency
+			FROM UDOM_BARCODEV2."OCRN"
+			WHERE "CurrCode"=(SELECT "Currency" FROM UDOM_BARCODEV2."OCRD" WHERE "CardCode"=:par1) 
+			ORDER BY DefaultCurrency DESC; 
+		END IF;
+	END IF;
 	END IF;
 	END IF;
 	END IF;

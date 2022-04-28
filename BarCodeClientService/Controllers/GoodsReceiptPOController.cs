@@ -1,5 +1,4 @@
-﻿
-using BarCodeLibrary.APICall;
+﻿using BarCodeLibrary.APICall;
 using BarCodeLibrary.Respones.SAP;
 using BarCodeLibrary.Respones.SAP.Tengkimleang;
 using Barcodesystem.Contract.RouteApi;
@@ -18,7 +17,7 @@ namespace BarCodeClientService.Controllers
             return View();
         }
         [HttpGet]
-        public IActionResult GetCustomerCleint()
+        public IActionResult GetCustomerClientResult()
         {
             var a = API.Read<ResponseCustomerGet>(APIRoute.GoodReceiptPO.Controller + APIRoute.GoodReceiptPO.GetCustomer);
             if (a.ErrorCode == 0)
@@ -55,6 +54,32 @@ namespace BarCodeClientService.Controllers
             {
                 return BadRequest(a.ErrorMessage);
             } 
+        }
+        [HttpGet]
+        public IActionResult GetSaleEmployeeResult()
+        {
+            var a = API.Read<ResponseGetSaleEmployee>(APIRoute.GoodReceiptPO.Controller + APIRoute.GoodReceiptPO.GetSaleEmployee);
+            if (a.ErrorCode == 0)
+            {
+                return Ok(a.Data);
+            }
+            else
+            {
+                return BadRequest(a.ErrorMessage);
+            }
+        }
+        [HttpGet]
+        public IActionResult GetCurrency(string cardCode)
+        {
+            var a= API.Read<ResponseGetCurrency>(APIRoute.GoodReceiptPO.Controller + APIRoute.GoodReceiptPO.GetCurrency+cardCode);
+            if (a.ErrorCode == 0)
+            {
+                return Ok(a.Data);
+            }
+            else
+            {
+                return BadRequest(a.ErrorMessage);
+            }
         }
     }
 }

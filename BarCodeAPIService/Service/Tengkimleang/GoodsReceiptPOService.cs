@@ -161,11 +161,16 @@ namespace BarCodeAPIService.Service
                                 Description = drLine["Description"].ToString(),
                                 Quatity = Convert.ToDouble(drLine["Quantity"].ToString()),
                                 Price = Convert.ToDouble(drLine["Price"].ToString()),
+                                PriceBeforeDis = Convert.ToDouble(drLine["PriceBefDi"].ToString()),
                                 DiscPrcnt = Convert.ToDouble(drLine["DiscPrcnt"].ToString()),
+                                DiscountAMT = Convert.ToDouble(drLine["DiscountAmt"].ToString()),
                                 VatGroup = drLine["LineTotal"].ToString(),
                                 WhsCode = drLine["WhsCode"].ToString(),
                                 LineTotal = Convert.ToDouble(drLine["LineTotal"].ToString()),
-                                ManageItem = drLine["ManageItem"].ToString()
+                                ManageItem = drLine["ManageItem"].ToString(),
+                                UomName = drLine["UomName"].ToString(),
+                                TaxCode = drLine["TaxCode"].ToString(),
+                                LineNum = Convert.ToInt32(drLine["LineNum"].ToString())
                             });
                         }
                         oPORs.Add(new OPOR
@@ -182,6 +187,7 @@ namespace BarCodeAPIService.Service
                             TaxDate = Convert.ToDateTime(row["TaxDate"]).ToShortDateString(),
                             DocTotal = Convert.ToDouble(row["DocTotal"]),
                             DiscPrcnt = Convert.ToDouble(row["DiscPrcnt"]),
+                            DiscountAMT = Convert.ToDouble(row["DiscSum"].ToString()),
                             Line = pOR1s.ToList()
                         });
                     }
@@ -303,6 +309,55 @@ namespace BarCodeAPIService.Service
             catch (Exception ex)
             {
                 return Task.FromResult(new ResponseGetSaleEmployee
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMessage = ex.Message,
+                    Data = null
+                });
+            }
+        }
+
+        public Task<ResponseGetCurrency> ResponseGetCurrency(string cardCode)
+        {
+            var getCurrencies = new List<GetCurrency>();
+            DataTable dt = new DataTable();
+            try
+            {
+                LoginOnlyDatabase login = new LoginOnlyDatabase();
+                if (login.lErrCode == 0)
+                {
+                    string Query = $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetCurrency}','{cardCode}','','','','')";
+                    login.AD = new System.Data.Odbc.OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        getCurrencies.Add(new GetCurrency
+                        {
+                            Code = row["Code"].ToString(),
+                            Name = row["Name"].ToString(),
+                        });
+                    }
+                    return Task.FromResult(new ResponseGetCurrency
+                    {
+                        ErrorCode = 0,
+                        ErrorMessage = "",
+                        Data = getCurrencies.ToList()
+                    });
+                }
+                else
+                {
+                    return Task.FromResult(new ResponseGetCurrency
+                    {
+                        ErrorCode = login.lErrCode,
+                        ErrorMessage = login.sErrMsg,
+                        Data = null
+                    });
+                }
+            }
+
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseGetCurrency
                 {
                     ErrorCode = ex.HResult,
                     ErrorMessage = ex.Message,

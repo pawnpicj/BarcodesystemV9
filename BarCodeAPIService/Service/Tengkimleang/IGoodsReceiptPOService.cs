@@ -14,6 +14,7 @@ namespace BarCodeAPIService.Service
         Task<ResponseCustomerGet> responseCustomerGets();
         Task<ResponseGetSeries> responseGetSeries(string objectCode,string dateOfMonth);
         Task<ResponseGetSaleEmployee> responseGetSaleEmployees();
+        Task<ResponseGetCurrency> ResponseGetCurrency(string cardCode);
 
     }
 }

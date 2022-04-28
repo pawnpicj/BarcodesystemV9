@@ -58,15 +58,22 @@ namespace BarCodeAPIService.Controllers
             return Ok(a);
         }
         [HttpGet(APIRoute.GoodReceiptPO.GetSeries+ "{objectCode}/{dateOfMonth}")]
-        public async Task<IActionResult> GetSeries(string objectCode,string dateOfMonth)
+        public async Task<IActionResult> GetSeriesAsync(string objectCode,string dateOfMonth)
         {
             var a=await goodsReceiptPO.responseGetSeries(objectCode,dateOfMonth);
             return Ok(a);
         }
         [HttpGet(APIRoute.GoodReceiptPO.GetSaleEmployee)]
-        public IActionResult GetSaleEmployee()
+        public async Task<IActionResult> GetSaleEmployeeAsync()
         {
-            return Ok(null);
+            var a = await goodsReceiptPO.responseGetSaleEmployees();
+            return Ok(a);
+        }
+        [HttpGet(APIRoute.GoodReceiptPO.GetCurrency+"{cardCode}")]
+        public async Task<IActionResult> GetCurrencyAsync(string cardCode)
+        {
+            var a = await goodsReceiptPO.ResponseGetCurrency(cardCode);
+            return Ok(a);
         }
     }
 }

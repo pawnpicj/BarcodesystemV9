@@ -1,11 +1,12 @@
-﻿using BarCodeAPIService.Connection;
-using BarCodeLibrary.Respones.SAP;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Odbc;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Data;
+using BarCodeAPIService.Connection;
 using BarCodeAPIService.Models;
+using BarCodeLibrary.Respones.SAP;
 
 namespace BarCodeAPIService.Service
 {
@@ -14,23 +15,22 @@ namespace BarCodeAPIService.Service
         public Task<ResponseOACTGetGLAccount> ResponseOACTGetGLAccount()
         {
             var oACT = new List<OACT>();
-            DataTable dt = new DataTable();
+            var dt = new DataTable();
             try
             {
-                LoginOnlyDatabase login = new LoginOnlyDatabase();
+                var login = new LoginOnlyDatabase();
                 if (login.lErrCode == 0)
                 {
-                    string Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('OACT','','','','','')";
-                    login.AD = new System.Data.Odbc.OdbcDataAdapter(Query, login.CN);
+                    var Query = "CALL \"" + ConnectionString.CompanyDB +
+                                "\"._USP_CALLTRANS_Smey ('OACT','','','','','')";
+                    login.AD = new OdbcDataAdapter(Query, login.CN);
                     login.AD.Fill(dt);
                     foreach (DataRow row in dt.Rows)
-                    {
                         oACT.Add(new OACT
                         {
-                            AcctCode=row[0].ToString(),
-                            AcctName=row[1].ToString()
+                            AcctCode = row[0].ToString(),
+                            AcctName = row[1].ToString()
                         });
-                    }
                     return Task.FromResult(new ResponseOACTGetGLAccount
                     {
                         ErrorCode = 0,
@@ -38,15 +38,13 @@ namespace BarCodeAPIService.Service
                         Data = oACT.ToList()
                     });
                 }
-                else
+
+                return Task.FromResult(new ResponseOACTGetGLAccount
                 {
-                    return Task.FromResult(new ResponseOACTGetGLAccount
-                    {
-                        ErrorCode = login.lErrCode,
-                        ErrorMessage = login.sErrMsg,
-                        Data = null
-                    });
-                }
+                    ErrorCode = login.lErrCode,
+                    ErrorMessage = login.sErrMsg,
+                    Data = null
+                });
             }
 
             catch (Exception ex)

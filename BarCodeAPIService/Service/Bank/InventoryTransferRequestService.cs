@@ -1,11 +1,10 @@
-﻿using BarCodeAPIService.Connection;
-using BarCodeLibrary.Respones.SAP;
-using BarCodeAPIService.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Globalization;
+using BarCodeAPIService.Connection;
+using BarCodeLibrary.Respones.SAP;
+using SAPbobsCOM;
 
 namespace BarCodeAPIService.Service
 {
@@ -15,7 +14,7 @@ namespace BarCodeAPIService.Service
         {
             var oWTQ = new List<OWTQ>();
             var lWTQ1 = new List<WTQ1>();
-            SAPbobsCOM.Company oCompany;
+            Company oCompany;
 
             try
             {
@@ -23,16 +22,18 @@ namespace BarCodeAPIService.Service
                 if (login.LErrCode == 0)
                 {
                     oCompany = login.Company;
-                    SAPbobsCOM.Recordset oRS = null;
-                    SAPbobsCOM.Recordset? oRSLine = null;
-                    oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-                    oRSLine = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-                    string Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_BANK ('OWTQ','','','','','')";
+                    Recordset oRS = null;
+                    Recordset? oRSLine = null;
+                    oRS = (Recordset)oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
+                    oRSLine = (Recordset)oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
+                    var Query = "CALL \"" + ConnectionString.CompanyDB +
+                                "\"._USP_CALLTRANS_BANK ('OWTQ','','','','','')";
                     oRS.DoQuery(Query);
                     while (!oRS.EoF)
                     {
                         //Line
-                        string QueryLine = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK ('WTQ1','{oRS.Fields.Item(1).Value}','','','','')";
+                        var QueryLine =
+                            $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK ('WTQ1','{oRS.Fields.Item(1).Value}','','','','')";
                         oRSLine.DoQuery(QueryLine);
                         lWTQ1 = new List<WTQ1>();
                         while (!oRSLine.EoF)
@@ -67,6 +68,7 @@ namespace BarCodeAPIService.Service
                         oRS.MoveNext();
                         //DocDate = Convert.ToDateTime(oRS.Fields.Item(2).Value.ToString()),
                     }
+
                     return Task.FromResult(new ResponseGetOWTQ
                     {
                         ErrorCode = 0,
@@ -74,15 +76,13 @@ namespace BarCodeAPIService.Service
                         Data = oWTQ.ToList()
                     });
                 }
-                else
+
+                return Task.FromResult(new ResponseGetOWTQ
                 {
-                    return Task.FromResult(new ResponseGetOWTQ
-                    {
-                        ErrorCode = login.LErrCode,
-                        ErrorMsg = login.SErrMsg,
-                        Data = null
-                    });
-                }
+                    ErrorCode = login.LErrCode,
+                    ErrorMsg = login.SErrMsg,
+                    Data = null
+                });
             }
             catch (Exception ex)
             {
@@ -98,18 +98,20 @@ namespace BarCodeAPIService.Service
         public Task<ResponseGetWTQLine> responseGetWTQLine(int DocEntry)
         {
             var getWTQLine = new List<WTQLine>();
-            SAPbobsCOM.Company oCompany;
+            Company oCompany;
             try
             {
                 Login login = new();
                 if (login.LErrCode == 0)
                 {
                     oCompany = login.Company;
-                    SAPbobsCOM.Recordset? oRS = null;
-                    SAPbobsCOM.Recordset? oRSLine = null;
-                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK ('WTQ1','{DocEntry}','','','','')"; ;
-                    oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-                    oRSLine = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+                    Recordset? oRS = null;
+                    Recordset? oRSLine = null;
+                    var sqlStr =
+                        $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK ('WTQ1','{DocEntry}','','','','')";
+                    ;
+                    oRS = (Recordset)oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
+                    oRSLine = (Recordset)oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
                     oRS.DoQuery(sqlStr);
                     while (!oRS.EoF)
                     {
@@ -133,6 +135,7 @@ namespace BarCodeAPIService.Service
                         });
                         oRS.MoveNext();
                     }
+
                     return Task.FromResult(new ResponseGetWTQLine
                     {
                         ErrorCode = 0,
@@ -140,15 +143,13 @@ namespace BarCodeAPIService.Service
                         Data = getWTQLine
                     });
                 }
-                else
+
+                return Task.FromResult(new ResponseGetWTQLine
                 {
-                    return Task.FromResult(new ResponseGetWTQLine
-                    {
-                        ErrorCode = login.LErrCode,
-                        ErrorMsg = login.SErrMsg,
-                        Data = null
-                    });
-                }
+                    ErrorCode = login.LErrCode,
+                    ErrorMsg = login.SErrMsg,
+                    Data = null
+                });
             }
             catch (Exception ex)
             {
@@ -159,7 +160,6 @@ namespace BarCodeAPIService.Service
                     Data = null
                 });
             }
-
         }
     }
 }

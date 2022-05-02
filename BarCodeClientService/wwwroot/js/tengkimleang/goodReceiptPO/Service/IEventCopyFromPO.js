@@ -37,7 +37,7 @@
         }
         let responseBack = {};
         responseBack.remark = remark;
-        responseBack.docTotal=doctotal;
+        responseBack.docTotal = doctotal;
         responseBack.discountPercentage = discountPercentage;
         responseBack.discountAmount = discountAmount;
         responseBack.discountLine = discountLine;

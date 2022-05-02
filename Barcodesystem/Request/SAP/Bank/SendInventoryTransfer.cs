@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BarCodeLibrary.Request.SAP
 {
@@ -10,6 +7,7 @@ namespace BarCodeLibrary.Request.SAP
     {
         //Head
         public int Series { get; set; }
+
         //public int DocNum { get; set; }
         //public string DocEntry { get; set; }
         public string CardCode { get; set; }
@@ -30,13 +28,13 @@ namespace BarCodeLibrary.Request.SAP
         public List<SendInventoryTransferLine> Line { get; set; }
         //public List<SendInventoryTransferBatch> Batch { get; set; }
         //public List<SendInventoryTransferSerial> Serial { get; set; }
-
     }
 
     public class SendInventoryTransferLine
     {
         //Line
         public string ItemCode { get; set; }
+
         //public string ItemName { get; set; }
         public int Quantity { get; set; }
         public string FromWhsCode { get; set; }
@@ -51,6 +49,7 @@ namespace BarCodeLibrary.Request.SAP
         public string U_TranferNo { get; set; }
 
         public string ProductType { get; set; }
+
         //public List<SendInventoryTransferBatch> Batch { get; set; }
         //public List<SendInventoryTransferSerial> Serial { get; set; }
         public List<InventoryTransferBinLocation> FromBinLocations { get; set; }
@@ -74,6 +73,7 @@ namespace BarCodeLibrary.Request.SAP
     public class InventoryTransferBinLocation
     {
         public string BinEntry { get; set; }
+
         public long Quantity { get; set; }
         //public long SerialBatchNubmberBaseLine { get; set; }
     }

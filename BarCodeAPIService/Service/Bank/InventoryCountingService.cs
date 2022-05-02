@@ -1,10 +1,9 @@
-﻿using BarCodeAPIService.Connection;
+﻿using System;
+using System.Threading.Tasks;
+using BarCodeAPIService.Connection;
 using BarCodeLibrary.Request.SAP;
 using BarCodeLibrary.Respones.SAP;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using SAPbobsCOM;
 
 namespace BarCodeAPIService.Service
 {
@@ -17,24 +16,26 @@ namespace BarCodeAPIService.Service
         {
             try
             {
-                SAPbobsCOM.Company oCompany;
+                Company oCompany;
 
-                int Retval = 0;
+                var Retval = 0;
                 Login login = new();
                 if (login.LErrCode == 0)
                 {
                     oCompany = login.Company;
 
-                    SAPbobsCOM.CompanyService oCS = (SAPbobsCOM.CompanyService)oCompany.GetCompanyService();
-                    SAPbobsCOM.InventoryCountingsService oICS = (SAPbobsCOM.InventoryCountingsService)oCS.GetBusinessService(SAPbobsCOM.ServiceTypes.InventoryCountingsService);
-                    SAPbobsCOM.InventoryCounting oIC = (SAPbobsCOM.InventoryCounting)oICS.GetDataInterface(SAPbobsCOM.InventoryCountingsServiceDataInterfaces.icsInventoryCounting);
+                    var oCS = oCompany.GetCompanyService();
+                    var oICS = (InventoryCountingsService)oCS.GetBusinessService(ServiceTypes
+                        .InventoryCountingsService);
+                    var oIC = (InventoryCounting)oICS.GetDataInterface(InventoryCountingsServiceDataInterfaces
+                        .icsInventoryCounting);
 
-                    DateTime dt = DateTime.Now;
+                    var dt = DateTime.Now;
 
                     var dateString = sendInventoryCounting.CountingDate;
-                    DateTime countdate = DateTime.ParseExact(dateString, "yyyy-MM-dd", null);
+                    var countdate = DateTime.ParseExact(dateString, "yyyy-MM-dd", null);
                     var timeString = sendInventoryCounting.CountingTime;
-                    DateTime counttime = DateTime.ParseExact(timeString, "HH:mm", null);
+                    var counttime = DateTime.ParseExact(timeString, "HH:mm", null);
 
                     oIC.CountDate = countdate;
                     oIC.CountTime = counttime;
@@ -43,33 +44,33 @@ namespace BarCodeAPIService.Service
                     oIC.SingleCounterID = Convert.ToInt32(sendInventoryCounting.CountingType);
                     //Counter=36
 
-                    foreach (SendInventoryCountingLine l in sendInventoryCounting.Line)
+                    foreach (var l in sendInventoryCounting.Line)
                     {
-                        SAPbobsCOM.InventoryCountingLines oICLS = oIC.InventoryCountingLines;
-                        SAPbobsCOM.InventoryCountingLine oICL = oICLS.Add();
+                        var oICLS = oIC.InventoryCountingLines;
+                        var oICL = oICLS.Add();
                         oICL.ItemCode = l.ItemCode;
                         oICL.CountedQuantity = l.CountedQuantity;
                         oICL.WarehouseCode = l.WhsCode;
                         oICL.BinEntry = l.BinEntry;
                         oICL.UoMCode = l.UomCode;
-                        oICL.Counted = SAPbobsCOM.BoYesNoEnum.tYES;
-                        
-                            if (l.BatchNo != "")
+                        oICL.Counted = BoYesNoEnum.tYES;
+
+                        if (l.BatchNo != "")
+                        {
+                            var oInventoryCountingBatchNumber = oICL.InventoryCountingBatchNumbers.Add();
+                            oInventoryCountingBatchNumber.BatchNumber = l.BatchNo;
+                            oInventoryCountingBatchNumber.Quantity = l.Quantity;
+                        }
+                        else
+                        {
+                            if (l.SerialNo != "")
                             {
-                                SAPbobsCOM.InventoryCountingBatchNumber oInventoryCountingBatchNumber = oICL.InventoryCountingBatchNumbers.Add();
-                                oInventoryCountingBatchNumber.BatchNumber = l.BatchNo;
-                                oInventoryCountingBatchNumber.Quantity = l.Quantity;
+                                var oInventoryCountingSerialNumber = oICL.InventoryCountingSerialNumbers.Add();
+                                oInventoryCountingSerialNumber.InternalSerialNumber = l.SerialNo;
+                                oInventoryCountingSerialNumber.ManufacturerSerialNumber = l.SerialNo;
+                                oInventoryCountingSerialNumber.Quantity = l.Quantity;
                             }
-                            else
-                            {
-                                if (l.SerialNo != "")
-                                {
-                                    SAPbobsCOM.InventoryCountingSerialNumber oInventoryCountingSerialNumber = oICL.InventoryCountingSerialNumbers.Add();
-                                    oInventoryCountingSerialNumber.InternalSerialNumber = l.SerialNo;
-                                    oInventoryCountingSerialNumber.ManufacturerSerialNumber = l.SerialNo;
-                                    oInventoryCountingSerialNumber.Quantity = l.Quantity;
-                                }
-                            }                        
+                        }
 
                         //foreach (SendInventoryCountingBatch b in sendInventoryCounting.BatchLine)
                         //{
@@ -84,10 +85,9 @@ namespace BarCodeAPIService.Service
                         //    oInventoryCountingSerialNumber.ManufacturerSerialNumber = s.SerialNumber;
                         //    oInventoryCountingSerialNumber.Quantity = s.Quantity;
                         //}
+                    }
 
-                    }                    
-
-                    SAPbobsCOM.InventoryCountingParams oInventoryCountingParams = oICS.Add(oIC);
+                    var oInventoryCountingParams = oICS.Add(oIC);
                     //Retval = oICS.Add();
 
                     if (Retval != 0)
@@ -100,25 +100,20 @@ namespace BarCodeAPIService.Service
                             DocEntry = null
                         });
                     }
-                    else
-                    {
-                        return Task.FromResult(new ResponseInventoryCounting
-                        {
-                            ErrorCode = 0,
-                            ErrorMsg = "",
-                            DocEntry = oCompany.GetNewObjectKey(),
-                        });
-                    }
 
-                }
-                else
-                {
                     return Task.FromResult(new ResponseInventoryCounting
                     {
-                        ErrorCode = login.LErrCode,
-                        ErrorMsg = login.SErrMsg
+                        ErrorCode = 0,
+                        ErrorMsg = "",
+                        DocEntry = oCompany.GetNewObjectKey()
                     });
                 }
+
+                return Task.FromResult(new ResponseInventoryCounting
+                {
+                    ErrorCode = login.LErrCode,
+                    ErrorMsg = login.SErrMsg
+                });
             }
             catch (Exception ex)
             {
@@ -128,8 +123,6 @@ namespace BarCodeAPIService.Service
                     ErrorMsg = ex.Message
                 });
             }
-
         }
-
     }
 }

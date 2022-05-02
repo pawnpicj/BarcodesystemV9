@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace BarCodeLibrary.Respones.SAP.Tengkimleang
 {
@@ -12,6 +8,7 @@ namespace BarCodeLibrary.Respones.SAP.Tengkimleang
         public int ErrorCode { get; set; }
         public List<GetSaleEmployee> Data { get; set; }
     }
+
     public class GetSaleEmployee
     {
         public int Code { get; set; }

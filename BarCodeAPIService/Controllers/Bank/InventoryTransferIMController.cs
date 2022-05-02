@@ -1,10 +1,7 @@
-﻿using BarCodeAPIService.Service;
+﻿using System.Threading.Tasks;
+using BarCodeAPIService.Service;
 using Barcodesystem.Contract.RouteApi;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BarCodeAPIService.Controllers
 {
@@ -24,13 +21,8 @@ namespace BarCodeAPIService.Controllers
         {
             var a = await inventoryTransferIMService.responseGetOWTR();
             if (a.ErrorCode == 0)
-            {
                 return Ok(a);
-            }
-            else
-            {
-                return BadRequest();
-            }
+            return BadRequest();
         }
 
         [HttpGet("GetWTRLine/{DocEntry}")]
@@ -38,13 +30,8 @@ namespace BarCodeAPIService.Controllers
         {
             var a = await inventoryTransferIMService.responseGetWTRLine(DocEntry);
             if (a.ErrorCode == 0)
-            {
                 return Ok(a);
-            }
-            else
-            {
-                return BadRequest(a);
-            }
+            return BadRequest(a);
         }
     }
 }

@@ -1,11 +1,7 @@
-﻿using BarCodeAPIService.Service;
+﻿using System.Threading.Tasks;
 using BarCodeAPIService.Service.Pannreaksmey;
 using Barcodesystem.Contract.RouteApi;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BarCodeAPIService.Controllers.Pannreaksmey
 {
@@ -13,7 +9,7 @@ namespace BarCodeAPIService.Controllers.Pannreaksmey
     [Route(APIRoute.Root)]
     public class SeriesIMController : ControllerBase
     {
-        private ISeriesIMService seriesIM;
+        private readonly ISeriesIMService seriesIM;
 
         public SeriesIMController(ISeriesIMService seriesIM)
         {
@@ -25,13 +21,8 @@ namespace BarCodeAPIService.Controllers.Pannreaksmey
         {
             var a = await seriesIM.responseNNM1_IM();
             if (a.ErrorCode == 0)
-            {
                 return Ok(a);
-            }
-            else
-            {
-                return BadRequest(a);
-            }
+            return BadRequest(a);
         }
     }
 }

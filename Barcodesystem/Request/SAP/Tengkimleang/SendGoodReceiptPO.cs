@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BarCodeLibrary.Request.SAP.TengKimleang
 {
@@ -13,6 +10,7 @@ namespace BarCodeLibrary.Request.SAP.TengKimleang
         public int BrandID { get; set; }
         public List<SendGoodReceiptPOLine> Line { get; set; }
     }
+
     public class SendGoodReceiptPOLine
     {
         public string ItemCode { get; set; }
@@ -21,5 +19,4 @@ namespace BarCodeLibrary.Request.SAP.TengKimleang
         public string WhsCode { get; set; }
         public int UomCode { get; set; }
     }
-
 }

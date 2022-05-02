@@ -1,6 +1,6 @@
-﻿using Barcodesystem.Request.Token;
+﻿using System.Threading.Tasks;
+using Barcodesystem.Request.Token;
 using Barcodesystem.Respones.Token;
-using System.Threading.Tasks;
 
 namespace BarCodeAPIService.Service
 {

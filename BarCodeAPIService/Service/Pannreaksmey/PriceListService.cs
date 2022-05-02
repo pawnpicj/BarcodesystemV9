@@ -1,11 +1,12 @@
-﻿using BarCodeAPIService.Connection;
-using BarCodeLibrary.Respones.SAP;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Odbc;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Data;
+using BarCodeAPIService.Connection;
 using BarCodeAPIService.Models;
+using BarCodeLibrary.Respones.SAP;
 
 namespace BarCodeAPIService.Service
 {
@@ -14,25 +15,24 @@ namespace BarCodeAPIService.Service
         public Task<ResponseITM1GetPriceList> ResponseITM1GetPriceList()
         {
             var iTM1 = new List<ITM1>();
-            DataTable dt = new DataTable();
+            var dt = new DataTable();
             try
             {
-                LoginOnlyDatabase login = new LoginOnlyDatabase();
+                var login = new LoginOnlyDatabase();
                 if (login.lErrCode == 0)
                 {
-                    string Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('ITM1','','','','','')";
-                    login.AD =new System.Data.Odbc.OdbcDataAdapter(Query, login.CN);
+                    var Query = "CALL \"" + ConnectionString.CompanyDB +
+                                "\"._USP_CALLTRANS_Smey ('ITM1','','','','','')";
+                    login.AD = new OdbcDataAdapter(Query, login.CN);
                     login.AD.Fill(dt);
                     foreach (DataRow row in dt.Rows)
-                    {
                         iTM1.Add(new ITM1
                         {
-                            ItemCode=row[0].ToString(),
-                            PriceList=Convert.ToInt32(row[1].ToString()),
-                            Price=Convert.ToDouble(row[2].ToString()),
-                            ListName=row[3].ToString()
+                            ItemCode = row[0].ToString(),
+                            PriceList = Convert.ToInt32(row[1].ToString()),
+                            Price = Convert.ToDouble(row[2].ToString()),
+                            ListName = row[3].ToString()
                         });
-                    }
                     return Task.FromResult(new ResponseITM1GetPriceList
                     {
                         ErrorCode = 0,
@@ -40,15 +40,13 @@ namespace BarCodeAPIService.Service
                         Data = iTM1.ToList()
                     });
                 }
-                else
+
+                return Task.FromResult(new ResponseITM1GetPriceList
                 {
-                    return Task.FromResult(new ResponseITM1GetPriceList
-                    {
-                        ErrorCode = login.lErrCode,
-                        ErrorMessage = login.sErrMsg,
-                        Data = null
-                    });
-                }
+                    ErrorCode = login.lErrCode,
+                    ErrorMessage = login.sErrMsg,
+                    Data = null
+                });
             }
             catch (Exception ex)
             {

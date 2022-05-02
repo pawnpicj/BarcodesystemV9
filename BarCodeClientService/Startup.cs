@@ -1,16 +1,11 @@
 using BarCodeLibrary.APICall;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Rotativa.AspNetCore;
-
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
+using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace BarCodeClientService
 {
@@ -42,6 +37,7 @@ namespace BarCodeClientService
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
@@ -51,11 +47,11 @@ namespace BarCodeClientService
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=index}/{id?}");
+                    "default",
+                    "{controller=Home}/{action=index}/{id?}");
             });
             API.Url = Configuration.GetSection("API").Value;
-            RotativaConfiguration.Setup((Microsoft.AspNetCore.Hosting.IHostingEnvironment)env);
+            RotativaConfiguration.Setup((IHostingEnvironment)env);
         }
     }
 }

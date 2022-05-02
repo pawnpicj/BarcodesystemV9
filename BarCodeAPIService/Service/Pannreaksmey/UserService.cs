@@ -1,13 +1,14 @@
-﻿using BarCodeAPIService.Connection;
-using BarCodeLibrary.Respones.SAP.Pannreaksmey;
-using BarCodeLibrary.Request.SAP.Pannreaksmey;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Odbc;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Data;
+using BarCodeAPIService.Connection;
 using BarCodeAPIService.Models;
+using BarCodeLibrary.Request.SAP.Pannreaksmey;
 using BarCodeLibrary.Respones.SAP;
+using BarCodeLibrary.Respones.SAP.Pannreaksmey;
 
 namespace BarCodeAPIService.Service
 {
@@ -16,23 +17,22 @@ namespace BarCodeAPIService.Service
         public Task<ResponseOUSRGetUser> ResponseOUSRGetUser()
         {
             var oUSR = new List<OUSR>();
-            DataTable dt = new DataTable();
+            var dt = new DataTable();
             try
             {
-                LoginOnlyDatabase login = new LoginOnlyDatabase();
+                var login = new LoginOnlyDatabase();
                 if (login.lErrCode == 0)
                 {
-                    String Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('OUSR','','','','','')";
-                    login.AD = new System.Data.Odbc.OdbcDataAdapter(Query, login.CN);
+                    var Query = "CALL \"" + ConnectionString.CompanyDB +
+                                "\"._USP_CALLTRANS_Smey ('OUSR','','','','','')";
+                    login.AD = new OdbcDataAdapter(Query, login.CN);
                     login.AD.Fill(dt);
                     foreach (DataRow row in dt.Rows)
-                    {
                         oUSR.Add(new OUSR
                         {
                             UserCode = row[0].ToString(),
                             UserName = row[1].ToString()
                         });
-                    }
                     return Task.FromResult(new ResponseOUSRGetUser
                     {
                         ErrorCode = 0,
@@ -40,15 +40,13 @@ namespace BarCodeAPIService.Service
                         Data = oUSR.ToList()
                     });
                 }
-                else
+
+                return Task.FromResult(new ResponseOUSRGetUser
                 {
-                    return Task.FromResult(new ResponseOUSRGetUser
-                    {
-                        ErrorCode = login.lErrCode,
-                        ErrorMessage = login.sErrMsg,
-                        Data = null
-                    });
-                }
+                    ErrorCode = login.lErrCode,
+                    ErrorMessage = login.sErrMsg,
+                    Data = null
+                });
             }
             catch (Exception ex)
             {
@@ -63,37 +61,39 @@ namespace BarCodeAPIService.Service
 
         public Task<ResponsePostUser> ResponsePostUserAsync(SendUser send)
         {
-            ClsCRUD clsCRUD = new ClsCRUD();
-            var dt = clsCRUD.GetDataWeb("INSERT INTO \"" + ConnectionString.BarcodeDb + "\".TBUSER(USERCODE,USERNAME,PHONE,EMAIL,FAX,DEPARTMENT,PASSWORD,ADMINISTRATOR,CREATEDATE,UPDATEDATE,ACTIVE) VALUES( '"+send.UserCode+"','" + send.UserName +"','" + send.Phone + "','" + send.Email + "','" + send.Fax + "','" + send.Department + "','" + send.Password + "','" + send.Admin + "',(SELECT CURRENT_DATE  FROM DUMMY),'','" + send.Active + "');", "WebDb");
+            var clsCRUD = new ClsCRUD();
+            var dt = clsCRUD.GetDataWeb(
+                "INSERT INTO \"" + ConnectionString.BarcodeDb +
+                "\".TBUSER(USERCODE,USERNAME,PHONE,EMAIL,FAX,DEPARTMENT,PASSWORD,ADMINISTRATOR,CREATEDATE,UPDATEDATE,ACTIVE) VALUES( '" +
+                send.UserCode + "','" + send.UserName + "','" + send.Phone + "','" + send.Email + "','" + send.Fax +
+                "','" + send.Department + "','" + send.Password + "','" + send.Admin +
+                "',(SELECT CURRENT_DATE  FROM DUMMY),'','" + send.Active + "');", "WebDb");
             if (dt != null)
-            {
                 return Task.FromResult(new ResponsePostUser
                 {
                     ErrorCode = 0,
                     ErrorMsg = "",
                     UserCode = dt.Rows[0][1].ToString()
-                }); 
-            }
-            else
-            {
-                return Task.FromResult(new ResponsePostUser {
-                    ErrorCode = 0,
-                    ErrorMsg = "",
-                    UserCode =null
                 });
-            }
-                                
-        }  
+            return Task.FromResult(new ResponsePostUser
+            {
+                ErrorCode = 0,
+                ErrorMsg = "",
+                UserCode = null
+            });
+        }
+
         public Task<ResponseGetUser> RespponseGetuser()
         {
-            ClsCRUD clsCRUD = new ClsCRUD();
+            var clsCRUD = new ClsCRUD();
             var tbUSER = new List<TBUSER>();
-            var dt = clsCRUD.GetDataWeb("SELECT USERID,USERCODE,USERNAME,PHONE,EMAIL,FAX,DEPARTMENT,PASSWORD,ADMINISTRATOR,TO_DATE(CREATEDATE, 'YYYY-MM-DD'),TO_DATE(UPDATEDATE, 'YYYY-MM-DD'),ACTIVE FROM \"" + ConnectionString.BarcodeDb + "\".TBUSER", "WebDb");
-            List<ResponseGetUser> responseGetUsers = new List<ResponseGetUser>();
+            var dt = clsCRUD.GetDataWeb(
+                "SELECT USERID,USERCODE,USERNAME,PHONE,EMAIL,FAX,DEPARTMENT,PASSWORD,ADMINISTRATOR,TO_DATE(CREATEDATE, 'YYYY-MM-DD'),TO_DATE(UPDATEDATE, 'YYYY-MM-DD'),ACTIVE FROM \"" +
+                ConnectionString.BarcodeDb + "\".TBUSER", "WebDb");
+            var responseGetUsers = new List<ResponseGetUser>();
             if (dt != null)
             {
                 foreach (DataRow row in dt.Rows)
-                {
                     try
                     {
                         tbUSER.Add(new TBUSER
@@ -116,19 +116,17 @@ namespace BarCodeAPIService.Service
                     {
                         var e1 = ex.Message;
                     }
-                }
+
                 return Task.FromResult(new ResponseGetUser
                 {
                     Data = tbUSER.ToList()
                 });
             }
-            else
+
+            return Task.FromResult(new ResponseGetUser
             {
-                return Task.FromResult(new ResponseGetUser
-                {
-                    Data = null
-                }) ;
-            }
+                Data = null
+            });
         }
     }
 }

@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BarCodeLibrary.Contract.RouteProcedure
+﻿namespace BarCodeLibrary.Contract.RouteProcedure
 {
     public static class ProcedureRoute
     {
         public const string _USP_CALLTRANS_TENGKIMLEANG = "_USP_CALLTRANS_TENGKIMLEANG";
+
         public static class Type
         {
             public const string CustomerGet = "OCRD";

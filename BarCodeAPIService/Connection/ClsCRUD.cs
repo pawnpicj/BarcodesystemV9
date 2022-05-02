@@ -1,23 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Data.Odbc;
 using System.Data;
+using System.Data.Odbc;
 
 namespace BarCodeAPIService.Connection
 {
     public class ClsCRUD
     {
-        public DataTable GetDataWeb(string sql,string type)
+        public DataTable GetDataWeb(string sql, string type)
         {
-            DataTable tb = new DataTable();
-            string db = "";
-            if (type == "WebDb")
-            {
-                db = ConnectionString.ConnHana;
-            }            
-            OdbcDataAdapter dtp = new OdbcDataAdapter(sql, db);
+            var tb = new DataTable();
+            var db = "";
+            if (type == "WebDb") db = ConnectionString.ConnHana;
+            var dtp = new OdbcDataAdapter(sql, db);
             try
             {
                 dtp.Fill(tb);
@@ -27,6 +21,7 @@ namespace BarCodeAPIService.Connection
                 ex.Message.ToString();
                 tb = null;
             }
+
             return tb;
         }
     }

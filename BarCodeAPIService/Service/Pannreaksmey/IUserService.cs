@@ -1,9 +1,6 @@
-﻿using BarCodeLibrary.Respones.SAP;
+﻿using System.Threading.Tasks;
 using BarCodeLibrary.Request.SAP.Pannreaksmey;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using BarCodeLibrary.Respones.SAP;
 using BarCodeLibrary.Respones.SAP.Pannreaksmey;
 
 namespace BarCodeAPIService.Service

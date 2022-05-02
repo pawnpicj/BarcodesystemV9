@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace BarCodeLibrary.Respones.SAP
 {
@@ -12,7 +8,9 @@ namespace BarCodeLibrary.Respones.SAP
         public string ErrorMessage { get; set; }
         public List<OCPR> Data { get; set; }
     }
-    public class OCPR {
+
+    public class OCPR
+    {
         //CardCode,Name,Position,Address,Tel1,Tel2,Cellolar
         public string CardCode { get; set; }
         public string Name { get; set; }

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BarCodeLibrary.Respones.SAP
 {
@@ -12,6 +9,7 @@ namespace BarCodeLibrary.Respones.SAP
         public int ErrorCode { get; set; }
         public List<OPDN> Data { get; set; }
     }
+
     public class OPDN
     {
         public string CardCode { get; set; }
@@ -27,6 +25,7 @@ namespace BarCodeLibrary.Respones.SAP
         public double DiscPrcnt { get; set; }
         public List<PDN1> Line { get; set; }
     }
+
     public class PDN1
     {
         public string ItemCode { get; set; }

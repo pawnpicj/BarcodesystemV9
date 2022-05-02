@@ -10,20 +10,32 @@
         color: #5f95c3;
     }
 
-        #Icon:hover {
-            margin-top: 55px;
-            font-size: 60px;
-        }
+    #Icon:hover {
+        margin-top: 55px;
+        font-size: 60px;
+    }
+    #Bin{
+        margin-top:0px;
+    }
+    #Bin:hover{
+        margin-top:3px;
+    }
+    #QR{
+        margin-top:0px;
+    }
+    #QR:hover{
+        margin-top:3px;
+    }
 </style>
 
 <div class="container">
     <div class="row">
         @*Bin Location *@
-        <div class="col-lg-3" style="width: 250px;height: 250px;margin-top:30px;">
+        <div class="col-lg-3" style="width: 250px;height: 250px;margin-top:30px;border-width:1px">
             <a asp-controller="CreateLabelSticker" asp-action="GBinLocation">
-                <div style="width:100%;height:100%;background:#f0eff1">
+                <div style="width: 100%; height: 100%; background: #ffffff" id="Bin">
                     <div style="text-align:center">
-                        <p style="text-align:center;padding-top:15px;"><b>Bin Location</b></p>
+                        <p style="text-align: center; padding-top: 15px; color: #386994; font-weight: 300; font-size: 20px "><strong>Bin Location</strong></p>
                     </div>
                     <div style="width:100%;height:100%;text-align:center">
                         <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
@@ -33,9 +45,9 @@
         </div>
         <div class="col-lg-3" style="width: 250px;height: 250px;margin-top:30px;">
             <a asp-controller="CreateLabelSticker" asp-action="ItemMaster">
-                <div style="width:100%;height:100%;background:#f0eff1">
+                <div style="width: 100%; height: 100%; background: #ffffff" id="QR">
                     <div style="text-align:center">
-                        <p style="text-align:center;padding-top:15px;"><b>QR Code/BarCode Item</b></p>
+                        <p style="text-align: center; padding-top: 15px; color: #386994; font-weight: 300; font-size: 20px "><strong>QR Code/BarCode Item</strong></p>
                     </div>
                     <div style="width:100%;height:100%;text-align:center">
                         <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
@@ -71,4 +83,21 @@
             </a>
         </div>*@
     </div>
+    <script>
+
+        // $('#Bin').style.background = "#ecf2f9";
+        $('#Bin').mouseout(function () {
+            document.getElementById("Bin").style.backgroundColor = "#ffffff";
+        });
+        $('#Bin').mouseover(function () {
+            document.getElementById("Bin").style.backgroundColor = "rgba(0, 74, 153,0.1)";
+        });
+        $('#QR').mouseout(function () {
+            document.getElementById("QR").style.backgroundColor = "#ffffff";
+        });
+        $('#QR').mouseover(function () {
+            document.getElementById("QR").style.backgroundColor = "rgba(0, 74, 153,0.1)";
+        });
+                
+    </script>
 </div>

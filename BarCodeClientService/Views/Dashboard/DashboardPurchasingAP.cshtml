@@ -18,14 +18,22 @@
             margin-top: 55px;
             font-size: 60px;
         }
+    #PO {
+        margin-top: 0px;
+    }
+
+        #PO:hover {
+            margin-top: 3px;
+            color: #ffffff;
+        }
 </style>
 <div class="container">
     <div class="row">
         <div class="col-lg-3" style="width: 250px;height: 250px;margin-top:30px;">
             <a asp-controller="GoodsReceiptPO" asp-action="CreatePO">
-                <div style="width:100%;height:100%;background:#f0eff1">
+                <div style="width:100%;height:100%;background:#ffffff" id="PO">
                     <div style="text-align:center">
-                        <p style="text-align:center;padding-top:15px;">Goods receipt PO</p>
+                        <p style="text-align: center; padding-top: 15px; color: #386994; font-weight: 300; font-size: 20px">Goods receipt PO</p>
                     </div>
                     <div style="width:100%;height:100%;text-align:center">
                         <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
@@ -46,5 +54,13 @@
             </a>
         </div>*@
     </div>
+    <script>
+        $('#PO').mouseout(function () {
+            document.getElementById("PO").style.backgroundColor = "#ffffff";
+        });
+        $('#PO').mouseover(function () {
+            document.getElementById("PO").style.backgroundColor = "rgba(0, 74, 153,0.1)";
+        });
+    </script>
 </div>
 

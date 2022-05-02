@@ -3,38 +3,38 @@
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor*@
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"]</title>
 
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="~/css/site.css"/>
     <!-- Font Awesome JS -->
-    <link href="~/css/styles.css" rel="stylesheet" />
+    <link href="~/css/styles.css" rel="stylesheet"/>
     <script src="~/font icon/fontaws.js"></script>
     <script src="~/font icon/fonticons.js"></script>
     <script src="~/lib/jquery/dist/jquery.js"></script>
 
     <script>
 
-        $(document).ready(function () {
-            $(".hamburger .hamburger__inner").click(function () {
-                $(".wrapper").toggleClass("active")
+        $(document).ready(function() {
+            $(".hamburger .hamburger__inner").click(function() {
+                $(".wrapper").toggleClass("active");
 
                 $.ajax({
                     url: '@Url.Action("Layout", "Home")',
                     type: "GET",
                     dataType: "JSON",
-                    success: function (data) {
+                    success: function(data) {
                     }
                 });
-            })
+            });
 
-            $("#user").click(function () {
+            $("#user").click(function() {
                 $(".profile_dd").toggleClass("active");
                 $(".profile_dd1").removeClass("active");
             });
-            $("#setting").click(function () {
+            $("#setting").click(function() {
                 $(".profile_dd1").toggleClass("active");
                 $(".profile_dd").removeClass("active");
             });
@@ -49,21 +49,17 @@
             transition: all 0.3s;
         }
 
-        .wrapper.active .sidebar .sidebar__inner .profile {
-            width: 80px;
-        }
+        .wrapper.active .sidebar .sidebar__inner .profile { width: 80px; }
 
-        .wrapper .sidebar .sidebar__inner .profile {
-            width: 225px;
-        }
+        .wrapper .sidebar .sidebar__inner .profile { width: 225px; }
     </style>
 </head>
-<body style="background:#dce7f1">
-    @*@if (@ViewBag.UserCode == "1")
+<body style="background: #dce7f1">
+@*@if (@ViewBag.UserCode == "1")
         {*@
     @*@HttpContextAccessor.HttpContext.Session.GetString("Layout")*@
     <div class="wrapper active">
-        <div class="top_navbar" style="background: rgba(95, 149, 195,1);">
+        <div class="top_navbar" style="background:#5f95c3;">
             <div class="hamburger" style="background:#f0eff1">
                 <div class="hamburger__inner">
                     <div class="one" style="background:#000000"></div>
@@ -73,7 +69,7 @@
             </div>
             <div class="menu">
                 <div class="logo" style="color:#f0eff1">
-                    <strong>Barcode System</strong>
+                    <b>Barcode System</b>
                 </div>
                 <div class="right_menu">
                     <ul>
@@ -92,73 +88,83 @@
                                         <div class="dd_item1" id="Quit">Quit</div>
                                     </div>
                                 </li>*@
-                    </ul>
-                </div>
+                </ul>
             </div>
         </div>
-
-        <div class="main_container">
-            <div class="sidebar" style="background:#f0eff1">
-                <div class="sidebar__inner">
-                    <div class="profile">
-                        <div class="img">
-                            <a href="@Url.Action("Index","Home")" id="Home">
-                                <img src="~/Icon/sap.png" alt="profile_pic" style="width:100%;margin-left:-10px;">
-                            </a>
-                        </div>
-                    </div>
-                    <ul>
-                        <li>
-                            <a asp-controller="Admin" asp-action="Index" id="AR" class="active" style="color:#696969">
-                                @*href="@Url.Action("SaleARCreation","Home")"*@
-                                <span class="icon"><i class="fas fa-user-cog" style="margin-left:-20px;"></i></span>
-                                <span class="title">Administration</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a asp-controller="Dashboard" asp-action="DashboardSaleAR" id="AR" class="active" style="color:#696969">
-                                @*href="@Url.Action("SaleARCreation","Home")"*@
-                                <span class="icon"><i class="fas fa-cart-arrow-down" style="margin-left:-20px;"></i></span>
-                                <span class="title">Sale A/R</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a asp-controller="Dashboard" asp-action="DashboardPurchasingAP" id="AP" class="active" style="color:#696969">
-                                @*href="@Url.Action("Purchasing","Home")"*@
-                                <span class="icon"><i class="fas fa-chart-pie" style="margin-left:-20px;"></i></span>
-                                <span class="title">Purchasing - A/P</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a asp-controller="Dashboard" asp-action="DashboardInventory" id="INT" class="active" style="color:#696969">
-                                @*href="@Url.Action("InventoryCreation","Home")"*@
-                                <span class="icon"><i class="fas fa-warehouse" style="margin-left:-20px;"></i></span>
-                                <span class="title">Inventory</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a asp-controller="QRBarcode" asp-action="CreateBinLocation" id="INT" class="active" style="color:#696969">
-                                @*href="@Url.Action("InventoryCreation","Home")"*@
-                                <span class="icon"><i class="fas fa-barcode" style="margin-left:-20px;"></i></span>
-                                <span class="title">BarCode/QR Code</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="container1">
-                @RenderBody()
-            </div>
-        </div>
-
     </div>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <div class="main_container">
+        <div class="sidebar" style="background: #f0eff1">
+            <div class="sidebar__inner">
+                <div class="profile">
+                    <div class="img">
+                        <a href="@Url.Action("Index", "Home")" id="Home">
+                            <img src="~/Icon/sap.png" alt="profile_pic" style="margin-left: -10px; width: 100%;">
+                        </a>
+                    </div>
+                </div>
+                <ul>
+                    <li>
+                        <a asp-controller="Admin" asp-action="Index" id="AR" class="active" style="color: #696969">
+                            @*href="@Url.Action("SaleARCreation","Home")"*@
+                            <span class="icon">
+                                <i class="fas fa-user-cog" style="margin-left: -20px;"></i>
+                            </span>
+                            <span class="title">Administration</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-controller="Dashboard" asp-action="DashboardSaleAR" id="AR" class="active" style="color: #696969">
+                            @*href="@Url.Action("SaleARCreation","Home")"*@
+                            <span class="icon">
+                                <i class="fas fa-cart-arrow-down" style="margin-left: -20px;"></i>
+                            </span>
+                            <span class="title">Sale A/R</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-controller="Dashboard" asp-action="DashboardPurchasingAP" id="AP" class="active" style="color: #696969">
+                            @*href="@Url.Action("Purchasing","Home")"*@
+                            <span class="icon">
+                                <i class="fas fa-chart-pie" style="margin-left: -20px;"></i>
+                            </span>
+                            <span class="title">Purchasing - A/P</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-controller="Dashboard" asp-action="DashboardInventory" id="INT" class="active" style="color: #696969">
+                            @*href="@Url.Action("InventoryCreation","Home")"*@
+                            <span class="icon">
+                                <i class="fas fa-warehouse" style="margin-left: -20px;"></i>
+                            </span>
+                            <span class="title">Inventory</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-controller="QRBarcode" asp-action="CreateBinLocation" id="INT" class="active" style="color: #696969">
+                            @*href="@Url.Action("InventoryCreation","Home")"*@
+                            <span class="icon">
+                                <i class="fas fa-barcode" style="margin-left: -20px;"></i>
+                            </span>
+                            <span class="title">BarCode/QR Code</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="container1">
+            @RenderBody()
+        </div>
+    </div>
 
-    <script type="text/javascript">
-        @*$('#CreateUser').click(function () {
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+<script type="text/javascript">
+    @*$('#CreateUser').click(function () {
             window.location.replace('@Url.Action("ViewUser", "Setting")');
         });
         $('#logout').click(function () {
@@ -243,9 +249,9 @@
             }
         })*@
 
-    </script>
+</script>
 
-    @RenderSection("Scripts", required: false)
+@RenderSection("Scripts", false)
 
 </body>
 </html>

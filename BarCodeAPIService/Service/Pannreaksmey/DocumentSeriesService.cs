@@ -1,15 +1,16 @@
-﻿using BarCodeLibrary.Respones.SAP;
-using BarCodeAPIService.Connection;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Odbc;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Data;
+using BarCodeAPIService.Connection;
 using BarCodeAPIService.Models;
+using BarCodeLibrary.Respones.SAP;
 
 namespace BarCodeAPIService.Service
 {
-    public class DocumentSeriesService:IDocumentSeriesService
+    public class DocumentSeriesService : IDocumentSeriesService
     {
         //Task<ResponseNNM1GetDocumentSeries> ResponseNNM1GetDocumentSeries() {
         //    var nMM1 = new List<NNM1>();
@@ -69,27 +70,26 @@ namespace BarCodeAPIService.Service
         Task<ResponseNNM1GetDocumentSeries> IDocumentSeriesService.responseNNM1GetDocumentSeries()
         {
             var nMM1 = new List<NNM1>();
-            DataTable dt = new DataTable();
+            var dt = new DataTable();
             try
             {
-                LoginOnlyDatabase login = new LoginOnlyDatabase();
+                var login = new LoginOnlyDatabase();
                 if (login.lErrCode == 0)
                 {
-                    string Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('NNM1','','','','','')";
-                    login.AD = new System.Data.Odbc.OdbcDataAdapter(Query, login.CN);
+                    var Query = "CALL \"" + ConnectionString.CompanyDB +
+                                "\"._USP_CALLTRANS_Smey ('NNM1','','','','','')";
+                    login.AD = new OdbcDataAdapter(Query, login.CN);
                     login.AD.Fill(dt);
                     foreach (DataRow row in dt.Rows)
-                    {
                         nMM1.Add(new NNM1
                         {
-                            ObjectCode=row[0].ToString(),
-                            Series=Convert.ToInt32(row[1].ToString()),
-                            SeriesName=row[2].ToString(),
-                            InitialNum=Convert.ToInt32(row[3].ToString()),
-                            NextNumber=Convert.ToInt32(row[4].ToString()),
-                            Indicator=row[5].ToString()
+                            ObjectCode = row[0].ToString(),
+                            Series = Convert.ToInt32(row[1].ToString()),
+                            SeriesName = row[2].ToString(),
+                            InitialNum = Convert.ToInt32(row[3].ToString()),
+                            NextNumber = Convert.ToInt32(row[4].ToString()),
+                            Indicator = row[5].ToString()
                         });
-                    }                    
                     return Task.FromResult(new ResponseNNM1GetDocumentSeries
                     {
                         ErrorCode = 0,
@@ -97,15 +97,13 @@ namespace BarCodeAPIService.Service
                         Data = nMM1.ToList()
                     });
                 }
-                else
+
+                return Task.FromResult(new ResponseNNM1GetDocumentSeries
                 {
-                    return Task.FromResult(new ResponseNNM1GetDocumentSeries
-                    {
-                        ErrorCode = login.lErrCode,
-                        ErrorMessage = login.sErrMsg,
-                        Data = null
-                    });
-                }
+                    ErrorCode = login.lErrCode,
+                    ErrorMessage = login.sErrMsg,
+                    Data = null
+                });
             }
             catch (Exception ex)
             {

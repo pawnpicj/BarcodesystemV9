@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BarCodeLibrary.Request.SAP
 {
@@ -11,11 +8,13 @@ namespace BarCodeLibrary.Request.SAP
         public string CardCode { get; set; }
         public string NumAtCard { get; set; }
         public DateTime DocDate { get; set; }
+
         public int ContactPersion { get; set; }
+
         //public string DocType { get; set; }
         public List<SendDeliveryLine> Lines { get; set; }
-       
     }
+
     public class SendDeliveryLine
     {
         public string ItemCode { get; set; }

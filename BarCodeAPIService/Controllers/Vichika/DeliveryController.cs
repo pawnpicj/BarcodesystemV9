@@ -1,24 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using BarCodeAPIService.Service;
 using BarCodeLibrary.Request.SAP;
 using Barcodesystem.Contract.RouteApi;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-
+using Microsoft.AspNetCore.Mvc;
 
 namespace BarCodeAPIService.Controllers
 {
-    
     [ApiController]
     [Route(APIRoute.Root)]
     public class DeliveryController : ControllerBase
     {
         private readonly IDeliveryService Delivery;
+
         public DeliveryController(IDeliveryService Delivery)
         {
             this.Delivery = Delivery;
@@ -29,13 +22,8 @@ namespace BarCodeAPIService.Controllers
         {
             var a = await Delivery.responseGetORDR();
             if (a.ErrorCode == 0)
-            {
                 return Ok(a);
-            }
-            else
-            {
-                return BadRequest(a);
-            }
+            return BadRequest(a);
         }
 
         [HttpGet("GetSOLine/{DocEntry}")]
@@ -43,13 +31,8 @@ namespace BarCodeAPIService.Controllers
         {
             var a = await Delivery.responseGetORDRLine(DocEntry);
             if (a.ErrorCode == 0)
-            {
                 return Ok(a);
-            }
-            else
-            {
-                return BadRequest(a);
-            }
+            return BadRequest(a);
         }
 
         [HttpPost("SendDelivery")]
@@ -57,15 +40,8 @@ namespace BarCodeAPIService.Controllers
         {
             var a = await Delivery.PostDelivery(sendDelivery);
             if (a.ErrorCode == 0)
-            {
                 return Ok(a);
-            }
-            else
-            {
-                return BadRequest(a);
-            }
+            return BadRequest(a);
         }
     }
-   
-
 }

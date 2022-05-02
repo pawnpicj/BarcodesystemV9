@@ -1,11 +1,12 @@
-﻿using BarCodeAPIService.Connection;
-using BarCodeLibrary.Respones.SAP;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Odbc;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Data;
+using BarCodeAPIService.Connection;
 using BarCodeAPIService.Models;
+using BarCodeLibrary.Respones.SAP;
 
 namespace BarCodeAPIService.Service
 {
@@ -14,29 +15,28 @@ namespace BarCodeAPIService.Service
         public Task<ResponseOITMGetItemMaster> ResponseOITMGetItemMaster()
         {
             var oITM = new List<OITM>();
-            DataTable dt = new DataTable();
-            try {
-                LoginOnlyDatabase login = new LoginOnlyDatabase();
+            var dt = new DataTable();
+            try
+            {
+                var login = new LoginOnlyDatabase();
                 if (login.lErrCode == 0)
                 {
-                    string Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('OITM','','','','','')";
-                    login.AD = new System.Data.Odbc.OdbcDataAdapter(Query, login.CN);
+                    var Query = "CALL \"" + ConnectionString.CompanyDB +
+                                "\"._USP_CALLTRANS_Smey ('OITM','','','','','')";
+                    login.AD = new OdbcDataAdapter(Query, login.CN);
                     login.AD.Fill(dt);
                     foreach (DataRow row in dt.Rows)
-                    {
                         oITM.Add(new OITM
                         {
-                            ItemCode=row[0].ToString(),
-                            ItemName=row[1].ToString(),
-                            ItemFName=row[2].ToString(),
-                            ItemGroup=row[3].ToString(),
-                            ManBtchNum=row[4].ToString(),
-                            ManSerNum=row[5].ToString(),
-                            UoM=row[6].ToString(),
-                            FDA=row[7].ToString()
-
+                            ItemCode = row[0].ToString(),
+                            ItemName = row[1].ToString(),
+                            ItemFName = row[2].ToString(),
+                            ItemGroup = row[3].ToString(),
+                            ManBtchNum = row[4].ToString(),
+                            ManSerNum = row[5].ToString(),
+                            UoM = row[6].ToString(),
+                            FDA = row[7].ToString()
                         });
-                    }
                     return Task.FromResult(new ResponseOITMGetItemMaster
                     {
                         ErrorCode = 0,
@@ -44,21 +44,21 @@ namespace BarCodeAPIService.Service
                         Data = oITM.ToList()
                     });
                 }
-                else
+
+                return Task.FromResult(new ResponseOITMGetItemMaster
                 {
-                    return Task.FromResult(new ResponseOITMGetItemMaster { 
-                        ErrorCode=login.lErrCode,
-                        ErrorMessage=login.sErrMsg,
-                        Data=null
-                    });
-                }
-             
+                    ErrorCode = login.lErrCode,
+                    ErrorMessage = login.sErrMsg,
+                    Data = null
+                });
             }
-            catch (Exception ex) {
-                return Task.FromResult(new ResponseOITMGetItemMaster { 
-                    ErrorCode=ex.HResult,
-                    ErrorMessage=ex.Message,
-                    Data=null
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseOITMGetItemMaster
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMessage = ex.Message,
+                    Data = null
                 });
             }
         }

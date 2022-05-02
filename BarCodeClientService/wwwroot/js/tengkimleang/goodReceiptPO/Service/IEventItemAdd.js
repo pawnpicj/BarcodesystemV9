@@ -1,7 +1,6 @@
 ﻿class  IEventItemAdd {
     Btn_ClickBatchSerail(index,table) {
         var data = table.row(index).data();
-        console.log(data);
         if (data.ManageItem == "S") {
             $("#ItemCodeSerial").val(data.ItemCode);
             $("#ItemCodeSerialQty").val(data.Quantity);
@@ -32,20 +31,22 @@
         $("#txtManfrSerial").val("");
         $("#txtExpireDate").val("");
     }
-    GenerateSerialOrBatch(itemCode, qty) {
-        var month = new Date().getMonth();
-        if (month.length == 1) {
-            month = "0" + month;
-        }
-        return  itemCode
-                + qty
-                + new Date().getFullYear()
-                + month
-                + new Date().getDate()
-                + new Date().getDay()
-                + new Date().getHours()
-                + new Date().getMinutes()
-                + new Date().getSeconds()
-                + new Date().getMilliseconds();
+    GenerateSerialOrBatch(url,itemCode, qty) {
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: { objectCode: objectCode, dateOfMonth: dateOfMonth },
+            dataType: "JSON",
+            success: function (data) {
+                $("#SeriesID").empty();
+                for (var i = 0; i < data.length; i++) {
+                    $("#SeriesID").append('<option value="' + data[i].code + '">' + data[i].name + '</option>');
+                }
+            },
+            error: function (erro) {
+                console.log(erro.responseText);
+            }
+        });
+        return "Hello World";
     }
 }

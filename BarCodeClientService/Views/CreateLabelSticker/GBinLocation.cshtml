@@ -1,11 +1,10 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "O2O";
-    DateTime dt = DateTime.Now;
+    var dt = DateTime.Now;
     ViewData["Date"] = dt.ToShortDateString();
 }
 
-<link href="~/css/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/css/DataTable/jquery.dataTables.min.css" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 <style>
@@ -14,46 +13,40 @@
         color: red;
     }
 
-    #main {
-        position: absolute;
-    }
+    #main { position: absolute; }
 
     .color_tap {
-        min-width: 60px;
         background-color: #5f95c3;
         color: #ffffff;
         font-weight: 600;
         margin-right: 1px;
+        min-width: 60px;
     }
 
     .nav-tabs .nav-link {
-        border-radius: 0px 12px 0px 0px;
         border: 1px solid rgb(193, 193, 193);
+        border-radius: 0px 12px 0px 0px;
         height: 40px;
         line-height: 20px;
     }
 
-    .modal {
-        z-index: 200000;
-    }
+    .modal { z-index: 200000; }
 
     .modal-header {
         background: #5f95c3;
-        height: 40px;
         color: #ffffff;
+        height: 40px;
     }
 
-        .modal-header b {
-            margin-top: -10px;
-        }
+    .modal-header b { margin-top: -10px; }
 
     #TbAR table tr td {
-        position: relative !important;
-        padding: 0px !important;
+        background-color: none;
         height: 35px;
         margin-left: 15px;
         margin-top: 10px;
-        background-color: none;
+        padding: 0px !important;
+        position: relative !important;
     }
 
     table tbody tr td {
@@ -66,18 +59,16 @@
         color: red;
     }
 
-        table tbody tr.selected td .clsinput {
-            background: #94d8e1;
-            color: red;
-        }
-
-    .clsinput:focus {
-        outline: none;
+    table tbody tr.selected td .clsinput {
+        background: #94d8e1;
+        color: red;
     }
+
+    .clsinput:focus { outline: none; }
 </style>
 <div id="#main">
-    <div class="row" style="margin-left:5px;margin-top:5px;color:#696969;">
-        <h5 style="margin-top:5px;color:#696969;"></h5>
+    <div class="row" style="color: #696969; margin-left: 5px; margin-top: 5px;">
+        <h5 style="color: #696969; margin-top: 5px;"></h5>
     </div>
     <ul class="nav nav-tabs Tap-PA" id="mytab" role="tablist">
         <li class="nav-item">
@@ -104,42 +95,52 @@
                     Bin Code :
                     <div class="input-group">
                         <div class="input-group-prepend">
-                            <button class="input-group-text" id="binlocation"><i class="fa fa-check"></i></button>
+                            <button class="input-group-text" id="binlocation">
+                                <i class="fa fa-check"></i>
+                            </button>
                         </div>
                         <input type="text" class="form-control" placeholder="" id="binLocationCode" readonly>
                         <div class="input-group-append">
-                            <button class="input-group-text btnbinLocation" data-toggle="modal" data-target="#ModalBinCode"><i class="fa fa-search"></i></button>
+                            <button class="input-group-text btnbinLocation" data-toggle="modal" data-target="#ModalBinCode">
+                                <i class="fa fa-search"></i>
+                            </button>
                         </div>
                     </div>
                     Bin Name:
                     <div class="input-group">
                         <div class="input-group-prepend">
-                            <button class="input-group-text" id="warehouse"><i class="fa fa-check"></i></button>
+                            <button class="input-group-text" id="warehouse">
+                                <i class="fa fa-check"></i>
+                            </button>
                         </div>
                         <input type="text" class="form-control" placeholder="" id="binName" readonly>
                         <div class="input-group-append">
-                            <button class="input-group-text btnbin"><i class="fa fa-search"></i></button>
+                            <button class="input-group-text btnbin">
+                                <i class="fa fa-search"></i>
+                            </button>
                         </div>
                     </div>
-                    <div class="row" style="margin-top:15px">
-                        <div class="col-1"><label>Size: </label></div>
+                    <div class="row" style="margin-top: 15px">
+                        <div class="col-1">
+                            <label>Size: </label>
+                        </div>
                         <div class="col-9">
-                            <select size="1" class="c16" style="width:250px;height:30px">
+                            <select size="1" class="c16" style="height: 30px; width: 250px;">
                                 <option value="0">4x10</option>
                             </select>
                         </div>
                         <div class="col-2">
                             <div class="nav navbar-nav ml-auto">
-                                <button class="btn btn-info" id="Add" style="background:#f0eff1;color:#696969">Add Item</button>
+                                <button class="btn btn-info" id="Add" style="background: #f0eff1; color: #696969">Add Item</button>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>         
+            </div>
             @*1. Search Bin Location*@
             <div class="modal fade" id="ModalBinCode">
                 <div class="modal-dialog modal-xl">
-                    <div class="modal-content" style="background:#f0eff1;color:#696969;">
+                    <div class="modal-content" style="background: #f0eff1; color: #696969;">
                         <div class="modal-header">
                             <b>List of Bin Location</b>
                         </div>
@@ -147,14 +148,14 @@
                             <div class="table-responsive">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <table id="tbBinLocations" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                        <table id="tbBinLocations" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
                                             <thead>
-                                                <tr>
-                                                    <th>Bin Code</th>
-                                                    <th>Bin Name</th>
-                                                    <th>Warehouse</th>
-                                                    <th>Warehouse Name</th>
-                                                </tr>
+                                            <tr>
+                                                <th>Bin Code</th>
+                                                <th>Bin Name</th>
+                                                <th>Warehouse</th>
+                                                <th>Warehouse Name</th>
+                                            </tr>
                                             </thead>
                                         </table>
                                     </div>
@@ -162,8 +163,8 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-info" data-dismiss="modal" id="ChooseBinLocation" style="background:#f0eff1;color:#696969;">Choose</button>
-                            <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
+                            <button class="btn btn-info" data-dismiss="modal" id="ChooseBinLocation" style="background: #f0eff1; color: #696969;">Choose</button>
+                            <button class="btn btn-info" data-dismiss="modal" style="background: #f0eff1; color: #696969;">Close</button>
                         </div>
                     </div>
                 </div>
@@ -171,56 +172,56 @@
             <div class="row">
                 <div class="col-sm-12" style="padding-left: 5px;">
                     <div class="table-responsive">
-                        <table id="TbGBin" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;margin-bottom:10px;">
+                        <table id="TbGBin" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969; margin-bottom: 10px;">
                             <thead>
-                                <tr>
-                                    @*<th>G-Code</th>*@
-                                    <th>Warehouse </th>
-                                    <th>Bin Code</th>
-                                    <th>Bin Name</th>
-                                    <th>Command</th>
-                                </tr>
+                            <tr>
+                                @*<th>G-Code</th>*@
+                                <th>Warehouse </th>
+                                <th>Bin Code</th>
+                                <th>Bin Name</th>
+                                <th>Command</th>
+                            </tr>
                             </thead>
                         </table>
                     </div>
                 </div>
-                <br />
-                <button class="btn btn-success" id="Print" style="margin-left:5px;margin-top:20px;">Print</button>
+                <br/>
+                <button class="btn btn-success" id="Print" style="margin-left: 5px; margin-top: 20px;">Print</button>
             </div>
         </div>
     </div>
 </div>
-    <script src="~/js/Array.js"></script>
-    <script src="~/css/DataTable/jquery-3.3.1.js"></script>
-    <script src="~/css/DataTable/jquery.dataTables.min.js"></script>
+<script src="~/js/Array.js"></script>
+<script src="~/css/DataTable/jquery-3.3.1.js"></script>
+<script src="~/css/DataTable/jquery.dataTables.min.js"></script>
 
-    <script type="text/javascript">
-        // First. Action on nav-tabs
-        $('.next').click(function () {
-            $('.nav-tabs > .nav-item > .active').parent().next('li').find('a').trigger('click');
-            $('.next').prop('hidden', true);
-            $('.previous').prop('hidden', false);
-        });
-        $('.previous').click(function () {
-            $('.nav-tabs > .nav-item > .active').parent().prev('li').find('a').trigger('click');
-            $('.previous').prop('hidden', true);
-            $('.next').prop('hidden', false);
-        });
-        if ($("#create-tab").hasClass('active') == true) {
-            $('.previous').prop('hidden', true);
-        }
-        if ($("#print-tab").hasClass('active') == true) {
-            $('.next').prop('hidden', true);
-        }
-        $('#create-tab').click(function () {
-            console.log("hello");
-            $('.previous').prop('hidden', true);
-            $('.next').prop('hidden', false);
-        });
-        $('#print-tab').click(function () {
-            $('.next').prop('hidden', true);
-            $('.previous').prop('hidden', false);
-        });
+<script type="text/javascript">
+    // First. Action on nav-tabs
+    $('.next').click(function() {
+        $('.nav-tabs > .nav-item > .active').parent().next('li').find('a').trigger('click');
+        $('.next').prop('hidden', true);
+        $('.previous').prop('hidden', false);
+    });
+    $('.previous').click(function() {
+        $('.nav-tabs > .nav-item > .active').parent().prev('li').find('a').trigger('click');
+        $('.previous').prop('hidden', true);
+        $('.next').prop('hidden', false);
+    });
+    if ($("#create-tab").hasClass('active') == true) {
+        $('.previous').prop('hidden', true);
+    }
+    if ($("#print-tab").hasClass('active') == true) {
+        $('.next').prop('hidden', true);
+    }
+    $('#create-tab').click(function() {
+        console.log("hello");
+        $('.previous').prop('hidden', true);
+        $('.next').prop('hidden', false);
+    });
+    $('#print-tab').click(function() {
+        $('.next').prop('hidden', true);
+        $('.previous').prop('hidden', false);
+    });
 
     // End Get Warehouse
     // 2. Get BinLocation
@@ -230,42 +231,43 @@
         data: LBins,
         columns: [
             { data: "binCode", autoWidth: true },
-            {data: "descr",autoWidth:true},
+            { data: "descr", autoWidth: true },
             { data: "whsCode", autoWidth: true },
             { data: "whsName", autoWidth: true }
-            ]
+        ]
     });
 
     var tbBin = $('#tbBinLocations').DataTable();
     var LBins = [];
-    $('#tbBinLocations tbody').on('click', 'tr', function () {
-        if ($(this).hasClass('selected')) {
-            $(this).removeClass('selected');
-        }
-        else {
-            tbBin.$('tr.selected').removeClass('selected');
-            $(this).addClass('selected');
-        }
-    });
+    $('#tbBinLocations tbody').on('click',
+        'tr',
+        function() {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            } else {
+                tbBin.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
 
-    $(".btnbinLocation").click(function () {
-        $("#ModalBinCode").modal({backdrop:"static"});
+    $(".btnbinLocation").click(function() {
+        $("#ModalBinCode").modal({ backdrop: "static" });
         $.ajax({
             url: '@Url.Action("GetBinLocation", "CreateLabelSticker")',
             type: "GET",
             dataType: "JSON",
-            success: function (data) {
+            success: function(data) {
                 console.log(data);
-                LBins=[]
-                LBins = data.data
+                LBins = [];
+                LBins = data.data;
                 tbBin.clear();
                 tbBin.rows.add(LBins);
                 tbBin.draw();
             }
         });
     });
-        var whsCode;
-    $('#ChooseBinLocation').click(function () {
+    var whsCode;
+    $('#ChooseBinLocation').click(function() {
         var index = tbBin.row('.selected').index();
         var data = tbBin.row(index).data();
         $('#binLocationCode').val(data.binCode);
@@ -273,87 +275,86 @@
         whsCode = data.whsCode;
     });
     // END Get BinLocation
-        var BinCode=[];
-        //4. Add Bin Information into table
-        $('#TbGBin').DataTable({
-            bLengthChange: false,
-            binfo: false,
-            data: allbinLInes,
-            columns: [
-                /*{ data: "code", autoWidth: true },*/
-                { data: "whsCode", autoWidth: true },
-                { data: "binCode", autoWidth: true },
-                { data: "descr", autoWidth: true },
-                { render: function (data, type, full, meta) { return '<button class="btn-sm btn-danger" style="margin-left:40%;" onClick="remove(' + meta.row + ')"> <i class="fas fa-trash-alt"></i></button>'; } }
+    var BinCode = [];
+    //4. Add Bin Information into table
+    $('#TbGBin').DataTable({
+        bLengthChange: false,
+        binfo: false,
+        data: allbinLInes,
+        columns: [
+            /*{ data: "code", autoWidth: true },*/
+            { data: "whsCode", autoWidth: true },
+            { data: "binCode", autoWidth: true },
+            { data: "descr", autoWidth: true },
+            { render: function(data, type, full, meta) { return '<button class="btn-sm btn-danger" style="margin-left:40%;" onClick="remove(' + meta.row + ')"> <i class="fas fa-trash-alt"></i></button>'; } }
+        ]
+    });
+    var table = $('#TbGBin').DataTable();
+    var allbinLInes = [];
+    var allbinLineLs = [];
+    var i = 1;
+    var binLines = {};
+    $('#Add').click(function() {
+        binLines = {};
+        if ($('#binLocationCode').val() != "") {
+            //binLines.code = i.toString().padStart(4, '0');
+            binLines.whsCode = whsCode;
+            binLines.binCode = $('#binLocationCode').val();
+            binLines.descr = $('#binName').val();
+            allbinLInes.push(binLines);
+            table.clear();
+            table.rows.add(allbinLInes);
+            table.draw();
+            $('#Code').val("");
+            $('#binName').val("");
+            $('#binLocationCode').val("");
+            i = i + 1;
+        }
 
-            ]
-        });
-        var table = $('#TbGBin').DataTable();
-        var allbinLInes = [];
-        var allbinLineLs = [];
-        var i = 1;
-        var binLines = {};
-        $('#Add').click(function () {
-            binLines = {};
-            if ($('#binLocationCode').val() != "") {
-                //binLines.code = i.toString().padStart(4, '0');
-                binLines.whsCode = whsCode;
-                binLines.binCode = $('#binLocationCode').val();
-                binLines.descr = $('#binName').val();
-                allbinLInes.push(binLines);
-                table.clear();
-                table.rows.add(allbinLInes);
-                table.draw();
-                $('#Code').val("");
-                $('#binName').val("");
-                $('#binLocationCode').val("");
-                i = i + 1;
-            }
-
-        });
-        // END Adding Bin Information
-        // Print Label Sticker for Bin Location
-        $('#Print').click(function () {
-            var print = {};
-            print.Data = allbinLInes;
-            if (allbinLInes.length > 0) {
-                 $.ajax({
+    });
+    // END Adding Bin Information
+    // Print Label Sticker for Bin Location
+    $('#Print').click(function() {
+        var print = {};
+        print.Data = allbinLInes;
+        if (allbinLInes.length > 0) {
+            $.ajax({
                 url: '@Url.Action("PrintBinLabelPDFAction", "CreateLabelSticker")',
                 type: "POST",
                 data: { print: print },
                 dataType: "JSON",
-                success: function (data) {
-                if (data == 1) {
-                    window.location.href = "@Url.Action("PrintBinLabelPDF", "CreateLabelSticker")";
-                }
+                success: function(data) {
+                    if (data == 1) {
+                        window.location.href = "@Url.Action("PrintBinLabelPDF", "CreateLabelSticker")";
+                    }
                 }
             });
-            }
-
-
-        });
-        //button generate code
-        $('#btnGCode').click(function () {
-            var date = new Date();
-            var year = date.getFullYear().toString().slice(-2);
-            var mn = String(date.getMonth() + 1).padStart(2, '0');
-            var day = String(date.getDate()).padStart(2, '0');
-            var hr = date.getHours();
-            var min = date.getMinutes();
-            var ms = date.getSeconds();
-            $('#Code').val(year + mn + day + hr + min + ms);
-
-        });
-        // Remove row from Table
-        function remove(row) {
-            var data = table.row(row).data();
-            if (confirm("Do you want to delete?") == true){
-                helper.removeOne(allbinLInes, row => row.binCode === data.binCode);
-                table.clear();
-                table.rows.add(allbinLInes);
-                table.draw();
-            }
         }
 
-    </script>
 
+    });
+    //button generate code
+    $('#btnGCode').click(function() {
+        var date = new Date();
+        var year = date.getFullYear().toString().slice(-2);
+        var mn = String(date.getMonth() + 1).padStart(2, '0');
+        var day = String(date.getDate()).padStart(2, '0');
+        var hr = date.getHours();
+        var min = date.getMinutes();
+        var ms = date.getSeconds();
+        $('#Code').val(year + mn + day + hr + min + ms);
+
+    });
+
+    // Remove row from Table
+    function remove(row) {
+        var data = table.row(row).data();
+        if (confirm("Do you want to delete?") == true) {
+            helper.removeOne(allbinLInes, row => row.binCode === data.binCode);
+            table.clear();
+            table.rows.add(allbinLInes);
+            table.draw();
+        }
+    }
+
+</script>

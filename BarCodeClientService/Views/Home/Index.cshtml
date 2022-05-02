@@ -3,74 +3,50 @@
 }
 <style type="text/css">
     #Icon {
-        text-align: center;
-        margin-top: 60px;
-        font-size: 50px;
         color: #5f95c3;
+        font-size: 50px;
+        margin-top: 60px;
+        text-align: center;
     }
 
         #Icon:hover {
             margin-top: 55px;
             font-size: 60px;
         }
-    #Sale {
-        margin-top: 0px;
-    }
-
-        #Sale:hover {
-            margin-top: 3px;
-            color: #ffffff;
-        }
-    #Sale1 {
-        margin-top: 0px;
-    }
-
-        #Sale1:hover {
-            margin-top: 3px;
-            color: #ffffff;
-        }
-    #API {
-        margin-top: 0px;
-    }
-
-        #API:hover {
-            margin-top: 3px;
-            color: #ffffff;
-        }
 </style>
 <div class="container">
     <div class="row">
-        <div class="col-lg-3" style="width: 250px;height: 250px;margin-top:30px;">
+        <div class="col-lg-3" style="height: 250px; margin-top: 30px; width: 250px;">
             <a asp-controller="Dashboard" asp-action="DashboardSaleAR">
-                <div style="width:100%;height:100%;background:#ffffff" id="Sale">
+                <div style="width:100%;height:100%;background:#f0eff1">
                     <div style="text-align:center">
-                        <p style="text-align: center; padding-top: 15px; color: #386994; font-weight: 300; font-size: 20px ">Sale A/R</p>
+                        <p style="text-align:center;padding-top:15px;">Sale A/R</p>
                     </div>
-                    <div style="width:100%;height:100%;text-align:center">
+                    <div style="height: 100%; text-align: center; width: 100%;">
                         <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
                     </div>
                 </div>
             </a>
         </div>
-        <div class="col-lg-3" style="width: 250px;height: 250px;margin-top:30px;">
+        <div class="col-lg-3" style="height: 250px; margin-top: 30px; width: 250px;">
             <a href="#" onclick="test2()">
-                <div style="width:100%;height:100%;background:#ffffff" id="Sale1">
+                <div style="width:100%;height:100%;background:#f0eff1">
                     <div style="text-align:center">
-                        <p style="text-align: center; padding-top: 15px; color: #386994; font-weight: 300; font-size: 20px">Sale A/R</p>
+                        <p style="text-align:center;padding-top:15px;">Sale A/R</p>
                     </div>
-                    <div style="width:100%;height:100%;text-align:center">
+                    <div style="height: 100%; text-align: center; width: 100%;">
                         <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
                     </div>
                 </div>
             </a>
         </div>
-        <div class="col-lg-3" style="width: 250px;height: 250px;margin-top:30px;">
+        <div class="col-lg-3" style="height: 250px; margin-top: 30px; width: 250px;">
             <a href="#" onclick="POSTDataAPI()">
-                <div style="width:100%;height:100%;background:#ffffff" id="API">
+                <div style="width:100%;height:100%;background:#f0eff1">
                     <div style="text-align:center">
-                        <p style="text-align: center; padding-top: 15px; color: #386994; font-weight: 300; font-size: 20px">POST DATA to Web API</p>
+                        <p style="text-align:center;padding-top:15px;">POST DATA to Web API</p>
                     </div>
-                    <div style="width:100%;height:100%;text-align:center">
+                    <div style="height: 100%; text-align: center; width: 100%;">
                         <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
                     </div>
                 </div>
@@ -100,43 +76,43 @@
     });
     function test1() {
         $.ajax({
-        url: '@Url.Action("GetAPITesting", "Home")',
-        type: "GET",
-        //data: { ItemCode: Items },
-        dataType: "JSON",
-            beforeSend: function () {
-          
-                    //$('#Modalloder').modal('show');
-        },
-        success: function (data) {
-            console.log(data);
-            if (data.errorCode == 0) {                
-                alert("I can get Data from Restful Service");
-            } else {
-                alert("Oppp Maybe Internal Error Look Like this:" + data.errorMessage);                
+            url: '@Url.Action("GetAPITesting", "Home")',
+            type: "GET",
+            //data: { ItemCode: Items },
+            dataType: "JSON",
+            beforeSend: function() {
+
+                //$('#Modalloder').modal('show');
+            },
+            success: function(data) {
+                console.log(data);
+                if (data.errorCode == 0) {
+                    alert("I can get Data from Restful Service");
+                } else {
+                    alert("Oppp Maybe Internal Error Look Like this:" + data.errorMessage);
+                }
             }
-        }
-    });
+        });
     }
 
     function test2() {
         $.ajax({
-        url: '@Url.Action("GetSaleEmployee", "Home")',
-        type: "GET",
-        //data: { ItemCode: Items },
-        dataType: "JSON",
-        beforeSend: function () {
-                    //$('#Modalloder').modal('show');
-        },
-        success: function (data) {
-            console.log(data);
-            if (data.errorCode == 0) {
-                alert("I can get Data from Restful Service [GetContactPerson]");
-            } else {
-                alert("Oppp Maybe Internal Error Look Like this:" + data.errorMessage);
+            url: '@Url.Action("GetSaleEmployee", "Home")',
+            type: "GET",
+            //data: { ItemCode: Items },
+            dataType: "JSON",
+            beforeSend: function() {
+                //$('#Modalloder').modal('show');
+            },
+            success: function(data) {
+                console.log(data);
+                if (data.errorCode == 0) {
+                    alert("I can get Data from Restful Service [GetContactPerson]");
+                } else {
+                    alert("Oppp Maybe Internal Error Look Like this:" + data.errorMessage);
+                }
             }
-        }
-    });
+        });
     }
 
     function POSTDataAPI() {
@@ -163,10 +139,10 @@
             type: "POST",
             data: { sendGoodsReturn: obj },
             dataType: "JSON",
-            beforeSend: function () {
-                        //$('#Modalloder').modal('show');
+            beforeSend: function() {
+                //$('#Modalloder').modal('show');
             },
-            success: function (data) {
+            success: function(data) {
                 console.log(data);
 
             }

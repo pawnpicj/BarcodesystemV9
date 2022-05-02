@@ -10,12 +10,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/bootstrap-grid.css" rel="stylesheet" />
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet"/>
+    <link href="~/lib/bootstrap/dist/css/bootstrap-grid.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="~/css/site.css"/>
     <!-- Font Awesome JS -->
-    <link href="~/css/styles.css" rel="stylesheet" />
+    <link href="~/css/styles.css" rel="stylesheet"/>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/jquery/dist/JsBarcode.all.min.js"></script>
 </head>
@@ -23,65 +23,70 @@
     .container-fluid {
         font-family: arial;
         font-size: 12px;
+        height: 169.078740157px;
+        margin-bottom: auto;
         margin-left: 30px;
         margin-top: 10px;
-        margin-bottom: auto;
-        width: 263.5669291339px;
-        height: 169.078740157px;
         outline: solid 1px black;
+        width: 263.5669291339px;
     }
 </style>
 <body>
-    @{ int i = 1;
-        string script = "";
-    }
-    @foreach (var l in Model.Data)
-    {
-        <div class="row">
-            <div class="col-12">
-                <div>
-                    <br />
+@{
+    var i = 1;
+    var script = "";
+}
+@foreach (var l in Model.Data)
+{
+    <div class="row">
+        <div class="col-12">
+            <div>
+                <br/>
+            </div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <label> Bin Code : <label id="ddd-@i">@l.BinCode</label></label>
+                    </div>
                 </div>
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-12"><label> Bin Code : <label id="ddd-@i">@l.BinCode</label></label></div>
+                <div class="row">
+                    <div class="col-12">
+                        <label>Bin Name : @l.Descr</label>
                     </div>
-                    <div class="row">
-                        <div class="col-12"><label>Bin Name : @l.Descr</label></div>
-                    </div>
-                    <div class="row">
-                        <img id="test-@i" style="margin:2px auto auto 30px" />
-                    </div>
+                </div>
+                <div class="row">
+                    <img id="test-@i" style="margin: 2px auto auto 30px"/>
                 </div>
             </div>
         </div>
-        script = script + "<script>JsBarcode('#test-" + @i + "', $('#ddd-" + @i.ToString() + "').text(), {width: 1,height: 35,displayValue: true,textPosition: 'bottom',fontSize: 12,background: '#ffffff',lineColor: '#212529'});</script>";
-        i = i + 1;
-    }
+    </div>
+    script = script + "<script>JsBarcode('#test-" + i + "', $('#ddd-" + i + "').text(), {width: 1,height: 35,displayValue: true,textPosition: 'bottom',fontSize: 12,background: '#ffffff',lineColor: '#212529'});</script>";
+    i = i + 1;
+}
 
 @Html.Raw(script)
 <script>
-            //$("#test").JsBarcode("jQuery Script", {
-            //    width: 2,
-            //    height: 100,
-            //    format: "auto",
-            //    displayValue: true,
-            //    fontOptions: "",
-            //    font: "monospace",
-            //    text: undefined,
-            //    textAlign: "center",
-            //    textPosition: "bottom",
-            //    textMargin: 2,
-            //    fontSize: 20,
-            //    background: "#ffffff",
-            //    lineColor: "#000000",
-            //    margin: 10,
-            //    marginTop: undefined,
-            //    marginBottom: undefined,
-            //    marginLeft: undefined,
-            //    marginRight: undefined,
-            //    valid: function valid() { }
-            //});
+                    //$("#test").JsBarcode("jQuery Script", {
+    //    width: 2,
+    //    height: 100,
+    //    format: "auto",
+    //    displayValue: true,
+    //    fontOptions: "",
+    //    font: "monospace",
+    //    text: undefined,
+    //    textAlign: "center",
+    //    textPosition: "bottom",
+    //    textMargin: 2,
+    //    fontSize: 20,
+    //    background: "#ffffff",
+    //    lineColor: "#000000",
+    //    margin: 10,
+    //    marginTop: undefined,
+    //    marginBottom: undefined,
+    //    marginLeft: undefined,
+    //    marginRight: undefined,
+    //    valid: function valid() { }
+    //});
 </script>
 </body>
 </html>

@@ -1,11 +1,12 @@
-﻿using BarCodeAPIService.Connection;
-using BarCodeLibrary.Respones.SAP;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Odbc;
 using System.Linq;
 using System.Threading.Tasks;
+using BarCodeAPIService.Connection;
 using BarCodeAPIService.Models;
+using BarCodeLibrary.Respones.SAP;
 
 namespace BarCodeAPIService.Service
 {
@@ -14,18 +15,20 @@ namespace BarCodeAPIService.Service
         public Task<ResponseOBTNGetBatch> ResponseOIBTGetBatch()
         {
             var oBIN = new List<OBTN>();
-            DataTable dt = new DataTable();
-           // SAPbobsCOM.Company oCompany;
-            try {
+            var dt = new DataTable();
+            // SAPbobsCOM.Company oCompany;
+            try
+            {
                 // Login login = new();
-                LoginOnlyDatabase login = new LoginOnlyDatabase();
+                var login = new LoginOnlyDatabase();
 
-                if (login.lErrCode == 0) {
-                  //  oCompany = login.Company;
-                  //  SAPbobsCOM.Recordset oRS = null;
-                  //  oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);                    
+                if (login.lErrCode == 0)
+                {
+                    //  oCompany = login.Company;
+                    //  SAPbobsCOM.Recordset oRS = null;
+                    //  oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);                    
                     // oRS.DoQuery(Query);
-                    
+
                     /*while (!oRS.EoF)
                     {
                         oBIN.Add(new OBTN
@@ -38,19 +41,18 @@ namespace BarCodeAPIService.Service
                         });
                         oRS.MoveNext();
                     }*/
-                    string Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('OIBT','','','','','')";
-                    login.AD = new System.Data.Odbc.OdbcDataAdapter(Query, login.CN);
+                    var Query = "CALL \"" + ConnectionString.CompanyDB +
+                                "\"._USP_CALLTRANS_Smey ('OIBT','','','','','')";
+                    login.AD = new OdbcDataAdapter(Query, login.CN);
                     login.AD.Fill(dt);
                     foreach (DataRow row in dt.Rows)
-                    {
                         oBIN.Add(new OBTN
                         {
                             ItemCode = row[0].ToString(),
-                            ItemName=row[1].ToString(),
-                            BatchNumber=row[2].ToString(),
-                            ExpDate=row[3].ToString()
-                        }) ;
-                    }
+                            ItemName = row[1].ToString(),
+                            BatchNumber = row[2].ToString(),
+                            ExpDate = row[3].ToString()
+                        });
                     return Task.FromResult(new ResponseOBTNGetBatch
                     {
                         ErrorCode = 0,
@@ -58,21 +60,22 @@ namespace BarCodeAPIService.Service
                         Data = oBIN.ToList()
                     });
                 }
-                else
+
+                return Task.FromResult(new ResponseOBTNGetBatch
                 {
-                    return Task.FromResult(new ResponseOBTNGetBatch { 
-                        ErrorCode=login.lErrCode,
-                        ErrorMessage=login.sErrMsg,
-                        Data=null
-                    });
-                }
+                    ErrorCode = login.lErrCode,
+                    ErrorMessage = login.sErrMsg,
+                    Data = null
+                });
             }
 
-            catch (Exception ex) {
-                return Task.FromResult(new ResponseOBTNGetBatch { 
-                    ErrorCode=ex.HResult,
-                    ErrorMessage=ex.Message,
-                    Data=null
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseOBTNGetBatch
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMessage = ex.Message,
+                    Data = null
                 });
             }
         }

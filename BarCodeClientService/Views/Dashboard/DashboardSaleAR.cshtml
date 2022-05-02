@@ -3,47 +3,36 @@
 }
 <style type="text/css">
     #Icon {
-        text-align: center;
-        margin-top: 60px;
-        font-size: 50px;
         color: #5f95c3;
+        font-size: 50px;
+        margin-top: 60px;
+        text-align: center;
     }
-    #Icon:hover {
-        margin-top: 55px;
-        font-size: 60px;
-    }
-    #Delivery {
-        margin-top: 0px;
-    }
-    #Delivery:hover {
-        margin-top: 3px;
-    }
-    #Return {
-        margin-top: 0px;
-    }
-    #Return:hover {
-        margin-top: 3px;
-    }
+
+        #Icon:hover {
+            margin-top: 55px;
+            font-size: 60px;
+        }
 </style>
 <div class="container">
     <div class="row">
-        <div class="col-lg-3" style="width: 250px;height: 250px;margin-top:30px;">
+        <div class="col-lg-3" style="height: 250px; margin-top: 30px; width: 250px;">
             <a asp-controller="SaleOrder" asp-action="CreateSaleOrder">
-                <div style="width: 100%; height: 100%; background: #ffffff" id="Delivery">
+                <div style="width:100%;height:100%;background:#f0eff1">
                     <div style="text-align:center">
-                        <p style="text-align: center; padding-top: 15px; color: #386994; font-weight: 300; font-size: 20px">Delivery</p>
+                        <p style="text-align:center;padding-top:15px;">Delivery</p>
                     </div>
-                    <div style="width:100%;height:100%;text-align:center">
+                    <div style="height: 100%; text-align: center; width: 100%;">
                         <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
                     </div>
                 </div>
             </a>
         </div>
-        <div class="col-lg-3" style="width: 250px;height: 250px;margin-top:30px;">
+        <div class="col-lg-3" style="height: 250px; margin-top: 30px; width: 250px;">
             <a asp-controller="DeliveryReturn" asp-action="CreateDeliveryReturn">
-            <div style="width: 100%; height: 100%; background: #ffffff" id="Return">
+            <div style="width:100%;height:100%;background:#f0eff1">
                 <div style="text-align:center">
-                    <p style="text-align: center; padding-top: 15px; color: #386994; font-weight: 300; font-size: 20px">Delivery Return</p>
+                    <p style="text-align:center;padding-top:15px;">Delivery Return</p>
                 </div>
                 <div style="width:100%;height:100%;text-align:center">
                     <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
@@ -52,19 +41,5 @@
             </a>
         </div>
     </div>
-    <script>
-        $('#Delivery').mouseout(function () {
-            document.getElementById("Delivery").style.backgroundColor = "#ffffff";
-        });
-        $('#Delivery').mouseover(function () {
-            document.getElementById("Delivery").style.backgroundColor = "rgba(0, 74, 153,0.1)";
-        });
-        $('#Return').mouseout(function () {
-            document.getElementById("Return").style.backgroundColor = "#ffffff";
-        });
-        $('#Return').mouseover(function () {
-            document.getElementById("Return").style.backgroundColor = "rgba(0, 74, 153,0.1)";
-        });
-    </script>
 </div>
 

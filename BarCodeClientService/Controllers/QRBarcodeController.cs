@@ -1,13 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BarCodeLibrary.APICall;
-using BarCodeLibrary.Respones.SAP;
-using QRCoder;
-using System.Drawing;
+﻿using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
+using Microsoft.AspNetCore.Mvc;
+using QRCoder;
 
 namespace BarCodeClientService.Controllers
 {
@@ -15,25 +10,21 @@ namespace BarCodeClientService.Controllers
     {
         public IActionResult CreateBinLocation()
         {
-
             return View();
         }
-        public IActionResult GenerateQRCode(string itemcode,string itemname, string fda,string str)
+
+        public IActionResult GenerateQRCode(string itemcode, string itemname, string fda, string str)
         {
             string text, text1;
             if (itemcode == null)
-            {
                 text1 = "";
-            }
             else
-            {
                 text1 = "- " + itemcode + "\n- " + itemname + "\n- " + fda;
-            }
             text = text1 + str;
-            QRCodeGenerator qRCodeGenerator = new QRCodeGenerator();
-            QRCodeData qRCodeData = qRCodeGenerator.CreateQrCode(text, QRCodeGenerator.ECCLevel.Q) ;
-            QRCode qRCode = new QRCode(qRCodeData);
-            Bitmap bitmap = qRCode.GetGraphic(15);
+            var qRCodeGenerator = new QRCodeGenerator();
+            var qRCodeData = qRCodeGenerator.CreateQrCode(text, QRCodeGenerator.ECCLevel.Q);
+            var qRCode = new QRCode(qRCodeData);
+            var bitmap = qRCode.GetGraphic(15);
             var bitmapBytes = ConvertBitmapToBytes(bitmap);
             return File(bitmapBytes, "image/jpeg");
             text1 = "";
@@ -43,9 +34,9 @@ namespace BarCodeClientService.Controllers
 
         private byte[] ConvertBitmapToBytes(Bitmap bitmap)
         {
-            using (MemoryStream ms=new MemoryStream())
+            using (var ms = new MemoryStream())
             {
-                bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                bitmap.Save(ms, ImageFormat.Png);
                 return ms.ToArray();
             }
         }

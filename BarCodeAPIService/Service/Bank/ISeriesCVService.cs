@@ -1,9 +1,5 @@
-﻿using BarCodeLibrary.Respones.SAP;
+﻿using System.Threading.Tasks;
 using BarCodeLibrary.Respones.SAP.Bank;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BarCodeAPIService.Service.Bank
 {

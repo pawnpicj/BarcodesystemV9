@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BarCodeLibrary.Respones.SAP
 {
     public class ResponseGetORDR
     {
-        
         public string ErrorMessage { get; set; }
         public int ErrorCode { get; set; }
         public List<ORDR> Data { get; set; }
     }
+
     public class ORDR
     {
         public string DocNum { get; set; }
@@ -20,7 +17,7 @@ namespace BarCodeLibrary.Respones.SAP
         public string CardName { get; set; }
         public string CardCode { get; set; }
         public int CntctCode { get; set; }
-        public string NumAtCard { get; set; }        
+        public string NumAtCard { get; set; }
         public string DocStatus { get; set; }
         public string DocDate { get; set; }
         public DateTime DocDueDate { get; set; }
@@ -31,6 +28,7 @@ namespace BarCodeLibrary.Respones.SAP
         public string SlpName { get; set; }
         public List<RDR1> Line { get; set; }
     }
+
     public class RDR1
     {
         public string ItemCode { get; set; }
@@ -43,4 +41,3 @@ namespace BarCodeLibrary.Respones.SAP
         public string WhsCode { get; set; }
     }
 }
-

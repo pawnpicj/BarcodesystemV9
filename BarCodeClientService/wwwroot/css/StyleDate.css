@@ -1,19 +1,17 @@
 ﻿input[type="date"]:before {
-    top: 1px;
-    left: 3px;
+    color: black;
     content: attr(data-date);
     display: inline-block;
-    color: black;
+    left: 3px;
+    top: 1px;
 }
 
-input[type="date"]::-webkit-datetime-edit, input[type="date"]::-webkit-inner-spin-button, input[type="date"]::-webkit-clear-button {
-    display: none;
-}
+input[type="date"]::-webkit-datetime-edit, input[type="date"]::-webkit-inner-spin-button, input[type="date"]::-webkit-clear-button { display: none; }
 
 input[type="date"]::-webkit-calendar-picker-indicator {
-    position: absolute;
-    top: 6px;
-    right: 0;
     color: black;
     font-size: 15px;
+    position: absolute;
+    right: 0;
+    top: 6px;
 }

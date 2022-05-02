@@ -1,11 +1,11 @@
 ﻿@{
     ViewData["Title"] = "O2O";
-    DateTime dt = DateTime.Now;
+    var dt = DateTime.Now;
     ViewData["Date"] = dt.ToShortDateString();
 }
 
-<link href="~/css/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
-<link href="~/css/DataTable/rowReorder.dataTables.min.css" rel="stylesheet" />
+<link href="~/css/DataTable/jquery.dataTables.min.css" rel="stylesheet"/>
+<link href="~/css/DataTable/rowReorder.dataTables.min.css" rel="stylesheet"/>
 @*<link href="~/css/DataTable/responsive.dataTables.min.css" rel="stylesheet" />*@
 <script src="~/css/DataTable/jquery-3.3.1.js"></script>
 <script src="~/css/DataTable/jquery.dataTables.min.js"></script>
@@ -18,45 +18,39 @@
         color: red;
     }
 
-    #main {
-        position: absolute;
-    }
+    #main { position: absolute; }
 
     .color_tap {
-        min-width: 60px;
         background-color: #5f95c3;
         color: #ffffff;
         font-weight: 600;
         margin-right: 1px;
+        min-width: 60px;
     }
 
     .nav-tabs .nav-link {
-        border-radius: 0px 12px 0px 0px;
         border: 1px solid rgb(193, 193, 193);
+        border-radius: 0px 12px 0px 0px;
         height: 40px;
         line-height: 20px;
     }
 
-    .modal {
-        z-index: 200000;
-    }
+    .modal { z-index: 200000; }
 
     .modal-header {
         background: #5f95c3;
-        height: 40px;
         color: #ffffff;
+        height: 40px;
     }
 
-        .modal-header b {
-            margin-top: -10px;
-        }
+    .modal-header b { margin-top: -10px; }
 
     #TbAR table tr td {
-        position: relative !important;
-        padding: 0px !important;
         height: 35px;
         margin-left: 15px;
         margin-top: 10px;
+        padding: 0px !important;
+        position: relative !important;
         /*background-color: none;*/
     }
 
@@ -70,276 +64,282 @@
         color: red;
     }
 
-        table tbody tr.selected td .clsinput {
-            background: #94d8e1;
-            color: red;
-        }
-
-    .clsinput:focus {
-        outline: none;
+    table tbody tr.selected td .clsinput {
+        background: #94d8e1;
+        color: red;
     }
+
+    .clsinput:focus { outline: none; }
 </style>
 
 <div id="#main">
 
-    <div class="row" style="margin-left:5px;margin-top:5px;color:#696969;">
-        <h5 style="margin-top:5px;color:#696969;">
-            <a asp-action="DashboardAR" asp-controller="Dashboard" onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fas fa-home"></i> Dashboard</a>
-            <span>
-                <a asp-action="ShowAR" asp-controller="ARInvoice" onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fa fa-caret-right align-right"></i> O2O</a>
-                <i class="fa fa-caret-right align-right"></i> Create O2O
-            </span>
-        </h5>
-    </div>
-    <hr />
-    <div style="padding: 10px; color: #696969;">
-        <ul class="nav nav-tabs Tap-PA" id="mytab" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active color_tap" id="cus-tab" data-toggle="tab" href="#cus" role="tab" aria-controls="Customer" aria-selected="true">Customer</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link color_tap" id="item-tab" data-toggle="tab" href="#item" role="tab" aria-controls="Items" aria-selected="false">Items</a>
-            </li>
-        </ul>
-        <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="cus" role="tabpanel" aria-labelledby="cus-tab" style="margin-top: 10px">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div>
-                            Vendor Code :
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <button class="input-group-text" id="CcusID"><i class="fa fa-check"></i></button>
-                                </div>
-                                <input type="text" class="form-control" placeholder="Search Code" id="CusID" value="" readonly>
-                                <div class="input-group-append">
-                                    <button class="input-group-text btnModelsCus" data-toggle="modal" data-target="#ModalCusCode"><i class="fa fa-search"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            Branch Name :
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="CusName" value="" readonly>
-                            </div>
-                        </div>
-                        Order Number :
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="CusRef">
-                        </div>
-                        Remarks :
-                        <div class="input-group">
-                            <textarea class="form-control" id="Remark" rows="1"></textarea>
-                        </div>
-                        Customer Tax ID<span style="color:red;">*</span> :
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="TaxId">
-                        </div>
-                        Customer Type<span style="color:red;">*</span> :
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="CusType">
-                        </div>
-                        Customer Name :
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="CusRemark">
-                        </div>
-                        Address<span style="color:red;">*</span> :
-                        <div class="input-group">
-                            <textarea class="form-control" id="Address" rows="3"></textarea>
-                        </div>
-                        Tel :
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="CusTel">
-                        </div>
+<div class="row" style="color: #696969; margin-left: 5px; margin-top: 5px;">
+    <h5 style="color: #696969; margin-top: 5px;">
+        <a asp-action="DashboardAR" asp-controller="Dashboard" onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fas fa-home"></i> Dashboard</a>
+        <span>
+            <a asp-action="ShowAR" asp-controller="ARInvoice" onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fa fa-caret-right align-right"></i> O2O</a>
+            <i class="fa fa-caret-right align-right"></i> Create O2O
+        </span>
+    </h5>
+</div>
+<hr/>
+<div style="color: #696969; padding: 10px;">
+<ul class="nav nav-tabs Tap-PA" id="mytab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active color_tap" id="cus-tab" data-toggle="tab" href="#cus" role="tab" aria-controls="Customer" aria-selected="true">Customer</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link color_tap" id="item-tab" data-toggle="tab" href="#item" role="tab" aria-controls="Items" aria-selected="false">Items</a>
+    </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+<div class="tab-pane fade show active" id="cus" role="tabpanel" aria-labelledby="cus-tab" style="margin-top: 10px">
+    <div class="row">
+        <div class="col-sm-6">
+            <div>
+                Vendor Code :
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <button class="input-group-text" id="CcusID">
+                            <i class="fa fa-check"></i>
+                        </button>
                     </div>
-                    <div class="col-sm-6">
-                        <div>
-                            Series :
-                            <div class="input-group">
-                                <select id="SeriesID" class="form-control">
-                                </select>
-                            </div>
-                        </div>
-                        <div>
-                            Posting Date :
-                            <div class="input-group">
-                                <input type="date" class="form-control" id="DocDate">
-                            </div>
-                        </div>
-                        <div>
-                            Document Date :
-                            <div class="input-group">
-                                <input type="date" class="form-control" id="DocumentDate">
-                            </div>
-                        </div>
-                        <div>
-                            BP Currency :
-                            <div class="input-group">
-                                <select class="form-control" id="BPDocCurr"></select>
-                            </div>
-                        </div>
-                        Sales Employees :
-                        <div class="input-group">
-                            <select class="form-control" id="SaleEmp"></select>
-                        </div>
-
+                    <input type="text" class="form-control" placeholder="Search Code" id="CusID" value="" readonly>
+                    <div class="input-group-append">
+                        <button class="input-group-text btnModelsCus" data-toggle="modal" data-target="#ModalCusCode">
+                            <i class="fa fa-search"></i>
+                        </button>
                     </div>
                 </div>
             </div>
-
-            <div class="tab-pane fade" id="item" role="tabpanel" aria-labelledby="item-tab" style="margin-top: 10px">
-                <div class="row">
-                    <div class="col-sm-6">
-                        Item Code :
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <button class="input-group-text" id="CItemCode"><i class="fa fa-check"></i></button>
-                            </div>
-                            <input type="text" class="form-control" placeholder="Search Code" id="ItemCode">
-                            <div class="input-group-append">
-                                <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalItem"><i class="fa fa-search"></i></button>
-                            </div>
-                        </div>
-                        Item Descrition :
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="ItemDescr" readonly>
-                        </div>
-                        Quantity :
-                        <div class="input-group">
-                            <input type="number" class="form-control" value="1" id="Qty">
-                        </div>
-
-                        <div>
-                            Gross Price :
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <input type="button" class="input-group-text" id="DocCurr" />
-                                </div>
-                                <input type="number" class="form-control" id="Price" value="0">
-                            </div>
-                        </div>
-
-                        <div>
-                            Discount(%) :
-                            <div class="input-group">
-                                <input type="number" class="form-control" value="0" id="Discount" onchange="LineDiscountPer()">
-                            </div>
-                            Discount Amount :
-                            <div class="input-group">
-                                <input type="number" class="form-control" value="0" id="DiscountAmt" onchange="LinDiscountAMT()">
-                            </div>
-                        </div>
-                        Uom Name :
-                        <div class="input-group">
-                            <select id="UomID" class="form-control">
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div>
-                            VAT Code :
-                            <div class="input-group">
-                                <select id="TaxCode" class="form-control">
-                                </select>
-                            </div>
-                        </div>
-
-                        Inventory Uom :
-                        <div class="input-group">
-                            <select id="InventoryID" class="form-control">
-                            </select>
-                        </div>
-                        <div>
-                            Warehouse :
-                            <div class="input-group">
-                                <select id="whscode" class="form-control">
-                                </select>
-                            </div>
-                        </div>
-                        <div>
-                            Total :
-                            <div class="input-group">
-                                <input type="number" class="form-control" value="0" id="totalItem" disabled>
-                            </div>
-                        </div>
-                    </div>
+            <div>
+                Branch Name :
+                <div class="input-group">
+                    <input type="text" class="form-control" id="CusName" value="" readonly>
                 </div>
-                <div class="row" style=" padding: 15px; ">
-                    <div class="nav navbar-nav ml-auto">
-                        <button class="btn btn-info" id="AddItem" style="background:#f0eff1;color:#696969">Add Item</button>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="table-responsive">
-                            <table id="TbAR" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
-                                <thead>
-                                    <tr>
-                                        <th>ItemCode</th>
-                                        <th>UnitPrice</th>
-                                        <th>Discount(%)</th>
-                                        <th>Dis.Amount</th>
-                                        <th>Qty</th>
-                                        <th>Price Before Discount</th>
-                                        <th>Line Total</th>
-                                        <th>Uom Name</th>
-                                        <th>TaxCode</th>
-                                        <th>Warehouse</th>
-                                        <th>BatchOrSerial</th>
-                                        <th>Command</th>
-                                    </tr>
-                                </thead>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row" style="margin-top:5px;">
-                    <div class="col-sm-4">
-                    </div>
-                    <div class="col-sm-4">
-                        Discount % :
-                        <input type="number" class="form-control" value="0" id="DisPer" onchange="DisPer()" />
-                        Discount Amount :
-                        <input type="number" class="form-control" value="0" id="DisAmt" onchange="DisAmt()" />
-                    </div>
-                    <div class="col-sm-4">
-                        Before Discount :
-                        <input class="form-control" readonly id="BTax" />
-                        Discount By Items :
-                        <input class="form-control" readonly id="DisA" />
-                        @*Tax Amount :*@
-                        <input class="form-control d-none" readonly id="Tax" />
-                        <input class="d-none" id="TaxBeforeDis" />
-                        Total Amount :
-                        <input class="form-control" readonly id="Total" />
-                    </div>
-                </div>
+            </div>
+            Order Number :
+            <div class="input-group">
+                <input type="text" class="form-control" id="CusRef">
+            </div>
+            Remarks :
+            <div class="input-group">
+                <textarea class="form-control" id="Remark" rows="1"></textarea>
+            </div>
+            Customer Tax ID<span style="color: red;">*</span> :
+            <div class="input-group">
+                <input type="text" class="form-control" id="TaxId">
+            </div>
+            Customer Type<span style="color: red;">*</span> :
+            <div class="input-group">
+                <input type="text" class="form-control" id="CusType">
+            </div>
+            Customer Name :
+            <div class="input-group">
+                <input type="text" class="form-control" id="CusRemark">
+            </div>
+            Address<span style="color: red;">*</span> :
+            <div class="input-group">
+                <textarea class="form-control" id="Address" rows="3"></textarea>
+            </div>
+            Tel :
+            <div class="input-group">
+                <input type="text" class="form-control" id="CusTel">
             </div>
         </div>
-        <hr />
-        <div class="row" style="padding: 15px;margin-top:-20px;margin-bottom:-20px;">
-            <div class="nav navbar-nav ml-auto">
-                <div class="btn-group">
-                    @*<button class="btn btn-info previous" style="background:#f0eff1;color:#696969">Previous</button>
-                        <button class="btn btn-info next" style="background: #f0eff1;color: #696969;">Next</button>*@
-                    <button class="btn btn-info" id="CopyFromPO" style="background:#f0eff1;color:#696969;"
-                            data-toggle="modal" data-target="#ModalCopyFromPO" disabled>
-                        Copy From PO
+        <div class="col-sm-6">
+            <div>
+                Series :
+                <div class="input-group">
+                    <select id="SeriesID" class="form-control">
+                    </select>
+                </div>
+            </div>
+            <div>
+                Posting Date :
+                <div class="input-group">
+                    <input type="date" class="form-control" id="DocDate">
+                </div>
+            </div>
+            <div>
+                Document Date :
+                <div class="input-group">
+                    <input type="date" class="form-control" id="DocumentDate">
+                </div>
+            </div>
+            <div>
+                BP Currency :
+                <div class="input-group">
+                    <select class="form-control" id="BPDocCurr"></select>
+                </div>
+            </div>
+            Sales Employees :
+            <div class="input-group">
+                <select class="form-control" id="SaleEmp"></select>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="tab-pane fade" id="item" role="tabpanel" aria-labelledby="item-tab" style="margin-top: 10px">
+    <div class="row">
+        <div class="col-sm-6">
+            Item Code :
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <button class="input-group-text" id="CItemCode">
+                        <i class="fa fa-check"></i>
                     </button>
-                    <button class="btn btn-info" id="Save" style="background:#f0eff1;color:#696969;margin-left:5px;">Add New</button>
+                </div>
+                <input type="text" class="form-control" placeholder="Search Code" id="ItemCode">
+                <div class="input-group-append">
+                    <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalItem">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            Item Descrition :
+            <div class="input-group">
+                <input type="text" class="form-control" id="ItemDescr" readonly>
+            </div>
+            Quantity :
+            <div class="input-group">
+                <input type="number" class="form-control" value="1" id="Qty">
+            </div>
+
+            <div>
+                Gross Price :
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <input type="button" class="input-group-text" id="DocCurr"/>
+                    </div>
+                    <input type="number" class="form-control" id="Price" value="0">
+                </div>
+            </div>
+
+            <div>
+                Discount(%) :
+                <div class="input-group">
+                    <input type="number" class="form-control" value="0" id="Discount" onchange="LineDiscountPer()">
+                </div>
+                Discount Amount :
+                <div class="input-group">
+                    <input type="number" class="form-control" value="0" id="DiscountAmt" onchange="LinDiscountAMT()">
+                </div>
+            </div>
+            Uom Name :
+            <div class="input-group">
+                <select id="UomID" class="form-control">
+                </select>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div>
+                VAT Code :
+                <div class="input-group">
+                    <select id="TaxCode" class="form-control">
+                    </select>
+                </div>
+            </div>
+
+            Inventory Uom :
+            <div class="input-group">
+                <select id="InventoryID" class="form-control">
+                </select>
+            </div>
+            <div>
+                Warehouse :
+                <div class="input-group">
+                    <select id="whscode" class="form-control">
+                    </select>
+                </div>
+            </div>
+            <div>
+                Total :
+                <div class="input-group">
+                    <input type="number" class="form-control" value="0" id="totalItem" disabled>
                 </div>
             </div>
         </div>
     </div>
-    <hr />
+    <div class="row" style="padding: 15px;">
+        <div class="nav navbar-nav ml-auto">
+            <button class="btn btn-info" id="AddItem" style="background: #f0eff1; color: #696969">Add Item</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="table-responsive">
+                <table id="TbAR" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
+                    <thead>
+                    <tr>
+                        <th>ItemCode</th>
+                        <th>UnitPrice</th>
+                        <th>Discount(%)</th>
+                        <th>Dis.Amount</th>
+                        <th>Qty</th>
+                        <th>Price Before Discount</th>
+                        <th>Line Total</th>
+                        <th>Uom Name</th>
+                        <th>TaxCode</th>
+                        <th>Warehouse</th>
+                        <th>BatchOrSerial</th>
+                        <th>Command</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top: 5px;">
+        <div class="col-sm-4">
+        </div>
+        <div class="col-sm-4">
+            Discount % :
+            <input type="number" class="form-control" value="0" id="DisPer" onchange="DisPer()"/>
+            Discount Amount :
+            <input type="number" class="form-control" value="0" id="DisAmt" onchange="DisAmt()"/>
+        </div>
+        <div class="col-sm-4">
+            Before Discount :
+            <input class="form-control" readonly id="BTax"/>
+            Discount By Items :
+            <input class="form-control" readonly id="DisA"/>
+            @*Tax Amount :*@
+            <input class="form-control d-none" readonly id="Tax"/>
+            <input class="d-none" id="TaxBeforeDis"/>
+            Total Amount :
+            <input class="form-control" readonly id="Total"/>
+        </div>
+    </div>
+</div>
+</div>
+<hr/>
+<div class="row" style="margin-bottom: -20px; margin-top: -20px; padding: 15px;">
+    <div class="nav navbar-nav ml-auto">
+        <div class="btn-group">
+            @*<button class="btn btn-info previous" style="background:#f0eff1;color:#696969">Previous</button>
+                        <button class="btn btn-info next" style="background: #f0eff1;color: #696969;">Next</button>*@
+            <button class="btn btn-info" id="CopyFromPO" style="background: #f0eff1; color: #696969;"
+                    data-toggle="modal" data-target="#ModalCopyFromPO" disabled>
+                Copy From PO
+            </button>
+            <button class="btn btn-info" id="Save" style="background: #f0eff1; color: #696969; margin-left: 5px;">Add New</button>
+        </div>
+    </div>
+</div>
+</div>
+<hr/>
 </div>
 
 @*Block Models*@
 <div class="modal modal-backdrop" id="Modalloder" role="dialog" data-backdrop="static">
     <div class="modal-dialog modal-dialog-centered modal-sm">
-        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+        <div class="modal-content" style="background: #f0eff1; color: #696969;">
             <div class="modal-body">
                 <div class="text-center">
                     <div class="spinner-border text-primary" role="status">
@@ -353,7 +353,7 @@
 
 <div class="modal" id="ModalSuccess" role="dialog" data-backdrop="static">
     <div class="modal-dialog modal-dialog-centered modal-sm">
-        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+        <div class="modal-content" style="background: #f0eff1; color: #696969;">
             <div class="modal-header">
                 <b>Information</b>
             </div>
@@ -361,7 +361,7 @@
                 <p id="ErrMsg"> - </p>
             </div>
             <div class="modal-footer">
-                <button class="btn-sm btn-success" data-dismiss="modal" style="color:#696969;">OK</button>
+                <button class="btn-sm btn-success" data-dismiss="modal" style="color: #696969;">OK</button>
             </div>
         </div>
     </div>
@@ -371,7 +371,7 @@
 @*1. Search Customer Code*@
 <div class="modal fade" id="ModalCusCode">
     <div class="modal-dialog modal-xl">
-        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+        <div class="modal-content" style="background: #f0eff1; color: #696969;">
             <div class="modal-header">
                 <b>List of Customer</b>
             </div>
@@ -379,14 +379,14 @@
                 <div class="table-responsive">
                     <div class="row">
                         <div class="col-sm-12">
-                            <table id="TbCusCode" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                            <table id="TbCusCode" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
                                 <thead>
-                                    <tr>
-                                        <th>Customer Code</th>
-                                        <th>Cusetomer Name</th>
-                                        <th>Phone</th>
-                                        <th>Address</th>
-                                    </tr>
+                                <tr>
+                                    <th>Customer Code</th>
+                                    <th>Cusetomer Name</th>
+                                    <th>Phone</th>
+                                    <th>Address</th>
+                                </tr>
                                 </thead>
                             </table>
                         </div>
@@ -394,8 +394,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-info" data-dismiss="modal" id="ChooseCus" style="background:#f0eff1;color:#696969;">Choose</button>
-                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseCus" style="background: #f0eff1; color: #696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background: #f0eff1; color: #696969;">Close</button>
             </div>
         </div>
     </div>
@@ -404,7 +404,7 @@
 @*2. Search ItemCode*@
 <div class="modal fade" id="ModalItem">
     <div class="modal-dialog modal-xl">
-        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+        <div class="modal-content" style="background: #f0eff1; color: #696969;">
             <div class="modal-header">
                 <b>List of Items</b>
             </div>
@@ -412,15 +412,15 @@
                 <div class="table-responsive">
                     <div class="row">
                         <div class="col-sm-12">
-                            <table id="TbItem" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                            <table id="TbItem" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
                                 <thead>
-                                    <tr>
-                                        <th>Item Code</th>
-                                        <th>Item Descrition</th>
-                                        <th>Gross Price</th>
-                                        <th>In Stock</th>
-                                        <th>BarCode</th>
-                                    </tr>
+                                <tr>
+                                    <th>Item Code</th>
+                                    <th>Item Descrition</th>
+                                    <th>Gross Price</th>
+                                    <th>In Stock</th>
+                                    <th>BarCode</th>
+                                </tr>
                                 </thead>
                             </table>
                         </div>
@@ -439,7 +439,7 @@
 @*Copy From PO*@
 <div class="modal fade" id="ModalCopyFromPO" data-backdrop="static">
     <div class="modal-dialog modal-xl">
-        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+        <div class="modal-content" style="background: #f0eff1; color: #696969;">
             <div class="modal-header">
                 <b>Purchase Order</b>
             </div>
@@ -447,15 +447,15 @@
                 <div class="table-responsive">
                     <div class="row">
                         <div class="col-sm-12">
-                            <table id="TbCopyFromPO" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                            <table id="TbCopyFromPO" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
                                 <thead>
-                                    <tr>
-                                        <th>Receipt No(SAP)</th>
-                                        <th>Vendor Name</th>
-                                        <th>Document Date</th>
-                                        <th>DocTotal</th>
-                                        <th>Document Status</th>
-                                    </tr>
+                                <tr>
+                                    <th>Receipt No(SAP)</th>
+                                    <th>Vendor Name</th>
+                                    <th>Document Date</th>
+                                    <th>DocTotal</th>
+                                    <th>Document Status</th>
+                                </tr>
                                 </thead>
                             </table>
                         </div>
@@ -463,8 +463,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-info" data-dismiss="modal" id="ChoosePO" style="background:#f0eff1;color:#696969;">Choose</button>
-                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
+                <button class="btn btn-info" data-dismiss="modal" id="ChoosePO" style="background: #f0eff1; color: #696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background: #f0eff1; color: #696969;">Close</button>
             </div>
         </div>
     </div>
@@ -472,7 +472,7 @@
 @*Generate Batch*@
 <div class="modal fade " id="ModalBarCodeSerail" data-backdrop="static">
     <div class="modal-dialog modal-xl">
-        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+        <div class="modal-content" style="background: #f0eff1; color: #696969;">
             <div class="modal-header">
                 <b>Serial Numbers - Setup</b>
             </div>
@@ -521,7 +521,7 @@
                     <div class="row">
                         <div class="col-6"></div>
                         <div class="col-6">
-                            <button class="btn btn-info float-right mt-4 mb-4" id="BtnSaveSerial" style="background:#f0eff1;color:#696969;">Save</button>
+                            <button class="btn btn-info float-right mt-4 mb-4" id="BtnSaveSerial" style="background: #f0eff1; color: #696969;">Save</button>
                         </div>
                     </div>
                 </div>
@@ -531,12 +531,12 @@
                         <div class="col-sm-12">
                             <table id="TbSerial" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
                                 <thead>
-                                    <tr>
-                                        <th>Serial Number</th>
-                                        <th>Mfr Serial No.</th>
-                                        <th>Expiration Date</th>
-                                        <th>Action</th>
-                                    </tr>
+                                <tr>
+                                    <th>Serial Number</th>
+                                    <th>Mfr Serial No.</th>
+                                    <th>Expiration Date</th>
+                                    <th>Action</th>
+                                </tr>
                                 </thead>
                             </table>
                         </div>
@@ -544,7 +544,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background: #f0eff1; color: #696969;">Close</button>
             </div>
         </div>
     </div>
@@ -567,8 +567,8 @@
     let LinesAR = [];
     DataTableInit.TableItemLine();
     var tbItemLine = $('#TbAR').DataTable();
-    DataMethod.AddClassSelected("TbAR",tbItemLine);
-    $(".btnModelsItem").click(function () {
+    DataMethod.AddClassSelected("TbAR", tbItemLine);
+    $(".btnModelsItem").click(function() {
         $("#ModalItem").modal({ backdrop: "static" });
         alert("Select Item not yet Do");
         //$.ajax({
@@ -596,15 +596,16 @@
     var LCopyFromPO = [];
     DataTableInit.TablePurchaseOrder();
     var TbCopyFromPO = $("#TbCopyFromPO").DataTable();
-    $('#TbCopyFromPO tbody').on('click', 'tr', function () {
-        temporyListPO = [];
-        if ($(this).hasClass('selected')) {
-            temporyListPO = DataMethod.arrayRemove(temporyListPO, $(this)[0]._DT_RowIndex);
-        }
-        else {
-            temporyListPO.push($(this)[0]._DT_RowIndex);
-        }
-    });
+    $('#TbCopyFromPO tbody').on('click',
+        'tr',
+        function() {
+            temporyListPO = [];
+            if ($(this).hasClass('selected')) {
+                temporyListPO = DataMethod.arrayRemove(temporyListPO, $(this)[0]._DT_RowIndex);
+            } else {
+                temporyListPO.push($(this)[0]._DT_RowIndex);
+            }
+        });
     DataMethod.AddClassSelected('TbCopyFromPO', TbCopyFromPO);
     /*End Purchase Order*/
 
@@ -615,16 +616,16 @@
     DataMethod.AddClassSelected('TbCusCode', tbCus);
     $(".btnModelsCus").click(function() {
         $("#ModalCusCode").modal({ backdrop: "static" });
-        GetMasterData.getCustomer('@Url.Action("GetCustomerClientResult","GoodsReceiptPO")');
+        GetMasterData.getCustomer('@Url.Action("GetCustomerClientResult", "GoodsReceiptPO")');
     });
-    $('#ChooseCus').click(function () {
+    $('#ChooseCus').click(function() {
         var index = tbCus.row('.selected').index();
         var data = tbCus.row(index).data();
         $('#CusID').val(data.cardCode);
         $('#CusName').val(data.cardName);
-        $('#CcusID').css('background-color', '#4CAF50')
+        $('#CcusID').css('background-color', '#4CAF50');
         $('#CopyFromPO').removeAttr("disabled");
-        GetMasterData.getCurrency('@Url.Action("GetCurrency","GoodsReceiptPO")',data.cardCode);
+        GetMasterData.getCurrency('@Url.Action("GetCurrency", "GoodsReceiptPO")', data.cardCode);
     });
     /* End DataTable List Of Customer */
 
@@ -637,28 +638,28 @@
     /* End Init DataTable */
 
     // #region Init Master
-    GetMasterData.getSeries("", '@ViewData["Date"]','@Url.Action("GetSeries","GoodsReceiptPO")','20');
-    GetMasterData.getSaleEmployee('@Url.Action("GetSaleEmployeeResult","GoodsReceiptPO")');
+    GetMasterData.getSeries("", '@ViewData["Date"]', '@Url.Action("GetSeries", "GoodsReceiptPO")', '20');
+    GetMasterData.getSaleEmployee('@Url.Action("GetSaleEmployeeResult", "GoodsReceiptPO")');
     // #endregion
 
     // #region EventChange DocDate
-    $("#DocDate").change(function(){
-        GetMasterData.getSeries($("#DocDate").val(),'@ViewData["Date"]','@Url.Action("GetSeries","GoodsReceiptPO")','20');
+    $("#DocDate").change(function() {
+        GetMasterData.getSeries($("#DocDate").val(), '@ViewData["Date"]', '@Url.Action("GetSeries", "GoodsReceiptPO")', '20');
     });
     // #endregion
 
-    $('#AddItem').click(function () {
+    $('#AddItem').click(function() {
         alert("Not Yet Do");
     });
 
-    $('#Save').click(function () {
+    $('#Save').click(function() {
         alert("Not yet DO");
     });
 
 
     // Item Code
-    var Instock=0;
-    $('#ChooseItem').click(function () {
+    var Instock = 0;
+    $('#ChooseItem').click(function() {
         var index = tbItem.row('.selected').index();
         var data = tbItem.row(index).data();
         $('#ItemCode').val(data.itemCode);
@@ -670,26 +671,26 @@
     // End Item Code
 
     // Copy From PO
-    $('#ChoosePO').click(function () {
+    $('#ChoosePO').click(function() {
         LinesAR = [];
-        let result=EventCopyFromPOService.ChoosePO_Click(temporyListPO, TbCopyFromPO);
-        LinesAR=result.linesAR;
-        $('#Remark').val("Based On Purchase Orders "+result.remark);
+        let result = EventCopyFromPOService.ChoosePO_Click(temporyListPO, TbCopyFromPO);
+        LinesAR = result.linesAR;
+        $('#Remark').val("Based On Purchase Orders " + result.remark);
         $('#Total').val(result.docTotal);
         $("#DisPer").val(result.discountPercentage);
         $("#DisAmt").val(result.discountAmount);
         $("#DisA").val(result.discountLine);
-        $("#BTax").val(Number(result.lineTotal+result.discountLine).toFixed(2));
+        $("#BTax").val(Number(result.lineTotal + result.discountLine).toFixed(2));
         tbItemLine.clear();
         tbItemLine.rows.add(LinesAR);
         tbItemLine.search('').draw();
     });
-    $('#CopyFromPO').click(function(){
-        temporyListPO=[];
-        if($("#CusID").val()!=""){
-            var cardCode=$("#CusID").val()
+    $('#CopyFromPO').click(function() {
+        temporyListPO = [];
+        if ($("#CusID").val() != "") {
+            var cardCode = $("#CusID").val();
             GetMasterData.getPurchaseOrder('@Url.Action("GetPurchaseOrderByCardCode", "GoodsReceiptPO")', cardCode);
-        }else{
+        } else {
             alert("Please Select Customer, if you don't select can bind data");
         }
     });
@@ -705,12 +706,12 @@
         let objSave = new IEventItemAdd();
         var itemCode = $('#ItemCodeSerial').val();
         var qty = $('#ItemCodeSerialQty').val();
-        var a=objSave.GenerateSerialOrBatch(itemCode,qty);
+        var a = objSave.GenerateSerialOrBatch(itemCode, qty);
         $("#SerialNumber").val(a);
     });
 
     //End Save Serial
-    
+
     $(".modal-header").on("mousedown",
         function(mousedownEvt) {
             var $draggable = $(this);
@@ -735,9 +736,10 @@
     );
     $('#DocDate').val(formatDate('@ViewData["Date"]'));
     $('#DocumentDate').val(formatDate('@ViewData["Date"]'));
+
     function formatDate(date) {
         var d = new Date(date),
-            month = '' + (d.getMonth()+1),
+            month = '' + (d.getMonth() + 1),
             day = '' + d.getDate(),
             year = d.getFullYear();
         if (month.length < 2)

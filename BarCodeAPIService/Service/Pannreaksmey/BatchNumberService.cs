@@ -20,7 +20,7 @@ namespace BarCodeAPIService.Service
             try
             {
                 // Login login = new();
-                var login = new LoginOnlyDatabase();
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
 
                 if (login.lErrCode == 0)
                 {

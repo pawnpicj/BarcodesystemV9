@@ -18,7 +18,7 @@ namespace BarCodeAPIService.Service
             var dt = new DataTable();
             try
             {
-                var login = new LoginOnlyDatabase();
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
                 if (login.lErrCode == 0)
                 {
                     var Query = "CALL \"" + ConnectionString.CompanyDB +

@@ -19,7 +19,7 @@ namespace BarCodeAPIService.Service.Pannreaksmey
             var dt = new DataTable();
             try
             {
-                var login = new LoginOnlyDatabase();
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
                 if (login.lErrCode == 0)
                 {
                     var Query = "CALL \"" + ConnectionString.CompanyDB +
@@ -64,7 +64,7 @@ namespace BarCodeAPIService.Service.Pannreaksmey
             var dt = new DataTable();
             try
             {
-                var login = new LoginOnlyDatabase();
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
                 if (login.lErrCode == 0)
                 {
                     var Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('OGBC',\"" +
@@ -112,7 +112,7 @@ namespace BarCodeAPIService.Service.Pannreaksmey
             var dt = new DataTable();
             try
             {
-                var login = new LoginOnlyDatabase();
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
                 if (login.lErrCode == 0)
                 {
                     var Query = "CALL \"" + ConnectionString.CompanyDB +

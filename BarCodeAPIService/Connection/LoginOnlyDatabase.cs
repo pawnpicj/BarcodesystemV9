@@ -8,9 +8,9 @@ namespace BarCodeAPIService.Models
 {
     public class LoginOnlyDatabase
     {
-        public LoginOnlyDatabase()
+        public LoginOnlyDatabase(Type type)
         {
-            Login();
+            Login(type);
         }
 
         public OdbcDataAdapter AD { get; set; }
@@ -24,26 +24,34 @@ namespace BarCodeAPIService.Models
         public int lErrCode { get; private set; }
 
         public Company Company { get; internal set; }
+        public enum Type
+        {
+            SapHana,SqlHana
+        }
 
-        private void Login()
+        private void Login(Type type)
         {
             //string Server = "";
             //string DbUserName = "";
             //string DbPassword = "";
             //string CompanyDB = "";
-            var connectionstr = "";
             try
             {
-                connectionstr = "Driver={HDBODBC32};UID=" + ConnectionString.DbUserName + ";PWD=" +
-                                ConnectionString.DbPassword + ";SERVERNODE=" + ConnectionString.Server + ";[DATABASE=" +
-                                ConnectionString.CompanyDB + "];";
+                string connectionstr = "";
+
+                if (type == Type.SapHana)
+                    connectionstr = $"Driver={{HDBODBC32}};UID={ConnectionString.DbUserName};" +
+                                    $"PWD={ConnectionString.DbPassword};SERVERNODE={ConnectionString.Server};[DATABASE={ConnectionString.CompanyDB}];";
+                else if (type == Type.SqlHana)
+                {
+                    connectionstr = $"Driver={{HDBODBC32}};UID={ConnectionString.DbUserName};" +
+                                    $"PWD={ConnectionString.DbPassword};SERVERNODE={ConnectionString.Server};[DATABASE={ConnectionString.BarcodeDb}];";
+                }
 
                 CN = new OdbcConnection(connectionstr);
 
                 if (CN.State == ConnectionState.Closed) CN.Open();
-
-                if (CN.State == ConnectionState.Open) lErrCode = 0;
-                else lErrCode = 9999;
+                lErrCode = CN.State == ConnectionState.Open ? 0 : 9999;
             }
             catch (Exception ex)
             {

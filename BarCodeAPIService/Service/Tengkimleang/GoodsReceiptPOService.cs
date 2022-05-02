@@ -91,7 +91,7 @@ namespace BarCodeAPIService.Service
             var dt = new DataTable();
             try
             {
-                var login = new LoginOnlyDatabase();
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
                 if (login.lErrCode == 0)
                 {
                     var Query =
@@ -141,7 +141,7 @@ namespace BarCodeAPIService.Service
             var dtLine = new DataTable();
             try
             {
-                var login = new LoginOnlyDatabase();
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
                 if (login.lErrCode == 0)
                 {
                     var Query =
@@ -226,7 +226,7 @@ namespace BarCodeAPIService.Service
             var dt = new DataTable();
             try
             {
-                var login = new LoginOnlyDatabase();
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
                 if (login.lErrCode == 0)
                 {
                     var Query =
@@ -272,7 +272,7 @@ namespace BarCodeAPIService.Service
             var dt = new DataTable();
             try
             {
-                var login = new LoginOnlyDatabase();
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
                 if (login.lErrCode == 0)
                 {
                     var Query =
@@ -318,7 +318,7 @@ namespace BarCodeAPIService.Service
             var dt = new DataTable();
             try
             {
-                var login = new LoginOnlyDatabase();
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
                 if (login.lErrCode == 0)
                 {
                     var Query =
@@ -360,49 +360,47 @@ namespace BarCodeAPIService.Service
 
         public Task<ResponseGetGenerateBatchSerial> responseGetGenerateBatchSerial()
         {
-            return null;
-            //var getCurrencies = new List<GetCurrency>();
-            //var dt = new DataTable();
-            //try
-            //{
-            //    var login = new LoginOnlyDatabase();
-            //    if (login.lErrCode == 0)
-            //    {
-            //        var Query =
-            //            $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetCurrency}','{cardCode}','','','','')";
-            //        login.AD = new OdbcDataAdapter(Query, login.CN);
-            //        login.AD.Fill(dt);
-            //        foreach (DataRow row in dt.Rows)
-            //            getCurrencies.Add(new GetCurrency
-            //            {
-            //                Code = row["Code"].ToString(),
-            //                Name = row["Name"].ToString()
-            //            });
-            //        return Task.FromResult(new ResponseGetCurrency
-            //        {
-            //            ErrorCode = 0,
-            //            ErrorMessage = "",
-            //            Data = getCurrencies.ToList()
-            //        });
-            //    }
+            var getCurrencies = new List<GetGenerateBatchSerial>();
+            var dt = new DataTable();
+            try
+            {
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
+                if (login.lErrCode == 0)
+                {
+                    var Query =
+                        $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetCurrency}','','','','','')";
+                    login.AD = new OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
+                        getCurrencies.Add(new GetGenerateBatchSerial
+                        {
+                            SerialAndBatch = row["Code"].ToString()
+                        });
+                    return Task.FromResult(new ResponseGetGenerateBatchSerial
+                    {
+                        ErrorCode = 0,
+                        ErrorMessage = "",
+                        Data = getCurrencies.ToList()
+                    });
+                }
 
-            //    return Task.FromResult(new ResponseGetCurrency
-            //    {
-            //        ErrorCode = login.lErrCode,
-            //        ErrorMessage = login.sErrMsg,
-            //        Data = null
-            //    });
-            //}
+                return Task.FromResult(new ResponseGetGenerateBatchSerial
+                {
+                    ErrorCode = login.lErrCode,
+                    ErrorMessage = login.sErrMsg,
+                    Data = null
+                });
+            }
 
-            //catch (Exception ex)
-            //{
-            //    return Task.FromResult(new ResponseGetCurrency
-            //    {
-            //        ErrorCode = ex.HResult,
-            //        ErrorMessage = ex.Message,
-            //        Data = null
-            //    });
-            //}
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseGetGenerateBatchSerial
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMessage = ex.Message,
+                    Data = null
+                });
+            }
         }
 
         #endregion

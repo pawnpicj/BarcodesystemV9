@@ -13,14 +13,26 @@
             margin-top: 55px;
             font-size: 60px;
         }
+        #Del{
+            margin-top:0px;
+        }
+        #Del:hover{
+            margin-top:2px;
+        }
+        #DelReturn{
+            margin-top:0px;
+        }
+        #DelReturn:hover{
+            margin-top:2px;
+        }
 </style>
 <div class="container">
     <div class="row">
         <div class="col-lg-3" style="height: 250px; margin-top: 30px; width: 250px;">
             <a asp-controller="SaleOrder" asp-action="CreateSaleOrder">
-                <div style="width:100%;height:100%;background:#f0eff1">
+                <div style="width: 100%; height: 100%; background: #ffffff" id="Del">
                     <div style="text-align:center">
-                        <p style="text-align:center;padding-top:15px;">Delivery</p>
+                        <p style="text-align: center; padding-top: 15px; color: #336699;"><b>Delivery</b></p>
                     </div>
                     <div style="height: 100%; text-align: center; width: 100%;">
                         <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
@@ -30,9 +42,9 @@
         </div>
         <div class="col-lg-3" style="height: 250px; margin-top: 30px; width: 250px;">
             <a asp-controller="DeliveryReturn" asp-action="CreateDeliveryReturn">
-            <div style="width:100%;height:100%;background:#f0eff1">
+            <div style="width: 100%; height: 100%; background: #ffffff" id="DelReturn">
                 <div style="text-align:center">
-                    <p style="text-align:center;padding-top:15px;">Delivery Return</p>
+                    <p style="text-align: center; padding-top: 15px; color: #336699;"><b>Delivery Return</b></p>
                 </div>
                 <div style="width:100%;height:100%;text-align:center">
                     <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
@@ -41,5 +53,19 @@
             </a>
         </div>
     </div>
+    <script>
+        $('#Del').mouseout(function () {
+            document.getElementById("Del").style.backgroundColor = "#ffffff";
+        });
+        $('#Del').mouseover(function () {
+            document.getElementById("Del").style.backgroundColor = "rgba(0, 74, 153,0.1)";
+        });
+        $('#DelReturn').mouseout(function () {
+            document.getElementById("DelReturn").style.backgroundColor = "#ffffff";
+        });
+        $('#DelReturn').mouseover(function () {
+            document.getElementById("DelReturn").style.backgroundColor = "rgba(0, 74, 153,0.1)";
+        });
+    </script>
 </div>
 

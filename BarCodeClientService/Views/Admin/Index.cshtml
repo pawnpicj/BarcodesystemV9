@@ -10,10 +10,10 @@
         text-align: center;
     }
 
-    #Icon:hover {
-        font-size: 60px;
-        margin-top: 55px;
-    }
+        #Icon:hover {
+            margin-top: 55px;
+            font-size: 60px;
+        }
 </style>
 
 <div class="container">
@@ -21,11 +21,9 @@
         @*Bin Location *@
         <div class="col-lg-3" style="height: 250px; margin-top: 30px; width: 250px;">
             <a asp-controller="Admin" asp-action="UserSetup">
-                <div style="background: #f0eff1; height: 100%; width: 100%;">
-                    <div style="text-align: center">
-                        <p style="padding-top: 15px; text-align: center;">
-                            <b>User</b>
-                        </p>
+                <div style="width:100%;height:100%;background:#f0eff1">
+                    <div style="text-align:center">
+                        <p style="text-align:center;padding-top:15px;"><b>User</b></p>
                     </div>
                     <div style="height: 100%; text-align: center; width: 100%;">
                         <i id="Icon" class="fas fa-users" aria-hidden="true"></i>
@@ -35,11 +33,9 @@
         </div>
         <div class="col-lg-3" style="height: 250px; margin-top: 30px; width: 250px;">
             <a asp-controller="CreateLabelSticker" asp-action="ItemMaster">
-                <div style="background: #f0eff1; height: 100%; width: 100%;">
-                    <div style="text-align: center">
-                        <p style="padding-top: 15px; text-align: center;">
-                            <b>Label Setup</b>
-                        </p>
+                <div style="width:100%;height:100%;background:#f0eff1">
+                    <div style="text-align:center">
+                        <p style="text-align:center;padding-top:15px;"><b>Label Setup</b></p>
                     </div>
                     <div style="height: 100%; text-align: center; width: 100%;">
                         <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
@@ -47,32 +43,19 @@
                 </div>
             </a>
         </div>
-        @*
-        InventoryTransfer (Return Borrow Bills)
-        <div class="col-lg-3" style="width: 250px;height: 250px;margin-top:30px;">
-            <a asp-controller="Inventory" asp-action="CreateInventoryTransferRBB">
-                <div style="width:100%;height:100%;background:#f0eff1">
-                    <div style="text-align:center">
-                        <p style="text-align:center;padding-top:15px;"><b>Inventory Tranfer (Return Borrow Bills)</b></p>
-                    </div>
-                    <div style="width:100%;height:100%;text-align:center">
-                        <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
-                    </div>
-                </div>
-            </a>
-        </div>
-
-        <div class="col-lg-3" style="width: 250px;height: 250px;margin-top:30px;">
-            <a asp-controller="Inventory" asp-action="CreateInventoryCounting">
-                <div style="width:100%;height:100%;background:#f0eff1">
-                    <div style="text-align:center">
-                        <p style="text-align:center;padding-top:15px;"><b>Inventory Counting</b></p>
-                    </div>
-                    <div style="width:100%;height:100%;text-align:center">
-                        <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
-                    </div>
-                </div>
-            </a>
-        </div>*@
     </div>
+    <script>
+        $('#User').mouseout(function () {
+            document.getElementById("User").style.backgroundColor = "#ffffff";
+        });
+        $('#User').mouseover(function () {
+            document.getElementById("User").style.backgroundColor = "rgba(0, 74, 153,0.1)";
+        });
+        $('#Label').mouseout(function () {
+            document.getElementById("Label").style.backgroundColor = "#ffffff";
+        });
+        $('#Label').mouseover(function () {
+            document.getElementById("Label").style.backgroundColor = "rgba(0, 74, 153,0.1)";
+        });
+    </script>
 </div>

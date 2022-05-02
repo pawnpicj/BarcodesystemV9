@@ -304,18 +304,34 @@
         });
         var tbUser = $('#TbListUser').DataTable();
         var LsUser = [];
-        $('#TbListUser tbody').on('click',
-            'tr',
-            function() {
-                if ($(this).hasClass('selected')) {
-                    $(this).removeClass('selected');
-
-                } else {
-                    tbUser.$('tr.selected').removeClass('selected');
-                    $(this).addClass('selected');
+        $('#TbListUser tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+                $('#userCode').val("");
+            }
+            else {
+                tbUser.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+                var index = tbUser.row('.selected').index();
+                var data = tbUser.row(index).data();
+                $('#userCode').val(data.userCode);
+                $('#userName').val(data.userName);
+                $('#phone').val(data.phone);
+                $('#email').val(data.email);
+                $('#fax').val(data.fax);
+                $('#department').val(data.department);
+                $('#password').val(data.password);
+                $('#admin').val(data.admin);
+                if (data.active == "Y") {
+                    document.getElementById('active').setAttribute('checked', true);
                 }
-            });
-
+                if (data.active == "N") {
+                    alert(data.active);
+                    document.getElementById('active').setAttribute('checked', false);
+                }
+            }
+        });
+        
         Load();
 
         function Load() {

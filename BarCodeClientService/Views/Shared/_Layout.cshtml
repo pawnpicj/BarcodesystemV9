@@ -57,23 +57,23 @@
 <body style="background: #dce7f1">
 @*@if (@ViewBag.UserCode == "1")
         {*@
-@*@HttpContextAccessor.HttpContext.Session.GetString("Layout")*@
-<div class="wrapper active">
-    <div class="top_navbar" style="background: #5f95c3;">
-        <div class="hamburger" style="background: #f0eff1">
-            <div class="hamburger__inner">
-                <div class="one" style="background: #000000"></div>
-                <div class="two" style="background: #000000"></div>
-                <div class="three" style="background: #000000"></div>
+    @*@HttpContextAccessor.HttpContext.Session.GetString("Layout")*@
+    <div class="wrapper active">
+        <div class="top_navbar" style="background:#5f95c3;">
+            <div class="hamburger" style="background:#f0eff1">
+                <div class="hamburger__inner">
+                    <div class="one" style="background:#000000"></div>
+                    <div class="two" style="background:#000000"></div>
+                    <div class="three" style="background:#000000"></div>
+                </div>
             </div>
-        </div>
-        <div class="menu">
-            <div class="logo" style="color: #f0eff1">
-                <b>Barcode System</b>
-            </div>
-            <div class="right_menu">
-                <ul>
-                    @*<li style="margin-top:10px;margin-right:10px;">
+            <div class="menu">
+                <div class="logo" style="color:#f0eff1">
+                    <b>Barcode System</b>
+                </div>
+                <div class="right_menu">
+                    <ul>
+                        @*<li style="margin-top:10px;margin-right:10px;">
                                 <a id="user" href="#"><i class="fas fa-user"></i></a>
                                 <div class="profile_dd">
 

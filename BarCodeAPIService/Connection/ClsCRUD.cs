@@ -6,6 +6,7 @@ namespace BarCodeAPIService.Connection
 {
     public class ClsCRUD
     {
+        public string ErrMsg { get; set; }
         public DataTable GetDataWeb(string sql, string type)
         {
             var tb = new DataTable();
@@ -20,8 +21,12 @@ namespace BarCodeAPIService.Connection
             {
                 ex.Message.ToString();
                 tb = null;
+                ErrMsg = ex.Message.ToString();
             }
-
+             if(ErrMsg !=null)
+            {
+                tb = null;
+            }
             return tb;
         }
     }

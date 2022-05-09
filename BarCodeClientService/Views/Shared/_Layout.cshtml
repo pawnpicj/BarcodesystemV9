@@ -52,6 +52,7 @@
         .wrapper.active .sidebar .sidebar__inner .profile { width: 80px; }
 
         .wrapper .sidebar .sidebar__inner .profile { width: 225px; }
+      
     </style>
 </head>
 <body style="background: #dce7f1">
@@ -59,7 +60,7 @@
         {*@
     @*@HttpContextAccessor.HttpContext.Session.GetString("Layout")*@
     <div class="wrapper active">
-        <div class="top_navbar" style="background:#5f95c3;">
+        <div class="top_navbar" style="background: rgb(45, 75, 95); height:50px">
             <div class="hamburger" style="background:#f0eff1">
                 <div class="hamburger__inner">
                     <div class="one" style="background:#000000"></div>
@@ -67,29 +68,40 @@
                     <div class="three" style="background:#000000"></div>
                 </div>
             </div>
-            <div class="menu">
-                <div class="logo" style="color:#f0eff1">
-                    <b>Barcode System</b>
-                </div>
-                <div class="right_menu">
-                    <ul>
-                        @*<li style="margin-top:10px;margin-right:10px;">
+            <div class="menu" >
+                <div class="row">
+                    <div class="col-2"><img src="/Icon/icons8-sap-48.png" /></div>
+                    <div class="col-10">
+                        <div class="logo" style="color: #ffffff; margin-right:50px;margin-top:10px; margin-left:10px;">
+                            <strong>Barcode System</strong>
+                        </div>                        
+                        <div class="right_menu">
+                            <ul>
+                                @*<li style="margin-top:10px;margin-right:10px;">
                                 <a id="user" href="#"><i class="fas fa-user"></i></a>
                                 <div class="profile_dd">
 
-                                    <div class="dd_item" id="changepass">Change Password</div>
-                                    <div class="dd_item" id="logout">Logout</div>
+                                <div class="dd_item" id="changepass">Change Password</div>
+                                <div class="dd_item" id="logout">Logout</div>
                                 </div>
-                            </li>
-                            <li style="margin-top:10px">
-                                    <a id="setting" href="#"><i class="fas fa-cog"></i></a>
-                                    <div class="profile_dd1">
-                                        <div class="dd_item1" id="CreateUser">Create User</div>
-                                        <div class="dd_item1" id="Quit">Quit</div>
-                                    </div>
+                                </li>
+                                <li style="margin-top:10px">
+                                <a id="setting" href="#"><i class="fas fa-cog"></i></a>
+                                <div class="profile_dd1">
+                                <div class="dd_item1" id="CreateUser">Create User</div>
+                                <div class="dd_item1" id="Quit">Quit</div>
+                                </div>
                                 </li>*@
-                </ul>
-            </div>
+                            </ul>
+                        </div>
+                    </div>                   
+                </div>    
+                <div class="row">
+                    <div class="co-2">
+                        <button id="sign_out" style="background-color:transparent;cursor:pointer;border:0px" title="sing out"><img src="/Icon/icons8-member-32.png" /></span></button>
+                       
+                    </div>
+                </div>
         </div>
     </div>
 

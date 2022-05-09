@@ -51,14 +51,14 @@
     }
 
     table tbody tr.selected td {
-        background: #ffce99; /*#94d8e1*/
-        color: red;
+        background: #ffeb99;
+         color: red;
     }
 
-    table tbody tr.selected td .clsinput {
-        background: #ffce99;
-        color: red;
-    }
+        table tbody tr.selected td .clsinput {
+            background: rgb(255, 235, 153);
+            color: red;
+        }
 
     .clsinput:focus { outline: none; }
 
@@ -66,6 +66,29 @@
         height: 20px;
         width: 20px;
     }
+    #TbListUser {
+        width: 100%;
+        border-collapse: collapse;
+    }
+        #TbListUser td {
+            padding: 7px;
+            border: #4e95f4 1px solid;
+
+        }
+            #TbListUser td:hover {
+                background-color: #ffff99;
+            }
+        #TbListUser tr {
+            background: #b8d1f3;
+        }
+
+            #TbListUser tr:hover td {
+                background-color: rgb(255, 240, 179);
+                cursor:pointer;
+            }
+            #TbListUser tr:hover {
+                background-color: #92b8ed;
+            }
 </style>
 <div id="#main">
     <div class="row" style="color: #696969; margin-left: 5px; margin-top: 5px;">
@@ -240,46 +263,88 @@
                 icon.setAttribute('class', 'fa-eye-slash');
             }
         }
-
         var User = {};
-        $('#Save').click(function() {
-            var active;
-            var date = new Date();
-            var year = date.getFullYear().toString();
-            var mn = String(date.getMonth() + 1).padStart(2, '0');
-            var day = String(date.getDate()).padStart(2, '0');
-            var hr = date.getHours();
-            var min = date.getMinutes();
-            var ms = date.getSeconds();
-            if (document.getElementById('active').checked == true) active = 'Y';
-            else active = 'N';
-            User.UserID = '0';
-            User.UserCode = $('#userCode').val();
-            User.UserName = $('#userName').val();
-            User.Phone = $('#phone').val();
-            User.Email = $('#email').val();
-            User.Fax = $('#fax').val();
-            User.Department = $('#department').val();
-            User.Password = $('#password').val();
-            User.Admin = $('#admin').val();
-            User.CreateDate = day + "/" + mn + "/" + year;
-            User.UpdateDate = '';
-            User.Active = active;
-            console.log(User);
+        var click = false;
+        var type;
+        $('#Save').click(function () {
+            if (document.getElementById("Save").innerText === "Save") {
+                var active;
+                var date = new Date();
+                var year = date.getFullYear().toString();
+                var mn = String(date.getMonth() + 1).padStart(2, '0');
+                var day = String(date.getDate()).padStart(2, '0');
+                var hr = date.getHours();
+                var min = date.getMinutes();
+                var ms = date.getSeconds();
+                if (document.getElementById('active').checked == true) active = 'Y';
+                else active = 'N';
+                User.UserID = '0';
+                User.UserCode = $('#userCode').val();
+                User.UserName = $('#userName').val();
+                User.Phone = $('#phone').val();
+                User.Email = $('#email').val();
+                User.Fax = $('#fax').val();
+                User.Department = $('#department').val();
+                User.Password = $('#password').val();
+                User.Admin = $('#admin').val();
+                User.CreateDate = day + "/" + mn + "/" + year;
+                User.UpdateDate = '';
+                User.Active = active;
 
-            $.ajax({
-                url: '@Url.Action("PostUser", "Admin")',
-                type: 'POST',
-                dataType: 'JSON',
-                data: { send: User },
-                success: function(data) {
-                }
+            click = true;
+                $.ajax({
+                    url: '@Url.Action("PostUser", "Admin")',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: { send: User },
+                    success: function (data) {
+                    }
+                });
+                alert("Create user success");
+            }
+
+            if (document.getElementById("Save").innerText === "Update") {
+
+                var active;
+                var date = new Date();
+                var year = date.getFullYear().toString();
+                var mn = String(date.getMonth() + 1).padStart(2, '0');
+                var day = String(date.getDate()).padStart(2, '0');
+                var hr = date.getHours();
+                var min = date.getMinutes();
+                var ms = date.getSeconds();
+                if (document.getElementById('active').checked == true) active = 'Y';
+                else active = 'N';
+                User.UserID = '0';
+                User.UserCode = $('#userCode').val();
+                User.UserName = $('#userName').val();
+                User.Phone = $('#phone').val();
+                User.Email = $('#email').val();
+                User.Fax = $('#fax').val();
+                User.Department = $('#department').val();
+                User.Password = $('#password').val();
+                User.Admin = $('#admin').val();
+                User.CreateDate = day + "/" + mn + "/" + year;
+                User.UpdateDate = '';
+                User.Active = active;
+                click = true;
+                $.ajax({
+                    url: '@Url.Action("UpdateUser", "Admin")',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: { send: User },
+                    success: function (data) {
+                    }
+                });
+            }
+        });
+        if (click === true) {
+            $('#Save').mouseleave(function () {
+                location.reload();
             });
+            click = false;
+        }
 
-        });
-        $('#Save').mouseleave(function() {
-            location.reload();
-        });
         $('#TbListUser').DataTable({
             bLengthChange: false,
             binfo: false,
@@ -305,6 +370,16 @@
             if ($(this).hasClass('selected')) {
                 $(this).removeClass('selected');
                 $('#userCode').val("");
+                $('#userName').val("");
+                $('#phone').val("");
+                $('#email').val("");
+                $('#fax').val("");
+                $('#department').val("");
+                $('#password').val("");
+                $('#admin').val("");
+                document.getElementById('active').checked = false;
+                document.getElementById('Save').innerHTML = "Save";
+                document.getElementById("userCode").readOnly = false;
             }
             else {
                 tbUser.$('tr.selected').removeClass('selected');
@@ -320,15 +395,17 @@
                 $('#password').val(data.password);
                 $('#admin').val(data.admin);
                 if (data.active == "Y") {
-                    document.getElementById('active').setAttribute('checked', true);
+                    document.getElementById('active').checked = true;
                 }
                 if (data.active == "N") {
-                    alert(data.active);
-                    document.getElementById('active').setAttribute('checked', false);
+                    document.getElementById('active').checked = false;
                 }
+                document.getElementById('Save').innerHTML = "Update";
+                document.getElementById("userCode").readOnly = true;
+
             }
         });
-        
+
         Load();
 
         function Load() {

@@ -33,5 +33,11 @@ namespace BarCodeClientService.Controllers
             var a = API.Read<ResponseGetUser>("api/User/GetUserLogin");
             return Ok(a);
         }
+        [HttpPost]
+        public IActionResult UpdateUserAsync(SendUser send)
+        {
+            var a = API.PostWithReturn<ResponsePostUser>("api/User/UpdateUser",send);
+            return Ok(a);
+        }
     }
 }

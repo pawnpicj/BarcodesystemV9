@@ -17,7 +17,20 @@ namespace BarCodeClientService.Controllers
 
         public IActionResult UserSetup()
         {
-            return View();
+            var a=API.Read<ResponseDepartment>("api/Department/GetDepartment");
+            return View(a);
+        }
+        [HttpGet]
+        public IActionResult GetDepartment()
+        {
+            var a=API.Read<ResponseDepartment>("api/Department/GetDepartment");
+            return Ok(a);
+        }
+        [HttpPost]
+        public IActionResult PostDepartment(DEP dep)
+        {
+            var a = API.PostWithReturn<ResponseDepartment>("api/Department/PostDepartment",dep);
+            return Ok(a);
         }
 
         [HttpPost]

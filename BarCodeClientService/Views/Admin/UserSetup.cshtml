@@ -1,4 +1,5 @@
-﻿@{
+﻿@model BarCodeLibrary.Respones.SAP.Pannreaksmey.ResponseDepartment;
+@{
     ViewData["Title"] = "User Setup";
 }
 <link href="~/css/DataTable/jquery.dataTables.min.css" rel="stylesheet"/>
@@ -160,7 +161,13 @@
                             </button>
                         </div>
                         <select style="height: 30px; width: 864px;" id="department">
-                            <option value="1">Admin</option>
+                            <option value="-1">     </option>
+                            @foreach (var item in Model.Data)
+                            {
+                                <option value="@item.Department">@item.Department</option>
+
+                            }
+                            <option value="0">Define New</option>
                         </select>
                     </div>
                     Password :
@@ -226,6 +233,27 @@
             </div>
         </div>
     </div>
+    <div class="d-none" id="modal_d_none">
+        <div class="modal fade" id="modelDept" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document"> 
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <strong class="modal-title" style="margin-top:-10px">Form Department</strong>
+                        <button type="button" class="close" aria-label="Close" style="margin-top:-25px">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row" style="margin-left:5px;margin-right:5px">
+                            Department
+                            <input type="text" class="form-control" id="txtdepartment" style="margin-top:5px;" />
+                        </div>
+                        <button type="button" id="btnsave" data-dismiss="modal" style="border: #4e95f4 1px solid; background: rgba(255, 204, 0,0.5);width:70px;height:30px;margin-top:20px;float:right ">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="d-none" id="body1">
         <div class="row">
             <div class="col-12" style="text-align: center">
@@ -263,6 +291,29 @@
                 icon.setAttribute('class', 'fa-eye-slash');
             }
         }
+        //Department
+        $('#department').change(function () {
+
+            if ($('#department').val() == '0') {
+                $('#modal_d_none').removeClass("d-none");
+                $('#modelDept').modal('show');
+            }
+        });
+        var dep = {};
+        $('#btnsave').click(function () {
+            dep.Department = $('#txtdepartment').val();
+            $.ajax({
+                    url: '@Url.Action("PostDepartment", "Admin")',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: { dep: dep },
+                    success: function (data) {
+                    }
+            });           
+            $('#modal_d_none').addClass("d-none");
+            location.reload();
+            location.reload();
+        });
         var User = {};
         var click = false;
         var type;
@@ -344,6 +395,12 @@
             });
             click = false;
         }
+        $('#Save').mouseleave(function () {
+            if (click == true) {
+                location.reload();
+                click=false;
+            }
+        });
 
         $('#TbListUser').DataTable({
             bLengthChange: false,
@@ -357,7 +414,7 @@
                 { data: "email", autoWidth: true },
                 { data: "fax", autoWidth: true },
                 { data: "department", autoWidth: true },
-                { data: "password", autoWidth: true },
+                { data: "password", autoWidth: true,type:'password'},
                 { data: "admin", autoWidth: true },
                 { data: "createDate", autoWidth: true },
                 { data: "updateDate", autoWidth: true },

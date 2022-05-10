@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BarCodeAPIService.Models;
+using System;
 using System.Data;
 using System.Data.Odbc;
 
@@ -10,12 +11,14 @@ namespace BarCodeAPIService.Connection
         public DataTable GetDataWeb(string sql, string type)
         {
             var tb = new DataTable();
-            var db = "";
-            if (type == "WebDb") db = ConnectionString.ConnHana;
-            var dtp = new OdbcDataAdapter(sql, db);
             try
             {
-                dtp.Fill(tb);
+                if (type == "WebDb")
+                {
+                    var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SqlHana);//ConnectionString.ConnHana;
+                    var dtp = new OdbcDataAdapter(sql, login.CN);
+                    dtp.Fill(tb);
+                }
             }
             catch (Exception ex)
             {

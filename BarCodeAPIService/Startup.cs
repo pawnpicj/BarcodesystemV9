@@ -55,6 +55,7 @@ namespace BarCodeAPIService
             services.AddScoped<IDocumentSeriesService, DocumentSeriesService>();
             services.AddScoped<IPriceListService, PriceListService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IDepartmentService, DepartmentService>();
 
             services.AddScoped<IInventoryTransferService, InventoryTransferService>();
             services.AddScoped<IInventoryCountingService, InventoryCountingService>();

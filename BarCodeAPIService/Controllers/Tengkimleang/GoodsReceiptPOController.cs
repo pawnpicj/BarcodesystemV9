@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using BarCodeAPIService.Service;
+using BarCodeLibrary.Request.SAP.Tengkimleang;
 using BarCodeLibrary.Request.SAP.TengKimleang;
 using Barcodesystem.Contract.RouteApi;
 using Microsoft.AspNetCore.Mvc;
@@ -61,6 +62,33 @@ namespace BarCodeAPIService.Controllers
         public async Task<IActionResult> GetCurrencyAsync(string cardCode)
         {
             var a = await goodsReceiptPO.responseGetCurrency(cardCode);
+            return Ok(a);
+        }
+
+        [HttpPost(APIRoute.GoodReceiptPO.GetGenerate_Serial_Batch)]
+        public async Task<IActionResult> GetGenerate_Serial_Batch(GetGenerateSerialBatchRequest generateSerialBatchRequest)
+        {
+            var a = await goodsReceiptPO.responseGetGenerateBatchSerial(generateSerialBatchRequest);
+            return Ok(a);
+        }
+
+        [HttpGet(APIRoute.GoodReceiptPO.GetItemCode)]
+        public async Task<IActionResult> GetItemCodeAsyncTask()
+        {
+            var a = await goodsReceiptPO.responseGetItemCodes();
+            return Ok(a);
+        }
+
+        [HttpGet(APIRoute.GoodReceiptPO.GetTaxCode)]
+        public async Task<IActionResult> GetTaxCode()
+        {
+            var a = await goodsReceiptPO.responseGetVatCodes();
+            return Ok(a);
+        }
+        [HttpGet(APIRoute.GoodReceiptPO.GetWarehouse)]
+        public async Task<IActionResult> GetWarehouse()
+        {
+            var a = await goodsReceiptPO.responseGetWarehouses();
             return Ok(a);
         }
     }

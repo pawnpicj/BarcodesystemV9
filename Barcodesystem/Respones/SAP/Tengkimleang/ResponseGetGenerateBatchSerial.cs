@@ -12,5 +12,6 @@ namespace BarCodeLibrary.Respones.SAP.Tengkimleang
     public class GetGenerateBatchSerial
     {
         public string SerialAndBatch { get; set; }
+        public string Script { get; set; }
     }
 }

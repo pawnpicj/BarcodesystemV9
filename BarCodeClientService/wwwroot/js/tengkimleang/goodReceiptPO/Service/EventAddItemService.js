@@ -3,7 +3,14 @@
     Btn_ClickBatchSerail(index, id) {
         EventItemAdd.iEventItemAdd.Btn_ClickBatchSerail(index, id);
     },
-    BtnSaveSerial_ClickSave() {
-        EventItemAdd.iEventItemAdd.BtnSaveSerial_ClickSave1();
+    DeleteArray(arr, value) {
+        let tmpArr = EventItemAdd.iEventItemAdd.DeleteSerial(arr, value);
+        lsSerial = tmpArr;
+        tbSerial1.clear();
+        tbSerial1.rows.add(lsSerial);
+        tbSerial1.search("").draw();
+    },
+    getItemCode(url) {
+        EventItemAdd.iEventItemAdd.getItemCode(url);
     }
 }

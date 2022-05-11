@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BarCodeLibrary.Request.SAP.Tengkimleang;
+using BarCodeLibrary.Request.SAP.TengKimleang;
 
 namespace BarCodeClientService.Controllers
 {
@@ -80,6 +82,66 @@ namespace BarCodeClientService.Controllers
             {
                 return BadRequest(a.ErrorMessage);
             }
+        }
+
+        [HttpPost]
+        public IActionResult GetSerialBatchResult(GetGenerateSerialBatchRequest generateSerialBatchRequest)
+        {
+            var a = API.PostWithReturn<ResponseGetGenerateBatchSerial>(APIRoute.GoodReceiptPO.Controller+APIRoute.GoodReceiptPO.GetGenerate_Serial_Batch
+                                                                        ,generateSerialBatchRequest);
+            if (a.ErrorCode == 0)
+            {
+                return Ok(a.Data);
+            }
+            else
+            {
+                return BadRequest(a.ErrorMessage);
+            }
+        }
+
+        [HttpPost]
+        public IActionResult CreateGoodsReceiptPoResult(SendGoodReceiptPO goodReceiptPo)
+        {
+            var a = API.PostWithReturn<ResponseGetGenerateBatchSerial>(APIRoute.GoodReceiptPO.Controller + APIRoute.GoodReceiptPO.SendGoodReceiptPO
+                , goodReceiptPo);
+            if (a != null)
+            {
+                return Ok(a.Data);
+            }
+            return BadRequest(API.ErrorMessage);
+        }
+
+        [HttpGet]
+        public IActionResult GetItemActionResult()
+        {
+            var a = API.Read<ResponseGetItemCode>(
+                APIRoute.GoodReceiptPO.Controller + APIRoute.GoodReceiptPO.GetItemCode);
+            if (a != null)
+            {
+                return Ok(a);
+            }
+            return BadRequest(API.ErrorMessage);
+        }
+
+        [HttpGet]
+        public IActionResult GetTaxCodeResult()
+        {
+            var a = API.Read<ResponseGetVatCode>(APIRoute.GoodReceiptPO.Controller + APIRoute.GoodReceiptPO.GetTaxCode);
+            if (a != null)
+            {
+                return Ok(a.Data);
+            }
+            return BadRequest(API.ErrorMessage);
+        }
+        [HttpGet]
+        public IActionResult GetWarehouseResult()
+        {
+            var a = API.Read<ResponseGetVatCode>(APIRoute.GoodReceiptPO.Controller + APIRoute.GoodReceiptPO.GetWarehouse);
+            if (a != null)
+            {
+                return Ok(a.Data);
+            }
+            return BadRequest(API.ErrorMessage);
         }
     }
 }

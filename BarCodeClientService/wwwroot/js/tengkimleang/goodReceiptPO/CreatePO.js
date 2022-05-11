@@ -1,5 +1,5 @@
 ﻿
-let GetMasterData ={
+let GetMasterData = {
     overallFunction: new GetMasterGoodReceiptPO(),
     getSeries(DocDate, currentDate, url, ObjectCode) {
         GetMasterData.overallFunction.getSeries(DocDate, currentDate, url, ObjectCode);
@@ -13,8 +13,14 @@ let GetMasterData ={
     getCustomer(url) {
         GetMasterData.overallFunction.getCustomer(url);
     },
-    getPurchaseOrder(url,cardCode) {
-        GetMasterData.overallFunction.getPurchaseOrder(url,cardCode)
+    getPurchaseOrder(url, cardCode) {
+        GetMasterData.overallFunction.getPurchaseOrder(url, cardCode)
+    },
+    getTaxCode(url) {
+        GetMasterData.overallFunction.getTaxCode(url);
+    },
+    getWarehouse(url) {
+        GetMasterData.overallFunction.getWarehouse(url);
     }
 }
 
@@ -77,9 +83,9 @@ let DataTableInit ={
             columns: [
                 { data: "itemCode", autoWidth: true },
                 { data: "itemName", autoWidth: true },
-                { data: "price", autoWidth: true },
-                { data: "onHand", autoWidth: true },
-                { data: "bcdCode", autoWidth: true }
+                { data: "unitPrice", autoWidth: true },
+                { data: "quantity", autoWidth: true },
+                { data: "barCode", autoWidth: true }
             ],
             rowCallback: function (row, data, index) {
                 //$('td', row).css('background-color', '#ffffff');
@@ -116,34 +122,6 @@ let DataTableInit ={
                 { data: "cardName", autoWidth: true },
                 { data: "phone", autoWidth: true },
                 { data: "address", autoWidth: true }
-            ],
-            rowCallback: function (row, data, index) {
-                //$('td', row).css('background-color', '#ffffff');
-                //$('td', row).css('color', '#717171');
-            }
-        });
-    },
-    TableSerial1() {
-        $('#TbSerial').DataTable({
-            responsive: true,
-            bLengthChange: false,
-            binfo: false,
-            data: lsSerial,
-            columns:
-            [
-                { data: "SerialNumber", autoWidth: true },
-                {
-                    data: "MfrSerialNo", autoWidth: true
-                },
-                {
-                    data: "ExpDate", autoWidth: true
-                },
-                {
-                    render: function (data, type, full, meta) {
-
-                        return ''; //'<button class="btn-sm btn-info" style="margin-left: 40%;" onClick="EventItemAdd.Btn_ClickBatchSerail(\'' + meta.row + '\',tbItemLine)"><i class="fas fa-barcode"></i></button>';
-                    }
-                }
             ],
             rowCallback: function (row, data, index) {
                 //$('td', row).css('background-color', '#ffffff');

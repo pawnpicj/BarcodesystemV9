@@ -1,4 +1,5 @@
 ﻿class IEventCopyFromPO {
+
     ChoosePO_Click(temporyListPO, TbCopyFromPO) {
         var remark = "";
         var doctotal = 0;
@@ -24,7 +25,7 @@
                 objLineItem.Quantity = data.line[k].quatity;
                 objLineItem.PriceBeforeDis = data.line[k].priceBeforeDis;
                 objLineItem.LineTotal = data.line[k].lineTotal;
-                objLineItem.UomName = data.line[k].lineTotal;
+                objLineItem.UomName = data.line[k].uomName;
                 objLineItem.TaxCode = data.line[k].taxCode;
                 objLineItem.Whs = data.line[k].whsCode;
                 objLineItem.DocEntry = data.docEntry;

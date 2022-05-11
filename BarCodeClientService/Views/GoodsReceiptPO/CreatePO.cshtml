@@ -76,10 +76,10 @@
 
 <div class="row" style="color: #696969; margin-left: 5px; margin-top: 5px;">
     <h5 style="color: #696969; margin-top: 5px;">
-        <a asp-action="DashboardAR" asp-controller="Dashboard" onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fas fa-home"></i> Dashboard</a>
+        <a onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fas fa-home"></i> Dashboard</a>
         <span>
-            <a asp-action="ShowAR" asp-controller="ARInvoice" onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fa fa-caret-right align-right"></i> O2O</a>
-            <i class="fa fa-caret-right align-right"></i> Create O2O
+            <a onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fa fa-caret-right align-right"></i>Good Receipt PO</a>
+            <i class="fa fa-caret-right align-right"></i> Create Good Receipt PO
         </span>
     </h5>
 </div>
@@ -114,38 +114,18 @@
                 </div>
             </div>
             <div>
-                Branch Name :
+                Vender Name :
                 <div class="input-group">
                     <input type="text" class="form-control" id="CusName" value="" readonly>
                 </div>
             </div>
             Order Number :
             <div class="input-group">
-                <input type="text" class="form-control" id="CusRef">
+                <input type="text" class="form-control" id="OrderNumberID">
             </div>
             Remarks :
             <div class="input-group">
-                <textarea class="form-control" id="Remark" rows="1"></textarea>
-            </div>
-            Customer Tax ID<span style="color: red;">*</span> :
-            <div class="input-group">
-                <input type="text" class="form-control" id="TaxId">
-            </div>
-            Customer Type<span style="color: red;">*</span> :
-            <div class="input-group">
-                <input type="text" class="form-control" id="CusType">
-            </div>
-            Customer Name :
-            <div class="input-group">
-                <input type="text" class="form-control" id="CusRemark">
-            </div>
-            Address<span style="color: red;">*</span> :
-            <div class="input-group">
-                <textarea class="form-control" id="Address" rows="3"></textarea>
-            </div>
-            Tel :
-            <div class="input-group">
-                <input type="text" class="form-control" id="CusTel">
+                <textarea class="form-control" id="Remark" rows="3"></textarea>
             </div>
         </div>
         <div class="col-sm-6">
@@ -210,7 +190,7 @@
             </div>
 
             <div>
-                Gross Price :
+                Unit Price :
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <input type="button" class="input-group-text" id="DocCurr"/>
@@ -229,11 +209,7 @@
                     <input type="number" class="form-control" value="0" id="DiscountAmt" onchange="LinDiscountAMT()">
                 </div>
             </div>
-            Uom Name :
-            <div class="input-group">
-                <select id="UomID" class="form-control">
-                </select>
-            </div>
+            
         </div>
         <div class="col-sm-6">
             <div>
@@ -243,16 +219,17 @@
                     </select>
                 </div>
             </div>
-
-            Inventory Uom :
-            <div class="input-group">
-                <select id="InventoryID" class="form-control">
-                </select>
-            </div>
             <div>
                 Warehouse :
                 <div class="input-group">
                     <select id="whscode" class="form-control">
+                    </select>
+                </div>
+            </div>
+            <div>
+                Uom Name :
+                <div class="input-group">
+                    <select id="UomID" class="form-control">
                     </select>
                 </div>
             </div>
@@ -300,9 +277,9 @@
         </div>
         <div class="col-sm-4">
             Discount % :
-            <input type="number" class="form-control" value="0" id="DisPer" onchange="DisPer()"/>
+            <input type="number" class="form-control" value="0" id="DisPer"/>
             Discount Amount :
-            <input type="number" class="form-control" value="0" id="DisAmt" onchange="DisAmt()"/>
+            <input type="number" class="form-control" value="0" id="DisAmt"/>
         </div>
         <div class="col-sm-4">
             Before Discount :
@@ -417,7 +394,7 @@
                                 <tr>
                                     <th>Item Code</th>
                                     <th>Item Descrition</th>
-                                    <th>Gross Price</th>
+                                    <th>Unit Price</th>
                                     <th>In Stock</th>
                                     <th>BarCode</th>
                                 </tr>
@@ -481,6 +458,7 @@
                     <div class="row">
                         <div class="col-6">
                             <input type="hidden" id="txtRowID"/>
+                            <input type="hidden" id="txtScriptID"/>
                             Item Code :
                             <div class="input-group">
                                 <input type="text" class="form-control" id="ItemCodeSerial" disabled="disabled">
@@ -528,7 +506,7 @@
 
                 <div class="table-responsive">
                     <div class="row">
-                        <div class="col-sm-12">
+                        <div class="col-12">
                             <table id="TbSerial" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
                                 <thead>
                                 <tr>
@@ -539,7 +517,7 @@
                                 </tr>
                                 </thead>
                             </table>
-                        </div>
+                        </div> 
                     </div>
                 </div>
             </div>
@@ -549,15 +527,18 @@
         </div>
     </div>
 </div>
-
-<script src="~/js/Array.js"></script>
-<script src="~/js/tengkimleang/Method/MethodDataTable.js"></script>
 <script src="~/js/tengkimleang/goodReceiptPO/GetMasterGoodReceiptPO.js"></script>
+<script src="~/js/tengkimleang/Method/MethodDataTable.js"></script>
+<script src="~/js/Array.js"></script>
 <script src="~/js/tengkimleang/goodReceiptPO/Service/IEventCopyFromPO.js"></script>
 <script src="~/js/tengkimleang/goodReceiptPO/Service/EventCopyFromPO.js"></script>
-<script src="~/js/tengkimleang/goodReceiptPO/CreatePO.js"></script>
 <script src="~/js/tengkimleang/goodReceiptPO/Service/IEventItemAdd.js"></script>
 <script src="~/js/tengkimleang/goodReceiptPO/Service/EventAddItemService.js"></script>
+<script src="~/js/tengkimleang/goodReceiptPO/Service/IEventSaveGoodReceipt.js"></script>
+<script src="~/js/tengkimleang/goodReceiptPO/Service/EventSaveGoodReceiptService.js"></script>
+<script src="~/js/tengkimleang/goodReceiptPO/CreatePO.js"></script>
+
+
 
 <script type="text/javascript">
     /* Init DataTable */
@@ -568,27 +549,18 @@
     DataTableInit.TableItemLine();
     var tbItemLine = $('#TbAR').DataTable();
     DataMethod.AddClassSelected("TbAR", tbItemLine);
-    $(".btnModelsItem").click(function() {
-        $("#ModalItem").modal({ backdrop: "static" });
-        alert("Select Item not yet Do");
-        //$.ajax({
-        //    url: '@Url.Action("GetItems", "Master")',
-        //    type: "GET",
-        //    dataType: "JSON",
-        //    data: { cardCode: $('#CusID').val()},
-        //    success: function (data) {
-        //        LItm = data
-        //        tbItem.clear();
-        //        tbItem.rows.add(LItm);
-        //        tbItem.search('').draw();
-        //    }
-        //});
-    });
     /* End DataTable List Of ItemLine */
+
 
     /* DataTable List Of Item Code */
     var LItm = [];
     DataTableInit.TableSearchItemCode();
+    var tbItemSearch = $('#TbItem').DataTable();
+    DataMethod.AddClassSelected("TbItem", tbItemSearch);
+    $(".btnModelsItem").click(function() {
+        $("#ModalItem").modal({ backdrop: "static" });
+        EventItemAdd.getItemCode('@Url.Action("GetItemActionResult","GoodsReceiptPO")');
+    });
     /* End DataTable List Of Item Code */
 
     /* DataTable List Purchase Order*/
@@ -619,8 +591,8 @@
         GetMasterData.getCustomer('@Url.Action("GetCustomerClientResult", "GoodsReceiptPO")');
     });
     $('#ChooseCus').click(function() {
-        var index = tbCus.row('.selected').index();
-        var data = tbCus.row(index).data();
+        const index = tbCus.row('.selected').index();
+        const data = tbCus.row(index).data();
         $('#CusID').val(data.cardCode);
         $('#CusName').val(data.cardName);
         $('#CcusID').css('background-color', '#4CAF50');
@@ -631,8 +603,38 @@
 
     /* DataTable Init Serial */
     var lsSerial = [];
-    DataTableInit.TableSerial1();
-    var tbSerial = $('#TbSerial').DataTable();
+    //DataTableInit.TableSerial1();
+    $('#TbSerial').dataTable({
+            bLengthChange: false,
+            bFilter: false,
+            bInfo: false,
+            bPaginate: false,
+            data: lsSerial,
+            columns:
+            [
+                    { data: "SerialNumber", autoWidth: true },
+                {
+                    data: "MfrSerialNo",
+                    autoWidth: true
+                    // render: function (data, type, full, meta) { return '<input type="number" class="clsinput" style="padding:0px; position:absolute;width:100px;border:none;" onchange="PriceChange(' + meta.row + ')" id="tbPrice' + meta.row + '" value="' + full.UnitPrice + '">'; }, autoWidth: true
+                },
+                {
+                    data: "ExpDate",
+                    autoWidth: true
+                    //render: function (data, type, full, meta) { return '<input type="number" class="clsinput" style="padding:0px; position:absolute;width:100px;border:none;" onchange="DisChange('+meta.row+')" value="'+full.Discount+'" id="tbDis'+meta.row+'" >'; }, autoWidth: true
+                },
+                {
+                    render: function(data, type, full, meta) {
+                        return '<button class="btn-sm btn-danger" style="margin-left: 40%;" onClick="EventItemAdd.DeleteArray(lsSerial,'+full.SerialNumber+')"><i class="fas fa-trash-alt"></i></button>';
+                    }
+                }
+            ],
+            rowCallback: function(row, data, index) {
+                //$('td', row).css('background-color', '#ffffff');
+                //$('td', row).css('color', '#717171');
+            }
+        });
+    var tbSerial1 = $('#TbSerial').DataTable();
     /* End DataTable Init Serial */
 
     /* End Init DataTable */
@@ -640,6 +642,8 @@
     // #region Init Master
     GetMasterData.getSeries("", '@ViewData["Date"]', '@Url.Action("GetSeries", "GoodsReceiptPO")', '20');
     GetMasterData.getSaleEmployee('@Url.Action("GetSaleEmployeeResult", "GoodsReceiptPO")');
+    GetMasterData.getTaxCode('@Url.Action("GetTaxCodeResult", "GoodsReceiptPO")');
+    GetMasterData.getWarehouse('@Url.Action("GetWarehouseResult", "GoodsReceiptPO")');
     // #endregion
 
     // #region EventChange DocDate
@@ -647,35 +651,54 @@
         GetMasterData.getSeries($("#DocDate").val(), '@ViewData["Date"]', '@Url.Action("GetSeries", "GoodsReceiptPO")', '20');
     });
     // #endregion
+    // #region EventChange Discount
+    $("#DisPer").change(function() {
+        var total = ($("#BTax").val() - $("#DisA").val()).toFixed(2);
+        total = (total * ($("#DisPer").val()/100)).toFixed(2);
+        $("#DisAmt").val(total);
+        $("#Total").val((($("#BTax").val() - $("#DisA").val()).toFixed(2)-total).toFixed(2));
 
+    });
+    $("#DisAmt").change(function() {
+        var total = ($("#BTax").val() - $("#DisA").val()).toFixed(2);
+        total = (($("#DisAmt").val() / total)*100).toFixed(2);
+        $("#DisPer").val(total);
+        $("#Total").val((($("#BTax").val() - $("#DisA").val()).toFixed(2)-$("#DisAmt").val()).toFixed(2));
+    });
+    // #endregion
+
+    // #region Onchange BP Currency
+
+    $("#BPDocCurr").change(function() {
+        $("#DocCurr").val($("#BPDocCurr").val());
+    });
+    // #endregion
+    
     $('#AddItem').click(function() {
         alert("Not Yet Do");
     });
 
     $('#Save').click(function() {
-        alert("Not yet DO");
+        EventSaveGoodReceiptPO.sendGoodReceiptPO();
     });
 
 
     // Item Code
-    var Instock = 0;
     $('#ChooseItem').click(function() {
-        var index = tbItem.row('.selected').index();
-        var data = tbItem.row(index).data();
+        const index = tbItemSearch.row('.selected').index();
+        const data = tbItemSearch.row(index).data();
         $('#ItemCode').val(data.itemCode);
         $('#ItemDescr').val(data.itemName);
-        Instock = Number(data.onHand);
         $('#CItemCode').css('background-color', '#4CAF50');
-        $("#UomID").prop("disabled", false);
     });
     // End Item Code
 
     // Copy From PO
     $('#ChoosePO').click(function() {
         LinesAR = [];
-        let result = EventCopyFromPOService.ChoosePO_Click(temporyListPO, TbCopyFromPO);
+        const result = EventCopyFromPOService.ChoosePO_Click(temporyListPO, TbCopyFromPO);
         LinesAR = result.linesAR;
-        $('#Remark').val("Based On Purchase Orders " + result.remark);
+        $('#Remark').val(`Based On Purchase Orders ${result.remark}`);
         $('#Total').val(result.docTotal);
         $("#DisPer").val(result.discountPercentage);
         $("#DisAmt").val(result.discountAmount);
@@ -688,7 +711,7 @@
     $('#CopyFromPO').click(function() {
         temporyListPO = [];
         if ($("#CusID").val() != "") {
-            var cardCode = $("#CusID").val();
+            const cardCode = $("#CusID").val();
             GetMasterData.getPurchaseOrder('@Url.Action("GetPurchaseOrderByCardCode", "GoodsReceiptPO")', cardCode);
         } else {
             alert("Please Select Customer, if you don't select can bind data");
@@ -699,15 +722,32 @@
     //Save Serial
 
     $("#BtnSaveSerial").click(function() {
-        let objSave = new IEventItemAdd();
-        objSave.BtnSaveSerial_ClickSave1();
+        if ($("#SerialNumber").val() === "" || $("#SerialNumber").val() === null) {
+            alert("Please Enter Seril Number Save!");
+        } else {
+            if ($("#ItemCodeSerialQty").val() <= 0) {
+                alert("Cannot save Serial with Qty Zero!");
+            } else {
+                if ($("#btnSerialNumGennerate").val()) {
+                    alert("Please Enter Serial!");
+                } else {
+                    EventItemAdd.iEventItemAdd.BtnSaveSerial_ClickSave1();
+                    console.log(lsSerial);
+                    tbSerial1.clear();
+                    tbSerial1.rows.add(lsSerial);
+                    tbSerial1.search("").draw();
+                }
+            }
+        }
     });
     $("#btnSerialNumGennerate").click(function() {
-        let objSave = new IEventItemAdd();
-        var itemCode = $('#ItemCodeSerial').val();
-        var qty = $('#ItemCodeSerialQty').val();
-        var a = objSave.GenerateSerialOrBatch(itemCode, qty);
-        $("#SerialNumber").val(a);
+        if ($("#ItemCodeSerialQty").val() <= 0) {
+            alert("Cannot save Serial with Qty Zero!");
+        } else {
+            const objSave = new IEventItemAdd();
+            objSave.GenerateSerialOrBatch('@Url.Action("GetSerialBatchResult", "GoodsReceiptPO")', $("#ItemCodeSerial").val(), 1, 'S');
+            //$("#SerialNumber").val(a);
+        }
     });
 
     //End Save Serial
@@ -738,17 +778,16 @@
     $('#DocumentDate').val(formatDate('@ViewData["Date"]'));
 
     function formatDate(date) {
-        var d = new Date(date),
-            month = '' + (d.getMonth() + 1),
-            day = '' + d.getDate(),
-            year = d.getFullYear();
+        const d = new Date(date);
+        var month = `${d.getMonth() + 1}`,
+            day = `${d.getDate()}`;
+        const year = d.getFullYear();
         if (month.length < 2)
-            month = '0' + month;
+            month = `0${month}`;
         if (day.length < 2)
-            day = '0' + day;
+            day = `0${day}`;
 
         return [year, month, day].join('-');
     }
-
 
 </script>

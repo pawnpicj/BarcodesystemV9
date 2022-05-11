@@ -43,7 +43,7 @@ BEGIN
 				WHEN B."ManBtchNum"='Y' THEN 'B'
 				ELSE 'N' 
 			END AS ManageItem,
-			A."unitMsr" AS UomName,
+			A."UomEntry" AS UomName,
 			A."VatGroup" AS TaxCode
 		FROM "UDOM_BARCODEV2"."POR1" AS A 
 		LEFT JOIN UDOM_BARCODEV2."OITM" AS B ON A."ItemCode"=B."ItemCode"
@@ -88,7 +88,6 @@ BEGIN
 		FROM "UDOM_BARCODEV2"."PDN1" AS A 
 		WHERE A."DocEntry"=:par1;
 	ELSE IF :DTYPE = 'GetStcok_Batch_Serial' THEN 
-	
 		SELECT 
 			 A."ItemCode"
 			,A."OnHand"
@@ -155,6 +154,27 @@ BEGIN
 			WHERE "CurrCode"=(SELECT "Currency" FROM UDOM_BARCODEV2."OCRD" WHERE "CardCode"=:par1) 
 			ORDER BY DefaultCurrency DESC; 
 		END IF;
+	ELSE IF :DTYPE='OITM' THEN
+		SELECT 
+			 "ItemCode" AS "ITEMCODE"
+			,"ItemName" AS "ITEMNAME"
+			,(SELECT IFNULL("Price",0) FROM UDOM_BARCODEV2."ITM1" WHERE "ItemCode"="OITM"."ItemCode" And "PriceList"=1) AS PRICE
+			,CAST(IFNULL("OnHand",0) AS INT) AS QTYONHAND
+			,"IUoMEntry" AS UOMNAME
+			,CASE 
+				WHEN "ManSerNum"='Y' THEN 'S' 
+				WHEN "ManBtchNum"='Y' THEN 'B'
+				ELSE 'N' 
+			 END AS MANAGEITEM
+			,IFNULL("CodeBars",'') AS BarCode
+		FROM UDOM_BARCODEV2."OITM" WHERE "InvntItem"='Y';
+	ELSE IF :DTYPE='OVTG' THEN
+		SELECT "Code","Name","Rate" FROM UDOM_BARCODEV2."OVTG" WHERE "Inactive"='N' AND "Category"='I';
+	ELSE IF :DTYPE='OWHS' THEN
+		SELECT "WhsCode" AS Code,"WhsName" AS Name FROM UDOM_BARCODEV2."OWHS" WHERE "Locked"='N';
+	END IF;
+	END IF;
+	END IF;
 	END IF;
 	END IF;
 	END IF;

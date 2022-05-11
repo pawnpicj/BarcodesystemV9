@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using BarCodeAPIService.Connection;
 using BarCodeAPIService.Models;
 using BarCodeLibrary.Contract.RouteProcedure;
+using BarCodeLibrary.Request.SAP.Tengkimleang;
 using BarCodeLibrary.Request.SAP.TengKimleang;
 using BarCodeLibrary.Respones.SAP.Tengkimleang;
 using SAPbobsCOM;
@@ -34,14 +35,45 @@ namespace BarCodeAPIService.Service
                     oGoodReceiptPO = (Documents)oCompany.GetBusinessObject(BoObjectTypes.oPurchaseDeliveryNotes);
                     oGoodReceiptPO.CardCode = sendGoodReceiptPO.CardCode;
                     oGoodReceiptPO.DocDate = sendGoodReceiptPO.DocDate;
-                    oGoodReceiptPO.BPL_IDAssignedToInvoice = sendGoodReceiptPO.BrandID;
+                    oGoodReceiptPO.DocDueDate = sendGoodReceiptPO.TaxDate;
+                    oGoodReceiptPO.Series = Convert.ToInt32(sendGoodReceiptPO.Series);
+                    oGoodReceiptPO.DocCurrency = sendGoodReceiptPO.CurrencyCode;
+                    oGoodReceiptPO.Comments = sendGoodReceiptPO.Remark;
                     foreach (var l in sendGoodReceiptPO.Line)
                     {
                         oGoodReceiptPO.Lines.ItemCode = l.ItemCode;
-                        oGoodReceiptPO.Lines.Quantity = l.Qty;
-                        oGoodReceiptPO.Lines.UnitPrice = l.UnitPrice;
-                        oGoodReceiptPO.Lines.WarehouseCode = l.WhsCode;
-                        oGoodReceiptPO.Lines.UoMEntry = l.UomCode;
+                        oGoodReceiptPO.Lines.Quantity = l.Quantity;
+                        oGoodReceiptPO.Lines.UnitPrice = l.PriceBeforeDis;
+                        oGoodReceiptPO.Lines.DiscountPercent = l.Discount;
+                        oGoodReceiptPO.Lines.WarehouseCode = l.Whs;
+                        oGoodReceiptPO.Lines.UoMEntry = Convert.ToInt32(l.UomName);
+                        if (l.DocEntry!=null)
+                        {
+                            oGoodReceiptPO.Lines.BaseEntry = Convert.ToInt32(l.DocEntry);
+                            oGoodReceiptPO.Lines.BaseType = 22;
+                            oGoodReceiptPO.Lines.BaseLine = l.LineNum;
+                        }
+
+                        if (l.ManageItem == "S")
+                        {
+                            foreach (var serial in l.Serial)
+                            {
+                                oGoodReceiptPO.Lines.SerialNumbers.Quantity = 1;
+                                oGoodReceiptPO.Lines.SerialNumbers.ManufacturerSerialNumber = serial.MfrSerialNo;
+                                oGoodReceiptPO.Lines.SerialNumbers.InternalSerialNumber = serial.SerialNumber;
+                                oGoodReceiptPO.Lines.SerialNumbers.Add();
+                            }
+                        }else if (l.ManageItem == "B")
+                        {
+                            foreach (var batch in l.Batches)
+                            {
+                                oGoodReceiptPO.Lines.BatchNumbers.Quantity = batch.Qty;
+                                oGoodReceiptPO.Lines.BatchNumbers.ManufacturerSerialNumber = batch.MfrSerialNo;
+                                oGoodReceiptPO.Lines.BatchNumbers.ExpiryDate = batch.ExpDate;
+                                oGoodReceiptPO.Lines.BatchNumbers.BatchNumber = batch.SerialNumber;
+                                oGoodReceiptPO.Lines.BatchNumbers.Add();
+                            }
+                        }
                         oGoodReceiptPO.Lines.Add();
                     }
 
@@ -358,29 +390,30 @@ namespace BarCodeAPIService.Service
             }
         }
 
-        public Task<ResponseGetGenerateBatchSerial> responseGetGenerateBatchSerial()
+        public Task<ResponseGetGenerateBatchSerial> responseGetGenerateBatchSerial(GetGenerateSerialBatchRequest generateSerialBatchRequest)
         {
-            var getCurrencies = new List<GetGenerateBatchSerial>();
+            var getGenerateBatchSerials = new List<GetGenerateBatchSerial>();
             var dt = new DataTable();
             try
             {
-                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SqlHana);
                 if (login.lErrCode == 0)
                 {
                     var Query =
-                        $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetCurrency}','','','','','')";
+                        $"CALL \"{ConnectionString.BarcodeDb}\".{ProcedureRoute._USP_GENERATE_BATCH_SqlHana} ('{generateSerialBatchRequest.itemCode}','{generateSerialBatchRequest.qty}')";
                     login.AD = new OdbcDataAdapter(Query, login.CN);
                     login.AD.Fill(dt);
                     foreach (DataRow row in dt.Rows)
-                        getCurrencies.Add(new GetGenerateBatchSerial
+                        getGenerateBatchSerials.Add(new GetGenerateBatchSerial
                         {
-                            SerialAndBatch = row["Code"].ToString()
+                            SerialAndBatch = row["SerialOrBatchGen"].ToString(),
+                            Script = row["SCRIPT_SERIAL"].ToString()
                         });
                     return Task.FromResult(new ResponseGetGenerateBatchSerial
                     {
                         ErrorCode = 0,
                         ErrorMessage = "",
-                        Data = getCurrencies.ToList()
+                        Data = getGenerateBatchSerials.ToList()
                     });
                 }
 
@@ -403,6 +436,152 @@ namespace BarCodeAPIService.Service
             }
         }
 
+        public Task<ResponseGetItemCode> responseGetItemCodes()
+        {
+            var getItemCodes = new List<GetItemCode>();
+            var dt = new DataTable();
+            try
+            {
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
+                if (login.lErrCode == 0)
+                {
+                    var Query =
+                        $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetItemCode}','','','','','')";
+                    login.AD = new OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
+                        getItemCodes.Add(new GetItemCode
+                        {
+                            ItemCode = row["ITEMCODE"].ToString(),
+                            ItemName = row["ITEMNAME"].ToString(),
+                            UnitPrice = row["PRICE"].ToString(),
+                            Quantity = row["QTYONHAND"].ToString(),
+                            UomName = row["UOMNAME"].ToString(),
+                            BarCode = row["BARCODE"].ToString(),
+                            ManageItem = row["MANAGEITEM"].ToString()
+                        });
+                    return Task.FromResult(new ResponseGetItemCode
+                    {
+                        ErrorCode = 0,
+                        ErrorMessage = "",
+                        Data = getItemCodes.ToList()
+                    });
+                }
+
+                return Task.FromResult(new ResponseGetItemCode
+                {
+                    ErrorCode = login.lErrCode,
+                    ErrorMessage = login.sErrMsg,
+                    Data = null
+                });
+            }
+
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseGetItemCode
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMessage = ex.Message,
+                    Data = null
+                });
+            }
+        }
+
+        public Task<ResponseGetVatCode> responseGetVatCodes()
+        {
+            var getVatCodes = new List<GetVatCode>();
+            var dt = new DataTable();
+            try
+            {
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
+                if (login.lErrCode == 0)
+                {
+                    var Query =
+                        $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetVatCode}','','','','','')";
+                    login.AD = new OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
+                        getVatCodes.Add(new GetVatCode
+                        {
+                            Code = row["Code"].ToString(),
+                            Name = row["Name"].ToString(),
+                            Rate = Convert.ToDouble(row["Rate"].ToString())
+                        });
+                    return Task.FromResult(new ResponseGetVatCode
+                    {
+                        ErrorCode = 0,
+                        ErrorMessage = "",
+                        Data = getVatCodes.ToList()
+                    });
+                }
+
+                return Task.FromResult(new ResponseGetVatCode
+                {
+                    ErrorCode = login.lErrCode,
+                    ErrorMessage = login.sErrMsg,
+                    Data = null
+                });
+            }
+
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseGetVatCode
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMessage = ex.Message,
+                    Data = null
+                });
+            }
+        }
+
+        public Task<ResponseGetWarehouse> responseGetWarehouses()
+        {
+            var getWarehouses = new List<GetWarehouse>();
+            var dt = new DataTable();
+            try
+            {
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
+                if (login.lErrCode == 0)
+                {
+                    var Query =
+                        $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetWarehouse}','','','','','')";
+                    login.AD = new OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
+                        getWarehouses.Add(new GetWarehouse
+                        {
+                            Code = row["Code"].ToString(),
+                            Name = row["Name"].ToString(),
+                        });
+                    return Task.FromResult(new ResponseGetWarehouse
+                    {
+                        ErrorCode = 0,
+                        ErrorMessage = "",
+                        Data = getWarehouses.ToList()
+                    });
+                }
+
+                return Task.FromResult(new ResponseGetWarehouse
+                {
+                    ErrorCode = login.lErrCode,
+                    ErrorMessage = login.sErrMsg,
+                    Data = null
+                });
+            }
+
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseGetWarehouse
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMessage = ex.Message,
+                    Data = null
+                });
+            }
+
+        }
+
         #endregion
+
     }
 }

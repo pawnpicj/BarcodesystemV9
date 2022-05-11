@@ -48,6 +48,7 @@
                 for (var i = 0; i < data.length; i++) {
                     $("#BPDocCurr").append("<option value='" + data[i].code + "'>" + data[i].name + "</option>");
                 }
+                $("#DocCurr").val($("#BPDocCurr").val());
             }
         });
     }
@@ -83,6 +84,32 @@
             },
             error: function(erro) {
                 console.log(erro.responseText);
+            }
+        });
+    }
+    getTaxCode(url) {
+        $.ajax({
+            url: url,
+            type: "GET",
+            dataType: "JSON",
+            success: function (data) {
+                $("#TaxCode").empty();
+                for (var i = 0; i < data.length; i++) {
+                    $("#TaxCode").append("<option value='" + data[i].code + "'>" + data[i].name + "</option>");
+                }
+            }
+        });
+    }
+    getWarehouse(url) {
+        $.ajax({
+            url: url,
+            type: "GET",
+            dataType: "JSON",
+            success: function (data) {
+                $("#whscode").empty();
+                for (var i = 0; i < data.length; i++) {
+                    $("#whscode").append("<option value='" + data[i].code + "'>" + data[i].name + "</option>");
+                }
             }
         });
     }

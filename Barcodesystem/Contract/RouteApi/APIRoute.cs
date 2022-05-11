@@ -19,6 +19,10 @@
             public const string GetSeries = "Series/";
             public const string GetSaleEmployee = "SaleEmployee";
             public const string GetCurrency = "GetCurrency/";
+            public const string GetGenerate_Serial_Batch = "GetSerialOrBatch";
+            public const string GetItemCode = "GetItem";
+            public const string GetTaxCode = "GetTaxCode";
+            public const string GetWarehouse = "GetWarehouse";
         }
     }
 }

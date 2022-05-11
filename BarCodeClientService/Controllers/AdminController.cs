@@ -8,8 +8,6 @@ namespace BarCodeClientService.Controllers
 {
     public class AdminController : Controller
     {
-        private readonly IUserService user;
-
         public IActionResult Index()
         {
             return View();

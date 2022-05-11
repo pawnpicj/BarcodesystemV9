@@ -4,18 +4,9 @@
 }
 <html>
 <head>
-
-    <link href="~/css/css.css" rel="stylesheet"/>
-    <link href="/css/SAP/fiori-fundamentals.min.css" />
-   
+    <link href="~/css/css.css" rel="stylesheet"/>   
 </head>
 <body>
-    <div class="fd-tile">
-        <div class="fd-tile__content">
-            <h3 class="fd-tile__title">Tile Title</h3>
-            <p>Tile Description</p>
-        </div>
-    </div>
     <div id="login">
         <div class="floater login_floater"></div>
         <div class="clear center_box login_box_border">
@@ -124,6 +115,8 @@
         <div class="floater"></div>
         <div class="clear center_box waiting_log"></div>
     </div>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script>
         function ShowPassword() {
             var x = document.getElementById('Password');
@@ -133,5 +126,50 @@
                 x.type = "password";
             }
         }
+        $(document).on('keypress', function (e) {
+            if (e.which == 13) {
+                if ($('#Username').val() == "" || $('#Password').val() == "") {
+                    alert("Please input username and password");
+                }
+                else {
+                $.ajax({
+                    url: '@Url.Action("LoginUser", "Home")',
+                    data: { user: $('#Username').val(), password: $('#Password').val()},
+                    type: 'GET',
+                    dataType: 'JSON',
+                    success: function(data) {
+                    if (data.id == 1) {
+                        window.location.href = '@Url.Action("Index","Home")';
+                    } else {
+                        alert("Login failed");
+                    }
+                    }
+                    });
+                }
+
+            }
+        });
+        var LsUser = [];
+        $('#logon_sbo_btn').click(function () {
+            if ($('#Username').val() == "" || $('#Password').val() == "") {
+                alert("Please input username and password");
+            } else {
+                $.ajax({
+                url: '@Url.Action("LoginUser", "Home")',
+                data: { user: $('#Username').val(), password: $('#Password').val()},
+                type: 'GET',
+                dataType: 'JSON',
+                success: function(data) {
+                if (data.id == 1) {
+                    window.location.href = '@Url.Action("Index","Home")';
+                } else {
+                    alert("Login failed");
+                }
+                }
+                });
+            }
+
+        });
     </script>
 </body>
+   

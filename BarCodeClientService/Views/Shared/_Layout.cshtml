@@ -176,6 +176,11 @@
 <script src="~/js/site.js" asp-append-version="true"></script>
 
 <script type="text/javascript">
+    $('#sign_out').click(function () {
+        if (confirm("Unsaved data will be lost. Do you want to continue without saving?") == true) {
+            window.location.replace('@Url.Action("Login","Home")');
+        }
+    });
     @*$('#CreateUser').click(function () {
             window.location.replace('@Url.Action("ViewUser", "Setting")');
         });

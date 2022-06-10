@@ -18,5 +18,6 @@ namespace BarCodeAPIService.Service
         Task<ResponseGetItemCode> responseGetItemCodes();
         Task<ResponseGetVatCode> responseGetVatCodes();
         Task<ResponseGetWarehouse> responseGetWarehouses();
+        Task<ResponseGetUnitOfMeasure> responseGetUnitOfMeasure();
     }
 }

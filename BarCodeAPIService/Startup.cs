@@ -3,7 +3,6 @@ using System.Text;
 using BarCodeAPIService.Connection;
 using BarCodeAPIService.Service;
 using BarCodeAPIService.Service.Bank;
-using BarCodeAPIService.Service.Home;
 using BarCodeAPIService.Service.Pannreaksmey;
 using BarCodeAPIService.Service.Tengkimleang;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -56,7 +55,6 @@ namespace BarCodeAPIService
             services.AddScoped<IDocumentSeriesService, DocumentSeriesService>();
             services.AddScoped<IPriceListService, PriceListService>();
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IDepartmentService, DepartmentService>();
 
             services.AddScoped<IInventoryTransferService, InventoryTransferService>();
             services.AddScoped<IInventoryCountingService, InventoryCountingService>();
@@ -66,8 +64,6 @@ namespace BarCodeAPIService
             services.AddScoped<IGetBinLocationService, GetBinLocationService>();
             services.AddScoped<IDeliveryService, DeliveryService>();
             services.AddScoped<IGenerateBinCodeServices, GenerateBinCodeService>();
-
-            services.AddScoped<IHomeService, HomeService>();
 
             #endregion
 

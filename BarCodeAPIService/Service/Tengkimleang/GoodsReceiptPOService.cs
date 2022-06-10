@@ -578,7 +578,52 @@ namespace BarCodeAPIService.Service
                     Data = null
                 });
             }
+        }
 
+        public Task<ResponseGetUnitOfMeasure> responseGetUnitOfMeasure()
+        {
+            var getUnitOfMeasure = new List<GetUnitOfMeasure>();
+            var dt = new DataTable();
+            try
+            {
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
+                if (login.lErrCode == 0)
+                {
+                    var Query =
+                        $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetWarehouse}','','','','','')";
+                    login.AD = new OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
+                        getUnitOfMeasure.Add(new GetUnitOfMeasure
+                        {
+                            Code = row["Code"].ToString(),
+                            Name = row["Name"].ToString(),
+                        });
+                    return Task.FromResult(new ResponseGetUnitOfMeasure
+                    {
+                        ErrorCode = 0,
+                        ErrorMessage = "",
+                        Data = getUnitOfMeasure.ToList()
+                    });
+                }
+
+                return Task.FromResult(new ResponseGetUnitOfMeasure
+                {
+                    ErrorCode = login.lErrCode,
+                    ErrorMessage = login.sErrMsg,
+                    Data = null
+                });
+            }
+
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseGetUnitOfMeasure
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMessage = ex.Message,
+                    Data = null
+                });
+            }
         }
 
         #endregion

@@ -172,6 +172,12 @@ BEGIN
 		SELECT "Code","Name","Rate" FROM UDOM_BARCODEV2."OVTG" WHERE "Inactive"='N' AND "Category"='I';
 	ELSE IF :DTYPE='OWHS' THEN
 		SELECT "WhsCode" AS Code,"WhsName" AS Name FROM UDOM_BARCODEV2."OWHS" WHERE "Locked"='N';
+	ELSE IF :DTYPE='OUOM' THEN
+		SELECT "UomCode" AS Code,"UomName" AS Name FROM UDOM_BARCODEV2."OUOM" 
+		WHERE "UomEntry" IN (
+			SELECT "UomEntry" FROM UDOM_BARCODEV2."ITM12" WHERE "UomType"='P' AND "ItemCode"=:par1
+		);
+	END IF;
 	END IF;
 	END IF;
 	END IF;

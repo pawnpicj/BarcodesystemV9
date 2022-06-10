@@ -38,10 +38,5 @@ namespace BarCodeAPIService.Controllers
             var a = await user.RespponseGetuser();
             return Ok(a);
         }
-        [HttpPost("UpdateUser")]
-        public async Task<IActionResult> UpdateUserAsync(SendUser send)
-        {
-            return Ok(await user.ResponseUpdateUser(send));
-        }
     }
 }

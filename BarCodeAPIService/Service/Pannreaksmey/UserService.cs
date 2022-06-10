@@ -88,7 +88,7 @@ namespace BarCodeAPIService.Service
             var clsCRUD = new ClsCRUD();
             var tbUSER = new List<TBUSER>();
             var dt = clsCRUD.GetDataWeb(
-                "SELECT ROW_NUMBER() OVER(ORDER BY USERID) As USERID,USERCODE,USERNAME,PHONE,EMAIL,FAX,DEPARTMENT,PASSWORD,ADMINISTRATOR,TO_DATE(CREATEDATE, 'YYYY-MM-DD'),TO_DATE(UPDATEDATE, 'YYYY-MM-DD'),ACTIVE FROM \"" +
+                "SELECT USERID,USERCODE,USERNAME,PHONE,EMAIL,FAX,DEPARTMENT,PASSWORD,ADMINISTRATOR,TO_DATE(CREATEDATE, 'YYYY-MM-DD'),TO_DATE(UPDATEDATE, 'YYYY-MM-DD'),ACTIVE FROM \"" +
                 ConnectionString.BarcodeDb + "\".TBUSER", "WebDb");
             var responseGetUsers = new List<ResponseGetUser>();
             if (dt != null)
@@ -126,26 +126,6 @@ namespace BarCodeAPIService.Service
             return Task.FromResult(new ResponseGetUser
             {
                 Data = null
-            });
-        }
-        public Task<ResponsePostUser> ResponseUpdateUser(SendUser send)
-        {
-            var clsCRUD = new ClsCRUD();
-            var dt = clsCRUD.GetDataWeb(
-                "UPDATE \"" + ConnectionString.BarcodeDb +
-                "\".TBUSER SET USERNAME='"+send.UserName+"',PHONE='"+send.Phone+"',EMAIL='"+send.Email+"',FAX='"+send.Fax+"',DEPARTMENT='"+send.Department+"',PASSWORD='"+send.Password+"',ADMINISTRATOR='"+send.Admin+ "',UPDATEDATE=(SELECT CURRENT_DATE  FROM DUMMY),ACTIVE='" + send.Active+"' WHERE USERCODE='"+send.UserCode+"';", "WebDb");
-            if (dt != null)
-                return Task.FromResult(new ResponsePostUser
-                {
-                    ErrorCode = 0,
-                    ErrorMsg = "",
-                    UserCode = dt.Rows[0][1].ToString()
-                });
-            return Task.FromResult(new ResponsePostUser
-            {
-                ErrorCode = 0,
-                ErrorMsg = "",
-                UserCode = null
             });
         }
     }

@@ -33,8 +33,4 @@
       <HintPath>D:\7. Barcode System\SAPBusinessOneSDK.dll</HintPath>
     </Reference>
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\css\SAP\" />
-  </ItemGroup>
 </Project>

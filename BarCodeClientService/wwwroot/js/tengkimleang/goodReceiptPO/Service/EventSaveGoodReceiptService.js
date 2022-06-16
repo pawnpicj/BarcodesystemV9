@@ -5,10 +5,11 @@
         return i;
     },
     valiDateLine(array) {
+        console.log(array);
         var i = EventSaveGoodReceiptPO.iEventSaveGoodReceipt.validLine(array);
         return i;
     },
-    sendGoodReceiptPO() {
+    sendGoodReceiptPO(url) {
         var validate = 1;
         validate = EventSaveGoodReceiptPO.validDateForm([
                 { id: "CusID", value: "Please Enter Customer Code!" },
@@ -31,14 +32,14 @@
             sendGoodReceiptPO.Remark = $("#Remark").val();
             sendGoodReceiptPO.Line = LinesAR;
             console.log(sendGoodReceiptPO);
-            alert("Successfull");
             $.ajax({
-                url: '@Url.Action("CreateGoodsReceiptPoResult", "GoodsReceiptPO")',
+                url: url,
                 type: "POST",
                 dataType: "JSON",
                 data: { goodReceiptPo: sendGoodReceiptPO },
                 success: function (data) {
                     console.log(data);
+                    alert("Successfull");
                     //$("#SerialNumber").val(data[0].serialAndBatch);
                     //$("#txtScriptID").val(data[0].script);
                 },
@@ -47,5 +48,11 @@
                 }
             });
         }
-    }
+    },
+    LineDiscountPer() {
+        EventSaveGoodReceiptPO.iEventSaveGoodReceipt.LineDiscountPer();
+    },
+    LinDiscountAMT() {
+        EventSaveGoodReceiptPO.iEventSaveGoodReceipt.LinDiscountAMT();
+    },
 }

@@ -109,7 +109,7 @@ BEGIN
 			   ,"CardName" AS CardName
 			   ,IFNULL("Building",'') AS Address
 			   ,IFNULL("Phone1",'') AS Phone
-		FROM "UDOM_BARCODEV2"."OCRD";
+		FROM "UDOM_BARCODEV2"."OCRD" WHERE "CardType"='S';
 	--Call Master Data
 	ELSE IF :DTYPE='NNM1' THEN
 		SELECT 
@@ -173,7 +173,7 @@ BEGIN
 	ELSE IF :DTYPE='OWHS' THEN
 		SELECT "WhsCode" AS Code,"WhsName" AS Name FROM UDOM_BARCODEV2."OWHS" WHERE "Locked"='N';
 	ELSE IF :DTYPE='OUOM' THEN
-		SELECT "UomCode" AS Code,"UomName" AS Name FROM UDOM_BARCODEV2."OUOM" 
+		SELECT "UomEntry" AS Code,"UomName" AS Name FROM UDOM_BARCODEV2."OUOM" 
 		WHERE "UomEntry" IN (
 			SELECT "UomEntry" FROM UDOM_BARCODEV2."ITM12" WHERE "UomType"='P' AND "ItemCode"=:par1
 		);

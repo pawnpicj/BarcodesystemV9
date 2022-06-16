@@ -11,6 +11,9 @@ using BarCodeLibrary.Request.SAP.Tengkimleang;
 using BarCodeLibrary.Request.SAP.TengKimleang;
 using BarCodeLibrary.Respones.SAP.Tengkimleang;
 using SAPbobsCOM;
+using SAPbouiCOM;
+using Company = SAPbobsCOM.Company;
+using DataTable = System.Data.DataTable;
 
 namespace BarCodeAPIService.Service
 {
@@ -51,7 +54,7 @@ namespace BarCodeAPIService.Service
                         {
                             oGoodReceiptPO.Lines.BaseEntry = Convert.ToInt32(l.DocEntry);
                             oGoodReceiptPO.Lines.BaseType = 22;
-                            oGoodReceiptPO.Lines.BaseLine = l.LineNum;
+                            //oGoodReceiptPO.Lines.BaseLine = l.LineNum;
                         }
 
                         if (l.ManageItem == "S")
@@ -400,7 +403,54 @@ namespace BarCodeAPIService.Service
                 if (login.lErrCode == 0)
                 {
                     var Query =
-                        $"CALL \"{ConnectionString.BarcodeDb}\".{ProcedureRoute._USP_GENERATE_BATCH_SqlHana} ('{generateSerialBatchRequest.itemCode}','{generateSerialBatchRequest.qty}')";
+                        $"CALL \"{ConnectionString.BarcodeDb}\".{ProcedureRoute._USP_GENERATE_SERIAL_SqlHana} ('{generateSerialBatchRequest.itemCode}','{generateSerialBatchRequest.qty}')";
+                    login.AD = new OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
+                        getGenerateBatchSerials.Add(new GetGenerateBatchSerial
+                        {
+                            SerialAndBatch = row["SerialOrBatchGen"].ToString(),
+                            Script = row["SCRIPT_SERIAL"].ToString()
+                        });
+                    return Task.FromResult(new ResponseGetGenerateBatchSerial
+                    {
+                        ErrorCode = 0,
+                        ErrorMessage = "",
+                        Data = getGenerateBatchSerials.ToList()
+                    });
+                }
+
+                return Task.FromResult(new ResponseGetGenerateBatchSerial
+                {
+                    ErrorCode = login.lErrCode,
+                    ErrorMessage = login.sErrMsg,
+                    Data = null
+                });
+            }
+
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseGetGenerateBatchSerial
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMessage = ex.Message,
+                    Data = null
+                });
+            }
+        }
+
+        public Task<ResponseGetGenerateBatchSerial> responseGetGenerateBatchAsync(GenerateBatchRequest generateBatchRequest)
+        {
+            var getGenerateBatchSerials = new List<GetGenerateBatchSerial>();
+            var dt = new DataTable();
+            try
+            {
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SqlHana);
+                if (login.lErrCode == 0)
+                {
+
+                    var Query =
+                        $"CALL \"{ConnectionString.BarcodeDb}\".{ProcedureRoute._USP_GENERATE_Batch_SqlHana} ('{generateBatchRequest.Batch}','{generateBatchRequest.ListBatch}')";
                     login.AD = new OdbcDataAdapter(Query, login.CN);
                     login.AD.Fill(dt);
                     foreach (DataRow row in dt.Rows)
@@ -580,7 +630,7 @@ namespace BarCodeAPIService.Service
             }
         }
 
-        public Task<ResponseGetUnitOfMeasure> responseGetUnitOfMeasure()
+        public Task<ResponseGetUnitOfMeasure> responseGetUnitOfMeasure(string ItemCode)
         {
             var getUnitOfMeasure = new List<GetUnitOfMeasure>();
             var dt = new DataTable();
@@ -590,7 +640,7 @@ namespace BarCodeAPIService.Service
                 if (login.lErrCode == 0)
                 {
                     var Query =
-                        $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetWarehouse}','','','','','')";
+                        $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetUom}','{ItemCode}','','','','')";
                     login.AD = new OdbcDataAdapter(Query, login.CN);
                     login.AD.Fill(dt);
                     foreach (DataRow row in dt.Rows)

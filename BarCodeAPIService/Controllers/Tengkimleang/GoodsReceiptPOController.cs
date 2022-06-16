@@ -71,6 +71,12 @@ namespace BarCodeAPIService.Controllers
             var a = await goodsReceiptPO.responseGetGenerateBatchSerial(generateSerialBatchRequest);
             return Ok(a);
         }
+        [HttpPost(APIRoute.GoodReceiptPO.GetGenerate_Batch)]
+        public async Task<IActionResult> GetGenerate_Batch(GenerateBatchRequest generateSerialBatchRequest)
+        {
+            var a = await goodsReceiptPO.responseGetGenerateBatchAsync(generateSerialBatchRequest);
+            return Ok(a);
+        }
 
         [HttpGet(APIRoute.GoodReceiptPO.GetItemCode)]
         public async Task<IActionResult> GetItemCodeAsyncTask()
@@ -91,10 +97,10 @@ namespace BarCodeAPIService.Controllers
             var a = await goodsReceiptPO.responseGetWarehouses();
             return Ok(a);
         }
-        [HttpGet(APIRoute.GoodReceiptPO.GetUnitOfMeasure)]
-        public async Task<IActionResult> GetUnitOfMeasure()
+        [HttpGet(APIRoute.GoodReceiptPO.GetUnitOfMeasure + "{itemCode}")]
+        public async Task<IActionResult> GetUnitOfMeasure(string itemCode)
         {
-            var a = await goodsReceiptPO.responseGetWarehouses();
+            var a = await goodsReceiptPO.responseGetUnitOfMeasure(itemCode);
             return Ok(a);
         }
     }

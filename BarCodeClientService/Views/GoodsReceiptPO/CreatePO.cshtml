@@ -6,6 +6,7 @@
 
 <link href="~/css/DataTable/jquery.dataTables.min.css" rel="stylesheet"/>
 <link href="~/css/DataTable/rowReorder.dataTables.min.css" rel="stylesheet"/>
+<link href="~/tengkimleang/goodReceiptPO/Style.css" />
 @*<link href="~/css/DataTable/responsive.dataTables.min.css" rel="stylesheet" />*@
 <script src="~/css/DataTable/jquery-3.3.1.js"></script>
 <script src="~/css/DataTable/jquery.dataTables.min.js"></script>
@@ -166,6 +167,7 @@
 <div class="tab-pane fade" id="item" role="tabpanel" aria-labelledby="item-tab" style="margin-top: 10px">
     <div class="row">
         <div class="col-sm-6">
+            <input type="hidden" id="itemManage"/>
             Item Code :
             <div class="input-group">
                 <div class="input-group-prepend">
@@ -202,14 +204,14 @@
             <div>
                 Discount(%) :
                 <div class="input-group">
-                    <input type="number" class="form-control" value="0" id="Discount" onchange="LineDiscountPer()">
+                    <input type="number" class="form-control" value="0" id="Discount" onchange="DisCountPerChange()">
                 </div>
                 Discount Amount :
                 <div class="input-group">
-                    <input type="number" class="form-control" value="0" id="DiscountAmt" onchange="LinDiscountAMT()">
+                    <input type="number" class="form-control" value="0" id="DiscountAmt" onchange="DisAmtChange()">
                 </div>
             </div>
-            
+
         </div>
         <div class="col-sm-6">
             <div>
@@ -446,7 +448,7 @@
         </div>
     </div>
 </div>
-@*Generate Batch*@
+@*Generate Serial*@
 <div class="modal fade " id="ModalBarCodeSerail" data-backdrop="static">
     <div class="modal-dialog modal-xl">
         <div class="modal-content" style="background: #f0eff1; color: #696969;">
@@ -456,7 +458,7 @@
             <div class="modal-body">
                 <div class="container">
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
                             <input type="hidden" id="txtRowID"/>
                             <input type="hidden" id="txtScriptID"/>
                             Item Code :
@@ -464,10 +466,10 @@
                                 <input type="text" class="form-control" id="ItemCodeSerial" disabled="disabled">
                             </div>
                         </div>
-                        <div class="col-6">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
                             QTY :
                             <div class="input-group">
-                                <input type="text" class="form-control" id="ItemCodeSerialQty" readonly="readonly">
+                                <input type="number" class="form-control" id="ItemCodeSerialQty" readonly="readonly">
                             </div>
                         </div>
                     </div>
@@ -483,13 +485,13 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
                             Mfr Serial No. :
                             <div class="input-group">
                                 <input type="text" class="form-control" id="txtManfrSerial">
                             </div>
                         </div>
-                        <div class="col-6">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
                             Exp Date :
                             <div class="input-group">
                                 <input type="date" class="form-control" id="txtExpireDate">
@@ -499,7 +501,7 @@
                     <div class="row">
                         <div class="col-6"></div>
                         <div class="col-6">
-                            <button class="btn btn-info float-right mt-4 mb-4" id="BtnSaveSerial" style="background: #f0eff1; color: #696969;">Save</button>
+                            <button class="btn btn-info float-right mt-4 mb-4" id="BtnSaveSerial1" style="background: #f0eff1; color: #696969;">Save</button>
                         </div>
                     </div>
                 </div>
@@ -508,6 +510,160 @@
                     <div class="row">
                         <div class="col-12">
                             <table id="TbSerial" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
+                                <thead>
+                                <tr>
+                                    <th>Serial Number</th>
+                                    <th>Mfr Serial No.</th>
+                                    <th>Expiration Date</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" style="background: #f0eff1; color: #696969;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*Generate Batch*@
+<div class="modal fade " id="ModalBarCodeBatch" data-backdrop="static">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background: #f0eff1; color: #696969;">
+            <div class="modal-header">
+                <b>Batch Numbers - Setup</b>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                            <input type="hidden" id="txtRowIDBatch"/>
+                            <input type="hidden" id="txtScriptIDBatch"/>
+                            Item Code :
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="ItemCodeBatch" disabled="disabled">
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                            QTY :
+                             <div class="input-group">
+                                <input type="number" class="form-control" id="ItemCodeBatchQty" readonly="readonly">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            Batch Number :
+                            <div class="row">
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-8 BatNumberPadding">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="BatchNumber">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-4 BatNumberPadding">
+                                    <div class="input-group">
+                                        @*<div class="input-group-append">*@
+                                        &nbsp;<select class="form-control" id="optBatchType" onchange="BatchChangeType()"><option value="1">Standard</option><option value="2">Advance</option></select>
+                                        <button class="input-group-text" id="btnBatchNumGennerate"><i class="fa fa-file-medical"></i>&nbsp; Generate</button>
+                                        @*</div>*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="DisPlayCustomize" style="display: none;">
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-5">
+                                Total Generate Batch :
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="txtTotalGenBatch">
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-5">
+                                Per Batch Unit :
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="txtPerBatch">
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-2">
+                                Total Qty:
+                                <div class="input-group">
+                                    <input type="text" class="form-control" disabled id="txtTotalQtyGenBatch">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                                Batch No. From :
+                                <div class="input-group">
+                                    <select class="form-control" id="optBatchFrom">
+                                        <option></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                                Batch No. To :
+                                <div class="input-group">
+                                    <select class="form-control" id="optBatchTo">
+                                        <option></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                            Mfr Date. :
+                            <div class="input-group">
+                                <input type="date" class="form-control" id="dtpMfrDateBatch">
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                            Exp Date :
+                            <div class="input-group">
+                                <input type="date" class="form-control" id="dtpExpireDateBatch">
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                            Admission Date :
+                            <div class="input-group">
+                                <input type="date" class="form-control" id="dtpAdmissionDateBatch">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6"></div>
+                        <div class="col-6">
+                            <button class="btn btn-info float-right mt-4 mb-4" id="BtnSaveBatch" style="background: #f0eff1; color: #696969;">Save</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="DisPlayCustomizeTable" style="display: none;">
+                    <div class="table-responsive">
+                        <div class="row">
+                            <div class="col-12">
+                                <table id="tmpBatchFromTo" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
+                                    <thead>
+                                    <tr>
+                                        <th>Batch From</th>
+                                        <th>Batch To</th>
+                                        <th>Expiration Date</th>
+                                        <th>MfrDate</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-12">
+                            <table id="TbBatch" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
                                 <thead>
                                 <tr>
                                     <th>Serial Number</th>
@@ -545,6 +701,7 @@
 
 
     /* DataTable List Of Item */
+    let objectLine = {};
     let LinesAR = [];
     DataTableInit.TableItemLine();
     var tbItemLine = $('#TbAR').DataTable();
@@ -559,7 +716,9 @@
     DataMethod.AddClassSelected("TbItem", tbItemSearch);
     $(".btnModelsItem").click(function() {
         $("#ModalItem").modal({ backdrop: "static" });
-        EventItemAdd.getItemCode('@Url.Action("GetItemActionResult","GoodsReceiptPO")');
+        if (tbItemSearch.length==0) {
+            EventItemAdd.getItemCode('@Url.Action("GetItemActionResult","GoodsReceiptPO")');
+        }
     });
     /* End DataTable List Of Item Code */
 
@@ -604,39 +763,20 @@
     /* DataTable Init Serial */
     var lsSerial = [];
     //DataTableInit.TableSerial1();
-    $('#TbSerial').dataTable({
-            bLengthChange: false,
-            bFilter: false,
-            bInfo: false,
-            bPaginate: false,
-            data: lsSerial,
-            columns:
-            [
-                    { data: "SerialNumber", autoWidth: true },
-                {
-                    data: "MfrSerialNo",
-                    autoWidth: true
-                    // render: function (data, type, full, meta) { return '<input type="number" class="clsinput" style="padding:0px; position:absolute;width:100px;border:none;" onchange="PriceChange(' + meta.row + ')" id="tbPrice' + meta.row + '" value="' + full.UnitPrice + '">'; }, autoWidth: true
-                },
-                {
-                    data: "ExpDate",
-                    autoWidth: true
-                    //render: function (data, type, full, meta) { return '<input type="number" class="clsinput" style="padding:0px; position:absolute;width:100px;border:none;" onchange="DisChange('+meta.row+')" value="'+full.Discount+'" id="tbDis'+meta.row+'" >'; }, autoWidth: true
-                },
-                {
-                    render: function(data, type, full, meta) {
-                        return '<button class="btn-sm btn-danger" style="margin-left: 40%;" onClick="EventItemAdd.DeleteArray(lsSerial,'+full.SerialNumber+')"><i class="fas fa-trash-alt"></i></button>';
-                    }
-                }
-            ],
-            rowCallback: function(row, data, index) {
-                //$('td', row).css('background-color', '#ffffff');
-                //$('td', row).css('color', '#717171');
-            }
-        });
+    DataTableInit.TableSerialGen();
     var tbSerial1 = $('#TbSerial').DataTable();
     /* End DataTable Init Serial */
 
+    // DataTable Init Batch
+    var LBatch = [];
+    DataTableInit.TableBatch();
+    var tbBatch = $('#TbBatch').DataTable();
+    /* End DataTable Init Batch */
+
+    // DataTable Init tmpBatch
+    var LtmpBatch = [];
+    DataTableInit.TabletmpBatchFromTo();
+    var TbtmpBatchFromTo = $('#tmpBatchFromTo').DataTable();
     /* End Init DataTable */
 
     // #region Init Master
@@ -675,11 +815,92 @@
     // #endregion
     
     $('#AddItem').click(function() {
-        alert("Not Yet Do");
+        if ($('#itemManage').val() == 'S') {
+            if (objectLine.Serial !== undefined) {
+                if ($("#Qty").val() == objectLine.Serial.length) {
+                    alert("Can add to LineAR");
+                    objectLine.UomName = $("#UomID").val();
+                    objectLine.Whs = $("#whscode").val();
+                    objectLine.TaxCode = $("#TaxCode").val();
+                    objectLine.LineTotal = $("#totalItem").val();
+                    objectLine.PriceBeforeDis = $("#Price").val()*$("#Qty").val();
+                    objectLine.Quantity = $("#Qty").val();
+                    objectLine.DiscountAmount = $("#DiscountAmt").val();
+                    objectLine.Discount = $("#Discount").val();
+                    objectLine.UnitPrice = $("#Price").val();
+                    LinesAR.push(objectLine);
+                    tbItemLine.clear();
+                    tbItemLine.rows.add(LinesAR);
+                    tbItemLine.search('').draw();
+                    var priceBeforeDis=$("#BTax").val();
+                    if (priceBeforeDis != "") {
+                        priceBeforeDis = parseFloat(priceBeforeDis);
+                    }
+                    priceBeforeDis = priceBeforeDis + parseFloat($("#Price").val()*$("#Qty").val());
+                    $("#BTax").val(priceBeforeDis);
+                    var disByItem=$("#DisA").val();
+                    if (disByItem!="") {
+                        disByItem = parseFloat(disByItem);
+                    }
+                    disByItem = disByItem + parseFloat($("#DiscountAmt").val());
+                    $("#DisA").val(disByItem);
+                    var totalLine = $("#Total").val();
+                    if (totalLine!="") {
+                        totalLine = parseFloat(totalLine);
+                    }
+                    totalLine = totalLine + parseFloat($("#totalItem").val());
+                    $("#Total").val(totalLine);
+                    EventItemAdd.clearText(
+                        [
+                            {id:"ItemCode",value:""},
+                            {id:"ItemDescr",value:""},
+                            {id:"Qty",value:"1"},
+                            {id:"Price",value:"0"},
+                            {id:"Discount",value:"0"},
+                            {id:"DiscountAmt",value:"0"},
+                            {id:"totalItem",value:"0"},
+                            {id:"txtRowID",value:"0"},
+                            {id:"txtScriptID",value:"0"},
+                            {id:"ItemCodeSerial",value:"0"},
+                            {id:"ItemCodeSerialQty",value:"0"},
+                            {id:"SerialNumber",value:"0"},
+                            {id:"txtManfrSerial",value:"0"}
+                        ],"");
+                    EventItemAdd.clearText([
+                            { id: "UomID" }
+                        ],
+                        "option");
+                    objectLine = {};
+                    //lsSerial = [];
+                } else {
+                    $("#ItemCodeSerial").val($("#ItemCode").val());
+                    $("#ItemCodeSerialQty").val($("#Qty").val()-objectLine.Serial.length);
+                    lsSerial = objectLine.Serial;
+                    tbSerial1.clear();
+                    tbSerial1.rows.add(lsSerial);
+                    tbSerial1.search("").draw();
+                    //$("#").val(objectLine.ManageItem);
+                    $('#ModalBarCodeSerail').modal('show');
+                }
+            } else {
+                $("#ItemCodeSerial").val($("#ItemCode").val());
+                $("#ItemCodeSerialQty").val($("#Qty").val()-objectLine.Serial.length);
+                //$("#").val(objectLine.ManageItem);
+                lsSerial = objectLine.Serial;
+                tbSerial1.clear();
+                tbSerial1.rows.add(lsSerial);
+                tbSerial1.search("").draw();
+                $('#ModalBarCodeSerail').modal('show');
+            }
+        }else if ($('#itemManage').val() == 'B') {
+            $("#ItemCodeBatch").val($("#ItemCode").val());
+            $("#ItemCodeBatchQty").val($("#Qty").val());
+            $('#ModalBarCodeBatch').modal('show');
+        }
     });
 
     $('#Save').click(function() {
-        EventSaveGoodReceiptPO.sendGoodReceiptPO();
+        EventSaveGoodReceiptPO.sendGoodReceiptPO('@Url.Action("CreateGoodsReceiptPoResult", "GoodsReceiptPO")');
     });
 
 
@@ -689,14 +910,27 @@
         const data = tbItemSearch.row(index).data();
         $('#ItemCode').val(data.itemCode);
         $('#ItemDescr').val(data.itemName);
+        $('#Price').val(data.unitPrice);
+        $('#itemManage').val(data.manageItem);
+        $('#totalItem').val(data.unitPrice);
         $('#CItemCode').css('background-color', '#4CAF50');
-
+        objectLine = {};
+        if(objectLine!=undefined)
+        {
+            if (data.itemCode !== objectLine.ItemCode) {
+                objectLine = {};
+            }
+        }
+        objectLine.ItemCode = data.itemCode;
+        objectLine.ManageItem = data.manageItem;
+        objectLine.UomName = data.UomName;
+        objectLine.Serial = [];
+        GetMasterData.getUomCode('@Url.Action("GetUomCodeResult", "GoodsReceiptPO")',data.itemCode);
     });
     // End Item Code
 
     // Copy From PO
     $('#ChoosePO').click(function() {
-        LinesAR = [];
         const result = EventCopyFromPOService.ChoosePO_Click(temporyListPO, TbCopyFromPO);
         LinesAR = result.linesAR;
         $('#Remark').val(`Based On Purchase Orders ${result.remark}`);
@@ -722,22 +956,36 @@
 
     //Save Serial
 
-    $("#BtnSaveSerial").click(function() {
+    $("#BtnSaveSerial1").click(function() {
         if ($("#SerialNumber").val() === "" || $("#SerialNumber").val() === null) {
             alert("Please Enter Seril Number Save!");
         } else {
             if ($("#ItemCodeSerialQty").val() <= 0) {
                 alert("Cannot save Serial with Qty Zero!");
             } else {
-                if ($("#btnSerialNumGennerate").val()) {
-                    alert("Please Enter Serial!");
+                var serial = {};
+                let  qty = $("#ItemCodeSerialQty").val() - 1;
+                serial.SerialNumber = $("#SerialNumber").val();
+                serial.MfrSerialNo = $("#txtManfrSerial").val();
+                serial.ExpDate = $("#txtExpireDate").val();
+                serial.Script = $("#txtScriptID").val();
+                let index = $("#txtRowID").val();
+                console.log(index);
+                lsSerial.push(serial);
+                if (index === "" || index==="0") {
+                    objectLine.Serial=lsSerial;
                 } else {
-                    EventItemAdd.iEventItemAdd.BtnSaveSerial_ClickSave1();
-                    console.log(lsSerial);
-                    tbSerial1.clear();
-                    tbSerial1.rows.add(lsSerial);
-                    tbSerial1.search("").draw();
+                    LinesAR[index].Serial=lsSerial;
                 }
+                console.log(objectLine);
+                console.log(lsSerial);
+                $("#SerialNumber").val("");
+                $("#txtManfrSerial").val("");
+                $("#txtExpireDate").val("");
+                $("#ItemCodeSerialQty").val(qty);
+                tbSerial1.clear();
+                tbSerial1.rows.add(lsSerial);
+                tbSerial1.search("").draw();
             }
         }
     });
@@ -745,9 +993,34 @@
         if ($("#ItemCodeSerialQty").val() <= 0) {
             alert("Cannot save Serial with Qty Zero!");
         } else {
-            const objSave = new IEventItemAdd();
-            objSave.GenerateSerialOrBatch('@Url.Action("GetSerialBatchResult", "GoodsReceiptPO")', $("#ItemCodeSerial").val(), 1, 'S');
+            EventItemAdd.GenerateSerialOrBatch('@Url.Action("GetSerialBatchResult", "GoodsReceiptPO")', $("#ItemCodeSerial").val(), 1, 'S');
             //$("#SerialNumber").val(a);
+        }
+    });
+
+    $("#btnBatchNumGennerate").click(function() {
+        alert("Heng Heng");
+        if ($("#optBatchType").val() === "1") {
+            //Standard
+            alert("Standard");
+            $.ajax({
+                url: '@Url.Action("GenerateSerialResult","GoodsReceiptPO")',
+                type: "GET",
+                data: { objectCode: objectCode, dateOfMonth: dateOfMonth },
+                dataType: "JSON",
+                success: function(data) {
+                    $("#SeriesID").empty();
+                    for (var i = 0; i < data.length; i++) {
+                        $("#SeriesID").append('<option value="' + data[i].code + '">' + data[i].name + "</option>");
+                    }
+                },
+                error: function(erro) {
+                    console.log(erro.responseText);
+                }
+            });
+        }else if ($("#optBatchType").val() === "2") {
+            //Advance
+            alert("Advance");
         }
     });
 
@@ -790,5 +1063,76 @@
 
         return [year, month, day].join('-');
     }
+
+    function DisCountPerChange() {
+        EventSaveGoodReceiptPO.LineDiscountPer();
+    }
+    function DisAmtChange() {
+        EventSaveGoodReceiptPO.LinDiscountAMT();
+    }
+
+    function BatchChangeType() {
+        if ($("#optBatchType").val() === "1") {
+            $("#DisPlayCustomizeTable").css("display","none");
+            $("#DisPlayCustomize").css("display","none");
+            $("#BtnSaveBatch").val("Save");
+            $("#BatchNumber").removeAttr("readonly");
+            $("#BtnSaveBatch").text("Save");
+        } else {
+            $("#DisPlayCustomizeTable").css("display","block");
+            $("#DisPlayCustomize").css("display","block");
+            $("#BatchNumber").attr("readonly","readonly");
+            $("#BtnSaveBatch").text("Save Item");
+        }
+    }
+
+    $("#txtTotalGenBatch").change(function() {
+        if ($("#txtPerBatch").val() !== 0 && $("#txtPerBatch").val() !=="") {
+            var totalGenBatch = $("#txtTotalGenBatch").val();
+            var totalPerBatch = $("#txtPerBatch").val();
+            var totalQty = totalGenBatch * totalPerBatch;
+            if (totalQty > $("#ItemCodeBatchQty").val()) {
+                alert("Value Can not bigger than Qty");
+            } else {
+                $("#txtTotalQtyGenBatch").val(totalQty);
+                $("#optBatchFrom").empty();
+                $("#optBatchTo").empty();
+                $("#optBatchTo").append(new Option("Batch To", "-1"));
+                $("#optBatchFrom").append(new Option("Batch From", "-1"));
+                for (i = 1; i <= totalGenBatch; i++) {
+                    $("#optBatchFrom").append(new Option(i, i));   
+                    $("#optBatchTo").append(new Option(i, i));   
+                }
+            }
+        }
+    });
+
+    $("#txtPerBatch").change(function() {
+        if ($("#txtPerBatch").val() !== 0 && $("#txtPerBatch").val() !== "") {
+            const totalGenBatch = $("#txtTotalGenBatch").val();
+            const totalPerBatch = $("#txtPerBatch").val();
+            const totalQty = totalGenBatch * totalPerBatch;
+            if (totalQty > $("#ItemCodeBatchQty").val()) {
+                alert("Value Can not bigger than Qty");
+            } else {
+                $("#txtTotalQtyGenBatch").val(totalQty);
+                $("#optBatchFrom").empty();
+                $("#optBatchTo").empty();
+                $("#optBatchTo").append(new Option("Batch To", "-1"));
+                $("#optBatchFrom").append(new Option("Batch From", "-1"));
+                for (i = 1; i <= totalGenBatch; i++) {
+                    $("#optBatchFrom").append(new Option(i, i));
+                    $("#optBatchTo").append(new Option(i, i));
+                }
+            }
+        }
+    });
+    $("#BtnSaveBatch").click(function() {
+        if ($("#BtnSaveBatch").text()==="Save") {
+            alert("Save Btn");
+        }else if ($("#BtnSaveBatch").text()==="Save Item") {
+            alert("Btn Save Item");
+        }
+    });
 
 </script>

@@ -21,6 +21,9 @@ let GetMasterData = {
     },
     getWarehouse(url) {
         GetMasterData.overallFunction.getWarehouse(url);
+    },
+    getUomCode(url, ItemCode) {
+        GetMasterData.overallFunction.getUomCode(url, ItemCode);
     }
 }
 
@@ -122,6 +125,79 @@ let DataTableInit ={
                 { data: "cardName", autoWidth: true },
                 { data: "phone", autoWidth: true },
                 { data: "address", autoWidth: true }
+            ],
+            rowCallback: function (row, data, index) {
+                //$('td', row).css('background-color', '#ffffff');
+                //$('td', row).css('color', '#717171');
+            }
+        });
+    },
+    TableSerialGen() {
+        $('#TbSerial').dataTable({
+            bLengthChange: false,
+            bFilter: false,
+            bInfo: false,
+            bPaginate: false,
+            data: lsSerial,
+            columns:
+            [
+                { data: "SerialNumber", autoWidth: true },
+                {
+                    data: "MfrSerialNo",
+                    autoWidth: true
+                    // render: function (data, type, full, meta) { return '<input type="number" class="clsinput" style="padding:0px; position:absolute;width:100px;border:none;" onchange="PriceChange(' + meta.row + ')" id="tbPrice' + meta.row + '" value="' + full.UnitPrice + '">'; }, autoWidth: true
+                },
+                {
+                    data: "ExpDate",
+                    autoWidth: true
+                    //render: function (data, type, full, meta) { return '<input type="number" class="clsinput" style="padding:0px; position:absolute;width:100px;border:none;" onchange="DisChange('+meta.row+')" value="'+full.Discount+'" id="tbDis'+meta.row+'" >'; }, autoWidth: true
+                },
+                {
+                    render: function(data, type, full, meta) {
+                        return '<button class="btn-sm btn-danger" style="margin-left: 40%;" onClick="EventItemAdd.DeleteArray(lsSerial,\''+full.SerialNumber+'\')"><i class="fas fa-trash-alt"></i></button>';
+                    }
+                }
+            ],
+            rowCallback: function(row, data, index) {
+                //$('td', row).css('background-color', '#ffffff');
+                //$('td', row).css('color', '#717171');
+            }
+        });
+    },
+    TableBatch() {
+        $('#TbBatch').DataTable({
+            responsive: true,
+            bLengthChange: false,
+            binfo: false,
+            data: LBatch,
+            columns: [
+                { data: "cardCode", autoWidth: true },
+                { data: "cardName", autoWidth: true },
+                { data: "phone", autoWidth: true },
+                { data: "address", autoWidth: true }
+            ],
+            rowCallback: function (row, data, index) {
+                //$('td', row).css('background-color', '#ffffff');
+                //$('td', row).css('color', '#717171');
+            }
+        });
+    },
+    TabletmpBatchFromTo() {
+        $('#tmpBatchFromTo').DataTable({
+            responsive: true,
+            bLengthChange: false,
+            binfo: false,
+            data: LtmpBatch,
+            columns: [
+                { data: "BatchFrom", autoWidth: true },
+                { data: "BatchTo", autoWidth: true },
+                { data: "ExpirationDate", autoWidth: true },
+                { data: "MfrDate", autoWidth: true },
+                {
+                    render: function(data, type, full, meta) {
+                        return '<button class="btn-sm btn-danger" style="margin-left: 40%;" onClick="alert(\'Heng Heng\')"><i class="fas fa-trash-alt"></i></button>';
+                    }
+                }
             ],
             rowCallback: function (row, data, index) {
                 //$('td', row).css('background-color', '#ffffff');

@@ -143,5 +143,31 @@ namespace BarCodeClientService.Controllers
             }
             return BadRequest(API.ErrorMessage);
         }
+
+        [HttpGet]
+        public IActionResult GetUomCodeResult(string ItemCode)
+        {
+            var a = API.Read<ResponseGetVatCode>(APIRoute.GoodReceiptPO.Controller + APIRoute.GoodReceiptPO.GetUnitOfMeasure+ItemCode);
+            if (a != null)
+            {
+                return Ok(a.Data);
+            }
+            return BadRequest(API.ErrorMessage);
+        }
+
+        [HttpGet]
+        public IActionResult GenerateBatchResult(GenerateBatchRequest generateSerialBatchRequest)
+        {
+            var a = API.PostWithReturn<ResponseGetGenerateBatchSerial>(APIRoute.GoodReceiptPO.Controller + APIRoute.GoodReceiptPO.GetGenerate_Serial_Batch
+                , generateSerialBatchRequest);
+            if (a.ErrorCode == 0)
+            {
+                return Ok(a.Data);
+            }
+            else
+            {
+                return BadRequest(a.ErrorMessage);
+            }
+        }
     }
 }

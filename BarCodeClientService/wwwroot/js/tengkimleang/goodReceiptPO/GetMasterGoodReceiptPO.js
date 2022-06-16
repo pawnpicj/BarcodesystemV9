@@ -113,4 +113,18 @@
             }
         });
     }
+    getUomCode(url, ItemCode) {
+        $.ajax({
+            url: url,
+            type: "GET",
+            data: { ItemCode: ItemCode },
+            dataType: "JSON",
+            success: function (data) {
+                $("#UomID").empty();
+                for (var i = 0; i < data.length; i++) {
+                    $("#UomID").append("<option value='" + data[i].code + "'>" + data[i].code +"-"+ data[i].name + "</option>");
+                }
+            }
+        });
+    }
 }

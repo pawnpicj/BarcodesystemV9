@@ -15,9 +15,10 @@ namespace BarCodeAPIService.Service
         Task<ResponseGetSaleEmployee> responseGetSaleEmployees();
         Task<ResponseGetCurrency> responseGetCurrency(string cardCode);
         Task<ResponseGetGenerateBatchSerial> responseGetGenerateBatchSerial(GetGenerateSerialBatchRequest generateSerialBatchRequest);
+        Task<ResponseGetGenerateBatchSerial> responseGetGenerateBatchAsync(GenerateBatchRequest generateBatchRequest);
         Task<ResponseGetItemCode> responseGetItemCodes();
         Task<ResponseGetVatCode> responseGetVatCodes();
         Task<ResponseGetWarehouse> responseGetWarehouses();
-        Task<ResponseGetUnitOfMeasure> responseGetUnitOfMeasure();
+        Task<ResponseGetUnitOfMeasure> responseGetUnitOfMeasure(string ItemCode);
     }
 }

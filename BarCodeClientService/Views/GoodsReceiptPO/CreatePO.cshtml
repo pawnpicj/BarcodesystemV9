@@ -1004,7 +1004,7 @@
             //Standard
             alert("Standard");
             $.ajax({
-                url: '@Url.Action("GenerateSerialResult","GoodsReceiptPO")',
+                url: '@Url.Action("GenerateBatchResult","GoodsReceiptPO")',
                 type: "GET",
                 data: { objectCode: objectCode, dateOfMonth: dateOfMonth },
                 dataType: "JSON",
@@ -1097,7 +1097,7 @@
                 $("#txtTotalQtyGenBatch").val(totalQty);
                 $("#optBatchFrom").empty();
                 $("#optBatchTo").empty();
-                $("#optBatchTo").append(new Option("Batch To", "-1"));
+                $("#optBatchTo").append(new Option("All", "-1"));
                 $("#optBatchFrom").append(new Option("Batch From", "-1"));
                 for (i = 1; i <= totalGenBatch; i++) {
                     $("#optBatchFrom").append(new Option(i, i));   
@@ -1118,7 +1118,7 @@
                 $("#txtTotalQtyGenBatch").val(totalQty);
                 $("#optBatchFrom").empty();
                 $("#optBatchTo").empty();
-                $("#optBatchTo").append(new Option("Batch To", "-1"));
+                $("#optBatchTo").append(new Option("All", "-1"));
                 $("#optBatchFrom").append(new Option("Batch From", "-1"));
                 for (i = 1; i <= totalGenBatch; i++) {
                     $("#optBatchFrom").append(new Option(i, i));
@@ -1132,6 +1132,11 @@
             alert("Save Btn");
         }else if ($("#BtnSaveBatch").text()==="Save Item") {
             alert("Btn Save Item");
+            var batchFrom=$("#optBatchFrom").val();
+            var batchTo=$("#optBatchTo").val();
+            if (batchFrom !== "-1") {
+
+            }
         }
     });
 

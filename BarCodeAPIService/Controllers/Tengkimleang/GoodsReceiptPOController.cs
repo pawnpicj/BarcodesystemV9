@@ -71,10 +71,16 @@ namespace BarCodeAPIService.Controllers
             var a = await goodsReceiptPO.responseGetGenerateBatchSerial(generateSerialBatchRequest);
             return Ok(a);
         }
-        [HttpPost(APIRoute.GoodReceiptPO.GetGenerate_Batch)]
-        public async Task<IActionResult> GetGenerate_Batch(GenerateBatchRequest generateSerialBatchRequest)
+        //[HttpPost(APIRoute.GoodReceiptPO.GetGenerate_Batch)]
+        //public async Task<IActionResult> GetGenerate_Batch(GenerateBatchRequest generateSerialBatchRequest)
+        //{
+        //    var a = await goodsReceiptPO.responseGetGenerateBatchAsync(generateSerialBatchRequest);
+        //    return Ok(a);
+        //}
+        [HttpPost(APIRoute.GoodReceiptPO.GetBatchGenerator)]
+        public async Task<IActionResult> GetGennerateBatchTask(GenerateBatchRequest generateBatchRequest)
         {
-            var a = await goodsReceiptPO.responseGetGenerateBatchAsync(generateSerialBatchRequest);
+            var a = await goodsReceiptPO.responseGetGenerateBatchAsync(generateBatchRequest);
             return Ok(a);
         }
 

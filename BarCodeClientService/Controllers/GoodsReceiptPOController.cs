@@ -158,7 +158,7 @@ namespace BarCodeClientService.Controllers
         [HttpGet]
         public IActionResult GenerateBatchResult(GenerateBatchRequest generateSerialBatchRequest)
         {
-            var a = API.PostWithReturn<ResponseGetGenerateBatchSerial>(APIRoute.GoodReceiptPO.Controller + APIRoute.GoodReceiptPO.GetGenerate_Serial_Batch
+            var a = API.PostWithReturn<ResponseGetGenerateBatchSerial>(APIRoute.GoodReceiptPO.Controller + APIRoute.GoodReceiptPO.GetBatchGenerator
                 , generateSerialBatchRequest);
             if (a.ErrorCode == 0)
             {

@@ -14,10 +14,16 @@ namespace BarCodeClientService.Controllers
 {
     public class GoodsReceiptPOController : Controller
     {
+        #region  View
+
         public IActionResult CreatePO()
         {
             return View();
         }
+        #endregion
+
+        #region Method
+
         [HttpGet]
         public IActionResult GetCustomerClientResult()
         {
@@ -44,18 +50,33 @@ namespace BarCodeClientService.Controllers
                 return BadRequest(a.ErrorMessage);
             }
         }
+
         [HttpGet]
-        public IActionResult GetSeries(string objectCode,string dateOfMonth)
+        public IActionResult GetGoodReturnByCardCode(string cardCode)
         {
-            var a = API.Read<ResponseGetSeries>(APIRoute.GoodReceiptPO.Controller + APIRoute.GoodReceiptPO.GetSeries + objectCode + "/" + dateOfMonth);
-            if(a.ErrorCode== 0)
+            var a = API.Read<ResponseOPDNGetGoodReceipt>(APIRoute.GoodReturn.Controller + APIRoute.GoodReturn.GetGoodReceiptPO+cardCode);
+            if (a.ErrorCode == 0)
             {
                 return Ok(a.Data);
             }
             else
             {
                 return BadRequest(a.ErrorMessage);
-            } 
+            }
+        }
+
+        [HttpGet]
+        public IActionResult GetSeries(string objectCode, string dateOfMonth)
+        {
+            var a = API.Read<ResponseGetSeries>(APIRoute.GoodReceiptPO.Controller + APIRoute.GoodReceiptPO.GetSeries + objectCode + "/" + dateOfMonth);
+            if (a.ErrorCode == 0)
+            {
+                return Ok(a.Data);
+            }
+            else
+            {
+                return BadRequest(a.ErrorMessage);
+            }
         }
         [HttpGet]
         public IActionResult GetSaleEmployeeResult()
@@ -73,7 +94,7 @@ namespace BarCodeClientService.Controllers
         [HttpGet]
         public IActionResult GetCurrency(string cardCode)
         {
-            var a= API.Read<ResponseGetCurrency>(APIRoute.GoodReceiptPO.Controller + APIRoute.GoodReceiptPO.GetCurrency+cardCode);
+            var a = API.Read<ResponseGetCurrency>(APIRoute.GoodReceiptPO.Controller + APIRoute.GoodReceiptPO.GetCurrency + cardCode);
             if (a.ErrorCode == 0)
             {
                 return Ok(a.Data);
@@ -87,8 +108,8 @@ namespace BarCodeClientService.Controllers
         [HttpPost]
         public IActionResult GetSerialBatchResult(GetGenerateSerialBatchRequest generateSerialBatchRequest)
         {
-            var a = API.PostWithReturn<ResponseGetGenerateBatchSerial>(APIRoute.GoodReceiptPO.Controller+APIRoute.GoodReceiptPO.GetGenerate_Serial_Batch
-                                                                        ,generateSerialBatchRequest);
+            var a = API.PostWithReturn<ResponseGetGenerateBatchSerial>(APIRoute.GoodReceiptPO.Controller + APIRoute.GoodReceiptPO.GetGenerate_Serial_Batch
+                                                                        , generateSerialBatchRequest);
             if (a.ErrorCode == 0)
             {
                 return Ok(a.Data);
@@ -102,11 +123,11 @@ namespace BarCodeClientService.Controllers
         [HttpPost]
         public IActionResult CreateGoodsReceiptPoResult(SendGoodReceiptPO goodReceiptPo)
         {
-            var a = API.PostWithReturn<ResponseGetGenerateBatchSerial>(APIRoute.GoodReceiptPO.Controller + APIRoute.GoodReceiptPO.SendGoodReceiptPO
+            var a = API.PostWithReturn<ResponseGoodReceiptPO>(APIRoute.GoodReceiptPO.Controller + APIRoute.GoodReceiptPO.SendGoodReceiptPO
                 , goodReceiptPo);
             if (a != null)
             {
-                return Ok(a.Data);
+                return Ok(a.DocEntry);
             }
             return BadRequest(API.ErrorMessage);
         }
@@ -147,7 +168,7 @@ namespace BarCodeClientService.Controllers
         [HttpGet]
         public IActionResult GetUomCodeResult(string ItemCode)
         {
-            var a = API.Read<ResponseGetVatCode>(APIRoute.GoodReceiptPO.Controller + APIRoute.GoodReceiptPO.GetUnitOfMeasure+ItemCode);
+            var a = API.Read<ResponseGetVatCode>(APIRoute.GoodReceiptPO.Controller + APIRoute.GoodReceiptPO.GetUnitOfMeasure + ItemCode);
             if (a != null)
             {
                 return Ok(a.Data);
@@ -155,8 +176,8 @@ namespace BarCodeClientService.Controllers
             return BadRequest(API.ErrorMessage);
         }
 
-        [HttpGet]
-        public IActionResult GenerateBatchResult(GenerateBatchRequest generateSerialBatchRequest)
+        [HttpPost]
+        public IActionResult GenerateBatchResult(GetBatchGenRequest generateSerialBatchRequest)
         {
             var a = API.PostWithReturn<ResponseGetGenerateBatchSerial>(APIRoute.GoodReceiptPO.Controller + APIRoute.GoodReceiptPO.GetBatchGenerator
                 , generateSerialBatchRequest);
@@ -169,5 +190,8 @@ namespace BarCodeClientService.Controllers
                 return BadRequest(a.ErrorMessage);
             }
         }
+
+        #endregion
+
     }
 }

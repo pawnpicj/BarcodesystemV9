@@ -87,6 +87,27 @@
             }
         });
     }
+
+    getGoodReceiptPO(url, cardCode) {
+        $.ajax({
+            url: url,
+            type: "GET",
+            data: { CardCode: cardCode },
+            dataType: "JSON",
+            success: function (data) {
+                console.log(data);
+                LCopyToGoodReturn = data;
+                console.log(LCopyToGoodReturn);
+                TbCopyFromGoodReciptPO.clear();
+                TbCopyFromGoodReciptPO.rows.add(LCopyToGoodReturn);
+                TbCopyFromGoodReciptPO.search("").columns().search("").draw();
+            },
+            error: function (erro) {
+                console.log(erro.responseText);
+            }
+        });
+    }
+
     getTaxCode(url) {
         $.ajax({
             url: url,

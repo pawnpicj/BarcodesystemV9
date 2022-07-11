@@ -14,7 +14,11 @@ let GetMasterData = {
         GetMasterData.overallFunction.getCustomer(url);
     },
     getPurchaseOrder(url, cardCode) {
-        GetMasterData.overallFunction.getPurchaseOrder(url, cardCode)
+        GetMasterData.overallFunction.getPurchaseOrder(url, cardCode);
+    },
+    getGoodReceiptPO(url, cardCode) {
+        console.log("Hello");
+        GetMasterData.overallFunction.getGoodReceiptPO(url, cardCode);
     },
     getTaxCode(url) {
         GetMasterData.overallFunction.getTaxCode(url);
@@ -114,6 +118,23 @@ let DataTableInit ={
             }
         });
     },
+    TableGoodReturn() {
+        $('#TbCopyToGoodReturn').DataTable({
+            responsive: true,
+            bLengthChange: false,
+            binfo: false,
+            data: LCopyToGoodReturn,
+            columns: [
+                { data: "docNum", autoWidth: true },
+                { data: "cardName", autoWidth: true },
+                { data: "docDate", autoWidth: true },
+                { data: "docTotal", autoWidth: true },
+                { data: "docStatus", autoWidth: true }
+            ],
+            rowCallback: function (row, data, index) {
+            }
+        });
+    },
     TableCustomer() {
         $('#TbCusCode').DataTable({
             responsive: true,
@@ -171,10 +192,17 @@ let DataTableInit ={
             binfo: false,
             data: LBatch,
             columns: [
-                { data: "cardCode", autoWidth: true },
-                { data: "cardName", autoWidth: true },
-                { data: "phone", autoWidth: true },
-                { data: "address", autoWidth: true }
+                { data: "itemCode", autoWidth: true },
+                { data: "qty", autoWidth: true },
+                { data: "serialAndBatch", autoWidth: true },
+                { data: "mfrDate", autoWidth: true },
+                { data: "expirationDate", autoWidth: true },
+                { data: "admissionDate", autoWidth: true },
+                {
+                    render: function (data, type, full, meta) {
+                        return '<button class="btn-sm btn-danger" style="margin-left: 40%;" onClick="DeleteBatch(LBatch,\'' + full.serialAndBatch + '\')"><i class="fas fa-trash-alt"></i></button>';
+                    }
+                }
             ],
             rowCallback: function (row, data, index) {
                 //$('td', row).css('background-color', '#ffffff');
@@ -193,9 +221,10 @@ let DataTableInit ={
                 { data: "BatchTo", autoWidth: true },
                 { data: "ExpirationDate", autoWidth: true },
                 { data: "MfrDate", autoWidth: true },
+                { data: "AdmissionDate", autoWidth: true },
                 {
                     render: function(data, type, full, meta) {
-                        return '<button class="btn-sm btn-danger" style="margin-left: 40%;" onClick="alert(\'Heng Heng\')"><i class="fas fa-trash-alt"></i></button>';
+                        return '<button class="btn-sm btn-danger" style="margin-left: 40%;" onClick="DeleteTmpBatch(LtmpBatch,\'' + full.BatchFrom + '\',\'' + full.BatchTo +'\')"><i class="fas fa-trash-alt"></i></button>';
                     }
                 }
             ],

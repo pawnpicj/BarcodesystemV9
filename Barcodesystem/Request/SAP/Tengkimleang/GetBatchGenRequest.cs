@@ -6,17 +6,21 @@ using System.Threading.Tasks;
 
 namespace BarCodeLibrary.Request.SAP.Tengkimleang
 {
-    public class GenerateBatchRequest
+    public class GetBatchGenRequest
     {
-        public List<Batch> ListBatch { get; set; }
-        public Batch Batch { get; set; }
+        public List<Batches> ListBatches { get; set; }
     }
-    public class Batch
+
+    public class Batches
     {
         public DateTime ManufactureDate { get; set; }
         public DateTime ExpireDate { get; set; }
         public DateTime AdmissionDate { get; set; }
         public int BatchFrom { get; set; }
         public int BatchTo { get; set; }
+        public string ItemCode { get; set; }
+        public int Qty { get; set; }
+        public int BatchCount { get; set; }
+        public string TypeBatchGen { get; set; }
     }
 }

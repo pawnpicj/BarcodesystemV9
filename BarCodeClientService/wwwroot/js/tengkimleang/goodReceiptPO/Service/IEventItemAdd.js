@@ -2,7 +2,6 @@
     Btn_ClickBatchSerail(index, table) {
         const data = table.row(index).data();
         console.log(data);
-        console.log("asdasdasdasd121323");
         if (data.ManageItem === "S") {
             let k = 0;
             if (data.Serial.length !== 0) {
@@ -22,7 +21,24 @@
             $("#txtExpireDate").val("");
             $("#ModalBarCodeSerail").modal("show");
         } else if (data.ManageItem == "B") {
-            alert("batch");
+            let k = 0;
+            console.log(data);
+            console.log(data.Batches.length);
+            if (data.Batches.length !== 0) {
+                for (let i = 0; i < data.Batches.length; i++) {
+                    k = k + data.Batches[i].qty;
+                }
+            }
+            console.log("HelloData");
+            console.log(k);
+            $("#ItemCodeBatch").val(data.ItemCode);
+            $("#ItemCodeBatchQty").val(data.Quantity - k);
+            $("#txtIDRowB").val(index);
+            LBatch = data.Batches;
+            tbBatch.clear();
+            tbBatch.rows.add(LBatch);
+            tbBatch.search("").draw();
+            $("#ModalBarCodeBatch").modal("show");
         }
     }
 

@@ -29,11 +29,14 @@
                         "Please Input Serial number in ItemCode line" + (i + 1));
                     return 1;
                 }
-            } else if(array[i].ManageItem==="B") {
+            } else if (array[i].ManageItem === "B") {
+                console.log(array[i].Batches);
                 var qty = 0;
-                for (var arr in array[i].Batch) {
-                    qty = qty + arr.Qty;
+                for (var k = 0; k < array[i].Batches.length; k++) {
+                    console.log(array[i].Batches[k].qty);
+                    qty = qty + parseFloat(array[i].Batches[k].qty);
                 }
+                console.log(qty);
                 if (parseInt(array[i].Quantity) !== qty) {
                     EventSaveGoodReceiptPO.iEventSaveGoodReceipt.messageBox(
                         "Please Input Batch number in ItemCode line" + (i + 1));

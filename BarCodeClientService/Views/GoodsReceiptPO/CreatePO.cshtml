@@ -188,7 +188,7 @@
             </div>
             Quantity :
             <div class="input-group">
-                <input type="number" class="form-control" value="1" id="Qty">
+                <input type="number" class="form-control" value="1" id="Qty" onchange="QtyChange()">
             </div>
 
             <div>
@@ -299,13 +299,23 @@
 </div>
 <hr/>
 <div class="row" style="margin-bottom: -20px; margin-top: -20px; padding: 15px;">
+    <div class="nav navbar-nav mr-auto">
+        <div class="btn-group">
+            @*<button class="btn btn-info previous" style="background:#f0eff1;color:#696969">Previous</button>
+                <button class="btn btn-info next" style="background: #f0eff1;color: #696969;">Next</button>*@
+            <button class="btn btn-info" id="CopyFromPO" style="background: #f0eff1; color: #696969;"
+                        data-toggle="modal" data-target="#ModalCopyFromPO" disabled>
+                    Copy From PO
+            </button>
+        </div>
+    </div>
     <div class="nav navbar-nav ml-auto">
         <div class="btn-group">
             @*<button class="btn btn-info previous" style="background:#f0eff1;color:#696969">Previous</button>
                         <button class="btn btn-info next" style="background: #f0eff1;color: #696969;">Next</button>*@
-            <button class="btn btn-info" id="CopyFromPO" style="background: #f0eff1; color: #696969;"
-                    data-toggle="modal" data-target="#ModalCopyFromPO" disabled>
-                Copy From PO
+            <button class="btn btn-info" id="CopyToGoodReturn" style="background: #f0eff1; color: #696969;"
+                    data-toggle="modal" data-target="#ModalCopyToGoodReturn" disabled>
+                Copy To Good Return
             </button>
             <button class="btn btn-info" id="Save" style="background: #f0eff1; color: #696969; margin-left: 5px;">Add New</button>
         </div>
@@ -448,6 +458,41 @@
         </div>
     </div>
 </div>
+
+@*Copy To Good Return*@
+<div class="modal fade" id="ModalCopyToGoodReturn" data-backdrop="static">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background: #f0eff1; color: #696969;">
+            <div class="modal-header">
+                <b>Good Return</b>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="TbCopyToGoodReturn" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
+                                <thead>
+                                <tr>
+                                    <th>Receipt No(SAP)</th>
+                                    <th>Vendor Name</th>
+                                    <th>Document Date</th>
+                                    <th>DocTotal</th>
+                                    <th>Document Status</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseGoodReceiptPO" style="background: #f0eff1; color: #696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background: #f0eff1; color: #696969;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @*Generate Serial*@
 <div class="modal fade " id="ModalBarCodeSerail" data-backdrop="static">
     <div class="modal-dialog modal-xl">
@@ -541,6 +586,7 @@
                     <div class="row">
                         <div class="col-12 col-sm-12 col-md-12 col-lg-6">
                             <input type="hidden" id="txtRowIDBatch"/>
+                            <input type="hidden" id="txtIDRowB"/>
                             <input type="hidden" id="txtScriptIDBatch"/>
                             Item Code :
                             <div class="input-group">
@@ -651,7 +697,8 @@
                                         <th>Batch From</th>
                                         <th>Batch To</th>
                                         <th>Expiration Date</th>
-                                        <th>MfrDate</th>
+                                        <th>Mfr Date</th>
+                                        <th>Admission Date</th>
                                         <th>Action</th>
                                     </tr>
                                     </thead>
@@ -666,9 +713,12 @@
                             <table id="TbBatch" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
                                 <thead>
                                 <tr>
-                                    <th>Serial Number</th>
-                                    <th>Mfr Serial No.</th>
+                                    <th>ItemCode</th>
+                                    <th>Qty</th>
+                                    <th>Batch Number</th>
+                                    <th>Mfr Date</th>
                                     <th>Expiration Date</th>
+                                    <th>Admission Date</th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
@@ -678,7 +728,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-info" data-dismiss="modal" style="background: #f0eff1; color: #696969;">Close</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background: #f0eff1; color: #696969;" id="btnCLoseBatch">Close</button>
             </div>
         </div>
     </div>
@@ -722,6 +772,24 @@
     });
     /* End DataTable List Of Item Code */
 
+    /* DataTable List Good Receipt PO*/
+    var temporyListGoodReturn = [];
+    var LCopyToGoodReturn = [];
+    DataTableInit.TableGoodReturn();
+    var TbCopyFromGoodReciptPO = $("#TbCopyToGoodReturn").DataTable();
+    $('#TbCopyToGoodReturn tbody').on('click',
+        'tr',
+        function() {
+            temporyListPO = [];
+            if ($(this).hasClass('selected')) {
+                temporyListPO = DataMethod.arrayRemove(temporyListPO, $(this)[0]._DT_RowIndex);
+            } else {
+                temporyListPO.push($(this)[0]._DT_RowIndex);
+            }
+        });
+    DataMethod.AddClassSelected('TbCopyToGoodReturn', TbCopyFromGoodReciptPO);
+    /*End Good Receipt PO*/
+
     /* DataTable List Purchase Order*/
     var temporyListPO = [];
     var LCopyFromPO = [];
@@ -756,6 +824,7 @@
         $('#CusName').val(data.cardName);
         $('#CcusID').css('background-color', '#4CAF50');
         $('#CopyFromPO').removeAttr("disabled");
+        $('#CopyToGoodReturn').removeAttr("disabled");
         GetMasterData.getCurrency('@Url.Action("GetCurrency", "GoodsReceiptPO")', data.cardCode);
     });
     /* End DataTable List Of Customer */
@@ -815,7 +884,10 @@
     // #endregion
     
     $('#AddItem').click(function() {
-        if ($('#itemManage').val() == 'S') {
+        if ($("#ItemCode").val()==="") {
+            alert("Please Chose Item First");
+        } else {
+            if ($('#itemManage').val() == 'S') {
             if (objectLine.Serial !== undefined) {
                 if ($("#Qty").val() == objectLine.Serial.length) {
                     alert("Can add to LineAR");
@@ -893,9 +965,80 @@
                 $('#ModalBarCodeSerail').modal('show');
             }
         }else if ($('#itemManage').val() == 'B') {
-            $("#ItemCodeBatch").val($("#ItemCode").val());
-            $("#ItemCodeBatchQty").val($("#Qty").val());
-            $('#ModalBarCodeBatch').modal('show');
+            if (LBatch !== undefined) {
+                var qtyBatch = 0;
+                for (var i = 0; i < LBatch.length; i++) {
+                    console.log(LBatch[i]);
+                    qtyBatch = qtyBatch + LBatch[i].qty;
+                }
+                if (parseFloat($("#Qty").val()) === qtyBatch) {
+                    objectLine.UomName = $("#UomID").val();
+                    objectLine.Whs = $("#whscode").val();
+                    objectLine.TaxCode = $("#TaxCode").val();
+                    objectLine.LineTotal = $("#totalItem").val();
+                    objectLine.PriceBeforeDis = $("#Price").val()*$("#Qty").val();
+                    objectLine.Quantity = $("#Qty").val();
+                    objectLine.DiscountAmount = $("#DiscountAmt").val();
+                    objectLine.Discount = $("#Discount").val();
+                    objectLine.UnitPrice = $("#Price").val();
+                    objectLine.Batches = LBatch;
+                    LinesAR.push(objectLine);
+                    tbItemLine.clear();
+                    tbItemLine.rows.add(LinesAR);
+                    tbItemLine.search('').draw();
+                    var priceBeforeDis=$("#BTax").val();
+                    if (priceBeforeDis != "") {
+                        priceBeforeDis = parseFloat(priceBeforeDis);
+                    }
+                    priceBeforeDis = priceBeforeDis + parseFloat($("#Price").val()*$("#Qty").val());
+                    $("#BTax").val(priceBeforeDis);
+                    var disByItem=$("#DisA").val();
+                    if (disByItem!="") {
+                        disByItem = parseFloat(disByItem);
+                    }
+                    disByItem = disByItem + parseFloat($("#DiscountAmt").val());
+                    $("#DisA").val(disByItem);
+                    var totalLine = $("#Total").val();
+                    if (totalLine!="") {
+                        totalLine = parseFloat(totalLine);
+                    }
+                    totalLine = totalLine + parseFloat($("#totalItem").val());
+                    $("#Total").val(totalLine);
+                    EventItemAdd.clearText(
+                        [
+                            {id:"ItemCode",value:""},
+                            {id:"ItemDescr",value:""},
+                            {id:"Qty",value:"1"},
+                            {id:"Price",value:"0"},
+                            {id:"Discount",value:"0"},
+                            {id:"DiscountAmt",value:"0"},
+                            {id:"totalItem",value:"0"},
+                            {id:"txtRowID",value:"0"},
+                            {id:"txtScriptID",value:"0"},
+                            {id:"ItemCodeSerial",value:"0"},
+                            {id:"ItemCodeSerialQty",value:"0"},
+                            {id:"SerialNumber",value:"0"},
+                            {id:"txtManfrSerial",value:"0"}
+                        ],"");
+                    EventItemAdd.clearText([
+                            { id: "UomID" }
+                        ],
+                        "option");
+                    objectLine = {};
+                    LBatch = [];
+                } else {
+                    $("#ItemCodeBatch").val($("#ItemCode").val());
+                    var tmpQty = parseFloat($("#Qty").val()) - qtyBatch;
+                    console.log(tmpQty);
+                    $("#ItemCodeBatchQty").val(tmpQty);
+                    $('#ModalBarCodeBatch').modal('show');
+                }
+            } else {
+                $("#ItemCodeBatch").val($("#ItemCode").val());
+                $("#ItemCodeBatchQty").val($("#Qty").val());
+                $('#ModalBarCodeBatch').modal('show');
+            }
+        }
         }
     });
 
@@ -972,12 +1115,13 @@
                 let index = $("#txtRowID").val();
                 console.log(index);
                 lsSerial.push(serial);
-                if (index === "" || index==="0") {
+                if (index === "") { //|| index==="0"
                     objectLine.Serial=lsSerial;
                 } else {
                     LinesAR[index].Serial=lsSerial;
                 }
                 console.log(objectLine);
+                console.log(LinesAR[index]);
                 console.log(lsSerial);
                 $("#SerialNumber").val("");
                 $("#txtManfrSerial").val("");
@@ -997,30 +1141,109 @@
             //$("#SerialNumber").val(a);
         }
     });
-
+    //To Do List
     $("#btnBatchNumGennerate").click(function() {
-        alert("Heng Heng");
         if ($("#optBatchType").val() === "1") {
             //Standard
             alert("Standard");
+            var a = {};
+            var obj = [];
+            obj.push({
+                "ManufactureDate ":$("#dtpMfrDateBatch").val(),
+                "ExpireDate":$("#dtpExpireDateBatch").val(),
+                "AdmissionDate":$("#dtpAdmissionDateBatch").val(),
+                "ItemCode":$("#ItemCodeBatch").val(),
+                "Qty":$("#ItemCodeBatchQty").val()
+            });
+            a.ListBatches=obj;
+            console.log(a);
             $.ajax({
-                url: '@Url.Action("GenerateBatchResult","GoodsReceiptPO")',
-                type: "GET",
-                data: { objectCode: objectCode, dateOfMonth: dateOfMonth },
+                url: '@Url.Action("GenerateBatchResult", "GoodsReceiptPO")',
+                type: "POST",
+                data: { generateSerialBatchRequest: a },
                 dataType: "JSON",
                 success: function(data) {
-                    $("#SeriesID").empty();
                     for (var i = 0; i < data.length; i++) {
-                        $("#SeriesID").append('<option value="' + data[i].code + '">' + data[i].name + "</option>");
+                        $("#txtRowIDBatch").val(data[i].serialAndBatch);
+                        $("#txtScriptIDBatch").val(data[i].script);
+                        $("#BatchNumber").val(data[i].serialAndBatch);
                     }
                 },
                 error: function(erro) {
                     console.log(erro.responseText);
                 }
             });
-        }else if ($("#optBatchType").val() === "2") {
+        } else if ($("#optBatchType").val() === "2") {
             //Advance
             alert("Advance");
+            if (LtmpBatch.length !== 0) {
+                var a = {};
+                var obj = [];
+                console.log(LtmpBatch);
+                for (let i = 0; i < LtmpBatch.length; i++) {
+                    obj.push({
+                        "ManufactureDate": LtmpBatch[i].MfrDate,
+                        "ExpireDate": LtmpBatch[i].ExpirationDate,
+                        "AdmissionDate": LtmpBatch[i].AdmissionDate,
+                        "BatchFrom": LtmpBatch[i].BatchFrom,
+                        "BatchTo": LtmpBatch[i].BatchTo,
+                        "ItemCode": $("#ItemCodeBatch").val(),
+                        "Qty": LtmpBatch[i].Qty,
+                        "BatchCount": $("#txtTotalGenBatch").val(),
+                        "TypeBatchGen": $("#optBatchType").val()
+                    });
+                }
+                a.ListBatches = obj;
+                console.log(a);
+                $.ajax({
+                    url: '@Url.Action("GenerateBatchResult", "GoodsReceiptPO")',
+                    type: "POST",
+                    data: { generateSerialBatchRequest: a },
+                    dataType: "JSON",
+                    success: function(data) {
+                        //alert("Success");
+                        console.log(data);
+                        var tmpQty = parseFloat($("#ItemCodeBatchQty").val());
+                        for (let i = 0; i < data.length; i++) {
+                            tmpQty = tmpQty - data[i].qty;
+                            LBatch.push(
+                                {
+                                    "itemCode": data[i].itemCode,
+                                    "qty": data[i].qty,
+                                    "serialAndBatch": data[i].serialAndBatch,
+                                    "mfrDate": data[i].mfrDate,
+                                    "expirationDate": data[i].expirationDate,
+                                    "admissionDate": data[i].admissionDate
+                                });
+                        }
+                        //Clear Data
+                        LtmpBatch = [];
+                        TbtmpBatchFromTo.clear();
+                        TbtmpBatchFromTo.rows.add(LtmpBatch);
+                        TbtmpBatchFromTo.search('').draw();;
+                        $("#txtTotalGenBatch").val("");
+                        $("#txtPerBatch").val("");
+                        $("#txtTotalQtyGenBatch").val("");
+                        $("#optBatchFrom").empty();
+                        $("#optBatchTo").empty();
+                        $("#dtpMfrDateBatch").val("");
+                        $("#dtpExpireDateBatch").val("");
+                        $("#dtpAdmissionDateBatch").val("");
+                        //End Clear Data
+                        console.log(tmpQty);
+                        $("#ItemCodeBatchQty").val(tmpQty);
+                        console.log(LBatch);
+                        tbBatch.clear();
+                        tbBatch.rows.add(LBatch);
+                        tbBatch.search('').draw();
+                    },
+                    error: function(erro) {
+                        console.log(erro.responseText);
+                    }
+                });
+            } else {
+                alert("Please Save Item Before Generate TmpDate");
+            }
         }
     });
 
@@ -1050,7 +1273,23 @@
     );
     $('#DocDate').val(formatDate('@ViewData["Date"]'));
     $('#DocumentDate').val(formatDate('@ViewData["Date"]'));
-
+    function DeleteBatch(arr, value) {
+        let tmp = arr.filter(function (ele) {
+            return ele.serialAndBatch !== value;
+        });
+        let tmpQty = arr.filter(function (ele) {
+            return ele.serialAndBatch === value;
+        });
+        console.log(tmpQty);
+        var tmpQ = parseFloat($("#ItemCodeBatchQty").val());
+        tmpQ = tmpQ + tmpQty[0].qty;
+        console.log(tmpQ);
+        $("#ItemCodeBatchQty").val(tmpQ);
+        LBatch = tmp;
+        tbBatch.clear();
+        tbBatch.rows.add(LBatch);
+        tbBatch.search('').draw();
+    }
     function formatDate(date) {
         const d = new Date(date);
         var month = `${d.getMonth() + 1}`,
@@ -1097,8 +1336,10 @@
                 $("#txtTotalQtyGenBatch").val(totalQty);
                 $("#optBatchFrom").empty();
                 $("#optBatchTo").empty();
-                $("#optBatchTo").append(new Option("All", "-1"));
-                $("#optBatchFrom").append(new Option("Batch From", "-1"));
+                //$("#optBatchTo").append(new Option("All", "-1")).selected = true;
+                //$("#optBatchFrom").append(new Option("All", "-1")).selected=true;
+                $("#optBatchTo").append('<option value="-1" selected="selected">ALL</option>');
+                $("#optBatchFrom").append('<option value="-1" selected="selected">ALL</option>');
                 for (i = 1; i <= totalGenBatch; i++) {
                     $("#optBatchFrom").append(new Option(i, i));   
                     $("#optBatchTo").append(new Option(i, i));   
@@ -1118,8 +1359,10 @@
                 $("#txtTotalQtyGenBatch").val(totalQty);
                 $("#optBatchFrom").empty();
                 $("#optBatchTo").empty();
-                $("#optBatchTo").append(new Option("All", "-1"));
-                $("#optBatchFrom").append(new Option("Batch From", "-1"));
+                //$("#optBatchTo").append(new Option("All", "-1"));
+                //$("#optBatchFrom").append(new Option("All", "-1"));
+                $("#optBatchTo").append('<option value="-1" selected="selected">ALL</option>');
+                $("#optBatchFrom").append('<option value="-1" selected="selected">ALL</option>');
                 for (i = 1; i <= totalGenBatch; i++) {
                     $("#optBatchFrom").append(new Option(i, i));
                     $("#optBatchTo").append(new Option(i, i));
@@ -1130,14 +1373,178 @@
     $("#BtnSaveBatch").click(function() {
         if ($("#BtnSaveBatch").text()==="Save") {
             alert("Save Btn");
+            LBatch.push(
+                { 
+                    "itemCode":$("#ItemCodeBatch").val(),
+                    "qty":1,
+                    "serialAndBatch":$("#BatchNumber").val(),
+                    "mfrDate":$("#dtpMfrDateBatch").val(),
+                    "expirationDate":$("#dtpExpireDateBatch").val(),
+                    "admissionDate":$("#dtpAdmissionDateBatch").val()
+                });
+            var qtytmp = parseFloat($("#ItemCodeBatchQty").val()) - 1;
+            $("#ItemCodeBatchQty").val(qtytmp);
+            //Clear Text
+            $("#txtTotalGenBatch").val("");
+            $("#txtPerBatch").val("");
+            $("#txtTotalQtyGenBatch").val("");
+            $("#optBatchFrom").empty();
+            $("#optBatchTo").empty();
+            $("#dtpMfrDateBatch").val("");
+            $("#dtpExpireDateBatch").val("");
+            $("#dtpAdmissionDateBatch").val("");
+            $("#BatchNumber").val("");
+            tbBatch.clear();
+            tbBatch.rows.add(LBatch);
+            tbBatch.search('').draw();
         }else if ($("#BtnSaveBatch").text()==="Save Item") {
             alert("Btn Save Item");
             var batchFrom=$("#optBatchFrom").val();
+            console.log($("#optBatchFrom").val());
             var batchTo=$("#optBatchTo").val();
-            if (batchFrom !== "-1") {
-
+            var i = 0;
+            if (batchFrom !== -1) {
+                i = 1;
             }
+            if (batchTo !== -1) {
+                i = 1;
+            }
+            console.log(i);
+            if (i === 1) {
+                var k = 0;
+                if (LtmpBatch.length !== null && LtmpBatch.length !== 0) {
+                    if ($("#optBatchFrom").val() > $("#optBatchTo").val()) {
+                        alert("Cannot Add BatchTo Smaller than BatchFrom");
+                    }
+                    else{
+                        for (var z = 0; z < LtmpBatch.length; z++) {
+                            if (LtmpBatch[z].BatchFrom === $("#optBatchFrom").val()) {
+                                k = 1;
+                            }
+                            if (LtmpBatch[z].BatchTo === $("#optBatchTo").val()) {
+                                k = 1;
+                            }
+                            if (LtmpBatch[z].BatchTo === $("#optBatchFrom").val()) {
+                                k = 1;
+                            }
+                            if (LtmpBatch[z].BatchFrom === $("#optBatchTo").val()) {
+                                k = 1;
+                            }
+                            if ($("#optBatchFrom").val() === -1) {
+                                k = 1;
+                            }
+                            if ($("#optBatchTo").val() === -1) {
+                                k = 1;
+                            }
+                            if ($("#optBatchFrom").val() <= LtmpBatch[z].BatchTo && $("#optBatchFrom").val() <= LtmpBatch[z].BatchTo) {
+                                k = 1;
+                            }
+                            if ($("#optBatchTo").val() <= LtmpBatch[z].BatchTo && $("#optBatchTo").val() <= LtmpBatch[z].BatchTo) {
+                                k = 1;
+                            }
+                        }
+                        if (k === 1) {
+                            alert("Can not Add Batch The same");
+                        } else {
+                            LtmpBatch.push({
+                                "BatchFrom": $("#optBatchFrom").val(),
+                                "BatchTo": $("#optBatchTo").val(),
+                                "ExpirationDate": $("#dtpExpireDateBatch").val(),
+                                "MfrDate": $("#dtpMfrDateBatch").val(),
+                                "AdmissionDate": $("#dtpAdmissionDateBatch").val(),
+                                "Qty": $("#txtPerBatch").val()
+                            });
+                            //Clear Text
+                            //$("#txtTotalGenBatch").val("");
+                            //$("#txtPerBatch").val("");
+                            //$("#txtTotalQtyGenBatch").val("");
+                            //$("#optBatchFrom").empty();
+                            //$("#optBatchTo").empty();
+                            //$("#dtpMfrDateBatch").val("");
+                            //$("#dtpExpireDateBatch").val("");
+                            //$("#dtpAdmissionDateBatch").val("");
+                            //$("#BatchNumber").val("");
+                        }
+                    }
+                } else {
+                    if ($("#txtTotalQtyGenBatch").val() !== "") {
+                        if ($("#optBatchFrom").val() > $("#optBatchTo").val()) {
+                            alert("Cannot Add BatchTo Smaller than BatchFrom");
+                        } else {
+                            LtmpBatch.push({
+                                "BatchFrom": ($("#optBatchFrom").val()==-1)?"ALL":$("#optBatchFrom").val(),
+                                "BatchTo": ($("#optBatchTo").val()==-1)?"ALL":$("#optBatchTo").val(),
+                                "ExpirationDate": $("#dtpExpireDateBatch").val(),
+                                "MfrDate": $("#dtpMfrDateBatch").val(),
+                                "AdmissionDate": $("#dtpAdmissionDateBatch").val(),
+                                "Qty": $("#txtPerBatch").val()
+                            });
+                            //CLear Data
+                            //$("#txtTotalGenBatch").val("");
+                            //$("#txtPerBatch").val("");
+                            //$("#txtTotalQtyGenBatch").val("");
+                            //$("#optBatchFrom").empty();
+                            //$("#optBatchTo").empty();
+                            //$("#dtpMfrDateBatch").val("");
+                            //$("#dtpExpireDateBatch").val("");
+                            //$("#dtpAdmissionDateBatch").val("");
+                            //$("#BatchNumber").val("");
+                        }
+                    }
+                }
+            }
+            TbtmpBatchFromTo.clear();
+            TbtmpBatchFromTo.rows.add(LtmpBatch);
+            TbtmpBatchFromTo.search('').draw();
         }
+    });
+    function DeleteTmpBatch(LsBatch,BatchFrom,BatchTo){
+        let tmp = LsBatch.filter(function (ele) {
+            return (ele.BatchFrom !== BatchFrom && ele.BatchTo !== BatchTo);
+        });
+        console.log(tmp);
+        LtmpBatch = tmp;
+        TbtmpBatchFromTo.clear();
+        TbtmpBatchFromTo.rows.add(LtmpBatch);
+        TbtmpBatchFromTo.search('').draw();
+    }
+
+    function QtyChange() {
+        var PriceChange=parseFloat($("#Price").val());
+        PriceChange = PriceChange * $("#Qty").val();
+        $("#totalItem").val(PriceChange);
+    }
+    $('#CopyToGoodReturn').click(function() {
+        temporyListPO = [];
+        if ($("#CusID").val() != "") {
+            const cardCode = $("#CusID").val();
+            GetMasterData.getGoodReceiptPO('@Url.Action("GetGoodReturnByCardCode", "GoodsReceiptPO")', cardCode);
+        } else {
+            alert("Please Select Customer, if you don't select can bind data");
+        }
+    });
+
+
+    $("#btnCLoseBatch").click(function() {
+        if ($("#txtIDRowB").val() !== "") {
+            alert("Hello");
+            console.log(parseInt($("#txtIDRowB").val()));
+            console.log("Hello World");
+            console.log(LinesAR[parseInt($("#txtIDRowB").val())].Batches);
+            console.log(LBatch);
+            LinesAR[parseInt($("#txtIDRowB").val())].Batches = LBatch;
+            $("#txtIDRowB").val("");
+            LBatch = [];
+            tbBatch.clear();
+            tbBatch.rows.add(LBatch);
+            tbBatch.search("").draw();
+        }
+    });
+
+    $("#ChooseGoodReceiptPO").click(function() {
+        const index = TbCopyFromGoodReciptPO.row('.selected').index();
+        const data = TbCopyFromGoodReciptPO.row(index).data();
+        window.location.href = '@Url.Action("CreateGoodReturn","GoodReturn")?DocNum='+data.docNum;
     });
 
 </script>

@@ -19,7 +19,10 @@ namespace BarCodeClientService.Controllers
         {
             return View();
         }
-
+        public IActionResult Authorize()
+        {
+            return View();
+        }
         [HttpPost]
         public IActionResult PostUserAsync(SendUser send)
         {

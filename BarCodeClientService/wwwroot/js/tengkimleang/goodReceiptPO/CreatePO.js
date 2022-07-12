@@ -233,6 +233,28 @@ let DataTableInit ={
                 //$('td', row).css('color', '#717171');
             }
         });
+    },
+    TableBarCode() {
+        $('#TbBarCode').DataTable({
+            responsive: true,
+            bLengthChange: false,
+            binfo: false,
+            data: LBarCode,
+            columns: [
+                { data: "barCode", autoWidth: true },
+                { data: "barCodeName", autoWidth: true },
+                { data: "itemCode", autoWidth: true },
+                { data: "itemName", autoWidth: true },
+                { data: "uomCode", autoWidth: true },
+                { data: "price", autoWidth: true },
+                { data: "uomName", autoWidth: true, visible: false },
+                { data: "manageItem", autoWidth: true, visible: false }
+            ],
+            rowCallback: function (row, data, index) {
+                //$('td', row).css('background-color', '#ffffff');
+                //$('td', row).css('color', '#717171');
+            }
+        });
     }
 }
 

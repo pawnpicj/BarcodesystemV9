@@ -191,6 +191,17 @@ namespace BarCodeClientService.Controllers
             }
         }
 
+        [HttpGet]
+        public IActionResult GetBarCodeActionResult(string BarCode)
+        {
+            var a = API.Read<ResponseGetBarCode>(APIRoute.GoodReceiptPO.Controller + APIRoute.GoodReceiptPO.GetBarCodeItem + BarCode);
+            if (a != null)
+            {
+                return Ok(a.Data);
+            }
+            return BadRequest(API.ErrorMessage);
+        }
+
         #endregion
 
     }

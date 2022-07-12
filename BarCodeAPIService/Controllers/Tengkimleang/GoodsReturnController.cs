@@ -17,7 +17,7 @@ namespace BarCodeAPIService.Controllers.Tengkimleang
             this.goodReturnService = goodReturnService;
         }
 
-        [HttpGet(APIRoute.GoodReturn.GetGoodReceiptPO+"{cardCode}")]
+        [HttpGet(APIRoute.GoodReturn.GetGoodReceiptPO+"{cardCode?}")]
         public async Task<IActionResult> GetGoodsReceiptPOAsync(string cardCode)
         {
             var a = await goodReturnService.responseOPDNGetGoodReceipt(cardCode);

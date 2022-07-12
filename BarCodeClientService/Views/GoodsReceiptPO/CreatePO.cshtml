@@ -215,6 +215,12 @@
         </div>
         <div class="col-sm-6">
             <div>
+                Bar Code :
+                <div class="input-group">
+                    <input type="text" class="form-control" id="BarCode" onchange="">
+                </div>
+            </div>
+            <div>
                 VAT Code :
                 <div class="input-group">
                     <select id="TaxCode" class="form-control">
@@ -595,7 +601,7 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-12 col-lg-6">
                             QTY :
-                             <div class="input-group">
+                            <div class="input-group">
                                 <input type="number" class="form-control" id="ItemCodeBatchQty" readonly="readonly">
                             </div>
                         </div>
@@ -733,6 +739,42 @@
         </div>
     </div>
 </div>
+
+@*List BarCode*@
+<div class="modal fade " id="ModalBarCode" data-backdrop="static">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background: #f0eff1; color: #696969;">
+            <div class="modal-header">
+                <b>Batch Numbers - Setup</b>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-12">
+                            <table id="TbBarCode" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
+                                <thead>
+                                <tr>
+                                    <th>BarCode</th>
+                                    <th>BarCodeName</th>
+                                    <th>ItemCode</th>
+                                    <th>ItemName</th>
+                                    <th>UOMCode</th>
+                                    <th>Price</th>
+                                    <th>Uom Name</th>
+                                    <th>Manage Item</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" style="background: #f0eff1; color: #696969;" id="btnCLoseBatch">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script src="~/js/tengkimleang/goodReceiptPO/GetMasterGoodReceiptPO.js"></script>
 <script src="~/js/tengkimleang/Method/MethodDataTable.js"></script>
 <script src="~/js/Array.js"></script>
@@ -807,6 +849,13 @@
         });
     DataMethod.AddClassSelected('TbCopyFromPO', TbCopyFromPO);
     /*End Purchase Order*/
+    /* DataTable List BarCode */
+
+    var LBarCode = [];
+    DataTableInit.TableBarCode();
+    var TbBarCode = $("#TbBarCode").DataTable();
+    DataMethod.AddClassSelected('TbBarCode', TbBarCode);
+    /* End DataTable List BarCode */
 
     /* DataTable List Of Customer */
     var LCus = [];
@@ -1546,5 +1595,58 @@
         const data = TbCopyFromGoodReciptPO.row(index).data();
         window.location.href = '@Url.Action("CreateGoodReturn","GoodReturn")?DocNum='+data.docNum;
     });
+    $("#BarCode").change(function() {
+        var barCode = $("#BarCode").val();
+        $.ajax({
+            url: '@Url.Action("GetBarCodeActionResult", "GoodsReceiptPO")',
+            type: "GET",
+            data: { BarCode: barCode },
+            dataType: "JSON",
+            success: function(data) {
+                //alert("Success");
+                console.log(data);
+                if (data.length !== 0) {
+                    if (data.length > 1) {
+                        $("#ModalBarCode").modal("show");
+                        LBarCode = data;
+                        TbBarCode.clear();
+                        TbBarCode.rows.add(LBarCode);
+                        TbBarCode.search('').draw();
+                    } else {
+                        AddDataToFrom(data);
+                    }
+                } else {
+                    alert("Not Found");
+                }
+            },
+            error: function(erro) {
+                        console.log(erro.responseText);
+            }
+        });
+    });
+    $('#TbBarCode tbody').on('click', 'tr', function () {
+        var data = TbBarCode.row(this).data();
+        AddDataToFrom(data);
 
+    });
+    function AddDataToFrom(data) {
+        $('#ItemCode').val(data.itemCode);
+        $('#ItemDescr').val(data.itemName);
+        $('#Price').val(data.unitPrice);
+        $('#itemManage').val(data.manageItem);
+        $('#totalItem').val(data.unitPrice);
+        $('#CItemCode').css('background-color', '#4CAF50');
+        objectLine = {};
+        if(objectLine!=undefined)
+        {
+            if (data.itemCode !== objectLine.ItemCode) {
+                objectLine = {};
+            }
+        }
+        objectLine.ItemCode = data.itemCode;
+        objectLine.ManageItem = data.manageItem;
+        objectLine.UomName = data.UomName;
+        objectLine.Serial = [];
+        GetMasterData.getUomCode('@Url.Action("GetUomCodeResult", "GoodsReceiptPO")',data.itemCode);
+    }
 </script>

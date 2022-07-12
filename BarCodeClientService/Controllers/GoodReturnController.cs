@@ -16,18 +16,17 @@ namespace BarCodeClientService.Controllers
 
         #region Http
         [HttpGet]
-        public IActionResult GetGoodReturnByCardCode(string cardCode)
+        public IActionResult GetGoodReturnByCardCodeAsResult()
         {
-            var a = API.Read<ResponseOPDNGetGoodReceipt>(APIRoute.GoodReturn.Controller + APIRoute.GoodReturn.GetGoodReceiptPOByDocNum + cardCode);
-            return Ok(a);
-            //if (a.ErrorCode == 0)
-            //{
-            //    return Ok(a.Data);
-            //}
-            //else
-            //{
-            //    return BadRequest(a.ErrorMessage);
-            //}
+            var a = API.Read<ResponseOPDNGetGoodReceipt>(APIRoute.GoodReturn.Controller + APIRoute.GoodReturn.GetGoodReceiptPO + "");
+            if (a.ErrorCode == 0)
+            {
+                return Ok(a.Data);
+            }
+            else
+            {
+                return BadRequest(a.ErrorMessage);
+            }
         }
 
         [HttpGet]

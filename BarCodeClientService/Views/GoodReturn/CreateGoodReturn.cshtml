@@ -194,7 +194,7 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content" style="background: #f0eff1; color: #696969;">
             <div class="modal-header">
-                <b>Purchase Order</b>
+                <b>Good Receipt PO</b>
             </div>
             <div class="modal-body">
                 <div class="table-responsive">
@@ -223,11 +223,11 @@
     </div>
 </div>
 
-
-
+<script src="~/js/tengkimleang/Method/MethodDataTable.js"></script>
 
 <script type="text/javascript">
     GetDocNum('@ViewBag.DocNum');
+    var dataTableMethod=new DataTableMethod(), 
     LinesAR = [];
     $('#TbAR').dataTable({
         bLengthChange: false,
@@ -280,6 +280,9 @@
         rowCallback: function (row, data, index) {
         }
     });
+    var TbCopyFromPO = $('#TbCopyFromPO').DataTable();
+    dataTableMethod.AddSelectClass("TbCopyFromPO",TbCopyFromPO)
+
     getSeries("", '@ViewData["Date"]', '@Url.Action("GetSeries", "GoodsReceiptPO")', '21');
 
     function getSeries(dateOfMonth, currentDate, url, objectCode) {
@@ -318,12 +321,16 @@
 
     $("#CopyFromPO").click(function() {
         $.ajax({
-            url: '@Url.Action("GetGoodReturnByCardCode", "GoodReturn")',
+            url: '@Url.Action("GetGoodReturnByCardCodeAsResult", "GoodReturn")',
             type: "GET",
-            data: { cardCode: "" },
+            //data: { docNum: "" },
             dataType: "JSON",
             success: function(data) {
                 console.log(data);
+                LCopyFromGoodReciptPO = data;
+                TbCopyFromPO.clear();
+                TbCopyFromPO.rows.add(LCopyFromGoodReciptPO);
+                TbCopyFromPO.search('').draw();
             },
             error: function(erro) {
                 console.log(erro.responseText);
@@ -397,15 +404,18 @@
             data: { sendGoodsReturn: object },
             dataType: "JSON",
             success: function(data) {
-                //console.log(new Date(data[0].docDate));
-                console.log(data);
-                if (data !== null) {
-                    alert("Hello");
-                }
+                alert("Success");
             },
             error: function(erro) {
-                console.log(erro.responseText);
+                alert(erro.responseText);
             }
         });
+    });
+    $("#ChoosePO").click(function() {
+        alert("Hello");
+        const index = TbCopyFromPO.row('.selected').index();
+        const data = TbCopyFromPO.row(index).data();
+        GetDocNum(data.docNum);
+        $("#ModalCopyFromPO").modal("hide");
     });
 </script>

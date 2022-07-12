@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace BarCodeLibrary.Respones.SAP
 {
-    public  class ResponseNNM1GetDocumentSeries
+    public class ResponseNNM1GetDocumentSeries
     {
         public int ErrorCode { get; set; }
         public string ErrorMessage { get; set; }
         public List<NNM1> Data { get; set; }
     }
+
     public class NNM1
     {
         public string ObjectCode { get; set; }

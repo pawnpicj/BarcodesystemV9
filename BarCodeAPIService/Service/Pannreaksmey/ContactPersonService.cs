@@ -1,11 +1,12 @@
-﻿using BarCodeLibrary.Respones.SAP;
-using BarCodeAPIService.Connection;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Odbc;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Data;
+using BarCodeAPIService.Connection;
 using BarCodeAPIService.Models;
+using BarCodeLibrary.Respones.SAP;
 
 namespace BarCodeAPIService.Service
 {
@@ -14,17 +15,17 @@ namespace BarCodeAPIService.Service
         public Task<ResponseOCPRGetContactPerson> ResponseOCPRGetContactPerson()
         {
             var oCPR = new List<OCPR>();
-            DataTable dt = new DataTable();
+            var dt = new DataTable();
             try
             {
-                LoginOnlyDatabase login = new LoginOnlyDatabase();
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
                 if (login.lErrCode == 0)
                 {
-                    string Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('OCPR','','','','','')";
-                    login.AD = new System.Data.Odbc.OdbcDataAdapter(Query, login.CN);
+                    var Query = "CALL \"" + ConnectionString.CompanyDB +
+                                "\"._USP_CALLTRANS_Smey ('OCPR','','','','','')";
+                    login.AD = new OdbcDataAdapter(Query, login.CN);
                     login.AD.Fill(dt);
                     foreach (DataRow row in dt.Rows)
-                    {
                         oCPR.Add(new OCPR
                         {
                             CardCode = row[0].ToString(),
@@ -33,9 +34,8 @@ namespace BarCodeAPIService.Service
                             Address = row[3].ToString(),
                             Tel1 = row[4].ToString(),
                             Tel2 = row[5].ToString(),
-                            Cellolar=row[6].ToString()
+                            Cellolar = row[6].ToString()
                         });
-                    }                   
                     return Task.FromResult(new ResponseOCPRGetContactPerson
                     {
                         ErrorCode = 0,
@@ -43,15 +43,13 @@ namespace BarCodeAPIService.Service
                         Data = oCPR.ToList()
                     });
                 }
-                else
+
+                return Task.FromResult(new ResponseOCPRGetContactPerson
                 {
-                    return Task.FromResult(new ResponseOCPRGetContactPerson
-                    {
-                        ErrorCode = login.lErrCode,
-                        ErrorMessage = login.sErrMsg,
-                        Data = null
-                    });
-                }
+                    ErrorCode = login.lErrCode,
+                    ErrorMessage = login.sErrMsg,
+                    Data = null
+                });
             }
 
             catch (Exception ex)

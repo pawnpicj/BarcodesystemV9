@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace BarCodeLibrary.Request.SAP
 {
@@ -46,7 +42,7 @@ namespace BarCodeLibrary.Request.SAP
         public List<SendInventoryCountingSerial> SerialLine { get; set; }
     }
 
-    public class SendInventoryCountingBatch 
+    public class SendInventoryCountingBatch
     {
         public string BatchNumber { get; set; }
         public double Quantity { get; set; }
@@ -57,8 +53,4 @@ namespace BarCodeLibrary.Request.SAP
         public string SerialNumber { get; set; }
         public double Quantity { get; set; }
     }
-
-
-
-
 }

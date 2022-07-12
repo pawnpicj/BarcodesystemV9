@@ -1,11 +1,12 @@
-﻿using BarCodeAPIService.Connection;
-using BarCodeLibrary.Respones.SAP;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Odbc;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Data;
+using BarCodeAPIService.Connection;
 using BarCodeAPIService.Models;
+using BarCodeLibrary.Respones.SAP;
 
 namespace BarCodeAPIService.Service
 {
@@ -14,23 +15,22 @@ namespace BarCodeAPIService.Service
         public Task<ResponseOPRCGetCostCenter> ResponseOPRCGetCostCenter()
         {
             var oPRC = new List<OPRC>();
-            DataTable dt = new DataTable();
+            var dt = new DataTable();
             try
             {
-                LoginOnlyDatabase login = new LoginOnlyDatabase();
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
                 if (login.lErrCode == 0)
                 {
-                    string Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('OPRC','','','','','')";
-                    login.AD = new System.Data.Odbc.OdbcDataAdapter(Query, login.CN);
+                    var Query = "CALL \"" + ConnectionString.CompanyDB +
+                                "\"._USP_CALLTRANS_Smey ('OPRC','','','','','')";
+                    login.AD = new OdbcDataAdapter(Query, login.CN);
                     login.AD.Fill(dt);
                     foreach (DataRow row in dt.Rows)
-                    {
                         oPRC.Add(new OPRC
                         {
-                            PrcCode=row[0].ToString(),
-                            PrcName=row[1].ToString()
+                            PrcCode = row[0].ToString(),
+                            PrcName = row[1].ToString()
                         });
-                    }
                     return Task.FromResult(new ResponseOPRCGetCostCenter
                     {
                         ErrorCode = 0,
@@ -38,20 +38,21 @@ namespace BarCodeAPIService.Service
                         Data = oPRC.ToList()
                     });
                 }
-                else {
-                    return Task.FromResult(new ResponseOPRCGetCostCenter { 
-                        ErrorCode=login.lErrCode,
-                        ErrorMessage=login.sErrMsg,
-                        Data=null
-                    });
-                }                
+
+                return Task.FromResult(new ResponseOPRCGetCostCenter
+                {
+                    ErrorCode = login.lErrCode,
+                    ErrorMessage = login.sErrMsg,
+                    Data = null
+                });
             }
             catch (Exception ex)
             {
-                return Task.FromResult(new ResponseOPRCGetCostCenter { 
-                    ErrorCode=ex.HResult,
-                    ErrorMessage=ex.Message,
-                    Data=null
+                return Task.FromResult(new ResponseOPRCGetCostCenter
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMessage = ex.Message,
+                    Data = null
                 });
             }
         }

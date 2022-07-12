@@ -181,23 +181,23 @@ namespace BarCodeAPIService.Service
         }
 
         public Task<ResponseGetORDRLine> responseGetORDRLine(int DocEntry)
-        {            
-                var getRDRLine = new List<ORDRLine>();
-                SAPbobsCOM.Company oCompany;
-                try
+        {
+            var getRDRLine = new List<ORDRLine>();
+            SAPbobsCOM.Company oCompany;
+            try
+            {
+                Login login = new();
+                if (login.LErrCode == 0)
                 {
-                    Login login = new();
-                    if (login.LErrCode == 0)
+                    oCompany = login.Company;
+                    SAPbobsCOM.Recordset? oRS = null;
+                    SAPbobsCOM.Recordset? oRSLine = null;
+                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_SOUNTITYA ('RDR1','{DocEntry}','','','','')"; ;
+                    oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+                    oRSLine = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+                    oRS.DoQuery(sqlStr);
+                    while (!oRS.EoF)
                     {
-                        oCompany = login.Company;
-                        SAPbobsCOM.Recordset? oRS = null;
-                        SAPbobsCOM.Recordset? oRSLine = null;
-                        string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_SOUNTITYA ('RDR1','{DocEntry}','','','','')"; ;
-                        oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-                        oRSLine = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-                        oRS.DoQuery(sqlStr);
-                        while (!oRS.EoF)
-                        {
                         getRDRLine.Add(new ORDRLine
                         {
                             ItemCode = oRS.Fields.Item(0).Value.ToString(),
@@ -213,34 +213,34 @@ namespace BarCodeAPIService.Service
                             DocEntry = Convert.ToInt32(oRS.Fields.Item(10).Value.ToString()),
                             DocNum = oRS.Fields.Item(11).Value.ToString()
                         });
-                            oRS.MoveNext();
-                        }
-                        return Task.FromResult(new ResponseGetORDRLine
-                        {
-                            ErrorCode = 0,
-                            ErrorMsg = "",
-                            Data = getRDRLine
-                        });
+                        oRS.MoveNext();
                     }
-                    else
+                    return Task.FromResult(new ResponseGetORDRLine
                     {
-                        return Task.FromResult(new ResponseGetORDRLine
-                        {
-                            ErrorCode = login.LErrCode,
-                            ErrorMsg = login.SErrMsg,
-                            Data = null
-                        });
-                    }
+                        ErrorCode = 0,
+                        ErrorMsg = "",
+                        Data = getRDRLine
+                    });
                 }
-                catch (Exception ex)
+                else
                 {
                     return Task.FromResult(new ResponseGetORDRLine
                     {
-                        ErrorCode = ex.HResult,
-                        ErrorMsg = ex.Message,
+                        ErrorCode = login.LErrCode,
+                        ErrorMsg = login.SErrMsg,
                         Data = null
                     });
                 }
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseGetORDRLine
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMsg = ex.Message,
+                    Data = null
+                });
+            }
 
         }
     }

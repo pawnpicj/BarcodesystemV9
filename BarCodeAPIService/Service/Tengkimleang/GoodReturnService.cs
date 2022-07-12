@@ -1,12 +1,18 @@
-﻿using BarCodeAPIService.Connection;
-using BarCodeAPIService.Models;
-using BarCodeLibrary.Request.SAP;
-using BarCodeLibrary.Respones.SAP;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Odbc;
 using System.Linq;
 using System.Threading.Tasks;
+using BarCodeAPIService.Connection;
+using BarCodeAPIService.Models;
+using BarCodeLibrary.Contract.RouteProcedure;
+using BarCodeLibrary.Request.SAP;
+using BarCodeLibrary.Respones.SAP;
+using SAPbobsCOM;
+using SAPbouiCOM;
+using Company = SAPbobsCOM.Company;
+using DataTable = System.Data.DataTable;
 
 namespace BarCodeAPIService.Service
 {
@@ -15,41 +21,43 @@ namespace BarCodeAPIService.Service
         private int ErrCode;
         private string ErrMsg;
 
-        public Task<ResponseOPDNGetGoodReceipt> responseOPDNGetGoodReceipt()
+        public Task<ResponseOPDNGetGoodReceipt> responseOPDNGetGoodReceipt(string cardCode)
         {
             var oPDNs = new List<OPDN>();
             var pDN1s = new List<PDN1>();
-            DataTable dt = new DataTable();
-            DataTable dtLine = new DataTable();
+            var dt = new DataTable();
+            var dtLine = new DataTable();
             try
             {
-                LoginOnlyDatabase login = new LoginOnlyDatabase();
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
                 if (login.lErrCode == 0)
                 {
-                    string query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_TENGKIMLEANG('OPDN','','','','','')";
-                    login.AD = new System.Data.Odbc.OdbcDataAdapter(query, login.CN);
+                    var query = $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetGoodRecieptPO}','{((cardCode == null) ? "" : cardCode)}','','','','')";
+                    login.AD = new OdbcDataAdapter(query, login.CN);
                     login.AD.Fill(dt);
                     foreach (DataRow row in dt.Rows)
                     {
                         dtLine = new DataTable();
-                        string query1 = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_TENGKIMLEANG('PDN1','"+row["DocEntry"].ToString()+"','','','','')";
-                        login.AD = new System.Data.Odbc.OdbcDataAdapter(query1, login.CN);
+                        var query1 = "CALL \"" + ConnectionString.CompanyDB +
+                                     "\"._USP_CALLTRANS_TENGKIMLEANG('PDN1','" + row["DocEntry"] + "','','','','')";
+                        login.AD = new OdbcDataAdapter(query1, login.CN);
                         login.AD.Fill(dtLine);
                         pDN1s = new List<PDN1>();
                         foreach (DataRow rowLine in dtLine.Rows)
-                        {
-                            pDN1s.Add(new PDN1  
+                            pDN1s.Add(new PDN1
                             {
-                                Description= rowLine["Dscription"].ToString(),
-                                DiscPrcnt=Convert.ToDouble(rowLine["DiscPrcnt"].ToString()),
-                                ItemCode=rowLine["ItemCode"].ToString(),
-                                LineTotal=Convert.ToDouble(rowLine["LineTotal"].ToString()),
-                                Price=Convert.ToDouble(rowLine["Price"].ToString()),
-                                Quatity=Convert.ToDouble(rowLine["Quantity"].ToString()),
-                                VatGroup= rowLine["VatGroup"].ToString(),
-                                WhsCode= rowLine["WhsCode"].ToString()
+                                Description = rowLine["Dscription"].ToString(),
+                                DiscPrcnt = Convert.ToDouble(rowLine["DiscPrcnt"].ToString()),
+                                ItemCode = rowLine["ItemCode"].ToString(),
+                                LineTotal = Convert.ToDouble(rowLine["LineTotal"].ToString()),
+                                Price = Convert.ToDouble(rowLine["Price"].ToString()),
+                                Quatity = Convert.ToDouble(rowLine["Quantity"].ToString()),
+                                VatGroup = rowLine["VatGroup"].ToString(),
+                                WhsCode = rowLine["WhsCode"].ToString(),
+                                LineNum = Convert.ToInt32(rowLine["LineNum"].ToString()),
+                                BaseEntry = Convert.ToInt32(row["DocEntry"].ToString()),
+                                ManageItem = rowLine["ManageItem"].ToString(),
                             });
-                        }
                         oPDNs.Add(new OPDN
                         {
                             CardCode = row["CardCode"].ToString(),
@@ -59,24 +67,28 @@ namespace BarCodeAPIService.Service
                             DocDate = Convert.ToDateTime(row["DocDate"].ToString()),
                             DocDueDate = Convert.ToDateTime(row["DocDueDate"].ToString()),
                             DocNum = Convert.ToInt32(row["DocNum"].ToString()),
+                            SlpCode = row["SlpCode"].ToString(),
+                            BPCurrency = row["BPCurrency"].ToString(),
                             //DocStatus = row["DocStatus"].ToString(),
                             //DocTotal = Convert.ToDouble(row["DocTotal"].ToString()),
-                            Line = pDN1s.ToList(),
-                            //NumAtCard = row["NumAtCard"].ToString(),
+                            NumAtCard = row["NumAtCard"].ToString(),
+                            Remark = row["Remark"].ToString(),
+                            DocEntry = Convert.ToInt32(row["DocEntry"].ToString()),
                             //TaxDate = Convert.ToDateTime("2022-01-01")
+                            Line = pDN1s.ToList(),
                         });
                     }
+
                     ErrCode = login.lErrCode;
                     ErrMsg = login.sErrMsg;
                 }
                 else
                 {
-
                     ErrCode = login.lErrCode;
                     ErrMsg = login.sErrMsg;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return Task.FromResult(new ResponseOPDNGetGoodReceipt
                 {
@@ -85,11 +97,98 @@ namespace BarCodeAPIService.Service
                     Data = null
                 });
             }
+
             return Task.FromResult(new ResponseOPDNGetGoodReceipt
             {
-                Data=oPDNs,
-                ErrorCode=0,
-                ErrorMessage=""
+                Data = oPDNs,
+                ErrorCode = 0,
+                ErrorMessage = ""
+            });
+        }
+
+        public Task<ResponseOPDNGetGoodReceipt> responseOPDNGetGoodReceiptByDocNum(string DocNum)
+        {
+            var oPDNs = new List<OPDN>();
+            var pDN1s = new List<PDN1>();
+            var dt = new DataTable();
+            var dtLine = new DataTable();
+            try
+            {
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
+                if (login.lErrCode == 0)
+                {
+                    var query = $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetGoodRecieptPO}','','{DocNum}','','','')";
+                    login.AD = new OdbcDataAdapter(query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        dtLine = new DataTable();
+                        var query1 = "CALL \"" + ConnectionString.CompanyDB +
+                                     "\"._USP_CALLTRANS_TENGKIMLEANG('PDN1','" + row["DocEntry"] + "','','','','')";
+                        login.AD = new OdbcDataAdapter(query1, login.CN);
+                        login.AD.Fill(dtLine);
+                        pDN1s = new List<PDN1>();
+                        foreach (DataRow rowLine in dtLine.Rows)
+                            pDN1s.Add(new PDN1
+                            {
+                                Description = rowLine["Dscription"].ToString(),
+                                DiscPrcnt = Convert.ToDouble(rowLine["DiscPrcnt"].ToString()),
+                                ItemCode = rowLine["ItemCode"].ToString(),
+                                LineTotal = Convert.ToDouble(rowLine["LineTotal"].ToString()),
+                                Price = Convert.ToDouble(rowLine["Price"].ToString()),
+                                Quatity = Convert.ToDouble(rowLine["Quantity"].ToString()),
+                                VatGroup = rowLine["VatGroup"].ToString(),
+                                WhsCode = rowLine["WhsCode"].ToString(),
+                                LineNum = Convert.ToInt32(rowLine["LineNum"].ToString()),
+                                BaseEntry = Convert.ToInt32(row["DocEntry"].ToString()),
+                                ManageItem = rowLine["ManageItem"].ToString(),
+                            });
+                        oPDNs.Add(new OPDN
+                        {
+                            CardCode = row["CardCode"].ToString(),
+                            CardName = row["CardName"].ToString(),
+                            CntctCode = Convert.ToInt32(row["CntctCode"].ToString()),
+                            DiscPrcnt = Convert.ToDouble(row["DiscPrcnt"].ToString()),
+                            DocDate = Convert.ToDateTime(row["DocDate"].ToString()),
+                            DocDueDate = Convert.ToDateTime(row["DocDueDate"].ToString()),
+                            DocNum = Convert.ToInt32(row["DocNum"].ToString()),
+                            SlpCode = row["SlpCode"].ToString(),
+                            BPCurrency = row["BPCurrency"].ToString(),
+                            SlpName = row["SlpName"].ToString(),
+                            //DocStatus = row["DocStatus"].ToString(),
+                            //DocTotal = Convert.ToDouble(row["DocTotal"].ToString()),
+                            NumAtCard = row["NumAtCard"].ToString(),
+                            Remark = row["Remark"].ToString(),
+                            DocEntry = Convert.ToInt32(row["DocEntry"].ToString()),
+                            //TaxDate = Convert.ToDateTime("2022-01-01")
+                            Line = pDN1s.ToList(),
+                        });
+                    }
+
+                    ErrCode = login.lErrCode;
+                    ErrMsg = login.sErrMsg;
+                }
+                else
+                {
+                    ErrCode = login.lErrCode;
+                    ErrMsg = login.sErrMsg;
+                }
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseOPDNGetGoodReceipt
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMessage = ex.Message,
+                    Data = null
+                });
+            }
+
+            return Task.FromResult(new ResponseOPDNGetGoodReceipt
+            {
+                Data = oPDNs,
+                ErrorCode = 0,
+                ErrorMessage = ""
             });
         }
 
@@ -97,26 +196,50 @@ namespace BarCodeAPIService.Service
         {
             try
             {
-                SAPbobsCOM.Documents oGoodReceiptPO;
-                SAPbobsCOM.Company oCompany;
-                int Retval = 0;
+                Documents oGoodReturnPurchase;
+                Company oCompany;
+                var Retval = 0;
                 Login login = new();
                 if (login.LErrCode == 0)
                 {
                     oCompany = login.Company;
-                    oGoodReceiptPO = (SAPbobsCOM.Documents)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oPurchaseReturns);
-                    oGoodReceiptPO.CardCode = sendGoodReturn.CardCode;
-                    oGoodReceiptPO.DocDate = sendGoodReturn.DocDate;
-                    foreach (SendGoodsReturnLine l in sendGoodReturn.Lines)
+                    oGoodReturnPurchase = (Documents)oCompany.GetBusinessObject(BoObjectTypes.oPurchaseReturns);
+                    oGoodReturnPurchase.CardCode = sendGoodReturn.CardCode;
+                    oGoodReturnPurchase.DocDate = sendGoodReturn.DocDate;
+                    oGoodReturnPurchase.DocDueDate=sendGoodReturn.DocDueDate;
+                    oGoodReturnPurchase.NumAtCard=sendGoodReturn.NumAtCard;
+                    oGoodReturnPurchase.Comments = sendGoodReturn.Remark;
+                    oGoodReturnPurchase.Series=sendGoodReturn.Series;
+                    oGoodReturnPurchase.DocCurrency = sendGoodReturn.BPCurrency;
+                    foreach (var l in sendGoodReturn.Lines)
                     {
-                        oGoodReceiptPO.Lines.ItemCode = l.ItemCode;
-                        oGoodReceiptPO.Lines.Quantity = l.Quantity;
-                        oGoodReceiptPO.Lines.UnitPrice = l.UnitPrice;
-                        oGoodReceiptPO.Lines.WarehouseCode = l.WarehouseCode;
-                        oGoodReceiptPO.Lines.UoMEntry = l.UomCode;
-                        oGoodReceiptPO.Lines.Add();
+                        oGoodReturnPurchase.Lines.ItemCode = l.ItemCode;
+                        oGoodReturnPurchase.Lines.Quantity = l.Quantity;
+                        oGoodReturnPurchase.Lines.UnitPrice = l.UnitPrice;
+                        oGoodReturnPurchase.Lines.WarehouseCode = l.WarehouseCode;
+                        oGoodReturnPurchase.Lines.TaxCode=l.TaxCode;
+                        oGoodReturnPurchase.Lines.BaseEntry = l.BaseEntry;
+                        oGoodReturnPurchase.Lines.BaseLine = l.LineNum;
+                        oGoodReturnPurchase.Lines.BaseType = 20;
+                        if (l.ManageItem == "S")
+                        {
+                            foreach (DataRow rowSerial in GetBatchSerialNumber("GetSerialNumber",l.BaseEntry.ToString(),l.LineNum.ToString(),l.ItemCode).Rows)
+                            {
+                                oGoodReturnPurchase.Lines.SerialNumbers.Quantity = Convert.ToDouble(rowSerial["Quantity"].ToString());
+                                oGoodReturnPurchase.Lines.SerialNumbers.InternalSerialNumber = rowSerial["DistNumber"].ToString();
+                                oGoodReturnPurchase.Lines.SerialNumbers.Add();
+                            }
+                        }
+                        else if (l.ManageItem == "B")
+                            foreach (DataRow rowBatch in GetBatchSerialNumber("GetBatchNumber", l.BaseEntry.ToString(), l.LineNum.ToString(), l.ItemCode).Rows)
+                            {
+                                oGoodReturnPurchase.Lines.BatchNumbers.Quantity = Convert.ToDouble(rowBatch["Quantity"].ToString());
+                                oGoodReturnPurchase.Lines.BatchNumbers.BatchNumber = rowBatch["BatchNum"].ToString();
+                                oGoodReturnPurchase.Lines.BatchNumbers.Add();
+                            }
+                        oGoodReturnPurchase.Lines.Add();
                     }
-                    Retval = oGoodReceiptPO.Add();
+                    Retval = oGoodReturnPurchase.Add();
                     if (Retval != 0)
                     {
                         oCompany.GetLastError(out ErrCode, out ErrMsg);
@@ -127,25 +250,20 @@ namespace BarCodeAPIService.Service
                             DocEntry = null
                         });
                     }
-                    else
-                    {
-                        return Task.FromResult(new ResponseGoodReturn
-                        {
-                            ErrorCode = 0,
-                            ErrorMsg = "",
-                            DocEntry = oCompany.GetNewObjectKey(),
-                        });
-                    }
 
-                }
-                else
-                {
                     return Task.FromResult(new ResponseGoodReturn
                     {
-                        ErrorCode = login.LErrCode,
-                        ErrorMsg = login.SErrMsg
+                        ErrorCode = 0,
+                        ErrorMsg = "",
+                        DocEntry = oCompany.GetNewObjectKey()
                     });
                 }
+
+                return Task.FromResult(new ResponseGoodReturn
+                {
+                    ErrorCode = login.LErrCode,
+                    ErrorMsg = login.SErrMsg
+                });
             }
             catch (Exception ex)
             {
@@ -155,6 +273,24 @@ namespace BarCodeAPIService.Service
                     ErrorMsg = ex.Message
                 });
             }
+        }
+
+        DataTable GetBatchSerialNumber(string type,string BaseEntry,string LineNum,string ItemCode)
+        {
+            var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
+            if (login.lErrCode == 0)
+            {
+                DataTable dtBatchSerial = new DataTable();
+                var query1 = "CALL \"" + ConnectionString.CompanyDB +
+                             "\"._USP_CALLTRANS_TENGKIMLEANG('" + type + "','" + BaseEntry + "','" + LineNum + "','" + ItemCode + "','','')";
+                login.AD = new OdbcDataAdapter(query1, login.CN);
+                login.AD.Fill(dtBatchSerial);
+                return dtBatchSerial;
+            }
+
+            return null;
+
+
         }
     }
 }

@@ -1,32 +1,28 @@
-﻿using BarCodeAPIService.Connection;
-using BarCodeLibrary.Respones.SAP;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Data.SqlClient;
-using System.Data;
-using BarCodeAPIService.Models;
+using BarCodeAPIService.Connection;
+using BarCodeLibrary.Respones.SAP;
+using SAPbobsCOM;
 
 namespace BarCodeAPIService.Service
 {
-   
     public class BinCodeService : IBinCodeService
     {
-
         public Task<ResponseOBINGetBinCode> ResponseOBINGetBinCode()
         {
             var oBIN = new List<OBIN>();
-            SAPbobsCOM.Company oCompany;
+            Company oCompany;
             try
             {
                 Login login = new();
                 if (login.LErrCode == 0)
                 {
                     oCompany = login.Company;
-                    SAPbobsCOM.Recordset? oRS = null;
-                    string Query = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_Smey('OBIN','','','','','')";
-                    oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+                    Recordset? oRS = null;
+                    var Query = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_Smey('OBIN','','','','','')";
+                    oRS = (Recordset)oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
                     oRS.DoQuery(Query);
                     while (!oRS.EoF)
                     {
@@ -40,6 +36,7 @@ namespace BarCodeAPIService.Service
                         });
                         oRS.MoveNext();
                     }
+
                     return Task.FromResult(new ResponseOBINGetBinCode
                     {
                         ErrorCode = 0,
@@ -47,15 +44,13 @@ namespace BarCodeAPIService.Service
                         Data = oBIN.ToList()
                     });
                 }
-                else
+
+                return Task.FromResult(new ResponseOBINGetBinCode
                 {
-                    return Task.FromResult(new ResponseOBINGetBinCode
-                    {
-                        ErrorCode = login.LErrCode,
-                        ErrorMessage = login.SErrMsg,
-                        Data = null
-                    });
-                }
+                    ErrorCode = login.LErrCode,
+                    ErrorMessage = login.SErrMsg,
+                    Data = null
+                });
             }
             catch (Exception ex)
             {

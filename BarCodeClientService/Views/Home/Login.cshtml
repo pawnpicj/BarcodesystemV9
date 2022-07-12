@@ -4,104 +4,128 @@
 }
 <html>
 <head>
-   
-    <link href="~/css/css.css" rel="stylesheet" />
+
+    <link href="~/css/css.css" rel="stylesheet"/>
 </head>
 <body>
-    <div id="login">
-        <div class="floater login_floater"></div>
-        <div class="clear center_box login_box_border">
-            <div class="login_box">
-                <div class="login_box_header">
-                    <div class="login_box_header_logo"></div>
-                    <div class="login_box_header_title"></div>
-                    <div class="clear"></div>
-                </div>
-                <div class="login_split"></div>
-                <div class="login_box_body">
-                    <div class="login_pic"></div>
-                    <div class="login_form">
-                        <div class="login_table">
-                            <div style="height: 20px"></div>
-                            <table class="domain_layer" style="display: none">
-                                <tr>
-                                    <td width="30%">Domain User</td>
-                                    <td width="70%"><input type="text" id="domain_user" value="" /></td>
-                                </tr>
-                                <tr>
-                                    <td>Password</td>
-                                    <td><input type="password" id="domain_password" /></td>
-                                </tr>
-                            </table>
-
-                            <table class="sbo_layer">
-                                <tr>
-                                    <td width="30%">Server</td>
-                                    <td width="70%"><select id="sbo_dbserver"><option>SAPB1</option></select></td>
-                                </tr>
-                                <tr>
-                                    <td>Company</td>
-                                    <td>
-
-                                        <input value="Refresh" id="refresh_company" type="button" style="width:66px" />
-                                        <select id="databaseSAP" style="width:63%">
-                                            
-                                        </select>
-                                        <input type="text" id="sbo_custom_company" style="display:none" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>User ID</td>
-                                    <td><input type="text" id="Username" /></td>
-                                </tr>
-                                <tr>
-                                    <td>Password</td>
-                                    <td><input type="password" id="Password" /></td>
-                                </tr>
-
-                            </table>
-                            <div style="height: 20px;margin-top: 10px">
-                                <input style="float:left" id="logon_by_domain" type="CHECKBOX" />
-                                <div style="float: left;margin-top:5px">Log on with Windows Domain User</div>
-                                <div style="float: right; width: 70px;">
-                                    <input id="logon_sbo_btn" type="button" value="Log On" />
-                                </div>
-                                <div class="clear"></div>
-                            </div>
-                        </div>
+<div id="login">
+    <div class="floater login_floater"></div>
+    <div class="clear center_box login_box_border">
+        <div class="login_box">
+            <div class="login_box_header">
+                <div class="login_box_header_logo"></div>
+                <div class="login_box_header_title"></div>
+                <div class="clear"></div>
+            </div>
+            <div class="login_split"></div>
+            <div class="login_box_body">
+                <div class="login_pic"></div>
+                <div class="login_form">
+                    <div class="login_table">
+                        <div style="height: 20px"></div>
                         <div>
-                            <div class="login_copyright" id="login_copyright"></div>
-                            <div class="sap_logo"></div>
+                            <br/><br/>
+                        </div>
+                        <table class="domain_layer" style="display: none">
+                            <tr>
+                                <td width="30%">Domain User</td>
+                                <td width="70%">
+                                    <input type="text" id="domain_user" value=""/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Password</td>
+                                <td>
+                                    <input type="password" id="domain_password"/>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <table class="sbo_layer">
+                            @*<tr>
+                                <td width="30%">Server</td>
+                                <td width="70%"><select id="sbo_dbserver"><option>SAPB1</option></select></td>
+                            </tr>*@
+                            @*<tr>
+                                <td>Company</td>
+                                <td>
+
+                                    <input value="Refresh" id="refresh_company" type="button" style="width:66px" />
+                                    <select id="databaseSAP" style="width:63%">
+
+                                    </select>
+                                    <input type="text" id="sbo_custom_company" style="display:none" />
+                                </td>
+                            </tr>*@
+                            <tr >
+                                <td>User ID</td>
+                                <td>
+                                    <input type="text" id="Username"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Password</td>
+                                <td>
+                                    <input type="password" id="Password"/>
+                                </td>
+                            </tr>
+
+                        </table>
+
+                        <div style="height: 10px; margin-left: 70px">
+                            <input style="float: left" id="logon_by_domain" type="CHECKBOX" onclick="ShowPassword()"/>
+                            <div style="float: left; margin-top: 5px">Show password</div>
+                        </div>
+                        <div style="height: 20px; margin-top: 20px">
+                            <div style="float: right; width: 70px;">
+                                <input id="logon_sbo_btn" type="button" value="Log On"/>
+                            </div>
                             <div class="clear"></div>
                         </div>
                     </div>
-                    <div class="clear"></div>
+                    <div>
+                        <div class="login_copyright" id="login_copyright"></div>
+                        <div class="sap_logo"></div>
+                        <div class="clear"></div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="overlay" style="display: none"></div>
-    <div class="dialog_wrap" id="messagebox" style="display: none">
-        <div class="floater"></div>
-        <div class="clear center_box dialog">
-            <div class="dialog_title">
-                <div class="dialog_title_text">System Information</div>
-                <div class="dialog_title_close"></div>
                 <div class="clear"></div>
             </div>
-            <div class="dialog_content" style="padding: 15px;"></div>
-            <div class="dialog_footer">
-                <div style="float: right;">
-                    <input type="button" value="OK" />
-                </div>
+        </div>
+    </div>
+</div>
+
+<div class="overlay" style="display: none"></div>
+<div class="dialog_wrap" id="messagebox" style="display: none">
+    <div class="floater"></div>
+    <div class="clear center_box dialog">
+        <div class="dialog_title">
+            <div class="dialog_title_text">System Information</div>
+            <div class="dialog_title_close"></div>
+            <div class="clear"></div>
+        </div>
+        <div class="dialog_content" style="padding: 15px;"></div>
+        <div class="dialog_footer">
+            <div style="float: right;">
+                <input type="button" value="OK"/>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="tooltip" id="tooltip" style="display: none"></div>
-    <div class="waiting_overlay" style="display: none">
-        <div class="floater"></div>
-        <div class="clear center_box waiting_log"></div>
-    </div>
+<div class="tooltip" id="tooltip" style="display: none"></div>
+<div class="waiting_overlay" style="display: none">
+    <div class="floater"></div>
+    <div class="clear center_box waiting_log"></div>
+</div>
+<script>
+    function ShowPassword() {
+        var x = document.getElementById('Password');
+        if (x.type === "password") {
+            x.type = "text";
+        } else {
+            x.type = "password";
+        }
+    }
+</script>
 </body>

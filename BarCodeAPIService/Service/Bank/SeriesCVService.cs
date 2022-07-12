@@ -1,10 +1,10 @@
-﻿using BarCodeAPIService.Connection;
-using BarCodeLibrary.Respones.SAP;
-using BarCodeLibrary.Respones.SAP.Bank;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BarCodeAPIService.Connection;
+using BarCodeLibrary.Respones.SAP.Bank;
+using SAPbobsCOM;
 
 namespace BarCodeAPIService.Service.Bank
 {
@@ -13,16 +13,17 @@ namespace BarCodeAPIService.Service.Bank
         public Task<ResponseNNM1_CV> responseNNM1_CV()
         {
             var oSCV = new List<NNM1CV>();
-            SAPbobsCOM.Company oCompany;
+            Company oCompany;
             try
             {
                 Login login = new();
                 if (login.LErrCode == 0)
                 {
                     oCompany = login.Company;
-                    SAPbobsCOM.Recordset oRS = null;
-                    oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-                    string Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_BANK ('NNM1CV','','','','','')";
+                    Recordset oRS = null;
+                    oRS = (Recordset)oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
+                    var Query = "CALL \"" + ConnectionString.CompanyDB +
+                                "\"._USP_CALLTRANS_BANK ('NNM1CV','','','','','')";
                     oRS.DoQuery(Query);
                     while (!oRS.EoF)
                     {
@@ -36,6 +37,7 @@ namespace BarCodeAPIService.Service.Bank
                         });
                         oRS.MoveNext();
                     }
+
                     return Task.FromResult(new ResponseNNM1_CV
                     {
                         ErrorCode = 0,
@@ -43,15 +45,13 @@ namespace BarCodeAPIService.Service.Bank
                         Data = oSCV.ToList()
                     });
                 }
-                else
+
+                return Task.FromResult(new ResponseNNM1_CV
                 {
-                    return Task.FromResult(new ResponseNNM1_CV
-                    {
-                        ErrorCode = login.LErrCode,
-                        ErrorMessage = login.SErrMsg,
-                        Data = null
-                    });
-                }
+                    ErrorCode = login.LErrCode,
+                    ErrorMessage = login.SErrMsg,
+                    Data = null
+                });
             }
 
             catch (Exception ex)
@@ -68,16 +68,17 @@ namespace BarCodeAPIService.Service.Bank
         public Task<ResponseGetSeriesCode> responseGetSeriesCode(string yymm, string typeSeries)
         {
             var oLine = new List<GetSeriesCode>();
-            SAPbobsCOM.Company oCompany;
+            Company oCompany;
             try
             {
                 Login login = new();
                 if (login.LErrCode == 0)
                 {
                     oCompany = login.Company;
-                    SAPbobsCOM.Recordset? oRS = null;
-                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('StrSeries','{yymm}','{typeSeries}','','','')";
-                    oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+                    Recordset? oRS = null;
+                    var sqlStr =
+                        $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('StrSeries','{yymm}','{typeSeries}','','','')";
+                    oRS = (Recordset)oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
                     oRS.DoQuery(sqlStr);
                     while (!oRS.EoF)
                     {
@@ -87,10 +88,11 @@ namespace BarCodeAPIService.Service.Bank
                             Series = Convert.ToInt32(oRS.Fields.Item(1).Value.ToString()),
                             SeriesName = oRS.Fields.Item(2).Value.ToString(),
                             Indicator = oRS.Fields.Item(3).Value.ToString(),
-                            BeginStr = oRS.Fields.Item(4).Value.ToString(),                            
+                            BeginStr = oRS.Fields.Item(4).Value.ToString()
                         });
                         oRS.MoveNext();
                     }
+
                     return Task.FromResult(new ResponseGetSeriesCode
                     {
                         ErrorCode = 0,
@@ -98,15 +100,13 @@ namespace BarCodeAPIService.Service.Bank
                         Data = oLine
                     });
                 }
-                else
+
+                return Task.FromResult(new ResponseGetSeriesCode
                 {
-                    return Task.FromResult(new ResponseGetSeriesCode
-                    {
-                        ErrorCode = login.LErrCode,
-                        ErrorMessage = login.SErrMsg,
-                        Data = null
-                    });
-                }
+                    ErrorCode = login.LErrCode,
+                    ErrorMessage = login.SErrMsg,
+                    Data = null
+                });
             }
             catch (Exception ex)
             {
@@ -118,7 +118,5 @@ namespace BarCodeAPIService.Service.Bank
                 });
             }
         }
-
     }
-
 }

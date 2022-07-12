@@ -24,7 +24,7 @@ namespace BarCodeAPIService.Service
                 Login login = new();
                 if (login.LErrCode == 0)
                 {
-                    
+
                     oCompany = login.Company;
 
                     oStockTransfer = (SAPbobsCOM.StockTransfer)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oStockTransfer);
@@ -102,7 +102,7 @@ namespace BarCodeAPIService.Service
                             else
                             {
                                 //break;
-                                
+
                             }
                         }
 
@@ -134,7 +134,7 @@ namespace BarCodeAPIService.Service
                         //    }
 
 
-                        
+
                     }
 
                     Retval = oStockTransfer.Add();

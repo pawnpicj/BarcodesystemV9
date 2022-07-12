@@ -1,25 +1,20 @@
+using System;
+using System.Text;
 using BarCodeAPIService.Connection;
 using BarCodeAPIService.Service;
+using BarCodeAPIService.Service.Bank;
+using BarCodeAPIService.Service.Pannreaksmey;
+using BarCodeAPIService.Service.Tengkimleang;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Serilog;
-using BarCodeAPIService.Service.Tengkimleang;
-using BarCodeAPIService.Service.Pannreaksmey;
-using BarCodeAPIService.Service.Bank;
 
 namespace BarCodeAPIService
 {
@@ -29,18 +24,17 @@ namespace BarCodeAPIService
         {
             Configuration = configuration;
         }
+
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
-            services.Configure<ApiBehaviorOptions>(options =>
-            {
-                options.SuppressModelStateInvalidFilter = true;
-            });
+            services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
+
             #region AddScope
+
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IGoodsReceiptPOService, GoodsReceiptPOService>();
             services.AddScoped<IGoodReturnService, GoodReturnService>();
@@ -70,12 +64,16 @@ namespace BarCodeAPIService
             services.AddScoped<IGetBinLocationService, GetBinLocationService>();
             services.AddScoped<IDeliveryService, DeliveryService>();
             services.AddScoped<IGenerateBinCodeServices, GenerateBinCodeService>();
+
             #endregion
+
             #region ConfigureJWTToken
+
             var tokenvalidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("Secret").Value.ToString())),
+                IssuerSigningKey =
+                    new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("Secret").Value)),
                 ValidateIssuer = false,
                 ValidateAudience = false,
                 RequireExpirationTime = true,
@@ -84,18 +82,21 @@ namespace BarCodeAPIService
             };
             services.AddSingleton(tokenvalidationParameters);
             services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(x =>
-            {
-                x.SaveToken = true;
-                x.TokenValidationParameters = tokenvalidationParameters;
-            });
+                {
+                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(x =>
+                {
+                    x.SaveToken = true;
+                    x.TokenValidationParameters = tokenvalidationParameters;
+                });
+
             #endregion
+
             #region Swagger
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
@@ -110,20 +111,22 @@ namespace BarCodeAPIService
                     Name = "Authorization",
                     Type = SecuritySchemeType.ApiKey
                 });
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
-                     new OpenApiSecurityScheme
-                     {
-                       Reference = new OpenApiReference
-                       {
-                         Type = ReferenceType.SecurityScheme,
-                         Id = "Bearer"
-                       }
-                     },
-                      new string[] { }
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] { }
                     }
-                 });
+                });
             });
+
             #endregion
         }
 
@@ -136,24 +139,24 @@ namespace BarCodeAPIService
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BarCodeAPIService v1"));
             }
+
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseSerilogRequestLogging();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-            ConnectionString.DbServerType = Configuration.GetSection("DbServerType").Value.ToString();
-            ConnectionString.Server = Configuration.GetSection("Server").Value.ToString();
-            ConnectionString.LicenseServer = Configuration.GetSection("LicenseServer").Value.ToString();
-            ConnectionString.SLDServer = Configuration.GetSection("SLDServer").Value.ToString();
-            ConnectionString.DbUserName = Configuration.GetSection("DbUserName").Value.ToString();
-            ConnectionString.DbPassword = Configuration.GetSection("DbPassword").Value.ToString();
-            ConnectionString.CompanyDB = Configuration.GetSection("CompanyDB").Value.ToString();
-            ConnectionString.UserName = Configuration.GetSection("UserNameSAP").Value.ToString();
-            ConnectionString.Password = Configuration.GetSection("Password").Value.ToString();
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            ConnectionString.DbServerType = Configuration.GetSection("DbServerType").Value;
+            ConnectionString.Server = Configuration.GetSection("Server").Value;
+            ConnectionString.LicenseServer = Configuration.GetSection("LicenseServer").Value;
+            ConnectionString.SLDServer = Configuration.GetSection("SLDServer").Value;
+            ConnectionString.DbUserName = Configuration.GetSection("DbUserName").Value;
+            ConnectionString.DbPassword = Configuration.GetSection("DbPassword").Value;
+            ConnectionString.CompanyDB = Configuration.GetSection("CompanyDB").Value;
+            ConnectionString.UserName = Configuration.GetSection("UserNameSAP").Value;
+            ConnectionString.Password = Configuration.GetSection("Password").Value;
+            ConnectionString.ConnHana = Configuration.GetSection("ConnectionStringHANA").Value;
+            ConnectionString.BarcodeDb = Configuration.GetSection("BarCodeDB").Value;
         }
     }
 }

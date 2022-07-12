@@ -1,19 +1,13 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-
-@{
+﻿@{
     ViewData["Title"] = "O2O";
-    DateTime dt = DateTime.Now;
+    var dt = DateTime.Now;
     ViewData["Date"] = dt.ToShortDateString();
 }
 
-<link href="~/css/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
-<link href="~/css/DataTable/rowReorder.dataTables.min.css" rel="stylesheet" />
+<link href="~/css/DataTable/jquery.dataTables.min.css" rel="stylesheet"/>
+<link href="~/css/DataTable/rowReorder.dataTables.min.css" rel="stylesheet"/>
+<link href="~/tengkimleang/goodReceiptPO/Style.css" />
 @*<link href="~/css/DataTable/responsive.dataTables.min.css" rel="stylesheet" />*@
-
 <script src="~/css/DataTable/jquery-3.3.1.js"></script>
 <script src="~/css/DataTable/jquery.dataTables.min.js"></script>
 <script src="~/css/DataTable/dataTables.rowReorder.min.js"></script>
@@ -25,46 +19,40 @@
         color: red;
     }
 
-    #main {
-        position: absolute;
-    }
+    #main { position: absolute; }
 
     .color_tap {
-        min-width: 60px;
         background-color: #5f95c3;
         color: #ffffff;
         font-weight: 600;
         margin-right: 1px;
+        min-width: 60px;
     }
 
     .nav-tabs .nav-link {
-        border-radius: 0px 12px 0px 0px;
         border: 1px solid rgb(193, 193, 193);
+        border-radius: 0px 12px 0px 0px;
         height: 40px;
         line-height: 20px;
     }
 
-    .modal {
-        z-index: 200000;
-    }
+    .modal { z-index: 200000; }
 
     .modal-header {
         background: #5f95c3;
-        height: 40px;
         color: #ffffff;
+        height: 40px;
     }
 
-        .modal-header b {
-            margin-top: -10px;
-        }
+    .modal-header b { margin-top: -10px; }
 
     #TbAR table tr td {
-        position: relative !important;
-        padding: 0px !important;
         height: 35px;
         margin-left: 15px;
         margin-top: 10px;
-        background-color: none;
+        padding: 0px !important;
+        position: relative !important;
+        /*background-color: none;*/
     }
 
     table tbody tr td {
@@ -77,277 +65,1486 @@
         color: red;
     }
 
-        table tbody tr.selected td .clsinput {
-            background: #94d8e1;
-            color: red;
-        }
-
-    .clsinput:focus {
-        outline: none;
+    table tbody tr.selected td .clsinput {
+        background: #94d8e1;
+        color: red;
     }
+
+    .clsinput:focus { outline: none; }
 </style>
 
 <div id="#main">
 
-    <div class="row" style="margin-left:5px;margin-top:5px;color:#696969;">
-        <h5 style="margin-top:5px;color:#696969;">
-            <a asp-action="DashboardPurchasingAP" asp-controller="Dashboard" onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fas fa-home"></i> Dashboard</a>
-            <span>
-                <a asp-action="ShowAP" asp-controller="APIvoice" onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fa fa-caret-right align-right"></i> Goods receipt PO </a>
-                <i class="fa fa-caret-right align-right"></i> Create Goods receipt PO
-            </span>
-        </h5>
-    </div>
-    <hr />
-    <div class="row" id="DLN">
+<div class="row" style="color: #696969; margin-left: 5px; margin-top: 5px;">
+    <h5 style="color: #696969; margin-top: 5px;">
+        <a onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fas fa-home"></i> Dashboard</a>
+        <span>
+            <a onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fa fa-caret-right align-right"></i>Good Receipt PO</a>
+            <i class="fa fa-caret-right align-right"></i> Create Good Receipt PO
+        </span>
+    </h5>
+</div>
+<hr/>
+<div style="color: #696969; padding: 10px;">
+<ul class="nav nav-tabs Tap-PA" id="mytab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active color_tap" id="cus-tab" data-toggle="tab" href="#cus" role="tab" aria-controls="Customer" aria-selected="true">Customer</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link color_tap" id="item-tab" data-toggle="tab" href="#item" role="tab" aria-controls="Items" aria-selected="false">Items</a>
+    </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+<div class="tab-pane fade show active" id="cus" role="tabpanel" aria-labelledby="cus-tab" style="margin-top: 10px">
+    <div class="row">
         <div class="col-sm-6">
-            Customer code :
-            <div class="input-group">
-                <input type="text" class="form-control" placeholder="Search Vendor" id="VendorCode">
-                <button type="button" class="btn btn-primary" id="findVendor">
-                    <i class="fas fa-search"></i>
-                </button>
+            <div>
+                Vendor Code :
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <button class="input-group-text" id="CcusID">
+                            <i class="fa fa-check"></i>
+                        </button>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Search Code" id="CusID" value="" readonly>
+                    <div class="input-group-append">
+                        <button class="input-group-text btnModelsCus" data-toggle="modal" data-target="#ModalCusCode">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
-            Vendor name :
-            <div class="input-group">
-                <input type="text" class="form-control" id="VendorName" readonly>
+            <div>
+                Vender Name :
+                <div class="input-group">
+                    <input type="text" class="form-control" id="CusName" value="" readonly>
+                </div>
             </div>
-            Doc date :
+            Order Number :
             <div class="input-group">
-                <input type="date" class="form-control" id="DocDate">
+                <input type="text" class="form-control" id="OrderNumberID">
+            </div>
+            Remarks :
+            <div class="input-group">
+                <textarea class="form-control" id="Remark" rows="3"></textarea>
             </div>
         </div>
         <div class="col-sm-6">
             <div>
-                Ref :
+                Series :
                 <div class="input-group">
-                    <input type="text" class="form-control" id="Ref">
+                    <select id="SeriesID" class="form-control">
+                    </select>
                 </div>
             </div>
-
             <div>
-                Remark :
+                Posting Date :
                 <div class="input-group">
-                    <input type="number" class="form-control" id="Remark" onchange="LineDiscountPer()">
+                    <input type="date" class="form-control" id="DocDate">
                 </div>
-                PO Number
+            </div>
+            <div>
+                Document Date :
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="PO Number" id="PONumber" readonly>
-                    <button type="button" class="btn btn-primary" id="SelectPO">
-                        Select PO
-                    </button>
+                    <input type="date" class="form-control" id="DocumentDate">
                 </div>
             </div>
-        </div>  
-    </div>
-</div>
-
-
-<div id="ListPO">
-    <div class="row">
-        <div class="col-sm-12" style=" padding: 3px; ">
-            <div class="input-group">
-                <input type="text" class="form-control" placeholder="List PO" style="color:#f0eff1">
-            </div>
-            <div class="row" style=" padding: 3px; ">
-            </div>
-            <div class="table-responsive">
-                <table id="TblistPO" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
-                    <thead>
-                        <tr>
-                            <th>PO number </th>
-                            <th>Vendor name </th>
-                            <th>Posting date </th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-        </div>
-        <div class="row" style=" padding: 10px; ">
-            <div class="nav navbar-nav ml-auto" style=" padding: 5px; ">
-                <button class="btn btn-info" id="ListPoChoose" style="background:#f0eff1;color:#696969">Choose</button>
-            </div>
-            <div class="nav navbar-nav ml-auto" style=" padding: 5px; ">
-                <button class="btn btn-info" id="ListPOClose" style="background:#f0eff1;color:#696969">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="POLine">
-    <div class="row">
-        <div class="col-sm-12" style=" padding: 3px; ">
-            <div class="input-group">
-                <input type="text" class="form-control" placeholder="PO Line" style="color:#f0eff1">
-            </div>
-            <div class="row" style=" padding: 3px; ">
-            </div>
-            <div class="table-responsive">
-                <table id="TbPOLine" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
-                    <thead>
-                        <tr>
-                            <th>Item Code</th>
-                            <th>Item name</th>
-                            <th>Input SN&BT</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-        </div>
-        <div class="row" style=" padding: 10px; ">
-            <div class="input-group">                
-                <div class="nav navbar-nav ml-auto" style=" padding: 5px; ">
-                    <button class="btn btn-info" id="SOlineClose" style="background:#f0eff1;color:#696969">Close</button>
+            <div>
+                BP Currency :
+                <div class="input-group">
+                    <select class="form-control" id="BPDocCurr"></select>
                 </div>
             </div>
+            Sales Employees :
+            <div class="input-group">
+                <select class="form-control" id="SaleEmp"></select>
+            </div>
+
         </div>
     </div>
 </div>
-<div id="DLNline">
+
+<div class="tab-pane fade" id="item" role="tabpanel" aria-labelledby="item-tab" style="margin-top: 10px">
     <div class="row">
         <div class="col-sm-6">
-            Barcode :
-            <div class="input-group">
-                <input type="text" class="form-control" id="DLN_CustomerCode">
-                <button type="button" class="btn btn-primary" id="DLN_findCustomer">
-                    <i>Generate</i>
-                </button>
-            </div>
+            <input type="hidden" id="itemManage"/>
             Item Code :
             <div class="input-group">
-                <input type="text" class="form-control" id="DLN_CustomerName">
-            </div>
-            Item name :
-            <div class="input-group">
-                <input type="text" class="form-control" id="DLN_DocDate">
-            </div>
-            Bin-location
-            <div class="input-group">
-                <input type="text" class="form-control" id="DLN_DocDate">
-            </div>
-            Warehouse
-            <div class="input-group">
-                <input type="text" class="form-control" id="DLN_DocDate">
-            </div>
-        </div>
-        <div class="col-sm-6">
-            <div>
-                Batch- SN :
-                <div class="input-group">
-                    <input type="text" class="form-control" id="DLN_Ref">
-                    <button type="button" class="btn btn-primary" id="DLN_findCustomer">
-                        <i>Generate</i>
+                <div class="input-group-prepend">
+                    <button class="input-group-text" id="CItemCode">
+                        <i class="fa fa-check"></i>
+                    </button>
+                </div>
+                <input type="text" class="form-control" placeholder="Search Code" id="ItemCode">
+                <div class="input-group-append">
+                    <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalItem">
+                        <i class="fa fa-search"></i>
                     </button>
                 </div>
             </div>
-            <div>
-                QTY :
-                <div class="input-group">
-                    <input type="number" class="form-control" id="DLN_Remark" onchange="LineDiscountPer()">
-                </div>
-                Max QTY
-                <div class="input-group">
-                    <input type="number" class="form-control" id="DocumentsDraft" onchange="LinDiscountAMT()">
-                </div>
-                EXP
-                <div class="input-group">
-                    <input type="number" class="form-control" id="DocumentsDraft" onchange="LinDiscountAMT()">
-                </div>
-                Waranty
-                <div class="input-group">
-                    <input type="number" class="form-control" id="DocumentsDraft" onchange="LinDiscountAMT()">
-                </div>
-            </div>
-        </div>
-        <div class="row" style=" padding: 10px; ">
+            Item Descrition :
             <div class="input-group">
-                <div class="nav navbar-nav ml-auto" style=" padding: 5px; ">
-                    <button class="btn btn-info" id="SOlineClose" style="background:#f0eff1;color:#696969">Add</button>
+                <input type="text" class="form-control" id="ItemDescr" readonly>
+            </div>
+            Quantity :
+            <div class="input-group">
+                <input type="number" class="form-control" value="1" id="Qty" onchange="QtyChange()">
+            </div>
+
+            <div>
+                Unit Price :
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <input type="button" class="input-group-text" id="DocCurr"/>
+                    </div>
+                    <input type="number" class="form-control" id="Price" value="0">
                 </div>
-                <div class="nav navbar-nav ml-auto" style=" padding: 5px; ">
-                    <button class="btn btn-info" id="DLN_Save" style="background:#f0eff1;color:#696969">Cancel</button>
+            </div>
+
+            <div>
+                Discount(%) :
+                <div class="input-group">
+                    <input type="number" class="form-control" value="0" id="Discount" onchange="DisCountPerChange()">
+                </div>
+                Discount Amount :
+                <div class="input-group">
+                    <input type="number" class="form-control" value="0" id="DiscountAmt" onchange="DisAmtChange()">
+                </div>
+            </div>
+
+        </div>
+        <div class="col-sm-6">
+            <div>
+                VAT Code :
+                <div class="input-group">
+                    <select id="TaxCode" class="form-control">
+                    </select>
+                </div>
+            </div>
+            <div>
+                Warehouse :
+                <div class="input-group">
+                    <select id="whscode" class="form-control">
+                    </select>
+                </div>
+            </div>
+            <div>
+                Uom Name :
+                <div class="input-group">
+                    <select id="UomID" class="form-control">
+                    </select>
+                </div>
+            </div>
+            <div>
+                Total :
+                <div class="input-group">
+                    <input type="number" class="form-control" value="0" id="totalItem" disabled>
                 </div>
             </div>
         </div>
+    </div>
+    <div class="row" style="padding: 15px;">
+        <div class="nav navbar-nav ml-auto">
+            <button class="btn btn-info" id="AddItem" style="background: #f0eff1; color: #696969">Add Item</button>
+        </div>
+    </div>
 
-        <div class="col-sm-12" style=" padding: 15px; ">
+    <div class="row">
+        <div class="col-sm-12">
             <div class="table-responsive">
-                <table id="DNL_Line" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                <table id="TbAR" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
                     <thead>
-                        <tr>
-                            <th>Item Code</th>
-                            <th>Item name</th>
-                            <th>Barcode</th>
-                            <th>QTY</th>
-                            <th>Max QTY</th>
-                            <th>Bin-location</th>
-                            <th>Warehouse</th>
-                            <th>Batch</th>
-                            <th>EXP</th>
-                            <th>Waranty</th>
-                            <th>Action</th>
-                        </tr>
+                    <tr>
+                        <th>ItemCode</th>
+                        <th>UnitPrice</th>
+                        <th>Discount(%)</th>
+                        <th>Dis.Amount</th>
+                        <th>Qty</th>
+                        <th>Price Before Discount</th>
+                        <th>Line Total</th>
+                        <th>Uom Name</th>
+                        <th>TaxCode</th>
+                        <th>Warehouse</th>
+                        <th>BatchOrSerial</th>
+                        <th>Command</th>
+                    </tr>
                     </thead>
                 </table>
             </div>
         </div>
-        <div class="row" style=" padding: 10px; ">
-            <div class="nav navbar-nav ml-auto" style=" padding: 5px; ">
-                <button class="btn btn-info" id="DLN_Add" style="background:#f0eff1;color:#696969">Save</button>
+    </div>
+
+    <div class="row" style="margin-top: 5px;">
+        <div class="col-sm-4">
+        </div>
+        <div class="col-sm-4">
+            Discount % :
+            <input type="number" class="form-control" value="0" id="DisPer"/>
+            Discount Amount :
+            <input type="number" class="form-control" value="0" id="DisAmt"/>
+        </div>
+        <div class="col-sm-4">
+            Before Discount :
+            <input class="form-control" readonly id="BTax"/>
+            Discount By Items :
+            <input class="form-control" readonly id="DisA"/>
+            @*Tax Amount :*@
+            <input class="form-control d-none" readonly id="Tax"/>
+            <input class="d-none" id="TaxBeforeDis"/>
+            Total Amount :
+            <input class="form-control" readonly id="Total"/>
+        </div>
+    </div>
+</div>
+</div>
+<hr/>
+<div class="row" style="margin-bottom: -20px; margin-top: -20px; padding: 15px;">
+    <div class="nav navbar-nav mr-auto">
+        <div class="btn-group">
+            @*<button class="btn btn-info previous" style="background:#f0eff1;color:#696969">Previous</button>
+                <button class="btn btn-info next" style="background: #f0eff1;color: #696969;">Next</button>*@
+            <button class="btn btn-info" id="CopyFromPO" style="background: #f0eff1; color: #696969;"
+                        data-toggle="modal" data-target="#ModalCopyFromPO" disabled>
+                    Copy From PO
+            </button>
+        </div>
+    </div>
+    <div class="nav navbar-nav ml-auto">
+        <div class="btn-group">
+            @*<button class="btn btn-info previous" style="background:#f0eff1;color:#696969">Previous</button>
+                        <button class="btn btn-info next" style="background: #f0eff1;color: #696969;">Next</button>*@
+            <button class="btn btn-info" id="CopyToGoodReturn" style="background: #f0eff1; color: #696969;"
+                    data-toggle="modal" data-target="#ModalCopyToGoodReturn" disabled>
+                Copy To Good Return
+            </button>
+            <button class="btn btn-info" id="Save" style="background: #f0eff1; color: #696969; margin-left: 5px;">Add New</button>
+        </div>
+    </div>
+</div>
+</div>
+<hr/>
+</div>
+
+@*Block Models*@
+<div class="modal modal-backdrop" id="Modalloder" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content" style="background: #f0eff1; color: #696969;">
+            <div class="modal-body">
+                <div class="text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
             </div>
-            <div class="nav navbar-nav ml-auto" style=" padding: 5px; ">
-                <button class="btn btn-info" id="DLN_Save" style="background:#f0eff1;color:#696969">Close</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="ModalSuccess" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content" style="background: #f0eff1; color: #696969;">
+            <div class="modal-header">
+                <b>Information</b>
+            </div>
+            <div class="modal-body">
+                <p id="ErrMsg"> - </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-sm btn-success" data-dismiss="modal" style="color: #696969;">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Create Models*@
+@*1. Search Customer Code*@
+<div class="modal fade" id="ModalCusCode">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background: #f0eff1; color: #696969;">
+            <div class="modal-header">
+                <b>List of Customer</b>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="TbCusCode" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
+                                <thead>
+                                <tr>
+                                    <th>Customer Code</th>
+                                    <th>Cusetomer Name</th>
+                                    <th>Phone</th>
+                                    <th>Address</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseCus" style="background: #f0eff1; color: #696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background: #f0eff1; color: #696969;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*2. Search ItemCode*@
+<div class="modal fade" id="ModalItem">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background: #f0eff1; color: #696969;">
+            <div class="modal-header">
+                <b>List of Items</b>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="TbItem" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
+                                <thead>
+                                <tr>
+                                    <th>Item Code</th>
+                                    <th>Item Descrition</th>
+                                    <th>Unit Price</th>
+                                    <th>In Stock</th>
+                                    <th>BarCode</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseItem" style="background: #f0eff1; color: #696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background: #f0eff1; color: #696969;">Close</button>
             </div>
         </div>
     </div>
 </div>
 
 
+@*Copy From PO*@
+<div class="modal fade" id="ModalCopyFromPO" data-backdrop="static">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background: #f0eff1; color: #696969;">
+            <div class="modal-header">
+                <b>Purchase Order</b>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="TbCopyFromPO" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
+                                <thead>
+                                <tr>
+                                    <th>Receipt No(SAP)</th>
+                                    <th>Vendor Name</th>
+                                    <th>Document Date</th>
+                                    <th>DocTotal</th>
+                                    <th>Document Status</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" id="ChoosePO" style="background: #f0eff1; color: #696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background: #f0eff1; color: #696969;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
+@*Copy To Good Return*@
+<div class="modal fade" id="ModalCopyToGoodReturn" data-backdrop="static">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background: #f0eff1; color: #696969;">
+            <div class="modal-header">
+                <b>Good Return</b>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="TbCopyToGoodReturn" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
+                                <thead>
+                                <tr>
+                                    <th>Receipt No(SAP)</th>
+                                    <th>Vendor Name</th>
+                                    <th>Document Date</th>
+                                    <th>DocTotal</th>
+                                    <th>Document Status</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseGoodReceiptPO" style="background: #f0eff1; color: #696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background: #f0eff1; color: #696969;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Generate Serial*@
+<div class="modal fade " id="ModalBarCodeSerail" data-backdrop="static">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background: #f0eff1; color: #696969;">
+            <div class="modal-header">
+                <b>Serial Numbers - Setup</b>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                            <input type="hidden" id="txtRowID"/>
+                            <input type="hidden" id="txtScriptID"/>
+                            Item Code :
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="ItemCodeSerial" disabled="disabled">
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                            QTY :
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="ItemCodeSerialQty" readonly="readonly">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            Serial Number :
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="SerialNumber">
+                                <div class="input-group-append">
+                                    <button class="input-group-text" id="btnSerialNumGennerate"><i class="fa fa-file-medical"></i>&nbsp; Generate</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                            Mfr Serial No. :
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="txtManfrSerial">
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                            Exp Date :
+                            <div class="input-group">
+                                <input type="date" class="form-control" id="txtExpireDate">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6"></div>
+                        <div class="col-6">
+                            <button class="btn btn-info float-right mt-4 mb-4" id="BtnSaveSerial1" style="background: #f0eff1; color: #696969;">Save</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-12">
+                            <table id="TbSerial" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
+                                <thead>
+                                <tr>
+                                    <th>Serial Number</th>
+                                    <th>Mfr Serial No.</th>
+                                    <th>Expiration Date</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" style="background: #f0eff1; color: #696969;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*Generate Batch*@
+<div class="modal fade " id="ModalBarCodeBatch" data-backdrop="static">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background: #f0eff1; color: #696969;">
+            <div class="modal-header">
+                <b>Batch Numbers - Setup</b>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                            <input type="hidden" id="txtRowIDBatch"/>
+                            <input type="hidden" id="txtIDRowB"/>
+                            <input type="hidden" id="txtScriptIDBatch"/>
+                            Item Code :
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="ItemCodeBatch" disabled="disabled">
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                            QTY :
+                             <div class="input-group">
+                                <input type="number" class="form-control" id="ItemCodeBatchQty" readonly="readonly">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            Batch Number :
+                            <div class="row">
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-8 BatNumberPadding">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="BatchNumber">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-4 BatNumberPadding">
+                                    <div class="input-group">
+                                        @*<div class="input-group-append">*@
+                                        &nbsp;<select class="form-control" id="optBatchType" onchange="BatchChangeType()"><option value="1">Standard</option><option value="2">Advance</option></select>
+                                        <button class="input-group-text" id="btnBatchNumGennerate"><i class="fa fa-file-medical"></i>&nbsp; Generate</button>
+                                        @*</div>*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="DisPlayCustomize" style="display: none;">
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-5">
+                                Total Generate Batch :
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="txtTotalGenBatch">
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-5">
+                                Per Batch Unit :
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="txtPerBatch">
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-2">
+                                Total Qty:
+                                <div class="input-group">
+                                    <input type="text" class="form-control" disabled id="txtTotalQtyGenBatch">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                                Batch No. From :
+                                <div class="input-group">
+                                    <select class="form-control" id="optBatchFrom">
+                                        <option></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                                Batch No. To :
+                                <div class="input-group">
+                                    <select class="form-control" id="optBatchTo">
+                                        <option></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                            Mfr Date. :
+                            <div class="input-group">
+                                <input type="date" class="form-control" id="dtpMfrDateBatch">
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                            Exp Date :
+                            <div class="input-group">
+                                <input type="date" class="form-control" id="dtpExpireDateBatch">
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                            Admission Date :
+                            <div class="input-group">
+                                <input type="date" class="form-control" id="dtpAdmissionDateBatch">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6"></div>
+                        <div class="col-6">
+                            <button class="btn btn-info float-right mt-4 mb-4" id="BtnSaveBatch" style="background: #f0eff1; color: #696969;">Save</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="DisPlayCustomizeTable" style="display: none;">
+                    <div class="table-responsive">
+                        <div class="row">
+                            <div class="col-12">
+                                <table id="tmpBatchFromTo" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
+                                    <thead>
+                                    <tr>
+                                        <th>Batch From</th>
+                                        <th>Batch To</th>
+                                        <th>Expiration Date</th>
+                                        <th>Mfr Date</th>
+                                        <th>Admission Date</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-12">
+                            <table id="TbBatch" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
+                                <thead>
+                                <tr>
+                                    <th>ItemCode</th>
+                                    <th>Qty</th>
+                                    <th>Batch Number</th>
+                                    <th>Mfr Date</th>
+                                    <th>Expiration Date</th>
+                                    <th>Admission Date</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" style="background: #f0eff1; color: #696969;" id="btnCLoseBatch">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/tengkimleang/goodReceiptPO/GetMasterGoodReceiptPO.js"></script>
+<script src="~/js/tengkimleang/Method/MethodDataTable.js"></script>
 <script src="~/js/Array.js"></script>
+<script src="~/js/tengkimleang/goodReceiptPO/Service/IEventCopyFromPO.js"></script>
+<script src="~/js/tengkimleang/goodReceiptPO/Service/EventCopyFromPO.js"></script>
+<script src="~/js/tengkimleang/goodReceiptPO/Service/IEventItemAdd.js"></script>
+<script src="~/js/tengkimleang/goodReceiptPO/Service/EventAddItemService.js"></script>
+<script src="~/js/tengkimleang/goodReceiptPO/Service/IEventSaveGoodReceipt.js"></script>
+<script src="~/js/tengkimleang/goodReceiptPO/Service/EventSaveGoodReceiptService.js"></script>
+<script src="~/js/tengkimleang/goodReceiptPO/CreatePO.js"></script>
+
+
+
 <script type="text/javascript">
-    var LDT = [];
-    $('#TbDT').DataTable({
-        responsive: true,
-        bLengthChange: false,
-        binfo: false,
-        data: LDT,
-        columns: [
-            { data: "docNum", autoWidth: true },
-            { data: "webID", autoWidth: true },
-            { data: "customerName", autoWidth: true },
-            { data: "posuser", autoWidth: true },
-            { data: "documentDate", autoWidth: true },
-            { data: "docTotal", autoWidth: true },
-            { data: "grossAmount", autoWidth: true },
-            { data: "drawAmount", autoWidth: true },
-            { data: "taxAmount", autoWidth: true }
-        ]
-    });
-    var dtlistPO = $('#TblistPO').DataTable()
-    var dtLinePO = $('#TbPOLine').DataTable()
-    var dtSNBT = $('#TbSNBT').DataTable()
-    var dtDraft = $('#TBDraft').dataTable()
-    var dtDNL_Line = $('#DNL_Line').dataTable()
-    var dtTbSNBT_Update = $('#TbSNBT_Update').dataTable()
+    /* Init DataTable */
 
-    $('#POLine').hide();
-    $('#ListPO').hide();
-    $('#SNBT').hide();
-    $('#DLNline').hide();
-    // $('#DLNline').hide();
 
-    $('#SelectPO').click(function () {
-        $('#DLN').hide();
-        $('#DLNline').hide();
-        $('#ListPO').show();
+    /* DataTable List Of Item */
+    let objectLine = {};
+    let LinesAR = [];
+    DataTableInit.TableItemLine();
+    var tbItemLine = $('#TbAR').DataTable();
+    DataMethod.AddClassSelected("TbAR", tbItemLine);
+    /* End DataTable List Of ItemLine */
+
+
+    /* DataTable List Of Item Code */
+    var LItm = [];
+    DataTableInit.TableSearchItemCode();
+    var tbItemSearch = $('#TbItem').DataTable();
+    DataMethod.AddClassSelected("TbItem", tbItemSearch);
+    $(".btnModelsItem").click(function() {
+        $("#ModalItem").modal({ backdrop: "static" });
+        if (tbItemSearch.length==0) {
+            EventItemAdd.getItemCode('@Url.Action("GetItemActionResult","GoodsReceiptPO")');
+        }
     });
-    $('#ListPoChoose').click(function () {        
-        $('#ListPO').hide();
-        $('#POLine').show();
-        $('#DLNline').show();
+    /* End DataTable List Of Item Code */
+
+    /* DataTable List Good Receipt PO*/
+    var temporyListGoodReturn = [];
+    var LCopyToGoodReturn = [];
+    DataTableInit.TableGoodReturn();
+    var TbCopyFromGoodReciptPO = $("#TbCopyToGoodReturn").DataTable();
+    $('#TbCopyToGoodReturn tbody').on('click',
+        'tr',
+        function() {
+            temporyListPO = [];
+            if ($(this).hasClass('selected')) {
+                temporyListPO = DataMethod.arrayRemove(temporyListPO, $(this)[0]._DT_RowIndex);
+            } else {
+                temporyListPO.push($(this)[0]._DT_RowIndex);
+            }
+        });
+    DataMethod.AddClassSelected('TbCopyToGoodReturn', TbCopyFromGoodReciptPO);
+    /*End Good Receipt PO*/
+
+    /* DataTable List Purchase Order*/
+    var temporyListPO = [];
+    var LCopyFromPO = [];
+    DataTableInit.TablePurchaseOrder();
+    var TbCopyFromPO = $("#TbCopyFromPO").DataTable();
+    $('#TbCopyFromPO tbody').on('click',
+        'tr',
+        function() {
+            temporyListPO = [];
+            if ($(this).hasClass('selected')) {
+                temporyListPO = DataMethod.arrayRemove(temporyListPO, $(this)[0]._DT_RowIndex);
+            } else {
+                temporyListPO.push($(this)[0]._DT_RowIndex);
+            }
+        });
+    DataMethod.AddClassSelected('TbCopyFromPO', TbCopyFromPO);
+    /*End Purchase Order*/
+
+    /* DataTable List Of Customer */
+    var LCus = [];
+    DataTableInit.TableCustomer();
+    var tbCus = $('#TbCusCode').DataTable();
+    DataMethod.AddClassSelected('TbCusCode', tbCus);
+    $(".btnModelsCus").click(function() {
+        $("#ModalCusCode").modal({ backdrop: "static" });
+        GetMasterData.getCustomer('@Url.Action("GetCustomerClientResult", "GoodsReceiptPO")');
     });
-  
+    $('#ChooseCus').click(function() {
+        const index = tbCus.row('.selected').index();
+        const data = tbCus.row(index).data();
+        $('#CusID').val(data.cardCode);
+        $('#CusName').val(data.cardName);
+        $('#CcusID').css('background-color', '#4CAF50');
+        $('#CopyFromPO').removeAttr("disabled");
+        $('#CopyToGoodReturn').removeAttr("disabled");
+        GetMasterData.getCurrency('@Url.Action("GetCurrency", "GoodsReceiptPO")', data.cardCode);
+    });
+    /* End DataTable List Of Customer */
+
+    /* DataTable Init Serial */
+    var lsSerial = [];
+    //DataTableInit.TableSerial1();
+    DataTableInit.TableSerialGen();
+    var tbSerial1 = $('#TbSerial').DataTable();
+    /* End DataTable Init Serial */
+
+    // DataTable Init Batch
+    var LBatch = [];
+    DataTableInit.TableBatch();
+    var tbBatch = $('#TbBatch').DataTable();
+    /* End DataTable Init Batch */
+
+    // DataTable Init tmpBatch
+    var LtmpBatch = [];
+    DataTableInit.TabletmpBatchFromTo();
+    var TbtmpBatchFromTo = $('#tmpBatchFromTo').DataTable();
+    /* End Init DataTable */
+
+    // #region Init Master
+    GetMasterData.getSeries("", '@ViewData["Date"]', '@Url.Action("GetSeries", "GoodsReceiptPO")', '20');
+    GetMasterData.getSaleEmployee('@Url.Action("GetSaleEmployeeResult", "GoodsReceiptPO")');
+    GetMasterData.getTaxCode('@Url.Action("GetTaxCodeResult", "GoodsReceiptPO")');
+    GetMasterData.getWarehouse('@Url.Action("GetWarehouseResult", "GoodsReceiptPO")');
+    // #endregion
+
+    // #region EventChange DocDate
+    $("#DocDate").change(function() {
+        GetMasterData.getSeries($("#DocDate").val(), '@ViewData["Date"]', '@Url.Action("GetSeries", "GoodsReceiptPO")', '20');
+    });
+    // #endregion
+    // #region EventChange Discount
+    $("#DisPer").change(function() {
+        var total = ($("#BTax").val() - $("#DisA").val()).toFixed(2);
+        total = (total * ($("#DisPer").val()/100)).toFixed(2);
+        $("#DisAmt").val(total);
+        $("#Total").val((($("#BTax").val() - $("#DisA").val()).toFixed(2)-total).toFixed(2));
+
+    });
+    $("#DisAmt").change(function() {
+        var total = ($("#BTax").val() - $("#DisA").val()).toFixed(2);
+        total = (($("#DisAmt").val() / total)*100).toFixed(2);
+        $("#DisPer").val(total);
+        $("#Total").val((($("#BTax").val() - $("#DisA").val()).toFixed(2)-$("#DisAmt").val()).toFixed(2));
+    });
+    // #endregion
+
+    // #region Onchange BP Currency
+
+    $("#BPDocCurr").change(function() {
+        $("#DocCurr").val($("#BPDocCurr").val());
+    });
+    // #endregion
+    
+    $('#AddItem').click(function() {
+        if ($("#ItemCode").val()==="") {
+            alert("Please Chose Item First");
+        } else {
+            if ($('#itemManage').val() == 'S') {
+            if (objectLine.Serial !== undefined) {
+                if ($("#Qty").val() == objectLine.Serial.length) {
+                    alert("Can add to LineAR");
+                    objectLine.UomName = $("#UomID").val();
+                    objectLine.Whs = $("#whscode").val();
+                    objectLine.TaxCode = $("#TaxCode").val();
+                    objectLine.LineTotal = $("#totalItem").val();
+                    objectLine.PriceBeforeDis = $("#Price").val()*$("#Qty").val();
+                    objectLine.Quantity = $("#Qty").val();
+                    objectLine.DiscountAmount = $("#DiscountAmt").val();
+                    objectLine.Discount = $("#Discount").val();
+                    objectLine.UnitPrice = $("#Price").val();
+                    LinesAR.push(objectLine);
+                    tbItemLine.clear();
+                    tbItemLine.rows.add(LinesAR);
+                    tbItemLine.search('').draw();
+                    var priceBeforeDis=$("#BTax").val();
+                    if (priceBeforeDis != "") {
+                        priceBeforeDis = parseFloat(priceBeforeDis);
+                    }
+                    priceBeforeDis = priceBeforeDis + parseFloat($("#Price").val()*$("#Qty").val());
+                    $("#BTax").val(priceBeforeDis);
+                    var disByItem=$("#DisA").val();
+                    if (disByItem!="") {
+                        disByItem = parseFloat(disByItem);
+                    }
+                    disByItem = disByItem + parseFloat($("#DiscountAmt").val());
+                    $("#DisA").val(disByItem);
+                    var totalLine = $("#Total").val();
+                    if (totalLine!="") {
+                        totalLine = parseFloat(totalLine);
+                    }
+                    totalLine = totalLine + parseFloat($("#totalItem").val());
+                    $("#Total").val(totalLine);
+                    EventItemAdd.clearText(
+                        [
+                            {id:"ItemCode",value:""},
+                            {id:"ItemDescr",value:""},
+                            {id:"Qty",value:"1"},
+                            {id:"Price",value:"0"},
+                            {id:"Discount",value:"0"},
+                            {id:"DiscountAmt",value:"0"},
+                            {id:"totalItem",value:"0"},
+                            {id:"txtRowID",value:"0"},
+                            {id:"txtScriptID",value:"0"},
+                            {id:"ItemCodeSerial",value:"0"},
+                            {id:"ItemCodeSerialQty",value:"0"},
+                            {id:"SerialNumber",value:"0"},
+                            {id:"txtManfrSerial",value:"0"}
+                        ],"");
+                    EventItemAdd.clearText([
+                            { id: "UomID" }
+                        ],
+                        "option");
+                    objectLine = {};
+                    //lsSerial = [];
+                } else {
+                    $("#ItemCodeSerial").val($("#ItemCode").val());
+                    $("#ItemCodeSerialQty").val($("#Qty").val()-objectLine.Serial.length);
+                    lsSerial = objectLine.Serial;
+                    tbSerial1.clear();
+                    tbSerial1.rows.add(lsSerial);
+                    tbSerial1.search("").draw();
+                    //$("#").val(objectLine.ManageItem);
+                    $('#ModalBarCodeSerail').modal('show');
+                }
+            } else {
+                $("#ItemCodeSerial").val($("#ItemCode").val());
+                $("#ItemCodeSerialQty").val($("#Qty").val()-objectLine.Serial.length);
+                //$("#").val(objectLine.ManageItem);
+                lsSerial = objectLine.Serial;
+                tbSerial1.clear();
+                tbSerial1.rows.add(lsSerial);
+                tbSerial1.search("").draw();
+                $('#ModalBarCodeSerail').modal('show');
+            }
+        }else if ($('#itemManage').val() == 'B') {
+            if (LBatch !== undefined) {
+                var qtyBatch = 0;
+                for (var i = 0; i < LBatch.length; i++) {
+                    console.log(LBatch[i]);
+                    qtyBatch = qtyBatch + LBatch[i].qty;
+                }
+                if (parseFloat($("#Qty").val()) === qtyBatch) {
+                    objectLine.UomName = $("#UomID").val();
+                    objectLine.Whs = $("#whscode").val();
+                    objectLine.TaxCode = $("#TaxCode").val();
+                    objectLine.LineTotal = $("#totalItem").val();
+                    objectLine.PriceBeforeDis = $("#Price").val()*$("#Qty").val();
+                    objectLine.Quantity = $("#Qty").val();
+                    objectLine.DiscountAmount = $("#DiscountAmt").val();
+                    objectLine.Discount = $("#Discount").val();
+                    objectLine.UnitPrice = $("#Price").val();
+                    objectLine.Batches = LBatch;
+                    LinesAR.push(objectLine);
+                    tbItemLine.clear();
+                    tbItemLine.rows.add(LinesAR);
+                    tbItemLine.search('').draw();
+                    var priceBeforeDis=$("#BTax").val();
+                    if (priceBeforeDis != "") {
+                        priceBeforeDis = parseFloat(priceBeforeDis);
+                    }
+                    priceBeforeDis = priceBeforeDis + parseFloat($("#Price").val()*$("#Qty").val());
+                    $("#BTax").val(priceBeforeDis);
+                    var disByItem=$("#DisA").val();
+                    if (disByItem!="") {
+                        disByItem = parseFloat(disByItem);
+                    }
+                    disByItem = disByItem + parseFloat($("#DiscountAmt").val());
+                    $("#DisA").val(disByItem);
+                    var totalLine = $("#Total").val();
+                    if (totalLine!="") {
+                        totalLine = parseFloat(totalLine);
+                    }
+                    totalLine = totalLine + parseFloat($("#totalItem").val());
+                    $("#Total").val(totalLine);
+                    EventItemAdd.clearText(
+                        [
+                            {id:"ItemCode",value:""},
+                            {id:"ItemDescr",value:""},
+                            {id:"Qty",value:"1"},
+                            {id:"Price",value:"0"},
+                            {id:"Discount",value:"0"},
+                            {id:"DiscountAmt",value:"0"},
+                            {id:"totalItem",value:"0"},
+                            {id:"txtRowID",value:"0"},
+                            {id:"txtScriptID",value:"0"},
+                            {id:"ItemCodeSerial",value:"0"},
+                            {id:"ItemCodeSerialQty",value:"0"},
+                            {id:"SerialNumber",value:"0"},
+                            {id:"txtManfrSerial",value:"0"}
+                        ],"");
+                    EventItemAdd.clearText([
+                            { id: "UomID" }
+                        ],
+                        "option");
+                    objectLine = {};
+                    LBatch = [];
+                } else {
+                    $("#ItemCodeBatch").val($("#ItemCode").val());
+                    var tmpQty = parseFloat($("#Qty").val()) - qtyBatch;
+                    console.log(tmpQty);
+                    $("#ItemCodeBatchQty").val(tmpQty);
+                    $('#ModalBarCodeBatch').modal('show');
+                }
+            } else {
+                $("#ItemCodeBatch").val($("#ItemCode").val());
+                $("#ItemCodeBatchQty").val($("#Qty").val());
+                $('#ModalBarCodeBatch').modal('show');
+            }
+        }
+        }
+    });
+
+    $('#Save').click(function() {
+        EventSaveGoodReceiptPO.sendGoodReceiptPO('@Url.Action("CreateGoodsReceiptPoResult", "GoodsReceiptPO")');
+    });
+
+
+    // Item Code
+    $('#ChooseItem').click(function() {
+        const index = tbItemSearch.row('.selected').index();
+        const data = tbItemSearch.row(index).data();
+        $('#ItemCode').val(data.itemCode);
+        $('#ItemDescr').val(data.itemName);
+        $('#Price').val(data.unitPrice);
+        $('#itemManage').val(data.manageItem);
+        $('#totalItem').val(data.unitPrice);
+        $('#CItemCode').css('background-color', '#4CAF50');
+        objectLine = {};
+        if(objectLine!=undefined)
+        {
+            if (data.itemCode !== objectLine.ItemCode) {
+                objectLine = {};
+            }
+        }
+        objectLine.ItemCode = data.itemCode;
+        objectLine.ManageItem = data.manageItem;
+        objectLine.UomName = data.UomName;
+        objectLine.Serial = [];
+        GetMasterData.getUomCode('@Url.Action("GetUomCodeResult", "GoodsReceiptPO")',data.itemCode);
+    });
+    // End Item Code
+
+    // Copy From PO
+    $('#ChoosePO').click(function() {
+        const result = EventCopyFromPOService.ChoosePO_Click(temporyListPO, TbCopyFromPO);
+        LinesAR = result.linesAR;
+        $('#Remark').val(`Based On Purchase Orders ${result.remark}`);
+        $('#Total').val(result.docTotal);
+        $("#DisPer").val(result.discountPercentage);
+        $("#DisAmt").val(result.discountAmount);
+        $("#DisA").val(result.discountLine);
+        $("#BTax").val(Number(result.lineTotal + result.discountLine).toFixed(2));
+        tbItemLine.clear();
+        tbItemLine.rows.add(LinesAR);
+        tbItemLine.search('').draw();
+    });
+    $('#CopyFromPO').click(function() {
+        temporyListPO = [];
+        if ($("#CusID").val() != "") {
+            const cardCode = $("#CusID").val();
+            GetMasterData.getPurchaseOrder('@Url.Action("GetPurchaseOrderByCardCode", "GoodsReceiptPO")', cardCode);
+        } else {
+            alert("Please Select Customer, if you don't select can bind data");
+        }
+    });
+    // End Copy From PO
+
+    //Save Serial
+
+    $("#BtnSaveSerial1").click(function() {
+        if ($("#SerialNumber").val() === "" || $("#SerialNumber").val() === null) {
+            alert("Please Enter Seril Number Save!");
+        } else {
+            if ($("#ItemCodeSerialQty").val() <= 0) {
+                alert("Cannot save Serial with Qty Zero!");
+            } else {
+                var serial = {};
+                let  qty = $("#ItemCodeSerialQty").val() - 1;
+                serial.SerialNumber = $("#SerialNumber").val();
+                serial.MfrSerialNo = $("#txtManfrSerial").val();
+                serial.ExpDate = $("#txtExpireDate").val();
+                serial.Script = $("#txtScriptID").val();
+                let index = $("#txtRowID").val();
+                console.log(index);
+                lsSerial.push(serial);
+                if (index === "") { //|| index==="0"
+                    objectLine.Serial=lsSerial;
+                } else {
+                    LinesAR[index].Serial=lsSerial;
+                }
+                console.log(objectLine);
+                console.log(LinesAR[index]);
+                console.log(lsSerial);
+                $("#SerialNumber").val("");
+                $("#txtManfrSerial").val("");
+                $("#txtExpireDate").val("");
+                $("#ItemCodeSerialQty").val(qty);
+                tbSerial1.clear();
+                tbSerial1.rows.add(lsSerial);
+                tbSerial1.search("").draw();
+            }
+        }
+    });
+    $("#btnSerialNumGennerate").click(function() {
+        if ($("#ItemCodeSerialQty").val() <= 0) {
+            alert("Cannot save Serial with Qty Zero!");
+        } else {
+            EventItemAdd.GenerateSerialOrBatch('@Url.Action("GetSerialBatchResult", "GoodsReceiptPO")', $("#ItemCodeSerial").val(), 1, 'S');
+            //$("#SerialNumber").val(a);
+        }
+    });
+    //To Do List
+    $("#btnBatchNumGennerate").click(function() {
+        if ($("#optBatchType").val() === "1") {
+            //Standard
+            alert("Standard");
+            var a = {};
+            var obj = [];
+            obj.push({
+                "ManufactureDate ":$("#dtpMfrDateBatch").val(),
+                "ExpireDate":$("#dtpExpireDateBatch").val(),
+                "AdmissionDate":$("#dtpAdmissionDateBatch").val(),
+                "ItemCode":$("#ItemCodeBatch").val(),
+                "Qty":$("#ItemCodeBatchQty").val()
+            });
+            a.ListBatches=obj;
+            console.log(a);
+            $.ajax({
+                url: '@Url.Action("GenerateBatchResult", "GoodsReceiptPO")',
+                type: "POST",
+                data: { generateSerialBatchRequest: a },
+                dataType: "JSON",
+                success: function(data) {
+                    for (var i = 0; i < data.length; i++) {
+                        $("#txtRowIDBatch").val(data[i].serialAndBatch);
+                        $("#txtScriptIDBatch").val(data[i].script);
+                        $("#BatchNumber").val(data[i].serialAndBatch);
+                    }
+                },
+                error: function(erro) {
+                    console.log(erro.responseText);
+                }
+            });
+        } else if ($("#optBatchType").val() === "2") {
+            //Advance
+            alert("Advance");
+            if (LtmpBatch.length !== 0) {
+                var a = {};
+                var obj = [];
+                console.log(LtmpBatch);
+                for (let i = 0; i < LtmpBatch.length; i++) {
+                    obj.push({
+                        "ManufactureDate": LtmpBatch[i].MfrDate,
+                        "ExpireDate": LtmpBatch[i].ExpirationDate,
+                        "AdmissionDate": LtmpBatch[i].AdmissionDate,
+                        "BatchFrom": LtmpBatch[i].BatchFrom,
+                        "BatchTo": LtmpBatch[i].BatchTo,
+                        "ItemCode": $("#ItemCodeBatch").val(),
+                        "Qty": LtmpBatch[i].Qty,
+                        "BatchCount": $("#txtTotalGenBatch").val(),
+                        "TypeBatchGen": $("#optBatchType").val()
+                    });
+                }
+                a.ListBatches = obj;
+                console.log(a);
+                $.ajax({
+                    url: '@Url.Action("GenerateBatchResult", "GoodsReceiptPO")',
+                    type: "POST",
+                    data: { generateSerialBatchRequest: a },
+                    dataType: "JSON",
+                    success: function(data) {
+                        //alert("Success");
+                        console.log(data);
+                        var tmpQty = parseFloat($("#ItemCodeBatchQty").val());
+                        for (let i = 0; i < data.length; i++) {
+                            tmpQty = tmpQty - data[i].qty;
+                            LBatch.push(
+                                {
+                                    "itemCode": data[i].itemCode,
+                                    "qty": data[i].qty,
+                                    "serialAndBatch": data[i].serialAndBatch,
+                                    "mfrDate": data[i].mfrDate,
+                                    "expirationDate": data[i].expirationDate,
+                                    "admissionDate": data[i].admissionDate
+                                });
+                        }
+                        //Clear Data
+                        LtmpBatch = [];
+                        TbtmpBatchFromTo.clear();
+                        TbtmpBatchFromTo.rows.add(LtmpBatch);
+                        TbtmpBatchFromTo.search('').draw();;
+                        $("#txtTotalGenBatch").val("");
+                        $("#txtPerBatch").val("");
+                        $("#txtTotalQtyGenBatch").val("");
+                        $("#optBatchFrom").empty();
+                        $("#optBatchTo").empty();
+                        $("#dtpMfrDateBatch").val("");
+                        $("#dtpExpireDateBatch").val("");
+                        $("#dtpAdmissionDateBatch").val("");
+                        //End Clear Data
+                        console.log(tmpQty);
+                        $("#ItemCodeBatchQty").val(tmpQty);
+                        console.log(LBatch);
+                        tbBatch.clear();
+                        tbBatch.rows.add(LBatch);
+                        tbBatch.search('').draw();
+                    },
+                    error: function(erro) {
+                        console.log(erro.responseText);
+                    }
+                });
+            } else {
+                alert("Please Save Item Before Generate TmpDate");
+            }
+        }
+    });
+
+    //End Save Serial
+
+    $(".modal-header").on("mousedown",
+        function(mousedownEvt) {
+            var $draggable = $(this);
+            var x = mousedownEvt.pageX - $draggable.offset().left,
+                y = mousedownEvt.pageY - $draggable.offset().top;
+            $("body").on("mousemove.draggable",
+                function(mousemoveEvt) {
+                    $draggable.closest(".modal-dialog").offset({
+                        "left": mousemoveEvt.pageX - x,
+                        "top": mousemoveEvt.pageY - y
+                    });
+                });
+            $("body").one("mouseup",
+                function() {
+                    $("body").off("mousemove.draggable");
+                });
+            $draggable.closest(".modal").one("bs.modal.hide",
+                function() {
+                    $("body").off("mousemove.draggable");
+                });
+        }
+    );
+    $('#DocDate').val(formatDate('@ViewData["Date"]'));
+    $('#DocumentDate').val(formatDate('@ViewData["Date"]'));
+    function DeleteBatch(arr, value) {
+        let tmp = arr.filter(function (ele) {
+            return ele.serialAndBatch !== value;
+        });
+        let tmpQty = arr.filter(function (ele) {
+            return ele.serialAndBatch === value;
+        });
+        console.log(tmpQty);
+        var tmpQ = parseFloat($("#ItemCodeBatchQty").val());
+        tmpQ = tmpQ + tmpQty[0].qty;
+        console.log(tmpQ);
+        $("#ItemCodeBatchQty").val(tmpQ);
+        LBatch = tmp;
+        tbBatch.clear();
+        tbBatch.rows.add(LBatch);
+        tbBatch.search('').draw();
+    }
+    function formatDate(date) {
+        const d = new Date(date);
+        var month = `${d.getMonth() + 1}`,
+            day = `${d.getDate()}`;
+        const year = d.getFullYear();
+        if (month.length < 2)
+            month = `0${month}`;
+        if (day.length < 2)
+            day = `0${day}`;
+
+        return [year, month, day].join('-');
+    }
+
+    function DisCountPerChange() {
+        EventSaveGoodReceiptPO.LineDiscountPer();
+    }
+    function DisAmtChange() {
+        EventSaveGoodReceiptPO.LinDiscountAMT();
+    }
+
+    function BatchChangeType() {
+        if ($("#optBatchType").val() === "1") {
+            $("#DisPlayCustomizeTable").css("display","none");
+            $("#DisPlayCustomize").css("display","none");
+            $("#BtnSaveBatch").val("Save");
+            $("#BatchNumber").removeAttr("readonly");
+            $("#BtnSaveBatch").text("Save");
+        } else {
+            $("#DisPlayCustomizeTable").css("display","block");
+            $("#DisPlayCustomize").css("display","block");
+            $("#BatchNumber").attr("readonly","readonly");
+            $("#BtnSaveBatch").text("Save Item");
+        }
+    }
+
+    $("#txtTotalGenBatch").change(function() {
+        if ($("#txtPerBatch").val() !== 0 && $("#txtPerBatch").val() !=="") {
+            var totalGenBatch = $("#txtTotalGenBatch").val();
+            var totalPerBatch = $("#txtPerBatch").val();
+            var totalQty = totalGenBatch * totalPerBatch;
+            if (totalQty > $("#ItemCodeBatchQty").val()) {
+                alert("Value Can not bigger than Qty");
+            } else {
+                $("#txtTotalQtyGenBatch").val(totalQty);
+                $("#optBatchFrom").empty();
+                $("#optBatchTo").empty();
+                //$("#optBatchTo").append(new Option("All", "-1")).selected = true;
+                //$("#optBatchFrom").append(new Option("All", "-1")).selected=true;
+                $("#optBatchTo").append('<option value="-1" selected="selected">ALL</option>');
+                $("#optBatchFrom").append('<option value="-1" selected="selected">ALL</option>');
+                for (i = 1; i <= totalGenBatch; i++) {
+                    $("#optBatchFrom").append(new Option(i, i));   
+                    $("#optBatchTo").append(new Option(i, i));   
+                }
+            }
+        }
+    });
+
+    $("#txtPerBatch").change(function() {
+        if ($("#txtPerBatch").val() !== 0 && $("#txtPerBatch").val() !== "") {
+            const totalGenBatch = $("#txtTotalGenBatch").val();
+            const totalPerBatch = $("#txtPerBatch").val();
+            const totalQty = totalGenBatch * totalPerBatch;
+            if (totalQty > $("#ItemCodeBatchQty").val()) {
+                alert("Value Can not bigger than Qty");
+            } else {
+                $("#txtTotalQtyGenBatch").val(totalQty);
+                $("#optBatchFrom").empty();
+                $("#optBatchTo").empty();
+                //$("#optBatchTo").append(new Option("All", "-1"));
+                //$("#optBatchFrom").append(new Option("All", "-1"));
+                $("#optBatchTo").append('<option value="-1" selected="selected">ALL</option>');
+                $("#optBatchFrom").append('<option value="-1" selected="selected">ALL</option>');
+                for (i = 1; i <= totalGenBatch; i++) {
+                    $("#optBatchFrom").append(new Option(i, i));
+                    $("#optBatchTo").append(new Option(i, i));
+                }
+            }
+        }
+    });
+    $("#BtnSaveBatch").click(function() {
+        if ($("#BtnSaveBatch").text()==="Save") {
+            alert("Save Btn");
+            LBatch.push(
+                { 
+                    "itemCode":$("#ItemCodeBatch").val(),
+                    "qty":1,
+                    "serialAndBatch":$("#BatchNumber").val(),
+                    "mfrDate":$("#dtpMfrDateBatch").val(),
+                    "expirationDate":$("#dtpExpireDateBatch").val(),
+                    "admissionDate":$("#dtpAdmissionDateBatch").val()
+                });
+            var qtytmp = parseFloat($("#ItemCodeBatchQty").val()) - 1;
+            $("#ItemCodeBatchQty").val(qtytmp);
+            //Clear Text
+            $("#txtTotalGenBatch").val("");
+            $("#txtPerBatch").val("");
+            $("#txtTotalQtyGenBatch").val("");
+            $("#optBatchFrom").empty();
+            $("#optBatchTo").empty();
+            $("#dtpMfrDateBatch").val("");
+            $("#dtpExpireDateBatch").val("");
+            $("#dtpAdmissionDateBatch").val("");
+            $("#BatchNumber").val("");
+            tbBatch.clear();
+            tbBatch.rows.add(LBatch);
+            tbBatch.search('').draw();
+        }else if ($("#BtnSaveBatch").text()==="Save Item") {
+            alert("Btn Save Item");
+            var batchFrom=$("#optBatchFrom").val();
+            console.log($("#optBatchFrom").val());
+            var batchTo=$("#optBatchTo").val();
+            var i = 0;
+            if (batchFrom !== -1) {
+                i = 1;
+            }
+            if (batchTo !== -1) {
+                i = 1;
+            }
+            console.log(i);
+            if (i === 1) {
+                var k = 0;
+                if (LtmpBatch.length !== null && LtmpBatch.length !== 0) {
+                    if ($("#optBatchFrom").val() > $("#optBatchTo").val()) {
+                        alert("Cannot Add BatchTo Smaller than BatchFrom");
+                    }
+                    else{
+                        for (var z = 0; z < LtmpBatch.length; z++) {
+                            if (LtmpBatch[z].BatchFrom === $("#optBatchFrom").val()) {
+                                k = 1;
+                            }
+                            if (LtmpBatch[z].BatchTo === $("#optBatchTo").val()) {
+                                k = 1;
+                            }
+                            if (LtmpBatch[z].BatchTo === $("#optBatchFrom").val()) {
+                                k = 1;
+                            }
+                            if (LtmpBatch[z].BatchFrom === $("#optBatchTo").val()) {
+                                k = 1;
+                            }
+                            if ($("#optBatchFrom").val() === -1) {
+                                k = 1;
+                            }
+                            if ($("#optBatchTo").val() === -1) {
+                                k = 1;
+                            }
+                            if ($("#optBatchFrom").val() <= LtmpBatch[z].BatchTo && $("#optBatchFrom").val() <= LtmpBatch[z].BatchTo) {
+                                k = 1;
+                            }
+                            if ($("#optBatchTo").val() <= LtmpBatch[z].BatchTo && $("#optBatchTo").val() <= LtmpBatch[z].BatchTo) {
+                                k = 1;
+                            }
+                        }
+                        if (k === 1) {
+                            alert("Can not Add Batch The same");
+                        } else {
+                            LtmpBatch.push({
+                                "BatchFrom": $("#optBatchFrom").val(),
+                                "BatchTo": $("#optBatchTo").val(),
+                                "ExpirationDate": $("#dtpExpireDateBatch").val(),
+                                "MfrDate": $("#dtpMfrDateBatch").val(),
+                                "AdmissionDate": $("#dtpAdmissionDateBatch").val(),
+                                "Qty": $("#txtPerBatch").val()
+                            });
+                            //Clear Text
+                            //$("#txtTotalGenBatch").val("");
+                            //$("#txtPerBatch").val("");
+                            //$("#txtTotalQtyGenBatch").val("");
+                            //$("#optBatchFrom").empty();
+                            //$("#optBatchTo").empty();
+                            //$("#dtpMfrDateBatch").val("");
+                            //$("#dtpExpireDateBatch").val("");
+                            //$("#dtpAdmissionDateBatch").val("");
+                            //$("#BatchNumber").val("");
+                        }
+                    }
+                } else {
+                    if ($("#txtTotalQtyGenBatch").val() !== "") {
+                        if ($("#optBatchFrom").val() > $("#optBatchTo").val()) {
+                            alert("Cannot Add BatchTo Smaller than BatchFrom");
+                        } else {
+                            LtmpBatch.push({
+                                "BatchFrom": ($("#optBatchFrom").val()==-1)?"ALL":$("#optBatchFrom").val(),
+                                "BatchTo": ($("#optBatchTo").val()==-1)?"ALL":$("#optBatchTo").val(),
+                                "ExpirationDate": $("#dtpExpireDateBatch").val(),
+                                "MfrDate": $("#dtpMfrDateBatch").val(),
+                                "AdmissionDate": $("#dtpAdmissionDateBatch").val(),
+                                "Qty": $("#txtPerBatch").val()
+                            });
+                            //CLear Data
+                            //$("#txtTotalGenBatch").val("");
+                            //$("#txtPerBatch").val("");
+                            //$("#txtTotalQtyGenBatch").val("");
+                            //$("#optBatchFrom").empty();
+                            //$("#optBatchTo").empty();
+                            //$("#dtpMfrDateBatch").val("");
+                            //$("#dtpExpireDateBatch").val("");
+                            //$("#dtpAdmissionDateBatch").val("");
+                            //$("#BatchNumber").val("");
+                        }
+                    }
+                }
+            }
+            TbtmpBatchFromTo.clear();
+            TbtmpBatchFromTo.rows.add(LtmpBatch);
+            TbtmpBatchFromTo.search('').draw();
+        }
+    });
+    function DeleteTmpBatch(LsBatch,BatchFrom,BatchTo){
+        let tmp = LsBatch.filter(function (ele) {
+            return (ele.BatchFrom !== BatchFrom && ele.BatchTo !== BatchTo);
+        });
+        console.log(tmp);
+        LtmpBatch = tmp;
+        TbtmpBatchFromTo.clear();
+        TbtmpBatchFromTo.rows.add(LtmpBatch);
+        TbtmpBatchFromTo.search('').draw();
+    }
+
+    function QtyChange() {
+        var PriceChange=parseFloat($("#Price").val());
+        PriceChange = PriceChange * $("#Qty").val();
+        $("#totalItem").val(PriceChange);
+    }
+    $('#CopyToGoodReturn').click(function() {
+        temporyListPO = [];
+        if ($("#CusID").val() != "") {
+            const cardCode = $("#CusID").val();
+            GetMasterData.getGoodReceiptPO('@Url.Action("GetGoodReturnByCardCode", "GoodsReceiptPO")', cardCode);
+        } else {
+            alert("Please Select Customer, if you don't select can bind data");
+        }
+    });
+
+
+    $("#btnCLoseBatch").click(function() {
+        if ($("#txtIDRowB").val() !== "") {
+            alert("Hello");
+            console.log(parseInt($("#txtIDRowB").val()));
+            console.log("Hello World");
+            console.log(LinesAR[parseInt($("#txtIDRowB").val())].Batches);
+            console.log(LBatch);
+            LinesAR[parseInt($("#txtIDRowB").val())].Batches = LBatch;
+            $("#txtIDRowB").val("");
+            LBatch = [];
+            tbBatch.clear();
+            tbBatch.rows.add(LBatch);
+            tbBatch.search("").draw();
+        }
+    });
+
+    $("#ChooseGoodReceiptPO").click(function() {
+        const index = TbCopyFromGoodReciptPO.row('.selected').index();
+        const data = TbCopyFromGoodReciptPO.row(index).data();
+        window.location.href = '@Url.Action("CreateGoodReturn","GoodReturn")?DocNum='+data.docNum;
+    });
+
 </script>
-

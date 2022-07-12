@@ -1,9 +1,10 @@
-﻿using BarCodeAPIService.Connection;
-using BarCodeLibrary.Respones.SAP;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BarCodeAPIService.Connection;
+using BarCodeLibrary.Respones.SAP;
+using SAPbobsCOM;
 
 namespace BarCodeAPIService.Service.Bank
 {
@@ -12,16 +13,17 @@ namespace BarCodeAPIService.Service.Bank
         public Task<ResponseGetBinLocation> responseGetBinLocation(string whscode)
         {
             var oBIN = new List<lBIN>();
-            SAPbobsCOM.Company oCompany;
+            Company oCompany;
             try
             {
                 Login login = new();
                 if (login.LErrCode == 0)
                 {
                     oCompany = login.Company;
-                    SAPbobsCOM.Recordset? oRS = null;
-                    string Query = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_Bank('GetBinLocationWhs','{whscode}','','','','')";
-                    oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+                    Recordset? oRS = null;
+                    var Query =
+                        $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_Bank('GetBinLocationWhs','{whscode}','','','','')";
+                    oRS = (Recordset)oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
                     oRS.DoQuery(Query);
                     while (!oRS.EoF)
                     {
@@ -35,6 +37,7 @@ namespace BarCodeAPIService.Service.Bank
                         });
                         oRS.MoveNext();
                     }
+
                     return Task.FromResult(new ResponseGetBinLocation
                     {
                         ErrorCode = 0,
@@ -42,15 +45,13 @@ namespace BarCodeAPIService.Service.Bank
                         Data = oBIN.ToList()
                     });
                 }
-                else
+
+                return Task.FromResult(new ResponseGetBinLocation
                 {
-                    return Task.FromResult(new ResponseGetBinLocation
-                    {
-                        ErrorCode = login.LErrCode,
-                        ErrorMessage = login.SErrMsg,
-                        Data = null
-                    });
-                }
+                    ErrorCode = login.LErrCode,
+                    ErrorMessage = login.SErrMsg,
+                    Data = null
+                });
             }
             catch (Exception ex)
             {

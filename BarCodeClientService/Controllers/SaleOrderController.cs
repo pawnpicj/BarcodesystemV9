@@ -84,7 +84,7 @@ namespace BarCodeClientService.Controllers
             var a = API.Read<ResponseGetSeriesCode>("api/SeriesCV/GetSeriesCode/" + xyymm + "/DE");
 
             return Ok(a);
-        }    
+        }
 
         public IActionResult ListSO()
         {

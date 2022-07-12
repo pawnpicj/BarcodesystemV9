@@ -17,7 +17,7 @@ namespace BarCodeClientService.Controllers
 {
     public class CreateLabelStickerController : Controller
     {
-                                                                                                                                                
+
         public IActionResult GBinLocation()
         {
             return View();
@@ -52,7 +52,7 @@ namespace BarCodeClientService.Controllers
         [HttpGet]
         public IActionResult GetGenerateBinCode()
         {
-            var a = API.Read < ResponeNNG1GetGenerateBinCode > ("api/GenerateBinCode/GetGenerateBinCode");
+            var a = API.Read<ResponeNNG1GetGenerateBinCode>("api/GenerateBinCode/GetGenerateBinCode");
             return Ok(a);
         }
         // Method for Pint Item Label's size 6x7
@@ -116,7 +116,7 @@ namespace BarCodeClientService.Controllers
                 PageWidth = 120,
                 PageHeight = 90
             };
-           // return View(responsePrintBinLabel);
+            // return View(responsePrintBinLabel);
         }
         [HttpPost]
         public IActionResult PrintBinLabelPDFAction(ResponsePrintBinLabel print)

@@ -1,4 +1,6 @@
 ﻿using System;
+using SAPbobsCOM;
+
 //using Microsoft.IdentityModel.Protocols;
 
 namespace BarCodeAPIService.Connection
@@ -7,37 +9,19 @@ namespace BarCodeAPIService.Connection
     {
         // Protected Shared ReadOnly _Log As log4net.ILog = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType)
 
-        private SAPbobsCOM.Company _Company = null!;
-        private int _lErrCode = 0!;
+        private int _lErrCode;
         private string _sErrMsg = null!;
-
-        public string SErrMsg
-        {
-            get
-            {
-                return _sErrMsg;
-            }
-        }
-        public int LErrCode
-        {
-            get
-            {
-                return _lErrCode;
-            }
-        }
-
-        public SAPbobsCOM.Company Company
-        {
-            get
-            {
-                return _Company;
-            }
-        }
 
         public Login()
         {
             LogIn1();
         }
+
+        public string SErrMsg => _sErrMsg;
+
+        public int LErrCode => _lErrCode;
+
+        public Company Company { get; private set; } = null!;
 
         //private string Decrypt(string Str)
         //{
@@ -67,7 +51,7 @@ namespace BarCodeAPIService.Connection
 
         private void LogIn1()
         {
-            SAPbobsCOM.Company oCompany/* TODO Change to default(_) if this is not a reference type */;
+            Company oCompany;
             //string Server = "";
             //string DbServerType = "";
             //string LicenseServer = "";
@@ -80,62 +64,62 @@ namespace BarCodeAPIService.Connection
             try
             {
                 // log4net.Config.XmlConfigurator.Configure()
-                oCompany = new SAPbobsCOM.Company();
+                oCompany = new Company();
                 // Set connection properties
                 switch (ConnectionString.DbServerType)
                 {
                     case "dst_MSSQL":
-                        {
-                            oCompany.DbServerType = SAPbobsCOM.BoDataServerTypes.dst_MSSQL;
-                            break;
-                        }
+                    {
+                        oCompany.DbServerType = BoDataServerTypes.dst_MSSQL;
+                        break;
+                    }
                     case "dst_DB_2":
-                        {
-                            oCompany.DbServerType = SAPbobsCOM.BoDataServerTypes.dst_DB_2;
-                            break;
-                        }
+                    {
+                        oCompany.DbServerType = BoDataServerTypes.dst_DB_2;
+                        break;
+                    }
 
                     case "dst_SYBASE":
-                        {
-                            oCompany.DbServerType = SAPbobsCOM.BoDataServerTypes.dst_SYBASE;
-                            break;
-                        }
+                    {
+                        oCompany.DbServerType = BoDataServerTypes.dst_SYBASE;
+                        break;
+                    }
 
                     case "dst_MSSQL2005":
-                        {
-                            oCompany.DbServerType = SAPbobsCOM.BoDataServerTypes.dst_MSSQL2005;
-                            break;
-                        }
+                    {
+                        oCompany.DbServerType = BoDataServerTypes.dst_MSSQL2005;
+                        break;
+                    }
 
                     case "dst_MAXDB":
-                        {
-                            oCompany.DbServerType = SAPbobsCOM.BoDataServerTypes.dst_MAXDB;
-                            break;
-                        }
+                    {
+                        oCompany.DbServerType = BoDataServerTypes.dst_MAXDB;
+                        break;
+                    }
 
                     case "dst_MSSQL2008":
-                        {
-                            oCompany.DbServerType = SAPbobsCOM.BoDataServerTypes.dst_MSSQL2008;
-                            break;
-                        }
+                    {
+                        oCompany.DbServerType = BoDataServerTypes.dst_MSSQL2008;
+                        break;
+                    }
 
                     case "dst_MSSQL2012":
-                        {
-                            oCompany.DbServerType = SAPbobsCOM.BoDataServerTypes.dst_MSSQL2012;
-                            break;
-                        }
+                    {
+                        oCompany.DbServerType = BoDataServerTypes.dst_MSSQL2012;
+                        break;
+                    }
 
                     case "dst_MSSQL2014":
-                        {
-                            oCompany.DbServerType = SAPbobsCOM.BoDataServerTypes.dst_MSSQL2014;
-                            break;
-                        }
+                    {
+                        oCompany.DbServerType = BoDataServerTypes.dst_MSSQL2014;
+                        break;
+                    }
 
                     case "HANADB":
-                        {
-                            oCompany.DbServerType = SAPbobsCOM.BoDataServerTypes.dst_HANADB;
-                            break;
-                        }
+                    {
+                        oCompany.DbServerType = BoDataServerTypes.dst_HANADB;
+                        break;
+                    }
                 }
 
                 //string tmpstr;
@@ -143,7 +127,7 @@ namespace BarCodeAPIService.Connection
                 //tmpstr = oCompany.Server;
                 oCompany.LicenseServer = ConnectionString.LicenseServer;
                 //tmpstr = oCompany.LicenseServer;
-                oCompany.language = SAPbobsCOM.BoSuppLangs.ln_English; // change to your language
+                oCompany.language = BoSuppLangs.ln_English; // change to your language
                 oCompany.UseTrusted = false;
                 oCompany.DbUserName = ConnectionString.DbUserName;
                 //tmpstr = oCompany.DbUserName;
@@ -156,20 +140,20 @@ namespace BarCodeAPIService.Connection
                 if (oCompany.Connect() != 0)
                 {
                     oCompany.GetLastError(out _lErrCode, out _sErrMsg);
-                    _Company = null!;
+                    Company = null!;
                 }
                 else
                 {
                     _lErrCode = 0;
                     _sErrMsg = "";
-                    _Company = oCompany;
+                    Company = oCompany;
                 }
             }
             catch (Exception ex)
             {
                 _lErrCode = ex.GetHashCode();
                 _sErrMsg = ex.Message;
-                _Company = null!;
+                Company = null!;
             }
         }
     }

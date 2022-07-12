@@ -1,6 +1,4 @@
 ﻿@media print {
     .hidden-print,
-    .hidden-print * {
-        display: none !important;
-    }
+    .hidden-print * { display: none !important; }
 }

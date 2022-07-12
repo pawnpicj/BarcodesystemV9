@@ -1,10 +1,7 @@
-﻿using BarCodeAPIService.Service;
+﻿using System.Threading.Tasks;
+using BarCodeAPIService.Service;
 using Barcodesystem.Contract.RouteApi;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BarCodeAPIService.Controllers
 {
@@ -14,19 +11,18 @@ namespace BarCodeAPIService.Controllers
     {
         private readonly IGLAccountService gLAccount;
 
-        public  GLAccountController(IGLAccountService gLAccount) {
+        public GLAccountController(IGLAccountService gLAccount)
+        {
             this.gLAccount = gLAccount;
         }
+
         [HttpGet]
-        public async Task<IActionResult> GetGLAccountAsync() {
+        public async Task<IActionResult> GetGLAccountAsync()
+        {
             var a = await gLAccount.ResponseOACTGetGLAccount();
-            if (a.ErrorCode == 0) {
+            if (a.ErrorCode == 0)
                 return Ok(a);
-            }
-            else
-            {
-                return BadRequest(a);
-            }
+            return BadRequest(a);
         }
     }
 }

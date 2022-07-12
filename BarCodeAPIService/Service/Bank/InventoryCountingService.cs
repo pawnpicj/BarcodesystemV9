@@ -46,7 +46,7 @@ namespace BarCodeAPIService.Service
 
                     foreach (SendInventoryCountingLine l in sendInventoryCounting.Line)
                     {
-                        
+
 
                         if ((l.BatchNo != "" && l.BatchNo != null) && l.ProductType == "b")
                         {
@@ -81,25 +81,25 @@ namespace BarCodeAPIService.Service
                             }
                         }
 
-                        
-                        
-                            //if (l.BatchNo != "")
-                            //{
-                            //    SAPbobsCOM.InventoryCountingBatchNumber oInventoryCountingBatchNumber = oICL.InventoryCountingBatchNumbers.Add();
-                            //    oInventoryCountingBatchNumber.BatchNumber = l.BatchNo;
-                            //    oInventoryCountingBatchNumber.Quantity = l.Quantity;
-                            //}
-                            //else
-                            //{
-                            //    if (l.SerialNo != "")
-                            //    {
-                            //        SAPbobsCOM.InventoryCountingSerialNumber oInventoryCountingSerialNumber = oICL.InventoryCountingSerialNumbers.Add();
-                            //        oInventoryCountingSerialNumber.InternalSerialNumber = l.SerialNo;
-                            //        oInventoryCountingSerialNumber.ManufacturerSerialNumber = l.SerialNo;
-                            //        oInventoryCountingSerialNumber.Quantity = l.Quantity;
-                            //    }
-                            //}          
-                    }                    
+
+
+                        //if (l.BatchNo != "")
+                        //{
+                        //    SAPbobsCOM.InventoryCountingBatchNumber oInventoryCountingBatchNumber = oICL.InventoryCountingBatchNumbers.Add();
+                        //    oInventoryCountingBatchNumber.BatchNumber = l.BatchNo;
+                        //    oInventoryCountingBatchNumber.Quantity = l.Quantity;
+                        //}
+                        //else
+                        //{
+                        //    if (l.SerialNo != "")
+                        //    {
+                        //        SAPbobsCOM.InventoryCountingSerialNumber oInventoryCountingSerialNumber = oICL.InventoryCountingSerialNumbers.Add();
+                        //        oInventoryCountingSerialNumber.InternalSerialNumber = l.SerialNo;
+                        //        oInventoryCountingSerialNumber.ManufacturerSerialNumber = l.SerialNo;
+                        //        oInventoryCountingSerialNumber.Quantity = l.Quantity;
+                        //    }
+                        //}          
+                    }
 
                     SAPbobsCOM.InventoryCountingParams oInventoryCountingParams = oICS.Add(oIC);
                     //Retval = oICS.Add();

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace BarCodeLibrary.Respones.SAP
 {
@@ -12,6 +8,7 @@ namespace BarCodeLibrary.Respones.SAP
         public string? ErrorMsg { get; set; }
         public List<OWTR> Data { get; set; }
     }
+
     public class OWTR
     {
         public int DocNum { get; set; }
@@ -29,6 +26,7 @@ namespace BarCodeLibrary.Respones.SAP
         public string LoanNum { get; set; }
         public List<WTR1> Line { get; set; }
     }
+
     public class WTR1
     {
         public string ItemCode { get; set; }

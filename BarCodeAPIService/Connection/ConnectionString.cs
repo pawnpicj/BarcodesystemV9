@@ -11,5 +11,7 @@
         public static string CompanyDB { get; set; } = null!;
         public static string UserName { get; set; } = null!;
         public static string Password { get; set; } = null!;
+        public static string ConnHana { get; set; } = null;
+        public static string BarcodeDb { get; set; } = null;
     }
 }

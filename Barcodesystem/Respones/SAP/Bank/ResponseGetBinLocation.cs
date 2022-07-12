@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace BarCodeLibrary.Respones.SAP
 {
@@ -12,6 +8,7 @@ namespace BarCodeLibrary.Respones.SAP
         public string ErrorMessage { get; set; }
         public List<lBIN> Data { get; set; }
     }
+
     public class lBIN
     {
         public string BinCode { get; set; }
@@ -19,6 +16,5 @@ namespace BarCodeLibrary.Respones.SAP
         public string WhsCode { get; set; }
         public string WhsName { get; set; }
         public int AbsEntry { get; set; }
-        
     }
 }

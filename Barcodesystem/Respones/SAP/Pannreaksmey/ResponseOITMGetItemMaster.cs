@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace BarCodeLibrary.Respones.SAP
 {
@@ -11,8 +7,8 @@ namespace BarCodeLibrary.Respones.SAP
         public int ErrorCode { get; set; }
         public string ErrorMessage { get; set; }
         public List<OITM> Data { get; set; }
-
     }
+
     public class OITM
     {
         public string ItemCode { get; set; }

@@ -52,7 +52,8 @@ namespace BarCodeLibrary.APICall
                 Response = Client.GetAsync(requestURI).Result;
                 if (Response.IsSuccessStatusCode)
                 {
-                    if (Response.StatusCode == HttpStatusCode.OK) {
+                    if (Response.StatusCode == HttpStatusCode.OK)
+                    {
                         //string aaa1 = JsonConvert.DeserializeObject<T>(Response.Content.ReadAsStringAsync().Result);
                         return JsonConvert.DeserializeObject<T>(Response.Content.ReadAsStringAsync().Result);
                     }
@@ -91,7 +92,8 @@ namespace BarCodeLibrary.APICall
                 }
                 else throw new Exception("Post was not successful \n\nReason Phrase: " + Response.Content.ReadAsStringAsync().Result);
             }
-            catch (Exception ex) { 
+            catch (Exception ex)
+            {
                 errorMessage = ex.Message;
                 return JsonConvert.DeserializeObject<T>(Response.Content.ReadAsStringAsync().Result);
                 //return (T)Convert.ChangeType(null, typeof(T)); 

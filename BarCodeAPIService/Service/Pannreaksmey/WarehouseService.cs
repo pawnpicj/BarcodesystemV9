@@ -15,7 +15,8 @@ namespace BarCodeAPIService.Service
             var oWHS = new List<OWHS>();
             //DataTable dt = new DataTable();
             SAPbobsCOM.Company oCompany;
-            try {
+            try
+            {
 
                 Login login = new();
                 if (login.LErrCode == 0)
@@ -29,11 +30,11 @@ namespace BarCodeAPIService.Service
                     {
                         oWHS.Add(new OWHS
                         {
-                            WhsCode= oRS.Fields.Item(0).Value.ToString(),
-                            WhsName= oRS.Fields.Item(1).Value.ToString(),
+                            WhsCode = oRS.Fields.Item(0).Value.ToString(),
+                            WhsName = oRS.Fields.Item(1).Value.ToString(),
                         });
                         oRS.MoveNext();
-                    }                   
+                    }
                     return Task.FromResult(new ResponseOWHSGetWarehouse
                     {
                         ErrorCode = 0,
@@ -47,11 +48,14 @@ namespace BarCodeAPIService.Service
                     {
                         ErrorCode = login.LErrCode,
                         ErrorMessage = login.SErrMsg,
-                        Data=null
-                    }) ;
+                        Data = null
+                    });
                 }
-            } catch (Exception ex) {
-                return Task.FromResult(new ResponseOWHSGetWarehouse { 
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseOWHSGetWarehouse
+                {
                     ErrorCode = ex.HResult,
                     ErrorMessage = ex.Message,
                     Data = null

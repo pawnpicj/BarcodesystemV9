@@ -16,7 +16,8 @@ namespace BarCodeAPIService.Service
             var oITM = new List<OITM>();
             SAPbobsCOM.Company oCompany;
             DataTable dt = new DataTable();
-            try {
+            try
+            {
                 Login login = new();
                 if (login.LErrCode == 0)
                 {
@@ -50,16 +51,19 @@ namespace BarCodeAPIService.Service
                 }
                 else
                 {
-                    return Task.FromResult(new ResponseOITMGetItemMaster {
+                    return Task.FromResult(new ResponseOITMGetItemMaster
+                    {
                         ErrorCode = login.LErrCode,
                         ErrorMessage = login.SErrMsg,
                         Data = null
                     });
                 }
-             
+
             }
-            catch (Exception ex) {
-                return Task.FromResult(new ResponseOITMGetItemMaster {
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseOITMGetItemMaster
+                {
                     ErrorCode = ex.HResult,
                     ErrorMessage = ex.Message,
                     Data = null

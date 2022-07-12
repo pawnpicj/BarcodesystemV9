@@ -10,7 +10,7 @@ namespace BarCodeAPIService.Service.Bank
     {
         Task<ResponseGetStockByWhsBin> responseGetStockByWhsBin(string whsCode, string binCode);
 
-        Task<ResponseGetStockItemBatchAndSerial> responseGetStockItemBatch(string itemCode,  string batchNumber);
+        Task<ResponseGetStockItemBatchAndSerial> responseGetStockItemBatch(string itemCode, string batchNumber);
         Task<ResponseGetStockItemBatchAndSerial> responseGetStockItemSerial(string itemCode, string serialNumber);
 
         Task<ResponseGetStockItemBatchAndSerial> responseGetStockItemBatchBin(string itemCode, string batchNumber, string binEntry);

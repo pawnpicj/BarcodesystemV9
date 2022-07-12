@@ -1,5 +1,3 @@
-using System;
-
 namespace BarCodeClientService.Models
 {
     public class ErrorViewModel

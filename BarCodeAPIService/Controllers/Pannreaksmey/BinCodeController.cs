@@ -1,10 +1,7 @@
-﻿using Barcodesystem.Contract.RouteApi;
+﻿using System.Threading.Tasks;
 using BarCodeAPIService.Service;
+using Barcodesystem.Contract.RouteApi;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BarCodeAPIService.Controllers
 {
@@ -18,19 +15,14 @@ namespace BarCodeAPIService.Controllers
         {
             this.binCode = binCode;
         }
+
         [HttpGet("GetBinCode")]
         public async Task<IActionResult> GetBinCodeAnsync()
         {
             var a = await binCode.ResponseOBINGetBinCode();
             if (a.ErrorCode == 0)
-            {
                 return Ok(a);
-            }
-            else
-            {
-                return BadRequest(a);
-            }
+            return BadRequest(a);
         }
-       
     }
 }

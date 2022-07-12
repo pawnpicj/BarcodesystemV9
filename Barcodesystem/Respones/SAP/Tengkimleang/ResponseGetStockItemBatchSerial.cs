@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BarCodeLibrary.Respones.SAP.Tengkimleang
 {
@@ -12,6 +9,7 @@ namespace BarCodeLibrary.Respones.SAP.Tengkimleang
         public int ErrorCode { get; set; }
         public List<GetStockItemBatchSerial> Data { get; set; }
     }
+
     public class GetStockItemBatchSerial
     {
         public string ItemCode { get; set; }
@@ -23,7 +21,7 @@ namespace BarCodeLibrary.Respones.SAP.Tengkimleang
         public int BinEntry { get; set; }
         public string BinCode { get; set; }
         public string BatchNumber { get; set; }
-        public string SerialNumber { get; set; }        
+        public string SerialNumber { get; set; }
         public DateTime ExpDate { get; set; }
     }
 }

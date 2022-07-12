@@ -26,6 +26,7 @@ namespace BarCodeLibrary.Respones.SAP
         public string SeriesName { get; set; }
         public int ToBinEntry { get; set; }
         public string ToBinCode { get; set; }
+        public string LoanNum { get; set; }
         public List<WTR1> Line { get; set; }
     }
     public class WTR1

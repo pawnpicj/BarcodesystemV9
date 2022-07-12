@@ -91,12 +91,28 @@
         <div class="tab-pane fade show active" id="create" role="tabpanel" aria-labelledby="create-tab">
             <div class="row" id="BinCode">
                 <div class="col-sm-8" style="padding: 10px;">
+                    Batch / SN:
+                    <div class="col-12" style="padding-left:2px;padding-right:10px">
+                        <div class="row">
+                            <div class="col-10">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <button class="input-group-text" id="GbatchSN"><i class="fa fa-check"></i></button>
+                                    </div>
+                                    <input type="text" class="form-control" placeholder="" id="batchSN" required>&nbsp;
+                                    <button class="btn btn-info" id="btnAuto" style="background:#f0eff1;color:#696969">Generate</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     Item :
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <button class="input-group-text" id="GItemCode"><i class="fa fa-check"></i></button>
                         </div>
                         <input type="text" class="form-control" placeholder="" id="ItemCode" readonly>
+                        <input type="text" class="form-control" placeholder="" id="txtFDA" readonly style="display:none">
                         <div class="input-group-append">
                             <button class="input-group-text btnItemCode" data-toggle="modal" data-target="#ModalItemCode"><i class="fa fa-search"></i></button>
                         </div>
@@ -106,7 +122,7 @@
                         <div class="input-group-prepend">
                             <button class="input-group-text" id="GItemName"><i class="fa fa-check"></i></button>
                         </div>
-                        <input type="text" class="form-control"  placeholder="" id="ItemName" readonly>
+                        <input type="text" class="form-control" placeholder="" id="ItemName" readonly>
                     </div>
                     Product Group :
                     <div class="input-group">
@@ -115,34 +131,13 @@
                         </div>
                         <input type="text" class="form-control" placeholder="" id="ProductGroup" readonly>
                     </div>
-                    Batch / SN:
-                    @*<div class="input-group">
-                        <div class="input-group-prepend">
-                            <button class="input-group-text" id="GbatchSN"><i class="fa fa-check"></i></button>
-                        </div>
-                        <input type="text" class="form-control" value="12345" placeholder="" id="batchSN" required>
-                    </div>*@
-                    <div class="col-12" style="padding-left:2px;padding-right:10px">
-                        <div class="row">
-                            <div class="col-10">
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <button class="input-group-text" id="GbatchSN"><i class="fa fa-check"></i></button>
-                                    </div>
-                                    <input type="text" class="form-control"  placeholder="" id="batchSN" required>
-                                </div>
-                            </div>
-                            <div class="col-2">
-                                <button class="btn btn-info" id="btnAuto" style="background:#f0eff1;color:#696969">Generate</button>
-                            </div>
-                        </div>
-                    </div>
+
                     Expired Date:
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <button class="input-group-text" id="GexpireDate"><i class="fa fa-check"></i></button>
                         </div>
-                        <input type="date" class="form-control"  placeholder="" id="expireDate" required>
+                        <input type="date" class="form-control" placeholder="" id="expireDate" required>
 
                     </div>
                     Quantity :
@@ -152,11 +147,11 @@
                         </div>
                         <input type="number" value="1" class="form-control" placeholder="" id="Qty" required>
                         @*<div class="input-group-append">
-                <button class="input-group-text btnbinLocation" data-toggle="modal" data-target="#ModalBinCode"><i class="fa fa-search"></i></button>
-            </div>*@
+                            <button class="input-group-text btnbinLocation" data-toggle="modal" data-target="#ModalBinCode"><i class="fa fa-search"></i></button>
+                        </div>*@
                     </div>
                     <div class="col-12">
-                        <div class="row">
+                        <div class="row" style="display:none">
                             <div class="col-2" style="padding-left:2px">
                                 <label>Sticker Size :</label>
                             </div>
@@ -172,12 +167,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-2">
-                                <div class="nav navbar-nav ml-auto" style=" padding: 5px; ">
-                                    <button class="btn btn-info" id="Add" style="background:#f0eff1;color:#696969">Add Item</button>
-                                </div>
-                            </div>
+
                         </div>
+                    </div>
+                    <div class="nav navbar-nav ml-auto" style=" padding: 5px; ">
+                        <button class="btn btn-info" id="Add" style="background:#f0eff1;color:#696969">Add Item</button>
                     </div>
                 </div>
             </div>
@@ -221,7 +215,6 @@
                         <table id="TbListItem" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;margin-bottom:10px;">
                             <thead>
                                 <tr>
-                                    <th>No. </th>
                                     <th>ItemCode </th>
                                     <th>Item Name </th>
                                     <th>Quantity</th>
@@ -245,7 +238,7 @@
                 <h1>
                     <label>Print Item Lable</label>
                 </h1>
-            </div> 
+            </div>
         </div>
         <div class="row">
             <div class="col-2">
@@ -258,34 +251,35 @@
                 </p>
             </div>
         </div>
-        
+
         @*<div class="row">
-            <div class="col-12" >
-                <div class="col-sm-12" style="padding-left: 5px;padding-top:20px;">
-                    <div class="table-responsive">
-                        <table id="TbListItemPrint" class="table  table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;margin-bottom:10px;">
-                            <thead>
-                                <tr>
-                                    <th>No. </th>
-                                    <th>ItemCode </th>
-                                    <th>Item Name </th>
-                                    <th>Quantity</th>
-                                    <th>Product Group</th>
-                                    <th>Batch/SN</th>
-                                    <th>Exp.Date</th>
-                                </tr>
-                            </thead>
-                        </table>
+                <div class="col-12" >
+                    <div class="col-sm-12" style="padding-left: 5px;padding-top:20px;">
+                        <div class="table-responsive">
+                            <table id="TbListItemPrint" class="table  table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;margin-bottom:10px;">
+                                <thead>
+                                    <tr>
+                                        <th>No. </th>
+                                        <th>ItemCode </th>
+                                        <th>Item Name </th>
+                                        <th>Quantity</th>
+                                        <th>Product Group</th>
+                                        <th>Batch/SN</th>
+                                        <th>Exp.Date</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>*@
+            </div>*@
     </div>
 </div>
 <script src="~/js/Array.js"></script>
 <script src="~/css/DataTable/jquery-3.3.1.js"></script>
 <script src="~/css/DataTable/jquery.dataTables.min.js"></script>
 <script type="text/javascript">
+    document.getElementById("batchSN").focus();
     //Get Item Master
     $('#tbItem').DataTable({
         bLengthChange: false,
@@ -322,13 +316,13 @@
             type: "GET",
             dataType: "JSON",
             success: function (data) {
-                console.log(data);
+                //console.log(data);
                 LWhs = []
                 LWhs = data.data
                 tbWhs.clear();
                 tbWhs.rows.add(LWhs);
                 tbWhs.draw();
-                console.log("Hello");
+                //console.log("Hello");
             }
         });
     });
@@ -341,10 +335,25 @@
         $('#ItemCode').val(data.itemCode);
         $('#ItemName').val(data.itemName);
         $('#ProductGroup').val(data.itemGroup);
-        FDA = "1234";
+
+        let fda13 = data.fda
+        let mixfda = "";
+
+        if (fda13.length > 1) {
+            let set1 = fda13.substring(0, 2);
+            let set2 = fda13.substring(3, 2);
+            let set3 = fda13.substring(3, 8);
+            let set4 = fda13.substring(8, 9);
+            let set5 = fda13.substring(9, 13);
+            mixfda = set1 + "-" + set2 + "-" + set3 + "-" + set4 + "-" + set5;
+        } else {
+            mixfda = "";
+        }
+
+        $('#txtFDA').val(mixfda);
+        //FDA = "1234";
         batch = data.manBtchNum;
         serial = data.manSerNum;
-        console.log();
 
     });
     // Add Item to Table
@@ -353,14 +362,13 @@
         binfo: false,
         data: allbinLInes,
         columns: [
-            {data:"no",autoWidth:true},
             { data: "itemCode", autoWidth: true },
             { data: "itemName", autoWidth: true },
             { data: "quantity", autoWidth: true},
             { data: "productCode", autoWidth: true },
             { data: "batchSN", autoWidth: true },
             { data: "expDate", autoWidth: true },
-            {data: "fda",autoWidth:true}
+            { data: "fda",autoWidth:true}
         ]
     });
     //$('#TbListItemPrint').DataTable({
@@ -382,91 +390,122 @@
 /*    var tableprint = $('#TbListItemPrint').DataTable();*/
     var HeaderLs = [];
     var allbinLInes = [];
+    var allitemLInes = [];
     var No = 1;
-    var Qty; var check = 0;
+    var Qty = 0;
+    var check = 0;
     var itemLines = {};
-        $('#Add').click(function () {
+    $('#Add').click(function () {
 
-            allitemLInes = [];
-            if ($('#ItemCode').val() != "" && $('#ItemName').val() != "" && $('#Qty').val() != "" && $('#ProductGroup').val() != "" && $('#batchSN').val() != "" && $('#expireDate').val()!="") {
-                Qty = $('#Qty').val();
-                if (batch == "Y") {
-                    for (var i = 1; i <= Qty; i++) {
-                        itemLines.no = i.toString().padStart(4,'0')+"";
-                        itemLines.itemCode = $('#ItemCode').val() + " ";
-                        itemLines.itemName = $('#ItemName').val() + " ";
-                        itemLines.quantity = 1 + " ";
-                        itemLines.productCode = $('#ProductGroup').val() + " ";
-                        itemLines.batchSN = $('#batchSN').val() + " ";
-                        itemLines.expDate = $('#expireDate').val() + " ";
-                        itemLines.fda = FDA;
-                        itemLines.concatText = "- " + $('#ItemCode').val() + "\n- " + $('#ItemName').val() + "\n- " + $('#ProductGroup').val();
-                        itemLines.concatText2 = $('#ItemCode').val() + ";" + $('#batchSN').val() + "; ;" + $('#expireDate').val() + ";" +  i.toString().padStart(4, '0')+"";
-                        allitemLInes.push(itemLines);
-                        table.rows.add(allitemLInes);
-                        table.draw();
-                        HeaderLs.push(itemLines);
-                    }
+        allitemLInes = [];
+        //allitemLInes = [];
+        //HeaderLs = [];
+        itemLines = {};
+        Qty = $('#Qty').val();
+        //console.log(Qty);
+        if ($('#ItemCode').val() != "" && $('#ItemName').val() != "" && $('#Qty').val() != "" && $('#ProductGroup').val() != "" && $('#batchSN').val() != "" && $('#expireDate').val() != "") {
+            if (batch == "Y") {
+                for (var i = 0; i < Qty; i++) {
+                    allitemLInes = [];
+                    //itemLines.no = i+1;
+                    itemLines.itemCode = $('#ItemCode').val() + "";
+                    itemLines.itemName = $('#ItemName').val() + "";
+                    itemLines.quantity = 1;
+                    itemLines.productCode = $('#ProductGroup').val() + " ";
+                    itemLines.batchSN = $('#batchSN').val() + "";
+                    itemLines.expDate = $('#expireDate').val() + "";
+                    itemLines.fda = $('#txtFDA').val();
+                    itemLines.concatText = "- " + $('#ItemCode').val() + "\n- " + $('#ItemName').val() + "\n- " + $('#ProductGroup').val();
+                    itemLines.concatText2 = $('#ItemCode').val() + ";" + $('#batchSN').val() + ";;" + $('#expireDate').val() + ";" + i.toString().padStart(4, '0') + "";
+                    allitemLInes.push(itemLines);
+                    HeaderLs.push(itemLines);
+                    table.rows.add(allitemLInes).draw(false);
                 }
+
+            }
+
                 if (serial == "Y") {
-                    for (var i = 1; i <= Qty;i++) {
-                        itemLines.no = i.toString().padStart(4, '0') + "";
-                        itemLines.itemCode = $('#ItemCode').val() + " ";
-                        itemLines.itemName = $('#ItemName').val() + " ";
-                        itemLines.quantity = 1 + " ";
-                        itemLines.productCode = $('#ProductGroup').val() + " ";
-                        itemLines.batchSN = $('#batchSN').val() + " ";
-                        itemLines.expDate = $('#expireDate').val() + " ";
-                        itemLines.fda = FDA;
+                    for (var i = 0; i < Qty; i++) {
+                        allitemLInes = [];
+                        //itemLines.no = i.toString().padStart(4, '0') + "";
+                        itemLines.itemCode = $('#ItemCode').val() + "";
+                        itemLines.itemName = $('#ItemName').val() + "";
+                        itemLines.quantity = 1;
+                        itemLines.productCode = $('#ProductGroup').val() + "";
+                        itemLines.batchSN = $('#batchSN').val() + "";
+                        itemLines.expDate = $('#expireDate').val() + "";
+                        itemLines.fda = $('#txtFDA').val();
                         itemLines.concatText = "- " + $('#ItemCode').val() + "\n- " + $('#ItemName').val() + "\n- " + $('#ProductGroup').val();
-                        itemLines.concatText2 = $('#ItemCode').val() + "; ;" + $('#batchSN').val() + i.toString().padStart(2, '0') + ";" + $('#expireDate').val() + ";" + i.toString().padStart(4, '0') + "";
+                        itemLines.concatText2 = $('#ItemCode').val() + ";;" + $('#batchSN').val() + i.toString().padStart(2, '0') + ";" + $('#expireDate').val() + ";" + i.toString().padStart(4, '0') + "";
                         allitemLInes.push(itemLines);
-                        table.rows.add(allitemLInes);
-                        table.draw();
                         HeaderLs.push(itemLines);
+                        table.rows.add(allitemLInes).draw(false);
                     }
                 }
                 if (batch == "N" && serial == "N") {
-                        for ( var i = 1; i <= Qty; i++) {
-                            itemLines.no = i.toString().padStart(4, '0');
-                            itemLines.itemCode = $('#ItemCode').val() + " ";
-                            itemLines.itemName = $('#ItemName').val() + " ";
-                            itemLines.quantity = 1 + " ";
-                            itemLines.productCode = $('#ProductGroup').val() + " ";
-                            itemLines.batchSN = $('#batchSN').val() + " ";
-                            itemLines.expDate = $('#expireDate').val() + " ";
-                            itemLines.fda = FDA;
-                            itemLines.concatText = "- " + $('#ItemCode').val() + "\n\n-" + $('#ItemName').val() + "\n\n-" + $('#ProductGroup').val();
-                            itemLines.concatText2 = $('#ItemCode').val() + "; ; ;" + $('#expireDate').val() + ";" + i.toString().padStart(4, '0') + "";
-                            allitemLInes.push(itemLines);
-                            HeaderLs.push(itemLines);
-                            itemLines = {};
-                        }
-                    table.rows.add(allitemLInes);
-                    table.draw();
+                    for (var i = 0; i < Qty; i++) {
+                        allitemLInes = [];
+                        //itemLines.no = i.toString().padStart(4, '0');
+                        itemLines.itemCode = $('#ItemCode').val() + "";
+                        itemLines.itemName = $('#ItemName').val() + "";
+                        itemLines.quantity = 1;
+                        itemLines.productCode = $('#ProductGroup').val() + " ";
+                        itemLines.batchSN = $('#batchSN').val() + "";
+                        itemLines.expDate = $('#expireDate').val() + "";
+                        itemLines.fda = $('#txtFDA').val();
+                        itemLines.concatText = "- " + $('#ItemCode').val() + "\n\n-" + $('#ItemName').val() + "\n\n-" + $('#ProductGroup').val();
+                        itemLines.concatText2 = $('#ItemCode').val() + ";;;" + $('#expireDate').val() + ";" + i.toString().padStart(4, '0') + "";
+                        allitemLInes.push(itemLines);
+                        HeaderLs.push(itemLines);
+                        itemLines = {};
+                        table.rows.add(allitemLInes).draw(false);
+                    }
+                    //table.clear();
+                    //table.rows.add(allitemLInes).draw(false);
                 }
-
                 $('#ItemCode').val("");
                 $('#ItemName').val("");
                 $('#Qty').val("1");
                 $('#ProductGroup').val("");
                 $('#batchSN').val("");
                 $('#expireDate').val("");
-                FDA = "";
-
+                $('#txtFDA').val();
             }
 
         });
     //Table waitig for Print
-    var print = {};
+
 
     $('#Print').click(function () {
+
         //var headstr = "<html><head><style>table.table-bordered{border:1px solid black;margin-top:20px;}table.table-bordered > thead > tr > th{border:1px solid black;}table.table-bordered > tbody > tr > td{border:1px solid black;}</style></head><body>";
         //var footstr = "</body>";
         //var item = document.getElementById("body1").innerHTML;
         //document.body.innerHTML = headstr + item + footstr;dfdsd
-        print.Data = HeaderLs;
-        if (HeaderLs.length) {
+
+        //print.Data = allitemLInes;
+        /*if (allitemLInes.length > 0) { }*/
+        var sLine = [];
+        var arrayLine = {};
+        var print = {};
+        for (let rr = 0; rr < table.column(0).data().length; rr++) {
+            arrayLine = {};
+            var data = table.row(rr).data();
+            arrayLine.itemCode = data.itemCode;
+            arrayLine.itemName = data.itemName;
+            arrayLine.productCode = data.productCode;
+            arrayLine.quantity = data.quantity;
+            arrayLine.concatText = data.concatText;
+            arrayLine.concatText2 = data.concatText2;
+            arrayLine.expDate = data.expDate;
+            arrayLine.batchSN = data.batchSN;
+            arrayLine.fda = data.fda;
+            sLine.push(arrayLine);
+        }
+        //console.log(sLine);
+
+        print.Data = sLine;
+        if (sLine.length > 0) {
             if ($('#labelSize').val() == '0') {
             $.ajax({
                 url: '@Url.Action("PrintItemLablePDFAction", "CreateLabelSticker")',
@@ -474,8 +513,8 @@
                 data: { print: print},
                 dataType: "JSON",
                 success: function (data) {
-                if (data == 1) {
-                    window.location.href = "@Url.Action("PrintItemLablePDF", "CreateLabelSticker")";//170x264
+                    if (data == 1) {
+                        window.location.href = "@Url.Action("PrintItemLablePDF", "CreateLabelSticker")";//170x264
                 }
                 }
             });
@@ -494,7 +533,11 @@
             });
         }
         }
+
+
     });
+
+
     //Button for Generate Batch/Serial
     $('#btnAuto').click(function () {
         var date = new Date();

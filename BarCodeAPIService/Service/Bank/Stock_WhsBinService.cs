@@ -424,6 +424,73 @@ namespace BarCodeAPIService.Service.Bank
                 });
             }
         }
-   
+
+        public Task<ResponseScanItemsInIM> responseScanItemsInIM(string docEntry, string itemCode, string batchSerialNo)
+        {
+            var getItemsLine = new List<GetItemsLine>();
+            SAPbobsCOM.Company oCompany;
+            try
+            {
+                Login login = new();
+                if (login.LErrCode == 0)
+                {
+                    oCompany = login.Company;
+                    SAPbobsCOM.Recordset? oRS = null;
+                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('GetItemInIM','{docEntry}','{itemCode}','{batchSerialNo}','','')"; ;
+                    oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+                    oRS.DoQuery(sqlStr);
+                    while (!oRS.EoF)
+                    {
+                        getItemsLine.Add(new GetItemsLine
+                        {
+                            
+                            DocEntry = Convert.ToInt32(oRS.Fields.Item(0).Value.ToString()),
+                            ItemCode = oRS.Fields.Item(1).Value.ToString(),
+                            ItemName = oRS.Fields.Item(2).Value.ToString(),
+                            Quantity = Convert.ToDouble(oRS.Fields.Item(3).Value.ToString()),
+                            UOMCode = oRS.Fields.Item(6).Value.ToString(),
+
+                            FWhsCode = oRS.Fields.Item(5).Value.ToString(),
+                            FBinEntry = Convert.ToInt32(oRS.Fields.Item(8).Value.ToString()),
+                            FBinCode = oRS.Fields.Item(7).Value.ToString(),
+
+                            TWhsCode = oRS.Fields.Item(4).Value.ToString(),
+                            TBinEntry = Convert.ToInt32(oRS.Fields.Item(10).Value.ToString()),
+                            TBinCode = oRS.Fields.Item(9).Value.ToString(),
+
+                            BatchNumber = oRS.Fields.Item(11).Value.ToString(),
+                            SerialNumber = oRS.Fields.Item(12).Value.ToString(),
+                        });
+                        oRS.MoveNext();
+                    }
+                    return Task.FromResult(new ResponseScanItemsInIM
+                    {
+                        ErrorCode = 0,
+                        ErrorMessage = "",
+                        Data = getItemsLine
+                    });
+                }
+                else
+                {
+                    return Task.FromResult(new ResponseScanItemsInIM
+                    {
+                        ErrorCode = login.LErrCode,
+                        ErrorMessage = login.SErrMsg,
+                        Data = null
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseScanItemsInIM
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMessage = ex.Message,
+                    Data = null
+                });
+            }
+        }
+
+
     }
 }

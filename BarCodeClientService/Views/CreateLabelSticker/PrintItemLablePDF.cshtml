@@ -21,27 +21,33 @@
     <script src="~/lib/jquery/dist/jquery.js"></script>
 </head>
 <style>
+    body {
+        /*margin: 0;*/
+        margin: 0px 0px -20px 5px;
+        background-color: #FFFFFF;
+        padding: 0;
+    }
     .container-fluid {
         font-family: arial;
         font-size: 6px;
-        margin: auto auto 5px auto;
-        width: 264.5669291339px;
-        height: 170px;
-        outline: solid 1px black;
+        /*margin: 0 auto auto auto;*/
+        width: 99%;
+        height: 200px;
+        outline: solid 1px #FFFFFF;
     }
     #ImgFDA {
-        max-width: 50%;
-        max-height: 50%;
+        max-width: 250px;
+        max-height: 90px;
     }
     #img1 {
-        width: 35px;
-        height: 35px;
+        width: 125px;
+        height: 125px;
     }
     #img {
-        width: 70px;
-        height: 70px;
-        margin-left: 78px;
-        margin-top:-17px;
+        width: 230px;
+        height: 230px;
+        /*margin-left: 78px;
+        margin-top:-17px;*/
     }
     div.logo {
         background-image: url("/Icon/FDA Number.jpg");
@@ -53,6 +59,9 @@
         height: 40px;
         width: 700px;
 
+    }
+    .br1 {
+        height: 30px;
     }
     /*  @@page {
             size: auto;
@@ -79,99 +88,94 @@
         }*/
 </style>
 <body>
-    
-    <div class="row">
-        <div class="col-12">
-            @*<table>
-                <thead>
-                    <tr>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>*@
-                        @{ int i = 1;}
-                        @foreach (var l in Model.Data)
-                        {
-                            @*@if (i == 1)
-                            {
-                                <div>
-                                    <br />
-                                    <br />
-                                    <br />
-                                    <br />
-                                </div>
-                            }
-                            else
-                            {
-                                <div>
-                                    <br />
-                                    <br />
-                                    <br />
-                                    <br />
-                                    <br />
-                                    <br />
-                                    <br />
-                                    <br />
-                                    <br />
-                                </div>
-                            }*@
+    @*<table>
+        <thead>
+            <tr>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>*@
+    @{
+        int i = 1;
+        string linkfda = "";
+        string properties = "";
+    }
+    @{ string strPathAndQuery = Convert.ToString(Context.Request.Protocol) + "" + Convert.ToString(Context.Request.PathBase); }
+    @foreach (var l in Model.Data)
+    {
 
-                            @*<td><img src="https://chart.googleapis.com/chart?chf=bg,s,65432100&cht=qr&chs=90x90&chl=@String.Concat(l.ItemCode,l.ItemName)" id="img2"@i></td>*@
-                            <div class="container-fluid">
-                                <div class="row" style="margin-bottom:2px">
-                                    <div class="col-10" style="margin-left:1px;font-size:8px;">
-                                        <label style="margin-top:2px;margin-bottom:0px"><strong>นำเข้าและจัดจำหน่ายโดย</strong></label>
-                                    </div>
-                                    <div class="col-11  " style="font-size:6px;margin-top:2px;margin-bottom:0px">
-                                        @*<img src="https://chart.googleapis.com/chart?chf=bg,s,65432100&cht=qr&chs=60x60&chl=@String.Concat(l.ItemCode,l.ItemName,l.ProductCode)" id="img1" style="float:right;margin-right:-20px;margin-top:-6%">*@
-                                        <img src="@Url.Action("GenerateQRCode","QRBarcode")?itemcode=@l.ItemCode&&itemname=@l.ItemName&&fda=@l.fda&&str=@string.Empty" id="img1" style="float:right;margin-right:-20px;margin-top:-6%" />
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12" style="margin-left:1px;font-size:8px;">
-                                        <label style="margin-bottom:1px;margin-top:0px"><strong>บริษัท อุดมเมดิคอล อิควิปเม้นท์ จำกัด</strong></label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12" style="margin-left: 1px; font-size: 8px;">
-                                        <label style="margin-bottom:1px;margin-top:0px"><strong>เลขที่ 80 ซอยพัฒนาการ69 แขวงประเวศ</strong></label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12" style="margin-left: 1px; font-size: 8px;">
-                                        <label style="margin-top:0px;margin-bottom:1px"><strong> เขตประเวศ กรุงเทพฯ 10250</strong></label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12" style="margin-left:1px;font-size:8px;">
-                                        <label style="margin-top:0px;margin-bottom:1px"><strong>โทร.02-320-1234 , 085-344-3444</strong></label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12 portrait" style="margin-left:25%;margin-top:0px;margin-bottom:1px">
-                                        <img src="/Icon/FDA_Number1-removebg.png" id="ImgFDA">
-                                        <p style="margin-left:15%;margin-top:-15px">@l.fda</p>
-                                        @*<div class="centered">@l.fda</div>*@
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-1">
-                                        @*<img src="https://chart.googleapis.com/chart?chf=bg,s,65432100&cht=qr&chs=90x90&chl=@String.Concat(l.ItemCode,l.BatchSN,l.ExpDate)" id="img"@i>*@
-                                        <img src="@Url.Action("GenerateQRCode","QRBarcode")?itemcode=@string.Empty&&itemname=@string.Empty&&fda=@string.Empty&&str=@l.ConcatText2" id="img" @i />
-                                    </div>
-                                </div>
-                            </div>
+        //properties = Context.Request.Path + "<br>" + Context.Request.Scheme + "<br>" + Context.Request.Host + "<br>" + Context.Request.Method + "<br>" + Context.Request.Body + "<br>" + Context.Request.Headers + "<br>" + Context.Request.Protocol + "<br>" + Context.Request.HttpContext + "<br>" + Context.Request.Query + "<br>" + Context.Request.ContentLength + "<br>" + Context.Request.ContentType + "<br>" + Context.Request.BodyReader + "<br>" + Context.Request.Cookies + "<br>" + Context.Request.IsHttps + "<br>" + Context.Request.RouteValues + "<br>" + Context.Request.HasFormContentType;
 
-                            i = i + 1;
-                        }
-                    @*</tr>
-                </tbody>
-            </table>*@
-        </div>
-       
-    </div>
-    
+        @if (Context.Request.PathBase == "/")
+        {
+            linkfda = Context.Request.Scheme + "://" + Convert.ToString(Context.Request.Host) + "/Icon/FDA_Number1-removebg.png";
+        }
+        else
+        {
+            linkfda = Context.Request.Scheme + "://" + Convert.ToString(Context.Request.Host) + ""+ Convert.ToString(Context.Request.PathBase) + "/Icon/FDA_Number1-removebg.png";
+        }
+        @*<div class="container-fluid"></div>*@
+
+        <table width="100%" class="container-fluid" border="0">
+            <tr>
+                <td width="70%">
+                    <strong>
+                        <font size="3" face="Tahoma">
+                            &nbsp;นำเข้าและจัดจำหน่ายโดย<br>
+                            &nbsp;บริษัท อุดมเมดิคอล อิควิปเม้นท์ จำกัด<br>
+                            &nbsp;เลขที่ 80 ซอยพัฒนาการ69 แขวงประเวศ<br>
+                            &nbsp;เขตประเวศ กรุงเทพฯ 10250<br>
+                            &nbsp;โทร.02-320-1234 , 085-344-3444<br>
+                        </font>
+                    </strong>
+                </td>
+                <td width="30%" align="center">
+                    <img src="@Url.Action("GenerateQRCode","QRBarcode")?itemcode=@l.ItemCode&&itemname=@l.ItemName&&fda=@l.fda&&str=@string.Empty" id="img1" @*style="float:right;margin-right:-20px;margin-top:-6%"*@ />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center">
+
+                    @if (l.fda != null)
+                    {
+                        <img src="@linkfda" id="ImgFDA">
+                        <p style="margin-left:4%;margin-top:-40px;font-size:16px">
+                            <b>@l.fda</b>
+                        </p>
+                    }
+                    else
+                    {
+                        <label>&nbsp;</label><br />
+                        <label>&nbsp;</label><br />
+                    }
+
+                    <img src="@Url.Action("GenerateQRCode","QRBarcode")?itemcode=@string.Empty&&itemname=@string.Empty&&fda=@string.Empty&&str=@l.ConcatText2" id="img" @i />
+                </td>
+            </tr>
+            @*<tr>
+                    <td colspan="2" align="center">
+                        <hr style="border-color: #FFFFFF;">
+                        <hr style="border-color: #FFFFFF;">
+                    </td>
+                </tr>*@
+        </table>
+
+        @*<div class="br1"><br></div>*@
+        i = i + 1;
+
+        @*@if (i > 1)
+            {
+                <div class="br1"><br></div>
+            }*@
+    }
+
+    @*</tr>
+            </tbody>
+        </table>*@
+
+    @*<font color="red">=== @i ====</font>*@
+
     <script>
         //window.print();
         //onafterprint = function () {
@@ -191,7 +195,7 @@
             var mytext2 = "Hi";
             //myimg.src = gapi + "90x90&chl=" + mytext;
             //myimg1.src = gapi + "60x60&chl=" + mytext1;
-           // myimg2.src = gapi + "60x60" + "&chl=" + mytext2;
+            // myimg2.src = gapi + "60x60" + "&chl=" + mytext2;
 
         }
     </script>

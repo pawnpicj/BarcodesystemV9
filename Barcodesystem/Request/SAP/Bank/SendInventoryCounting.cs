@@ -41,6 +41,7 @@ namespace BarCodeLibrary.Request.SAP
         public string BatchNo { get; set; }
         public string SerialNo { get; set; }
         public long Quantity { get; set; }
+        public string ProductType { get; set; }
         public List<SendInventoryCountingBatch> BatchLine { get; set; }
         public List<SendInventoryCountingSerial> SerialLine { get; set; }
     }

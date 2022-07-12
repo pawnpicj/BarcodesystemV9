@@ -91,7 +91,11 @@ namespace BarCodeLibrary.APICall
                 }
                 else throw new Exception("Post was not successful \n\nReason Phrase: " + Response.Content.ReadAsStringAsync().Result);
             }
-            catch (Exception ex) { errorMessage = ex.Message; return (T)Convert.ChangeType(null, typeof(T)); }
+            catch (Exception ex) { 
+                errorMessage = ex.Message;
+                return JsonConvert.DeserializeObject<T>(Response.Content.ReadAsStringAsync().Result);
+                //return (T)Convert.ChangeType(null, typeof(T)); 
+            }
         }
 
         public static List<T> PostWithReturnDataTableToList<T>(string requestURI, object sqlScript) where T : class, new()

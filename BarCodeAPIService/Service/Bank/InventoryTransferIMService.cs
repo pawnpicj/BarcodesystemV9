@@ -64,7 +64,8 @@ namespace BarCodeAPIService.Service
                             ToWhs = oRS.Fields.Item(8).Value.ToString(),
                             SeriesName = oRS.Fields.Item(9).Value.ToString(),
                             ToBinEntry = Convert.ToInt32(oRS.Fields.Item(11).Value.ToString()),
-                            ToBinCode = oRS.Fields.Item(12).Value.ToString()
+                            ToBinCode = oRS.Fields.Item(12).Value.ToString(),
+                            LoanNum = oRS.Fields.Item(13).Value.ToString()
                         });
                         oRS.MoveNext();
                         //DocDate = Convert.ToDateTime(oRS.Fields.Item(2).Value.ToString()),
@@ -109,7 +110,7 @@ namespace BarCodeAPIService.Service
                     oCompany = login.Company;
                     SAPbobsCOM.Recordset? oRS = null;
                     SAPbobsCOM.Recordset? oRSLine = null;
-                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK ('WTR1-IM','{DocEntry}','','','','')"; ;
+                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK ('WTR1-IM','{DocEntry}','','','','')";
                     oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRSLine = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRS.DoQuery(sqlStr);
@@ -125,10 +126,10 @@ namespace BarCodeAPIService.Service
                             WhsCode = oRS.Fields.Item(5).Value.ToString(),
                             UomCode = oRS.Fields.Item(6).Value.ToString(),
                             unitMsr = oRS.Fields.Item(7).Value.ToString(),
-                            U_unitprice = Convert.ToDouble(oRS.Fields.Item(8).Value.ToString()),
-                            BinCode = oRS.Fields.Item(9).Value.ToString(),
-                            FromBinEntry = Convert.ToInt32(oRS.Fields.Item(10).Value.ToString())
-
+                            BinCode = oRS.Fields.Item(8).Value.ToString(),
+                            FromBinEntry = Convert.ToInt32(oRS.Fields.Item(9).Value.ToString()),
+                            ToBinCode = oRS.Fields.Item(10).Value.ToString(),
+                            ToBinEntry = Convert.ToInt32(oRS.Fields.Item(11).Value.ToString())
                             //OnHand = Convert.ToInt32(oRS.Fields.Item(1).Value.ToString()),
                             //SerailNumber = oRS.Fields.Item(2).Value.ToString(),
                             //BatchNumber = oRS.Fields.Item(3).Value.ToString()

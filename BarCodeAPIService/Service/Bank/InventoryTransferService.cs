@@ -38,51 +38,102 @@ namespace BarCodeAPIService.Service
                     oStockTransfer.JournalMemo = sendInventoryTransfer.JournalRemark;
                     oStockTransfer.FromWarehouse = sendInventoryTransfer.FromWhsCode;
                     oStockTransfer.ToWarehouse = sendInventoryTransfer.ToWhsCode;
-
+                    oStockTransfer.UserFields.Fields.Item("U_loannum").Value = sendInventoryTransfer.U_loannum;
 
                     foreach (SendInventoryTransferLine l in sendInventoryTransfer.Line)
                     {
+                        if ((l.BatchNo != "" && l.BatchNo != null) && l.ProductType == "b")
+                        {
                             oStockTransfer.Lines.ItemCode = l.ItemCode;
                             oStockTransfer.Lines.Quantity = l.Quantity;
                             oStockTransfer.Lines.FromWarehouseCode = l.FromWhsCode;
                             oStockTransfer.Lines.WarehouseCode = l.ToWhsCode;
                             oStockTransfer.Lines.UserFields.Fields.Item("U_TranferNo").Value = l.U_TranferNo;
+                            oStockTransfer.Lines.BatchNumbers.SetCurrentLine(0);
+                            oStockTransfer.Lines.BatchNumbers.BatchNumber = l.BatchNo;
+                            oStockTransfer.Lines.BatchNumbers.Quantity = l.Quantity;
+                            oStockTransfer.Lines.BatchNumbers.Add();
 
-                        if (l.BatchNo != "" && l.ProductType == "b")
+                            oStockTransfer.Lines.BinAllocations.BinActionType = SAPbobsCOM.BinActionTypeEnum.batFromWarehouse;
+                            oStockTransfer.Lines.BinAllocations.SerialAndBatchNumbersBaseLine = 0;
+                            //fromBinEntry
+                            oStockTransfer.Lines.BinAllocations.BinAbsEntry = l.fromBinEntry;
+                            oStockTransfer.Lines.BinAllocations.Quantity = l.Quantity;
+                            oStockTransfer.Lines.BinAllocations.Add();
+
+                            oStockTransfer.Lines.BinAllocations.BinActionType = SAPbobsCOM.BinActionTypeEnum.batToWarehouse;
+                            oStockTransfer.Lines.BinAllocations.SerialAndBatchNumbersBaseLine = 0;
+                            oStockTransfer.Lines.BinAllocations.BinAbsEntry = l.toBinEntry;
+                            oStockTransfer.Lines.BinAllocations.Quantity = l.Quantity;
+                            oStockTransfer.Lines.BinAllocations.Add();
+
+                            oStockTransfer.Lines.Add();
+                        }
+                        else
+                        {
+                            if ((l.SerialNo != "" && l.SerialNo != null) && l.ProductType == "s")
                             {
-                                oStockTransfer.Lines.BatchNumbers.SetCurrentLine(0);
-                                oStockTransfer.Lines.BatchNumbers.BatchNumber = l.BatchNo;
-                                oStockTransfer.Lines.BatchNumbers.Quantity = l.Quantity;
-                                oStockTransfer.Lines.BatchNumbers.Add();
+                                oStockTransfer.Lines.ItemCode = l.ItemCode;
+                                oStockTransfer.Lines.Quantity = l.Quantity;
+                                oStockTransfer.Lines.FromWarehouseCode = l.FromWhsCode;
+                                oStockTransfer.Lines.WarehouseCode = l.ToWhsCode;
+                                oStockTransfer.Lines.UserFields.Fields.Item("U_TranferNo").Value = l.U_TranferNo;
+                                oStockTransfer.Lines.SerialNumbers.SetCurrentLine(0);
+                                oStockTransfer.Lines.SerialNumbers.ManufacturerSerialNumber = l.SerialNo;
+                                oStockTransfer.Lines.SerialNumbers.InternalSerialNumber = l.SerialNo;
+                                oStockTransfer.Lines.SerialNumbers.Quantity = l.Quantity;
+                                oStockTransfer.Lines.SerialNumbers.Add();
+
+                                oStockTransfer.Lines.BinAllocations.BinActionType = SAPbobsCOM.BinActionTypeEnum.batFromWarehouse;
+                                oStockTransfer.Lines.BinAllocations.SerialAndBatchNumbersBaseLine = 0;
+                                //fromBinEntry
+                                oStockTransfer.Lines.BinAllocations.BinAbsEntry = l.fromBinEntry;
+                                oStockTransfer.Lines.BinAllocations.Quantity = l.Quantity;
+                                oStockTransfer.Lines.BinAllocations.Add();
+
+                                oStockTransfer.Lines.BinAllocations.BinActionType = SAPbobsCOM.BinActionTypeEnum.batToWarehouse;
+                                oStockTransfer.Lines.BinAllocations.SerialAndBatchNumbersBaseLine = 0;
+                                oStockTransfer.Lines.BinAllocations.BinAbsEntry = l.toBinEntry;
+                                oStockTransfer.Lines.BinAllocations.Quantity = l.Quantity;
+                                oStockTransfer.Lines.BinAllocations.Add();
+
+                                oStockTransfer.Lines.Add();
                             }
                             else
                             {
-                                if (l.SerialNo != "" && l.ProductType == "s")
-                                {
-                                    oStockTransfer.Lines.SerialNumbers.SetCurrentLine(0);
-                                    oStockTransfer.Lines.SerialNumbers.ManufacturerSerialNumber = l.SerialNo;
-                                    oStockTransfer.Lines.SerialNumbers.InternalSerialNumber = l.SerialNo;
-                                    oStockTransfer.Lines.SerialNumbers.Quantity = l.Quantity;
-                                    oStockTransfer.Lines.SerialNumbers.Add();
-                                }
+                                //break;
+                                
                             }
+                        }
 
-                        break;
 
-                        oStockTransfer.Lines.BinAllocations.BinActionType = SAPbobsCOM.BinActionTypeEnum.batFromWarehouse;
-                        oStockTransfer.Lines.BinAllocations.SerialAndBatchNumbersBaseLine = 0;
-                        //fromBinEntry
-                        oStockTransfer.Lines.BinAllocations.BinAbsEntry = l.fromBinEntry;
-                        oStockTransfer.Lines.BinAllocations.Quantity = l.Quantity;
-                        oStockTransfer.Lines.BinAllocations.Add();
 
-                        oStockTransfer.Lines.BinAllocations.BinActionType = SAPbobsCOM.BinActionTypeEnum.batToWarehouse;
-                        oStockTransfer.Lines.BinAllocations.SerialAndBatchNumbersBaseLine = 0;
-                        oStockTransfer.Lines.BinAllocations.BinAbsEntry = l.toBinEntry;
-                        oStockTransfer.Lines.BinAllocations.Quantity = l.Quantity;
-                        oStockTransfer.Lines.BinAllocations.Add();
-                        
-                        oStockTransfer.Lines.Add();
+                        //    oStockTransfer.Lines.ItemCode = l.ItemCode;
+                        //    oStockTransfer.Lines.Quantity = l.Quantity;
+                        //    oStockTransfer.Lines.FromWarehouseCode = l.FromWhsCode;
+                        //    oStockTransfer.Lines.WarehouseCode = l.ToWhsCode;
+                        //    oStockTransfer.Lines.UserFields.Fields.Item("U_TranferNo").Value = l.U_TranferNo;
+
+                        //if ((l.BatchNo != "" && l.BatchNo != null) && l.ProductType == "b")
+                        //    {
+                        //        oStockTransfer.Lines.BatchNumbers.SetCurrentLine(0);
+                        //        oStockTransfer.Lines.BatchNumbers.BatchNumber = l.BatchNo;
+                        //        oStockTransfer.Lines.BatchNumbers.Quantity = l.Quantity;
+                        //        oStockTransfer.Lines.BatchNumbers.Add();
+                        //    }
+                        //    else
+                        //    {
+                        //        if ((l.SerialNo != "" && l.SerialNo != null) && l.ProductType == "s")
+                        //        {
+                        //            oStockTransfer.Lines.SerialNumbers.SetCurrentLine(0);
+                        //            oStockTransfer.Lines.SerialNumbers.ManufacturerSerialNumber = l.SerialNo;
+                        //            oStockTransfer.Lines.SerialNumbers.InternalSerialNumber = l.SerialNo;
+                        //            oStockTransfer.Lines.SerialNumbers.Quantity = l.Quantity;
+                        //            oStockTransfer.Lines.SerialNumbers.Add();
+                        //        }
+                        //    }
+
+
                         
                     }
 

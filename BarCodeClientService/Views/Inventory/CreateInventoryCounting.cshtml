@@ -109,9 +109,46 @@
 
         var minutes = now.getMinutes();
         var hour = now.getHours();
+
+        
+
         var ctime = hour + ":" + minutes;
+
         $('#txtCountingDate').val(today);
+        //$('#txtCountingTime').val(ctime);
+
+        //==================================
+        function AddMinutesToDate(date, minutes) {
+            return new Date(date.getTime() + minutes * 60000);
+        }
+        function DateFormat(date) {
+            var days = date.getDate();
+            var year = date.getFullYear();
+            var month = (date.getMonth() + 1);
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            var strTime = days + '/' + month + '/' + year + '/ ' + hours + ':' + minutes;
+            return strTime;
+        }
+        var now = new Date();
+        var next = AddMinutesToDate(now, -5);
+        var s = new Date(next);
+
+        var minutes = s.getMinutes();
+        var hour = s.getHours();
+
+        if (minutes < 10) {
+            minutes = '0' + minutes;
+        } else {
+            minutes = minutes;
+        }
+
+        var ctime = hour + ":" + minutes;
+
         $('#txtCountingTime').val(ctime);
+    //===============================
+
     });
 
     function checkBarcodeUDOM() {
@@ -198,7 +235,7 @@
                             </div>
                         </div>
 
-                        Sale Employee :
+                        @*Sale Employee :
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <button class="input-group-text" id="COcrCode4"><i class="fa fa-check"></i></button>
@@ -208,7 +245,7 @@
                             <div class="input-group-append">
                                 <button class="input-group-text" data-toggle="modal" data-target="#ModalSaleEmployee"><i class="fa fa-search"></i></button>
                             </div>
-                        </div>
+                        </div>*@
                         <div>
                             Ref2 :
                             <div class="input-group">
@@ -227,8 +264,8 @@
                         <div>
                             Warehouse :
                             <div class="input-group">
-                                <input type="text" autocomplete="off" disabled size="7" placeholder="" value="05" id="txtWhsCode">
-                                <input type="text" class="form-control" placeholder="" value="คลังเซล" id="txtWhsName" disabled>
+                                <input type="text" autocomplete="off" disabled size="7" placeholder="" value="" id="txtWhsCode">
+                                <input type="text" class="form-control" placeholder="" value="" id="txtWhsName" disabled>
                                 <div class="input-group-append">
                                     <button class="input-group-text" data-toggle="modal" data-target="#ModalWarehouse">
                                         <i class="fa fa-search"></i>
@@ -239,13 +276,14 @@
                         <div>
                             Bin Location :
                             <div class="input-group">
-                                <input type="text" autocomplete="off" disabled size="7" placeholder="" value="23853" id="txtBinCode">
-                                <input type="text" class="form-control" placeholder="" value="05-1006" id="txtBinName" disabled>
+                                <input type="text" autocomplete="off" disabled size="7" placeholder="" value="" id="txtBinCode">
+                                <input type="text" class="form-control" placeholder="" value="" id="txtBinName" disabled>
                                 <div class="input-group-append">
-                                    <button class="input-group-text" data-toggle="modal" data-target="#ModalBinLocation">
+                                    <button class="input-group-text btnModelsToBin" data-toggle="modal" data-target="#ModalBinLocation" >
                                         <i class="fa fa-search"></i>
                                     </button>
                                 </div>
+
                                 <button class="btn btn-danger" data-toggle="modal" id="btnClrBinCode" onclick="ClearBinCode();">
                                     <i class="fa fa-times"></i>
                                 </button>
@@ -257,7 +295,7 @@
                         <br>
                         @* =================== TabScanBarCode =================== *@
                         <div id="TabScanBarCode" class="BoxScan">
-                            <center>
+                            @*<center>
                                 <label>
                                     <input type="radio" id="rdoTypeScan" name="typeScan" value="01" style="height: 15px; width: 15px; vertical-align: middle;" onclick="checkBarcodeUDOM()" />
                                     <font size="3" style="font-weight:bold">Barcode UDOM</font>
@@ -267,9 +305,9 @@
                                     <input type="radio" id="rdoTypeScan" name="typeScan" value="02" style="height: 15px; width: 15px; vertical-align: middle; " onclick="checkBarcodeProduct()" />
                                     <font size="3" style="font-weight:bold">Barcode Product</font>
                                 </label>
-                            </center>
+                            </center>*@
 
-                            <div id="divBarcodeUDOM" style="display:none; ">
+                            <div id="divBarcodeUDOM" style="display: block; ">
                                 <div id="TabQty" style="display:block;">
                                     Input Quantity :
                                     <div class="input-group">
@@ -591,7 +629,7 @@
 
     // Get SaleEmployee
     var tableSlp = $('#TbSaleEmployee').DataTable({
-        "ajax": {
+        @*"ajax": {
             "url": '@Url.Action("GetSaleEmployee", "Inventory")',
             "type": "GET",
             "dataType": "JSON",
@@ -618,7 +656,7 @@
             var xName = document.getElementById("txtSlpName");
             xCode.value = cellCode;
             xName.value = cellName;
-        });
+        });*@
     });
 
     //+++++ Get Warehouse +++++
@@ -654,7 +692,53 @@
     });
 
     //+++++ GetToBinLocation +++++
-    var tableBin = $('#TbBinLocation').DataTable({
+    var LBins = [];
+
+    $('#TbBinLocation').DataTable({
+        bLengthChange: false,
+        binfo: false,
+        data: LBins,
+        language: {
+            emptyTable: "Loading ..."
+        },
+        columns: [
+            { data: "binCode", autoWidth: true },
+            { data: "whsCode", autoWidth: true },
+            { data: "absEntry", autoWidth: true }
+        ],
+        select: true,
+        paging: true,
+        ordering: false,
+        info: false
+    });
+
+    var tbBin = $('#TbBinLocation').DataTable();
+
+    $(".btnModelsToBin").click(function () {
+        if ($('#txtWhsCode').val() != '') {
+            $("#ModalBinLocation").modal({ backdrop: "static" });
+                $.ajax({
+                    url: '@Url.Action("GetBinLocationWhs", "Inventory")',
+                    data: { whscode: $('#txtWhsCode').val() },
+                    type: "GET",
+                    dataType: "JSON",
+                    success: function (data) {
+                        //console.log(data);
+                        LBins = []
+                        LBins = data.data
+                        tbBin.clear();
+                        tbBin.rows.add(LBins);
+                        tbBin.draw();
+                    }
+                });
+            } else {
+                alert('To Warehouse Empty!');
+                return false;
+            }
+
+        });
+
+    @*var tableBin = $('#TbBinLocation').DataTable({
         "ajax": {
             "url": '@Url.Action("GetBinLocation", "Home")',
             "type": "GET",
@@ -673,20 +757,33 @@
         "paging": true,
         "ordering": false,
         "info": false
-    });
-    tableBin.on('select', function () {
-        var cellbinCode = tableBin.rows({ selected: true }).data()[0]['binCode'];
-        var cellAbsEntry = tableBin.rows({ selected: true }).data()[0]['absEntry'];
+    });*@
 
+    tbBin.on('select', function () {
+        var cellbinCode = tbBin.rows({ selected: true }).data()[0]['binCode'];
+        var cellAbsEntry = tbBin.rows({ selected: true }).data()[0]['absEntry'];
         $('#ChooseBinLocation').click(function () {
-            var BinCode = document.getElementById("txtBinCode");
-            var BinName = document.getElementById("txtBinName");
-            BinCode.value = cellAbsEntry;
-            BinName.value = cellbinCode;
+            var txtToBinCode = document.getElementById("txtBinCode");
+            var txtBinEntry = document.getElementById("txtBinName");
+            txtToBinCode.value = cellAbsEntry;
+            txtBinEntry.value = cellbinCode;
         });
     });
 
+    //tableBin.on('select', function () {
+    //    var cellbinCode = tableBin.rows({ selected: true }).data()[0]['binCode'];
+    //    var cellAbsEntry = tableBin.rows({ selected: true }).data()[0]['absEntry'];
+
+    //    $('#ChooseBinLocation').click(function () {
+    //        var BinCode = document.getElementById("txtBinCode");
+    //        var BinName = document.getElementById("txtBinName");
+    //        BinCode.value = cellAbsEntry;
+    //        BinName.value = cellbinCode;
+    //    });
+    //});
+
     //GET Stock Whs Bin
+    var tline = $('#TbLineStock').DataTable();
     function fncGetStockWhsBin() {
 
         if (document.getElementById("txtWhsName").value != '') {
@@ -705,7 +802,7 @@
                     document.getElementById("btnSave").style.display = "block";
                     document.getElementById("TabScanBarCode").style.display = "block";
 
-                    var tline = $('#TbLineStock').DataTable({
+                    tline = $('#TbLineStock').DataTable({
                     "dom": "Bfrltip",
                     "bDestroy": true,
                     "aaData": data.data,
@@ -739,7 +836,10 @@
                     tline.columns([2, 4, 7, 8]).visible(false, false);
                     //document.getElementById("scanbarcode").focus();
                 //alert("Download Data Complete");
-                console.log("Download Data Complete");
+                    console.log("Download Data Complete");
+
+                    $('#txtScanBarCode01').val("");
+                    $('#txtScanBarCode01').focus();
             }
             });
 
@@ -777,7 +877,7 @@
             { "width": "20%", "targets": 0 },
             { "width": "20%", "targets": 0 },
             { "width": "20%", "targets": 0 },
-             { "width": "20%", "targets": 0 },            
+             { "width": "20%", "targets": 0 },
             { "width": "20%", "targets": 0 }
         ],
         "select": true,
@@ -802,7 +902,8 @@
             var sBatchSerial;
             var sBinEntry = document.getElementById("txtBinName").value;
             //var sBinEntry = '05-1048';
-
+            $('#txtScanBarCode01').val("");
+            $('#txtScanBarCode01').focus();
             if (sBatch != '') {
                 sBatchSerial = sBatch;
                 $.ajax({
@@ -911,7 +1012,7 @@
                         $('#txtScanBarCode01').val("");
                         $('#txtScanBarCode01').focus();
                     }
-                        
+
                     }
                 });
             }
@@ -1042,7 +1143,7 @@
                                                 bExpDate,
                                                 '',
                                                 bBatchNumber
-                                            ]).draw(false);                                       
+                                            ]).draw(false);
                                     } else {
                                         return false;
                                     }
@@ -1097,6 +1198,17 @@
     });
 
     function POSTDataAPI() {
+
+        document.getElementById("btnSave").style.display = 'none';
+        //List Data Line
+        //var tline = $('#TbLineStock').DataTable({
+        var arrDataLine = {};
+        var dLine = [];
+        var dataLineAll = {};
+
+        var whsCode = document.getElementById("txtWhsCode");
+        var binCode = document.getElementById("txtBinCode");
+        
         let regex = /\,(?!\s*?[\{\[\"\'\w])/g;
         var str = '';
 
@@ -1113,60 +1225,166 @@
         //var txtCountingTime = '10:00';
         //var txtcomments = 'ทดสอบ ' + datax;
 
-            if (!t.data().count()) {
-                alert('Empty table');
-            } else {
+        if (!t.data().count()) {
+            alert('Empty table');
+            document.getElementById("btnSave").style.display = 'block';
+        } else {
 
-                str = '{';
-                str = str + '"series": ' + document.getElementById("txtSeries").value + ',';
-                str = str + '"countingDate": "' + txtCountingDate + '",';
-                str = str + '"countingTime": "' + txtCountingTime + '",';
-                str = str + '"ref2": "' + document.getElementById("ref2").value + '",';
-                str = str + '"comments": "' + txtcomments + '",';
-                str = str + '"line": [';
-                //Line
-                for (let rr = 0; rr < t.column(0).data().length; rr++) {
-                    var data = t.row(rr).data();
-                    str = str + '{';
-                    str = str + '"itemCode": "' + data[0] + '",';
-                    str = str + '"whsCode": "' + data[3] + '",';
-                    str = str + '"binEntry": ' + data[4] + ',';
-                    str = str + '"uomCode": "' + data[6] + '",';
-                    str = str + '"countedQuantity": ' + data[2] + ',';
-                    str = str + '"batchNumber": "' + data[8] + '",';
-                    str = str + '"serialNumber": "' + data[9] + '",';
-                    str = str + '},';                                        
+            var sHead = {};
+            var sLine = [];
+            var arrayLine = {};
+            //Line
+            for (let rr = 0; rr < t.column(0).data().length; rr++) {
+
+                arrayLine = {};
+                var data = t.row(rr).data();
+                var productType = "";
+                if (data[8] != "") {
+                    productType = "b";
+                } else {
+                    if (data[9] != "") {
+                        productType = "s";
+                    }
                 }
-                str = str + ']';
-                str = str + '}';
-                console.log(str);
+                arrayLine.itemCode = data[0];
+                arrayLine.quantity = parseInt(data[2]);
+                arrayLine.whsCode = data[3];
+                arrayLine.binEntry = data[4];
+                arrayLine.uomCode = data[6];
+                arrayLine.productType = productType;
+                arrayLine.batchNo = data[8];
+                arrayLine.serialNo = data[9];
+                sLine.push(arrayLine);
             }
+            //console.log(sLine);
 
-            let cStr = str.replace(regex, ''); // remove all trailing commas
-            let jStr = JSON.parse(cStr); // build a new JSON object based on correct string
-            //var jStr = JSON.parse(str);
-            console.log(jStr);
+            //For Batch Number
+            var dataLine = sLine;
+            var gBatchNo = [];
+            dataLine.reduce(function (res, value) {
 
-            //outJSON = jStr
+                if (!res[value.productType]) {
+                    if (!res[value.batchNo]) {
+                        res[value.batchNo] = {
+                            itemCode: value.itemCode
+                            , quantity: 0
+                            , whsCode: value.whsCode
+                            , binEntry: value.binEntry
+                            , uomCode: value.uomCode
+                            , batchNo: value.batchNo
+                            , serialNo: ''
+                            , productType: value.productType
+                        }
+                        gBatchNo.push(res[value.batchNo]);
+                    }
+                }
+
+                res[value.batchNo].quantity += value.quantity;
+                return res;
+            }, {});
+
+            //For Serial Number
+            var gSerialNo = [];
+            dataLine.reduce(function (res, value) {
+                if (!res[value.productType]) {
+                    if (!res[value.serialNo]) {
+                        res[value.serialNo] = {
+                            itemCode: value.itemCode
+                            , quantity: 0
+                            , whsCode: value.whsCode
+                            , binEntry: value.binEntry
+                            , uomCode: value.uomCode
+                            , batchNo: ''
+                            , serialNo: value.serialNo
+                            , productType: value.productType
+                        }
+                        gSerialNo.push(res[value.serialNo]);
+                    }
+                }
+
+                res[value.serialNo].quantity += value.quantity;
+                return res;
+            }, {});
 
 
-            //console.log(contact);
-            $.ajax({
+            //console.log('length : ' + tline.column(0).data().length);
+            for (let ctbline = 0; ctbline < tline.column(0).data().length; ctbline++) {
+                arrDataLine = {};
+                var ldata = tline.row(ctbline).data();
+
+                var productType = "";
+                if (ldata.batchNo != "") {
+                    productType = "b";
+                } else {
+                    if (ldata.serialNo != "") {
+                        productType = "s";
+                    }
+                }
+                arrDataLine.itemCode = ldata.itemCode;
+                arrDataLine.quantity = 0;
+                arrDataLine.uomCode = ldata.uomCode;
+                arrDataLine.whsCode = whsCode.value;
+                arrDataLine.binEntry = parseInt(binCode.value);
+                arrDataLine.productType = productType;
+                arrDataLine.batchNo = ldata.batchNo;
+                arrDataLine.serialNo = ldata.serialNo;
+                dLine.push(arrDataLine);
+            }
+        //console.log(dLine);
+
+        //====================
+
+
+            var newLine = [];
+            //newLine = $.merge($.merge($.merge([], gBatchNo), gSerialNo), dLine);
+            newLine = $.merge($.merge([], gBatchNo), gSerialNo);
+            //console.log(newLine);
+            //dLine
+            //console.log("= Batch Number =");
+            //console.log(gBatchNo);
+            //console.log("= Serial Number =");
+            //console.log(gSerialNo);
+            //console.log("=================");
+
+            const arr = newLine;
+            jqueryXml = $(newLine);
+            console.log(jqueryXml);
+            console.log(jqueryXml[0]);
+            //for (var i = 0; i < arr.length; i++) {
+            //    var obj = arr;
+            //    console.log(" Row : " + obj);
+            //}
+
+
+            //Head
+            sHead.series = $('#txtSeries').val();
+            sHead.countingDate = $('#txtCountingDate').val();
+            sHead.countingTime = $('#txtCountingTime').val();
+            sHead.ref2 = $('#ref2').val();
+            sHead.comments = $('#comments').val();
+            sHead.line = newLine;
+            console.log(sHead);
+
+            @*$.ajax({
                 type: "POST",
                 url: '@Url.Action("PostInventoryCounting", "Inventory")',
-                data: { sendInventoryCounting: jStr},
+                data: { sendInventoryCounting: sHead },
                 dataType: "JSON",
-                error: function (request, error) {
-                    console.log(arguments);
-                    alert(" Can't do because: " + error);
-                },
-                success: function () {
-                    alert(" Done ! ");
-                    location.reload();
+                success: function (ex) {
+                    //console.log(ex);
+                    if (ex.errorCode == 0) {
+                        alert("Success");
+                        document.getElementById("btnSave").style.display = 'block';
+                        location.reload();
+                    } else {
+                        console.log(ex.errorMsg);
+                        alert(ex.errorMsg);
+                        document.getElementById("btnSave").style.display = 'block';
+                    }
                 }
-        });
+            });*@
+        }
     }
-
 
 </script>
 

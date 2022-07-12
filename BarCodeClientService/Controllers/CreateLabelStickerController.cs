@@ -22,28 +22,33 @@ namespace BarCodeClientService.Controllers
         {
             return View();
         }
+
         [HttpGet]
         public IActionResult GetWarehouseWhs()
         {
             var a = API.Read<ResponseOWHSGetWarehouse>("api/Warehouse/GetWarehouse");
             return Ok(a);
         }
+
         [HttpGet]
         public IActionResult GetBinLocation()
         {
             var a = API.Read<ResponseOBINGetBinCode>("api/BinCode/GetBinCode");
             return Ok(a);
         }
+
         [HttpGet]
         public IActionResult ItemMaster()
         {
             return View();
         }
+
         public IActionResult GetItemMaster()
         {
             var a = API.Read<ResponseOITMGetItemMaster>("api/ItemMasterData/GetItemMasterData");
             return Ok(a);
         }
+
         [HttpGet]
         public IActionResult GetGenerateBinCode()
         {
@@ -61,10 +66,11 @@ namespace BarCodeClientService.Controllers
             //6cm=226.7716535433px
             return new ViewAsPdf(responsePrintItemLable)
             {
-                PageSize = Rotativa.AspNetCore.Options.Size.A4,
-                PageMargins = { Left = 3, Bottom = 0,Right = 3, Top = 5 },
-                PageWidth = 65,
-                PageHeight = 180000
+                PageSize = Rotativa.AspNetCore.Options.Size.Letter,
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
+                PageMargins = new Rotativa.AspNetCore.Options.Margins(0, 0, 1, 0),
+                PageWidth = 120,
+                PageHeight = 90
                 //CustomSwitches = "--page-offset 0 --footer-center [page] --footer-font-size 12"
             };
         }
@@ -80,9 +86,10 @@ namespace BarCodeClientService.Controllers
             return new ViewAsPdf(responsePrintItemLable)
             {
                 PageSize = Rotativa.AspNetCore.Options.Size.A4,
-                PageMargins = { Left = 0, Bottom = 0, Right = 0, Top = 5 },
-                PageWidth = 65,
-                PageHeight =180000
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape,
+                PageMargins = { Left = 0, Bottom = 0, Right = 0, Top = 0 },
+                PageWidth = 40,
+                PageHeight = 65
                 // CustomSwitches = "--page-offset 0 --footer-center [page] --footer-font-size 12"
             };
             //return View(responsePrintItemLable);
@@ -103,11 +110,11 @@ namespace BarCodeClientService.Controllers
             responsePrintBinLabel.Data = ResponsePrintLabelStatic.Data;
             return new ViewAsPdf(responsePrintBinLabel)
             {
-                PageSize = Rotativa.AspNetCore.Options.Size.A4,
-                PageMargins = { Left = 0, Bottom = 0, Right = 0, Top = 20 },
-                PageWidth = 65,
-                PageHeight = 1000000,
-                CustomSwitches = "--page-offset 0 --footer-center [page] --footer-font-size 12"
+                PageSize = Rotativa.AspNetCore.Options.Size.Letter,
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
+                PageMargins = new Rotativa.AspNetCore.Options.Margins(0, 0, 1, 0),
+                PageWidth = 120,
+                PageHeight = 90
             };
            // return View(responsePrintBinLabel);
         }

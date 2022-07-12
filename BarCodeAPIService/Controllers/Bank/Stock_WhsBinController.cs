@@ -116,6 +116,19 @@ namespace BarCodeAPIService.Controllers.Bank
             }
         }
 
+        [HttpGet("GetStockItemx/{docEntry}/{itemCode}/{batchSerialNo}")]
+        public async Task<IActionResult> GetStockItemxAsync(string docEntry, string itemCode, string batchSerialNo)
+        {
+            var a = await stockWhsBinService.responseScanItemsInIM(docEntry, itemCode, batchSerialNo);
+            if (a.ErrorCode == 0)
+            {
+                return Ok(a);
+            }
+            else
+            {
+                return BadRequest(a);
+            }
+        }
 
     }
 }

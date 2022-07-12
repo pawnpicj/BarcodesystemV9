@@ -1,0 +1,317 @@
+﻿@model BarCodeLibrary.Respones.SAP.Bank.ResponseGetDataFromSO;
+@{
+    ViewData["Title"] = "List SO";
+}
+
+<link href="~/css/styles.css" rel="stylesheet" />
+<link href="~/css/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/css/DataTable/rowReorder.dataTables.min.css" rel="stylesheet" />
+<link type="text/css" href="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/css/dataTables.checkboxes.css" rel="stylesheet" />
+
+<script src="~/css/DataTable/jquery-3.3.1.js"></script>
+<script src="~/css/DataTable/jquery.dataTables.min.js"></script>
+<script src="~/css/DataTable/dataTables.rowReorder.min.js"></script>
+<script src="~/css/DataTable/dataTables.responsive.min.js"></script>
+<script src="~/css/DataTable/moment.min.js"></script>
+<script src="~/css/DataTable/datetime-moment.js"></script>
+<script src="~/css/DataTable/dataTables.buttons.min.js"></script>
+<script src="~/css/DataTable/dataTables.select.min.js"></script>
+<script src="~/css/DataTable/dataTables.dateTime.min.js"></script>
+
+<script src="https://editor.datatables.net/extensions/Editor/js/dataTables.editor.min.js"></script>
+<script type="text/javascript" src="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/js/dataTables.checkboxes.min.js"></script>
+
+<style>
+    tr.selected {
+        background: red;
+        color: red;
+    }
+
+    #main {
+        position: absolute;
+    }
+
+    .color_tap {
+        min-width: 60px;
+        background-color: #5f95c3;
+        color: #ffffff;
+        font-weight: 600;
+        margin-right: 1px;
+    }
+
+    .nav-tabs .nav-link {
+        border-radius: 0px 12px 0px 0px;
+        border: 1px solid rgb(193, 193, 193);
+        height: 40px;
+        line-height: 20px;
+    }
+
+    .modal {
+        z-index: 200000;
+    }
+
+    .modal-header {
+        background: #5f95c3;
+        height: 40px;
+        color: #ffffff;
+    }
+
+        .modal-header b {
+            margin-top: -10px;
+        }
+
+    #TbAR table tr td {
+        position: relative !important;
+        padding: 0px !important;
+        height: 35px;
+        margin-left: 15px;
+        margin-top: 10px;
+        background-color: none;
+    }
+
+    table tbody tr td {
+        background-color: #ffffff;
+        color: black;
+    }
+
+    table tbody tr.selected td {
+        background: #94d8e1;
+        color: red;
+    }
+
+        table tbody tr.selected td .clsinput {
+            background: #94d8e1;
+            color: red;
+        }
+
+    .clsinput:focus {
+        outline: none;
+    }
+
+    table.dataTable th {
+        font-size: 12px;
+        white-space: pre-wrap;
+        background-color: skyblue;
+        color: white;
+    }
+
+    table.dataTable td {
+        font-size: 12px;
+        white-space: pre-wrap;
+        font-weight: bold;
+    }
+
+    .BoxScan {
+        /*display: none;*/
+        border: 3px solid black;
+        border-radius: 3px 3px;
+    }
+</style>
+
+<script type="text/javascript">
+</script>
+
+<div id="#main">
+    <form id="frm-ListSO" action="#" method="POST">
+        <h3>List Items</h3>
+        @{ int i = 1;}
+
+
+        <table id="tbListItems" class="table table-striped table-bordered table-condensed dt-responsive nowrap text-xsmall" style="width: 100%; background: #f0eff1; color: #696969;">
+            <thead>
+                <tr>
+                    <th>docEntry</th>
+                    <th>docNum</th>
+                    <th>cardCode</th>
+                    <th>cardName</th>
+                    <th>itemCode</th>
+                    <th>itemName</th>
+                    <th>quantity</th>
+                    <th>price</th>
+                    <th>lineTotal</th>
+                    <th>vatGroup</th>
+                    <th>whsCode</th>
+                    <th>discPrcnt</th>
+                </tr>
+            </thead>
+        </table>
+        @*@foreach (var l in Model.Data)
+        {
+            <input type="text" id="txtDocEntry" value="@l.Docentry" />
+        }*@
+        <div align="right" class="table-responsive-sm"><button class="btn btn-info">Next</button></div>
+    </form>
+</div>
+
+
+<script src="~/js/Array.js"></script>
+<script type="text/javascript">
+    //var txtDocEntry = document.getElementById("txtDocEntry").value;
+    //console.log(txtDocEntry);
+    var sLine = [];
+    var tbLineItems = $('#tbListItems').DataTable({
+        bLengthChange: false,
+        data: sLine,
+        columns: [
+            { data: "docEntry" },
+            { data: "docNum" },
+            { data: "cardCode"},
+            { data: "cardName"},
+            { data: "itemCode"},
+            { data: "itemName"},
+            { data: "quantity"},
+            { data: "price"},
+            { data: "lineTotal"},
+            { data: "vatGroup"},
+            { data: "whsCode"},
+            { data: "discPrcnt"}
+        ],
+        scrollX: true,
+        order: [[0, 'desc']],
+        info: false,
+        responsive: false,
+        ordering: false,
+        paging: false,
+        searching: false
+    });
+
+
+    tbLineItems.columns([0, 2, 11]).visible(false, false);
+    //"data": { docentry: '126045' },
+    var array = [126041, 126040];
+    //var items = @Html.Raw(Json.Serialize(Model.Data));
+    var items = [{ "docentry": 126045 }];
+    var itemLine = [];
+    items.forEach(function (item) {
+        console.log(item.docentry)
+        $.noConflict();
+
+        try {
+            // Get Data
+            jQuery(function ($) {
+                jQuery.ajax({
+                    url: '@Url.Action("GetSOLine", "SaleOrder")',
+                    data: { docentry: item.docentry },
+                    type: "GET",
+                    dataType: "JSON",
+                    "dataSrc": 'data',
+                    processing: true,
+                    serverSide: true,
+                    success: function (data) {
+                        jqueryXml = $(data);
+                        if (jqueryXml[0].data.length != 0) {
+                            sLine = [];
+                            var arrayLine = {};
+
+                            itemLine = [];
+                            itemLine = data.data
+
+                            for (let c = 0; c < jqueryXml[0].data.length; c++) {
+                                arrayLine = {};
+                                arrayLine.docEntry = itemLine[c].docEntry
+                                arrayLine.docNum = itemLine[c].docNum
+                                arrayLine.cardCode = itemLine[c].cardCode
+                                arrayLine.cardName = itemLine[c].cardName
+                                arrayLine.itemCode = itemLine[c].itemCode
+                                arrayLine.itemName = itemLine[c].itemName
+                                arrayLine.quantity = itemLine[c].quatity
+                                arrayLine.price = itemLine[c].price
+                                arrayLine.lineTotal = itemLine[c].lineTotal
+                                arrayLine.vatGroup = itemLine[c].vatGroup
+                                arrayLine.whsCode = itemLine[c].whsCode
+                                arrayLine.discPrcnt = itemLine[c].discPrcnt
+                                sLine.push(arrayLine);
+                                tbLineItems.clear();
+                                tbLineItems.rows.add(sLine).draw(false);
+                            }
+                            console.log('Get Line So Complete. ' + item.docentry);
+                        }
+                    }
+                });
+            });
+
+        } catch (error) {
+            console.log(error);
+        }
+
+
+
+
+    });
+
+    @*var tbListItems = $('#tbListItems').DataTable({
+        "ajax": {
+            "url": '@Url.Action("GetSOLine", "SaleOrder")',
+            "data": { docentry: array[0] },
+            "type": "GET",
+            "dataType": "JSON",
+            "dataSrc": 'data',
+            "complete": function (data) {
+                console.log("Get List Items Finish.");
+            }
+        },
+        "columns": [
+            { "data": "itemCode" },
+            { "data": "itemName" },
+            { "data": "quatity" }
+        ],
+        "select": true,
+        "paging": false,
+        "ordering": false,
+        "info": false,
+        "searching": false
+    });*@
+
+
+    
+
+    $('#frm-ListSO').on('submit', function (e) {
+        console.clear();
+
+        //console.log(tbLineItems.column(0).data().length);
+
+        var sLine = [];
+        var sdata = {};
+        var arrayLine = {};
+
+        for (let rr = 0; rr < tbLineItems.column(0).data().length; rr++) {
+            arrayLine = {};
+            var data = tbLineItems.row(rr).data();
+
+            arrayLine.docEntry = data.docEntry;
+            arrayLine.docNum = data.docNum;
+            arrayLine.cardCode = data.cardCode;
+            arrayLine.cardName = data.cardName;
+            arrayLine.itemCode = data.itemCode;
+            arrayLine.itemName = data.itemName;
+            arrayLine.quantity = parseInt(data.quantity);
+            arrayLine.price = data.price;
+            arrayLine.lineTotal = data.lineTotal;
+            arrayLine.vatGroup = data.vatGroup;
+            arrayLine.whsCode = data.whsCode;
+            arrayLine.discPrcnt = data.discPrcnt;
+            sLine.push(arrayLine);
+            
+        }
+        console.log(sLine);
+        sdata.Data = sLine;
+
+        if (tbLineItems.column(0).data().length > 0) {
+            console.log(sdata);
+            $.ajax({
+                url: '@Url.Action("PostDataDelivery", "SaleOrder")',
+                type: "POST",
+                data: { sdata: sdata},
+                dataType: "JSON",
+                success: function (data) {
+                    if (data == 1) {
+                        window.location.href = "@Url.Action("frmDelivery", "SaleOrder")";
+                    }
+                }
+            });
+        }
+        e.preventDefault();
+    });
+
+
+</script>

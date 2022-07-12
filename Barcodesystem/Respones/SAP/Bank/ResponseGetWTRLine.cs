@@ -22,8 +22,9 @@ namespace BarCodeLibrary.Respones.SAP
         public string WhsCode { get; set; }
         public string UomCode { get; set; }
         public string unitMsr { get; set; }
-        public double U_unitprice { get; set; }
         public string BinCode { get; set; }
         public int FromBinEntry { get; set; }
+        public string ToBinCode { get; set; }
+        public int ToBinEntry { get; set; }
     }
 }

@@ -461,8 +461,8 @@
                                         <th>toBinEntry</th>
                                         <th>batchNumber</th>
                                         <th>serialNumber</th>
-                                        <th>Q</th>
-                                        <th>Command</th>
+                                        @*<th>Q</th>*@
+                                        @*<th>Command</th>*@
                                     </tr>
                                 </thead>
                             </table>
@@ -809,6 +809,7 @@
             var txtToWhsCode = document.getElementById("ToWhsCode");
             var txtDocEntry = document.getElementById("txtDocEntry");
             var txtSeriesTFR = document.getElementById("txtSeriesTFR");
+            var txtjrnlMemo = document.getElementById("jrnlMemo");
 
             txtDocNum.value = celldocNum;
             txtCardCode.value = cellcardCode;
@@ -819,6 +820,7 @@
             txtToWhsCode.value = celltoWhs;
             txtDocEntry.value = celldocEntry;
             txtSeriesTFR.value = cellseriesName;
+            //txtjrnlMemo.value = "IFReq." + celldocNum;
         });
     });
 
@@ -833,14 +835,7 @@
             { "width": "5%" },
             { "width": "5%" },
             { "width": "5%" },
-            { "width": "5%" },
-            {
-                render: function (data, type, full, meta) { return '<input type="number" size="7" value="0" class="input-textbox-1">'; }
-                , autoWidth: true
-            },
-            {
-                render: function (data, type, full, meta) { return '<button class="btn-sm btn-danger" style="margin-left: 40%;" onClick="Remove(' + meta.row + ')"><i class="fas fa-trash-alt"></i></button>'; }
-            }
+            { "width": "5%" }
         ],
         "select": true,
         "paging": false,
@@ -848,6 +843,15 @@
         "info": false,
         "searching": false
     });
+
+
+        //,{
+        //    render: function (data, type, full, meta) { return '<input type="number" size="7" value="0" class="input-textbox-1">'; }
+        //        , autoWidth: true
+        //},
+        //{
+        //    render: function (data, type, full, meta) { return '<button class="btn-sm btn-danger" style="margin-left: 40%;" onClick="Remove(' + meta.row + ')"><i class="fas fa-trash-alt"></i></button>'; }
+        //}
 
     //BarcodeUDOM
     $('#addRow01').on('click', function () {
@@ -1340,10 +1344,13 @@
 
         function fncLoadData() {
             var docentry = $("#txtDocEntry").val();
-            if (docentry != '') {
+            var tbincode = $('#ToBinCode').val();
+            if (docentry != '' && tbincode != '') {
                 ApplyDataTable(docentry);
-            } else {
+            } else if (docentry == '') {
                 alert("Please Select DocNum");
+            } else if (tbincode == '') {
+                alert("Please Select To Bin Location");
             }
         }
 
@@ -1497,60 +1504,10 @@
             sHead.salesEmployeeCode = $('#SlpCode0').val();
             sHead.comments = $('#comments').val();
             sHead.journalRemark = $('#jrnlMemo').val();
+            sHead.u_loannum = $('#DocNum').val();
             sHead.line = newLine;
             console.log(sHead);
 
-            //sHead.line = sLine;
-            //=================================================
-            //let regex = /\,(?!\s*?[\{\[\"\'\w])/g;
-            //var str = '';
-
-            //if (!t.data().count()) {
-            //    alert('Empty table');
-            //} else {
-
-            //    //console.log(t.column(0).data().length);
-            //    //let rowno = t.column(0).data().length;
-            //    //Head 2021-12-31
-            //    str = '{';
-            //    str = str + '"series": ' + document.getElementById("txtSeries").value + ',';
-            //    str = str + '"cardCode": "' + document.getElementById("CardCode").value + '",';
-            //    str = str + '"docDate": "' + document.getElementById("DocDate").value + '",';
-            //    str = str + '"taxDate": "' + document.getElementById("DocumentDate").value + '",';
-            //    str = str + '"fromWhsCode": "' + document.getElementById("FromWhsCode").value + '",';
-            //    str = str + '"toWhsCode": "' + document.getElementById("ToWhsCode").value + '",';
-            //    str = str + '"toBinCode": "' + document.getElementById("ToBinCode").value + '",';
-            //    str = str + '"toBinEntry": ' + document.getElementById("txtBinEntry").value + ',';
-            //    str = str + '"salesEmployeeCode": "' + document.getElementById("SlpCode0").value + '",';
-            //    str = str + '"comments": "' + document.getElementById("comments").value + '",';
-            //    str = str + '"journalRemark": "' + document.getElementById("comments").value + '",';
-            //    str = str + '"line": [';
-            //    //Line
-            //    for (let rr = 0; rr < t.column(0).data().length; rr++) {
-            //        var data = t.row(rr).data();
-            //        str = str + '{';
-            //        str = str + '"itemCode": "' + data[0] + '",';
-            //        str = str + '"quantity": ' + data[2] + ',';
-            //        str = str + '"fromWhsCode": "' + data[3] + '",';
-            //        str = str + '"toWhsCode": "' + data[5] + '",';
-            //        str = str + '"batchNo": "' + data[7] + '",';
-            //        str = str + '"serialNo": "' + data[8] + '",';
-            //        str = str + '"fromBinEntry" : ' + data[4] + ',';
-            //        str = str + '"toBinEntry" : ' + data[6] + ',';
-            //        str = str + '"u_TranferNo" : "-"';
-            //        str = str + '},';
-            //    }
-            //    str = str + ']';
-            //    str = str + '}';
-            //    console.log(str);
-            //}
-
-            //let cStr = str.replace(regex, ''); // remove all trailing commas
-            //let jStr = JSON.parse(cStr); // build a new JSON object based on correct string
-            //var jStr = JSON.parse(sHead);
-            //console.log(jStr);
-
-            //console.log(contact);
             $.ajax({
                 type: "POST",
                 url: '@Url.Action("PostInventoryTransfer", "Inventory")',
@@ -1562,7 +1519,7 @@
                 },
                 success: function () {
                     alert(" Done ! ");
-                    location.reload();
+                    //location.reload();
                 }
         });
     }

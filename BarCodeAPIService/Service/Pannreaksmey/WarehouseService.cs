@@ -13,21 +13,26 @@ namespace BarCodeAPIService.Service
         public Task<ResponseOWHSGetWarehouse> responseWHSGetWarehouse()
         {
             var oWHS = new List<OWHS>();
-            DataTable dt = new DataTable();
+            //DataTable dt = new DataTable();
+            SAPbobsCOM.Company oCompany;
             try {
-                LoginOnlyDatabase login = new LoginOnlyDatabase();  
-                if (login.lErrCode == 0)
+
+                Login login = new();
+                if (login.LErrCode == 0)
                 {
-                    string Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('OWHS','','','','','')";
-                    login.AD = new System.Data.Odbc.OdbcDataAdapter(Query, login.CN);
-                    login.AD.Fill(dt);
-                    foreach (DataRow row in dt.Rows)
+                    oCompany = login.Company;
+                    SAPbobsCOM.Recordset? oRS = null;
+                    string sqlStr = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('OWHS','','','','','')";
+                    oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+                    oRS.DoQuery(sqlStr);
+                    while (!oRS.EoF)
                     {
                         oWHS.Add(new OWHS
                         {
-                            WhsCode=row[0].ToString(),
-                            WhsName=row[1].ToString()
+                            WhsCode= oRS.Fields.Item(0).Value.ToString(),
+                            WhsName= oRS.Fields.Item(1).Value.ToString(),
                         });
+                        oRS.MoveNext();
                     }                   
                     return Task.FromResult(new ResponseOWHSGetWarehouse
                     {
@@ -40,16 +45,16 @@ namespace BarCodeAPIService.Service
                 {
                     return Task.FromResult(new ResponseOWHSGetWarehouse
                     {
-                        ErrorCode = login.lErrCode,
-                        ErrorMessage=login.sErrMsg,
+                        ErrorCode = login.LErrCode,
+                        ErrorMessage = login.SErrMsg,
                         Data=null
                     }) ;
                 }
             } catch (Exception ex) {
                 return Task.FromResult(new ResponseOWHSGetWarehouse { 
-                    ErrorCode=ex.HResult,
-                    ErrorMessage=ex.Message,
-                    Data=null
+                    ErrorCode = ex.HResult,
+                    ErrorMessage = ex.Message,
+                    Data = null
                 });
             }
         }

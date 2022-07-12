@@ -10,83 +10,144 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet"/>
-    <link href="~/lib/bootstrap/dist/css/bootstrap-grid.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="~/css/site.css"/>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/bootstrap-grid.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
     <!-- Font Awesome JS -->
-    <link href="~/css/styles.css" rel="stylesheet"/>
+    <link href="~/css/styles.css" rel="stylesheet" />
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/jquery/dist/JsBarcode.all.min.js"></script>
 </head>
 <style>
-    .container-fluid {
-        font-family: arial;
-        font-size: 12px;
-        height: 169.078740157px;
-        margin-bottom: auto;
-        margin-left: 30px;
-        margin-top: 10px;
-        outline: solid 1px black;
-        width: 263.5669291339px;
+    body {
+        /*margin: 0;*/
+        margin: 0px 0px -20px 5px;
+        background-color: #FFFFFF;
+        padding: 0;
     }
-</style>
-<body>
-@{
-    var i = 1;
-    var script = "";
-}
-@foreach (var l in Model.Data)
-{
-    <div class="row">
-        <div class="col-12">
-            <div>
-                <br/>
-            </div>
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-12">
-                        <label> Bin Code : <label id="ddd-@i">@l.BinCode</label></label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <label>Bin Name : @l.Descr</label>
-                    </div>
-                </div>
-                <div class="row">
-                    <img id="test-@i" style="margin: 2px auto auto 30px"/>
-                </div>
-            </div>
-        </div>
-    </div>
-    script = script + "<script>JsBarcode('#test-" + i + "', $('#ddd-" + i + "').text(), {width: 1,height: 35,displayValue: true,textPosition: 'bottom',fontSize: 12,background: '#ffffff',lineColor: '#212529'});</script>";
-    i = i + 1;
-}
+    .container-fluid {
+        font-family: Tahoma;
+        font-size: 30px;
+        /*margin-left: 30px;
+        margin-top: 10px;
+        margin-bottom: auto;
+        width: 99%;
+        height: 99%;
+        outline: solid 1px black;
+        line-height: 99%;
+        height: 390px;
+        border: 1px solid green;
+        text-align: center;
+        vertical-align: middle;*/
+    }
 
-@Html.Raw(script)
-<script>
-                    //$("#test").JsBarcode("jQuery Script", {
-    //    width: 2,
-    //    height: 100,
-    //    format: "auto",
-    //    displayValue: true,
-    //    fontOptions: "",
-    //    font: "monospace",
-    //    text: undefined,
-    //    textAlign: "center",
-    //    textPosition: "bottom",
-    //    textMargin: 2,
-    //    fontSize: 20,
-    //    background: "#ffffff",
-    //    lineColor: "#000000",
-    //    margin: 10,
-    //    marginTop: undefined,
-    //    marginBottom: undefined,
-    //    marginLeft: undefined,
-    //    marginRight: undefined,
-    //    valid: function valid() { }
-    //});
-</script>
+    .center {
+        width: 555px;
+        height: 420px;
+        border: 1px solid #ffffff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .child {
+        width: 100%;
+        height: auto;
+        background-color: red;
+        margin: 100px;
+        text-align:center;
+    }
+        /*.center p {
+            margin: 0;
+            top: 50%;
+            left: 50%;
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            border: 1px solid red;
+        }*/
+</style>
+<body style="background-color:#ffffff">
+    @{ int i = 1;
+        string script = "";
+    }
+    @foreach (var l in Model.Data)
+    {
+
+    @*<div class="center">
+        <div class="child">
+            <font size="5">
+                Bin Code : <label id="ddd-@i">@l.BinCode</label><br>
+                Bin Name : @l.Descr
+            </font>
+            <img id="test-@i" style="margin:2px auto auto 30px" />
+        </div>
+    </div>*@
+
+    <table class="center" border="0">
+        <tr>
+            <td align="center">&nbsp;</td>
+        </tr>
+        <tr>
+            <td align="center">
+                @if (l.Descr == null)
+                {
+                    <font size="5">
+                        <label>
+                            Bin Code : <label id="ddd-@i">@l.BinCode</label>
+                        </label><br>
+                        <label>
+                            Bin Name : -
+                        </label>
+                    </font>
+                }
+                else
+                {
+                    <font size="5">
+                        <label>
+                            Bin Code : <label id="ddd-@i">@l.BinCode</label>
+                        </label><br>
+                        <label>Bin Name : @l.Descr</label>
+                    </font>
+                }
+            </td>
+        </tr>
+        <tr>
+            <td align="center">
+                <img id="test-@i" style="margin:2px auto auto 30px" />
+            </td>
+        </tr>
+        <tr>
+            <td align="center">&nbsp;</td>
+        </tr>
+    </table>
+
+        script = script + "<script>JsBarcode('#test-" + @i + "', $('#ddd-" + @i.ToString() + "').text(), {width: 2,height: 90,displayValue: true,textPosition: 'bottom',fontSize: 24,background: '#ffffff',lineColor: '#212529'});</script>";
+        i = i + 1;
+    }
+
+    @Html.Raw(script)
+    <script>
+                //$("#test").JsBarcode("jQuery Script", {
+                //    width: 2,
+                //    height: 100,
+                //    format: "auto",
+                //    displayValue: true,
+                //    fontOptions: "",
+                //    font: "monospace",
+                //    text: undefined,
+                //    textAlign: "center",
+                //    textPosition: "bottom",
+                //    textMargin: 2,
+                //    fontSize: 20,
+                //    background: "#ffffff",
+                //    lineColor: "#000000",
+                //    margin: 10,
+                //    marginTop: undefined,
+                //    marginBottom: undefined,
+                //    marginLeft: undefined,
+                //    marginRight: undefined,
+                //    valid: function valid() { }
+                //});
+    </script>
 </body>
 </html>

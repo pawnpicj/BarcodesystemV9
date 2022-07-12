@@ -1,0 +1,588 @@
+﻿@model BarCodeLibrary.Respones.SAP.Bank.ResponseGetSOLine;
+@{
+    ViewData["Title"] = "Delivery";
+}
+
+<link href="~/css/styles.css" rel="stylesheet" />
+<link href="~/css/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/css/DataTable/rowReorder.dataTables.min.css" rel="stylesheet" />
+<link type="text/css" href="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/css/dataTables.checkboxes.css" rel="stylesheet" />
+
+<script src="~/css/DataTable/jquery-3.3.1.js"></script>
+<script src="~/css/DataTable/jquery.dataTables.min.js"></script>
+<script src="~/css/DataTable/dataTables.rowReorder.min.js"></script>
+<script src="~/css/DataTable/dataTables.responsive.min.js"></script>
+<script src="~/css/DataTable/moment.min.js"></script>
+<script src="~/css/DataTable/datetime-moment.js"></script>
+<script src="~/css/DataTable/dataTables.buttons.min.js"></script>
+<script src="~/css/DataTable/dataTables.select.min.js"></script>
+<script src="~/css/DataTable/dataTables.dateTime.min.js"></script>
+
+<script src="https://editor.datatables.net/extensions/Editor/js/dataTables.editor.min.js"></script>
+<script type="text/javascript" src="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/js/dataTables.checkboxes.min.js"></script>
+
+<style>
+    tr.selected {
+        background: red;
+        color: red;
+    }
+
+    #main {
+        position: absolute;
+    }
+
+    .color_tap {
+        min-width: 60px;
+        background-color: #5f95c3;
+        color: #ffffff;
+        font-weight: 600;
+        margin-right: 1px;
+    }
+
+    .nav-tabs .nav-link {
+        border-radius: 0px 12px 0px 0px;
+        border: 1px solid rgb(193, 193, 193);
+        height: 40px;
+        line-height: 20px;
+    }
+
+    .modal {
+        z-index: 200000;
+    }
+
+    .modal-header {
+        background: #5f95c3;
+        height: 40px;
+        color: #ffffff;
+    }
+
+        .modal-header b {
+            margin-top: -10px;
+        }
+
+    #TbAR table tr td {
+        position: relative !important;
+        padding: 0px !important;
+        height: 35px;
+        margin-left: 15px;
+        margin-top: 10px;
+        background-color: none;
+    }
+
+    table tbody tr td {
+        background-color: #ffffff;
+        color: black;
+    }
+
+    table tbody tr.selected td {
+        background: #94d8e1;
+        color: red;
+    }
+
+        table tbody tr.selected td .clsinput {
+            background: #94d8e1;
+            color: red;
+        }
+
+    .clsinput:focus {
+        outline: none;
+    }
+
+    table.dataTable th {
+        font-size: 12px;
+        white-space: pre-wrap;
+        background-color: skyblue;
+        color: white;
+    }
+
+    table.dataTable td {
+        font-size: 12px;
+        white-space: pre-wrap;
+        font-weight: bold;
+    }
+
+    .BoxScan {
+        /*display: none;*/
+        border: 3px solid black;
+        border-radius: 3px 3px;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var now = new Date();
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+        var today = now.getFullYear() + "-" + (month) + "-" + (day);
+        $('#DocDate').val(today);
+        $('#DocumentDate').val(today);
+    });
+
+    function checkBarcodeUDOM() {
+        document.getElementById("divBarcodeUDOM").style.display = "block";
+        document.getElementById("divBarcodeProduct").style.display = "none";
+        document.getElementById("txtScanBarCode01").focus();
+
+        document.getElementById("rdoTypeItem1").checked = false;
+        document.getElementById("rdoTypeItem2").checked = false;
+        document.getElementById("txtQuantity02").disabled = true;
+        document.getElementById("txtScanBarCode02").disabled = true;
+        document.getElementById("txtScanBatchSerial02").disabled = true;
+
+    }
+    function checkBarcodeProduct() {
+        document.getElementById("divBarcodeUDOM").style.display = "none";
+        document.getElementById("divBarcodeProduct").style.display = "block";
+        document.getElementById("txtScanBarCode02").focus();
+    }
+
+    function chTypeItem() {
+        document.getElementById("txtQuantity02").disabled = false;
+        document.getElementById("txtScanBarCode02").disabled = false;
+        document.getElementById("txtScanBatchSerial02").disabled = false;
+        document.getElementById("txtScanBarCode02").focus();
+        document.getElementById("txtQuantity02").value = "1";
+        document.getElementById("txtScanBarCode02").value = "";
+        document.getElementById("txtScanBatchSerial02").value = "";
+    }
+</script>
+
+<div id="#main">
+    
+        <div style="font-size:24px; font-weight:bolder;">[ Delivery ]</div>
+
+        <div class="tab-pane fade show active" id="item" role="tabpanel" aria-labelledby="item-tab" style="margin-top: 10px">
+            <div class="row">
+                <div class="col-sm-6">
+
+                    Series :
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button class="input-group-text" id="Cifr"><i class="fa fa-check"></i></button>
+                        </div>
+                        <input type="text" placeholder="" id="txtSeries" value="" autocomplete="off" disabled size="7">
+                        <input type="text" class="form-control" placeholder="" id="txtSeriesName" value="" autocomplete="off" disabled>
+                        <div class="input-group-append">
+                            <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalSeries"><i class="fa fa-search"></i></button>
+                        </div>
+                    </div>
+
+                    Customer :
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button class="input-group-text" id="Cifr"><i class="fa fa-check"></i></button>
+                        </div>
+                        <input type="text" placeholder="" id="txtCardCode" value="" autocomplete="off" disabled size="7">
+                        <input type="text" class="form-control" placeholder="" id="txtCardName" value="" autocomplete="off" disabled>
+                    </div>
+
+                    Customer Ref :
+                    <div class="input-group">
+                        <input type="text" placeholder="" id="txtNumAtCard" value="" autocomplete="off" class="form-control">
+                    </div>
+
+                    <div>
+                        Posting Date :
+                        <div class="input-group">
+                            <input type="date" class="form-control" id="DocDate">
+                        </div>
+                    </div>
+                    <div>
+                        Document Date :
+                        <div class="input-group">
+                            <input type="date" class="form-control" id="DocumentDate">
+                        </div>
+                    </div>
+
+                    Remark :
+                    <div class="input-group">
+                        <input type="text" placeholder="" id="txtRemark" value="" autocomplete="off" class="form-control">
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <table id="tbListItems" class="table table-striped table-bordered table-condensed dt-responsive nowrap text-xsmall" style="width: 100%; background: #f0eff1; color: #696969;">
+                        <thead>
+                            <tr>
+                                <th>docEntry</th>
+                                <th>docNum</th>
+                                <th>cardCode</th>
+                                <th>cardName</th>
+                                <th>itemCode</th>
+                                <th>itemName</th>
+                                <th>quantity</th>
+                                <th>price</th>
+                                <th>lineTotal</th>
+                                <th>vatGroup</th>
+                                <th>whsCode</th>
+                                <th>discPrcnt</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+
+            <hr>
+            <div id="divBarcodeUDOM" style="display:block; ">
+                <div id="TabQty" style="display:block;">
+                    Input Quantity :
+                    <div class="input-group">
+                        <input type="number" class="form-control" placeholder="" id="txtQuantity01" value="1" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
+                    </div>
+                </div>
+                <div>
+                    Scan Barcode :
+                    <div class="input-group">
+                        <input type="text" class="form-control" value="" id="txtScanBarCode01" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center;" autocomplete="off">
+                    </div>
+                    <button class="input-group-text" id="addRow01" style="display: none;" autocomplete="off"><i class="fa fa-plus"></i></button>
+                </div>
+            </div>
+
+            <hr>
+            <div><font size="+1" style="font-weight:bold"><u>List Data From Scan</u></font></div>
+            <button id="btnDelRow" class="btn btn-info">&nbsp;Delete Row&nbsp;</button>
+            <table id="tbScanItems" class="table table-striped table-bordered table-condensed dt-responsive nowrap text-xsmall" style="width: 100%; background: #f0eff1; color: #696969;">
+                <thead>
+                    <tr>
+                        <th>ItemCode</th>
+                        <th>ItemName</th>
+                        <th>Quantity</th>
+                        <th>batchNumber</th>
+                        <th>serialNumber</th>
+                    </tr>
+                </thead>
+            </table>
+
+            <div class="row" style="padding: 15px;margin-top:-20px;margin-bottom:-20px;">
+                <div class="nav navbar-nav ml-auto">
+                    <div class="btn-group">
+                        <button class="btn btn-success" id="Save" style="margin-left:5px;" onclick="POSTDataAPI()">Send To SAP</button>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+</div>
+
+<script src="~/js/Array.js"></script>
+<script type="text/javascript">
+    $.ajax({
+        type: "GET",
+        url: "@Url.Action("GetSeriesCode", "SaleOrder")",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        dataSrc: 'data',
+        success: function (data) {
+            jqueryXml = $(data);
+            console.log(jqueryXml);
+            $('#txtSeries').val(jqueryXml[0].data[0].series);
+            $('#txtSeriesName').val(jqueryXml[0].data[0].seriesName);
+        }
+    });
+
+    var tbLineItems = $('#tbListItems').DataTable({
+        bLengthChange: false,
+        columns: [
+            { data: "docEntry" },
+            { data: "docNum" },
+            { data: "cardCode" },
+            { data: "cardName" },
+            { data: "itemCode" },
+            { data: "itemName" },
+            { data: "quantity" },
+            { data: "price" },
+            { data: "lineTotal" },
+            { data: "vatGroup" },
+            { data: "whsCode" },
+            { data: "discPrcnt" }
+        ],
+        scrollX: true,
+        order: [[0, 'desc']],
+        info: false,
+        responsive: false,
+        ordering: false,
+        paging: false,
+        searching: false
+    });
+
+    var lineItems = @Html.Raw(Json.Serialize(Model.Data));
+    var ss = JSON.parse('@Html.Raw(Json.Serialize(Model.Data))');
+    var itemLine = [];
+    var cardCode = '';
+    var cardName = '';
+
+    console.log(lineItems);
+
+    lineItems.forEach(function (data) {
+        cardCode = data.cardCode;
+        cardName = data.cardName;
+        StrJson = $(data);
+        //console.log(StrJson);
+        tbLineItems.rows.add(StrJson).draw(false);
+    });
+
+    $('#txtCardCode').val(cardCode);
+    $('#txtCardName').val(cardName);
+
+    //Add Data In Row
+    var t = $('#tbScanItems').DataTable({
+        "columns": [            
+            { "width": "5%" },
+            { "width": "5%" },
+            { "width": "5%" },
+            { "width": "5%" },
+            { "width": "5%" }
+        ],
+        "scrollX": true,
+        "order": [[0, 'desc']],
+        "info": false,
+        "responsive": false,
+        "ordering": false,
+        "paging": false,
+        "searching": false
+    });
+
+    //Delete Line Item From ScanBarCode
+    $('#btnDelRow').click(function () {
+        t.row('.selected').remove().draw(false);
+    });
+
+    //BarcodeUDOM
+    $('#addRow01').on('click', function () {
+        if ($('#txtScanBarCode01').val() != '') {
+            var txtScanBarCode = document.getElementById("txtScanBarCode01").value;
+            const strArr = txtScanBarCode.split(";");
+            var sItemCode = strArr[0];
+            var sBatch = strArr[1];
+            var sSerial = strArr[2];
+            let jqueryXml = {};
+            console.log(sItemCode + "-" + sBatch + "-" + sSerial);
+
+            if (sBatch != '') {
+                //===========================
+                sBatchSerial = sBatch;
+                $.ajax({
+                    url: '@Url.Action("GetStockItemBatch", "Inventory")',
+                    data: { itemcode: sItemCode, batchnumber: sBatchSerial },
+                    type: "GET",
+                    dataType: "JSON",
+                    "dataSrc": 'data',
+                    success: function (data) {
+                        jqueryXml = $(data);
+                        //console.log(jqueryXml);
+                        if (jqueryXml[0].data.length != 0) {
+                            //=========================
+                            var bItemCode = jqueryXml[0].data[0].itemCode;
+                            var bItemName = jqueryXml[0].data[0].itemName;
+                            var sapQuantity;
+                            var bQuantity = document.getElementById("txtQuantity01").value;
+                            var bBatchNumber = sBatchSerial;
+
+                            var arrLineItems = {};
+                            let iNo = 0;
+                            let iC = 0;
+
+                            for (let ctb = 0; ctb < tbLineItems.column(0).data().length; ctb++) {
+
+                                arrLineItems = {};
+                                var rdata = tbLineItems.row(ctb).data();
+                                //console.log(rdata.itemCode + '+' + bItemCode);
+                                if (rdata.itemCode == bItemCode) {
+                                    iNo = 1;
+                                    sapQuantity = rdata.quantity;
+                                } else if (rdata.itemCode != bItemCode) {
+                                    iNo = 0;
+                                }
+                                
+                                iC = iC + iNo;
+                            }
+                            //console.log(iC);
+
+                            if (iC != 0) {
+
+                                //++++++++++++++++++++++++++
+                                if ($('#txtScanBarCode01').val() != '') {
+                                    t.row.add([
+                                        bItemCode,
+                                        bItemName,
+                                        bQuantity,
+                                        bBatchNumber,
+                                        ''
+                                    ]).draw(false);
+                                } else {
+                                    return false;
+                                }
+
+                                amountex(bItemCode, sapQuantity);
+
+                                $('#txtScanBarCode01').val("");
+                                $('#txtScanBarCode01').focus();
+                                //++++++++++++++++++++++++++
+
+                            } else {
+
+                                alert("Item Code not found in data line.");
+                                $('#txtScanBarCode01').val("");
+                                $('#txtScanBarCode01').focus();
+
+                            }
+                           
+                            //=========================
+                        } else {
+                            alert("Batch Number does not exist.");
+                            $('#txtScanBarCode01').val("");
+                            $('#txtScanBarCode01').focus();
+                        }
+                    }
+                });
+                //===========================
+            } else if (sSerial != '') {
+
+            }
+
+        }
+    });
+    $('#addRow01').click();
+
+    var input01 = document.getElementById("txtScanBarCode01");
+    input01.addEventListener("keyup", function (event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            document.getElementById("addRow01").click();
+        }
+    });
+
+    function amountex(itemcode, qty) {
+        //alert('amount exceeded');
+        console.log(itemcode + ':' + qty);
+
+        var c1 = 0;
+        var c2 = 0;
+
+        for (let i = 0; i < t.column(0).data().length; i++) {
+            
+            var scrdata = tbLineItems.row(i).data();
+
+            if (scrdata.itemCode == itemcode) {
+                c1 = 1;
+            } else {
+                c1 = 0;
+            }
+            c2 = c2 + c1;
+        }
+
+        console.log(c2 + '=' + qty);
+
+        if (qty > c2) {
+            alert('Amount Exceeded');
+            return false;
+        }
+        
+
+    }
+
+
+    //Add Data Head And Line -> SAP
+    function POSTDataAPI() {
+        //======================================
+
+        var sHead = {};
+        var sLine = [];
+        var arrayLine = {};
+        //Line
+        for (let rr = 0; rr < t.column(0).data().length; rr++) {
+            arrayLine = {};
+            var data = t.row(rr).data();
+            var productType = "";
+            if (data[7] != "") {
+                productType = "b";
+            } else {
+                if (data[8] != "") {
+                    productType = "s";
+                }
+            }
+
+            arrayLine.itemCode = data[0];
+            arrayLine.quantity = parseInt(data[2]);
+            arrayLine.fromWhsCode = data[3];
+            arrayLine.toWhsCode = data[5];
+            arrayLine.productType = productType;
+            arrayLine.batchNo = data[7];
+            arrayLine.serialNo = data[8];
+            arrayLine.fromBinEntry = data[4];
+            arrayLine.toBinEntry = data[6];
+            arrayLine.u_TranferNo = $('#txtDocNum').val();
+            sLine.push(arrayLine);
+        }
+
+        //console.log(sLine);
+
+        //For Batch Number
+        var dataLine = sLine;
+        var gBatchNo = [];
+        dataLine.reduce(function (res, value) {
+
+            if (!res[value.productType]) {
+                if (!res[value.batchNo]) {
+                    res[value.batchNo] = {
+                        itemCode: value.itemCode
+                        , quantity: 0
+                        , fromBinEntry: value.fromBinEntry
+                        , fromWhsCode: value.fromWhsCode
+                        , toBinEntry: value.toBinEntry
+                        , toWhsCode: value.toWhsCode
+                        , u_TranferNo: value.u_TranferNo
+                        , batchNo: value.batchNo
+                        , serialNo: ''
+                        , productType: value.productType
+                    }
+                    gBatchNo.push(res[value.batchNo]);
+                }
+            }
+
+            res[value.batchNo].quantity += value.quantity;
+            return res;
+        }, {});
+
+        //For Serial Number
+        var gSerialNo = [];
+        dataLine.reduce(function (res, value) {
+            if (!res[value.productType]) {
+                if (!res[value.serialNo]) {
+                    res[value.serialNo] = {
+                        itemCode: value.itemCode
+                        , quantity: 0
+                        , fromBinEntry: value.fromBinEntry
+                        , fromWhsCode: value.fromWhsCode
+                        , toBinEntry: value.toBinEntry
+                        , toWhsCode: value.toWhsCode
+                        , u_TranferNo: value.u_TranferNo
+                        , batchNo: ''
+                        , serialNo: value.serialNo
+                        , productType: value.productType
+                    }
+                    gSerialNo.push(res[value.serialNo]);
+                }
+            }
+
+            res[value.serialNo].quantity += value.quantity;
+            return res;
+        }, {});
+
+        //console.log("= Batch Number =");
+        //console.log(gBatchNo);
+        //console.log("= Serial Number =");
+        //console.log(gSerialNo);
+        //console.log("=================");
+        //var newArray = $.merge([], oldArray);
+        var newLine = [];
+        newLine = $.merge($.merge([], gBatchNo), gSerialNo);
+    }
+
+</script>

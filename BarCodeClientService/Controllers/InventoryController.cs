@@ -223,6 +223,13 @@ namespace BarCodeClientService.Controllers
             return Ok(a);
         }
 
+        public IActionResult GetStockItemx(string docentry, string itemcode, string batchserialno)
+        {
+            var a = API.Read<ResponseScanItemsInIM>("GetStockItemx/" + docentry + "/" + itemcode + "/" + batchserialno);
+            //var a = API.Read<ResponseScanItemsInIM>("GetStockItemx/19414/KS-10/Ma21071660004");
+            return Ok(a);
+        }
+
         [HttpPost]
         public IActionResult PostInventoryTransfer(SendInventoryTransfer sendInventoryTransfer)
         {

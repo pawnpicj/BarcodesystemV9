@@ -1,11 +1,11 @@
 ﻿@{
     ViewData["Title"] = "InventoryTransfer (Return Borrow Bills)";
-    var dt = DateTime.Now;
+    DateTime dt = DateTime.Now;
     ViewData["Date"] = dt.ToShortDateString();
 }
 
-<link href="~/css/DataTable/jquery.dataTables.min.css" rel="stylesheet"/>
-<link href="~/css/DataTable/rowReorder.dataTables.min.css" rel="stylesheet"/>
+<link href="~/css/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/css/DataTable/rowReorder.dataTables.min.css" rel="stylesheet" />
 @*<link href="~/css/DataTable/responsive.dataTables.min.css" rel="stylesheet" />*@
 
 <script src="~/css/DataTable/jquery-3.3.1.js"></script>
@@ -20,7 +20,7 @@
 
 <script type="text/javascript">
     /*DocDate*/
-    $(document).ready(function() {
+    $(document).ready(function () {
         var now = new Date();
         var day = ("0" + now.getDate()).slice(-2);
         var month = ("0" + (now.getMonth() + 1)).slice(-2);
@@ -66,40 +66,46 @@
         color: red;
     }
 
-    #main { position: absolute; }
+    #main {
+        position: absolute;
+    }
 
     .color_tap {
+        min-width: 60px;
         background-color: #5f95c3;
         color: #ffffff;
         font-weight: 600;
         margin-right: 1px;
-        min-width: 60px;
     }
 
     .nav-tabs .nav-link {
-        border: 1px solid rgb(193, 193, 193);
         border-radius: 0px 12px 0px 0px;
+        border: 1px solid rgb(193, 193, 193);
         height: 40px;
         line-height: 20px;
     }
 
-    .modal { z-index: 200000; }
+    .modal {
+        z-index: 200000;
+    }
 
     .modal-header {
         background: #5f95c3;
-        color: #ffffff;
         height: 40px;
+        color: #ffffff;
     }
 
-    .modal-header b { margin-top: -10px; }
+        .modal-header b {
+            margin-top: -10px;
+        }
 
     #TbAR table tr td {
-        background-color: none;
+        position: relative !important;
+        padding: 0px !important;
         height: 35px;
         margin-left: 15px;
         margin-top: 10px;
-        padding: 0px !important;
-        position: relative !important;
+        background-color: none;
     }
 
     table tbody tr td {
@@ -112,352 +118,334 @@
         color: red;
     }
 
-    table tbody tr.selected td .clsinput {
-        background: #94d8e1;
-        color: red;
+        table tbody tr.selected td .clsinput {
+            background: #94d8e1;
+            color: red;
+        }
+
+    .clsinput:focus {
+        outline: none;
     }
 
-    .clsinput:focus { outline: none; }
+    .ctd {
+        text-align: center;
+    }
 </style>
 
 <div id="#main">
-@* TimeLine *@
-<div class="row" style="color: #696969; margin-left: 5px; margin-top: 5px;">
-    <h5 style="color: #696969; margin-top: 5px;">
-        <a asp-action="DashboardInventory" asp-controller="Dashboard" onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fas fa-home"></i> Dashboard</a>
-        <span>
-            <a asp-action="ShowInventory" asp-controller="InventoryTransfer" onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fa fa-caret-right align-right"></i> Inventory Transfer</a>
-            <i class="fa fa-caret-right align-right"></i> Create InventoryTransfer (Return Borrow Bills)
-        </span>
-    </h5>
-</div>
-<hr/>
+    @* TimeLine *@
+    <div class="row" style="margin-left:5px;margin-top:5px;color:#696969;">
+        <h5 style="margin-top:5px;color:#696969;">
+            <a asp-action="DashboardInventory" asp-controller="Dashboard" onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fas fa-home"></i> Dashboard</a>
+            <span>
+                <a asp-action="ShowInventory" asp-controller="InventoryTransfer" onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fa fa-caret-right align-right"></i> Inventory Transfer</a>
+                <i class="fa fa-caret-right align-right"></i> Create InventoryTransfer (Return Borrow Bills)
+            </span>
+        </h5>
+    </div>
+    <hr />
 
-<div style="color: #696969; padding: 10px;">
-<ul class="nav nav-tabs Tap-PA" id="mytab" role="tablist">
-    @*<li class="nav-item">
+    <div style="padding: 10px; color: #696969;">
+        <ul class="nav nav-tabs Tap-PA" id="mytab" role="tablist">
+            @*<li class="nav-item">
                     <a class="nav-link active color_tap" id="cus-tab" data-toggle="tab" href="#cus" role="tab" aria-controls="Customer" aria-selected="true">Customer</a>
                 </li>*@
-    <li class="nav-item">
-        <a class="nav-link color_tap" id="item-tab" data-toggle="tab" href="#item" role="tab" aria-controls="Items" aria-selected="false">Add Data</a>
-    </li>
-</ul>
-<div class="tab-content" id="myTabContent">
+            <li class="nav-item">
+                <a class="nav-link color_tap" id="item-tab" data-toggle="tab" href="#item" role="tab" aria-controls="Items" aria-selected="false">Add Data</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
 
-<div class="tab-pane fade show active" id="item" role="tabpanel" aria-labelledby="item-tab" style="margin-top: 10px">
-    <div class="row">
-        <div class="col-sm-6">
-            Search InventoryTransfer IM No. :
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <button class="input-group-text" id="Cifr">
-                        <i class="fa fa-check"></i>
-                    </button>
-                </div>
-                <input type="text" id="txtDocEntry" disabled size="7" autocomplete="off" value=""/>
-                <input type="text" class="form-control" placeholder="" id="txtDocNum" value="" autocomplete="off" disabled>
-                <div class="input-group-append">
-                    <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalInfIM">
-                        <i class="fa fa-search"></i>
-                    </button>
-                </div>
-            </div>
-            Series : <input type="text" id="txtSeriesIM" readonly class="hiddenAdmin"/>
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <button class="input-group-text" id="Cifr">
-                        <i class="fa fa-check"></i>
-                    </button>
-                </div>
-                <input type="text" placeholder="" id="txtSeries" value="" autocomplete="off" disabled size="7">
-                <input type="text" class="form-control" placeholder="" id="txtSeriesName" value="" autocomplete="off" disabled>
-                <div class="input-group-append">
-                    <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalSeries">
-                        <i class="fa fa-search"></i>
-                    </button>
-                </div>
-            </div>
-            Customer Code :
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <button class="input-group-text" id="CItemCode">
-                        <i class="fa fa-check"></i>
-                    </button>
-                </div>
-                <input type="text" class="form-control" placeholder="" id="txtCardCode" readonly>
-                <div class="input-group-append">
-                    @*<button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalCusCode"><i class="fa fa-search"></i></button>*@
-                </div>
-            </div>
-            Customer Name :
-            <div class="input-group">
-                <input type="text" class="form-control" id="txtCardName" readonly>
-            </div>
+            <div class="tab-pane fade show active" id="item" role="tabpanel" aria-labelledby="item-tab" style="margin-top: 10px">
+                <div class="row">
+                    <div class="col-sm-6">
 
-            <div>
-                Posting Date :
-                <div class="input-group">
-                    <input type="date" class="form-control" id="DocDate">
-                </div>
-            </div>
-            <div>
-                Document Date :
-                <div class="input-group">
-                    <input type="date" class="form-control" id="DocumentDate">
-                </div>
-            </div>
-            <hr>
-        </div>
+                        Search InventoryTransfer IM No. :
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <button class="input-group-text" id="Cifr"><i class="fa fa-check"></i></button>
+                            </div>
+                            <input type="text" id="txtDocEntry" disabled size="7" autocomplete="off" value="" />
+                            <input type="text" class="form-control" placeholder="" id="txtDocNum" value="" autocomplete="off" disabled>
+                            <div class="input-group-append">
+                                <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalInfIM"><i class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+                        Series : <input type="text" id="txtSeriesIM" readonly class="hiddenAdmin" />
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <button class="input-group-text" id="Cifr"><i class="fa fa-check"></i></button>
+                            </div>
+                            <input type="text" placeholder="" id="txtSeries" value="" autocomplete="off" disabled size="7">
+                            <input type="text" class="form-control" placeholder="" id="txtSeriesName" value="" autocomplete="off" disabled>
+                            <div class="input-group-append">
+                                <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalSeries"><i class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+                        Customer Code :
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <button class="input-group-text" id="CItemCode"><i class="fa fa-check"></i></button>
+                            </div>
+                            <input type="text" class="form-control" placeholder="" id="txtCardCode" readonly>
+                            <div class="input-group-append">
+                                @*<button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalCusCode"><i class="fa fa-search"></i></button>*@
+                            </div>
+                        </div>
+                        Customer Name :
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="txtCardName" readonly>
+                        </div>
 
-        <div class="col-sm-6">
-            <div>
-                From Warehouse :
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <button class="input-group-text" id="COcrCode">
-                            <i class="fa fa-check"></i>
-                        </button>
-                    </div>
-                    <input type="text" class="form-control" placeholder="" value="" id="FromWhsCode" disabled>
-                    <!--<div class="input-group-append">
-                    <button class="input-group-text btnModelsOcrCode" data-toggle="modal" data-target="#ModalWarehouse"><i class="fa fa-search"></i></button>-->
-                    @*ModalFromWhsCode*@
-                    <!--</div>-->
-                </div>
-            </div>
-            <!--<div>
-            From Bin Location :
-            <div class="input-group">
-            <div class="input-group-prepend">
-                <button class="input-group-text" id="COcrCode2"><i class="fa fa-check"></i></button>
-            </div>
-            <input type="text" class="form-control" placeholder="" value="" id="FromBinCode">-->
-            @*<input type="text" class="form-control" placeholder="Search Code" value="C62" id="OcrCode2">*@
-            <!--<div class="input-group-append">
-            <button class="input-group-text btnModelsOcrCode2" data-toggle="modal" data-target="#ModalBinLocation"><i class="fa fa-search"></i></button>-->
-            @*ModalFromBinCode*@
-            <!--</div>
-            </div>
-            </div>-->
-            <div>
-                To Warehouse :
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <button class="input-group-text" id="COcrCode3">
-                            <i class="fa fa-check"></i>
-                        </button>
-                    </div>
-                    <input type="text" class="form-control" placeholder="" id="ToWhsCode" value="" disabled>
-                    <!--<div class="input-group-append">
-                    <button class="input-group-text btnModelsOcrCode3" data-toggle="modal" data-target="#ModalWarehouse"><i class="fa fa-search"></i></button>-->
-                    @*ModalToWhsCode*@
-                    <!--</div>-->
-                </div>
-            </div>
-            <div class="hiddenAdmin">
-                To Bin Location :
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <button class="input-group-text" id="COcrCode4">
-                            <i class="fa fa-check"></i>
-                        </button>
-                    </div>
-                    <input type="text" id="txtBinEntry" autocomplete="off" disabled size="7"/>
-                    <input type="text" class="form-control" placeholder="" id="ToBinCode" value="" disabled>
-                    <div class="input-group-append">
-                        @*<button class="input-group-text btnModelsOcrCode4" id="btnToBinLocation" data-toggle="modal" data-target="#ModalToBinLocation"><i class="fa fa-search"></i></button>*@@*ModalToBinCode*@
-                    </div>
-                </div>
-            </div>
-            <div>
-                Sale Employee :
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <button class="input-group-text" id="COcrCode4">
-                            <i class="fa fa-check"></i>
-                        </button>
-                    </div>
-                    <input type="text" size="7" placeholder="" id="SlpCode0" value="" disabled>
-                    <input type="text" class="form-control" placeholder="" id="SlpCode" value="" disabled>
-                </div>
-            </div>
-            <div>
-                Journal Remark :
-                <div class="input-group">
-                    <input type="text" class="form-control" value="" id="jrnlMemo">
-                </div>
-            </div>
-            <div>
-                Remark :
-                <div class="input-group">
-                    <input type="text" class="form-control" value="" id="comments">
-                </div>
-            </div>
-            <div align="center">
-                <br>
-                <div>
-                    <button class="btn btn-primary btn-lg btn-block" id="btnSeatch" onclick="fncLoadData()"> Search </button>
-                </div>
-                <div>
-                    <button class="btn btn-danger btn-lg btn-block" id="btnClear"> Clear </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<br>
-<div class="row" id="dataDocnum" style="display: none">
-    <div class="col-sm-12">
-        <div class="table-responsive">
-            <table id="TbDataLine" class="table table-striped table-bordered table-condensed dt-responsive nowrap text-xsmall" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
-                <thead>
-                <tr>
-                    <th>ItemCode</th>
-                    <th>ItemName</th>
-                    <th>SAP-QTY</th>
-                    <th>FromWarehouse</th>
-                    <th>ToWarehouse</th>
-                    <th>UomCode</th>
-                    <th>Unit Price</th>
-                    <th>FromBinCode</th>
-                    <th>FromBinEntry</th>
-                </tr>
-                </thead>
-            </table>
-            <br/>
-            <div class="col-sm-6">
-                <div class="hiddenAdmin">
-                    ItemCode : <input type="text" id="txtItemCode" class="form-control" value="" style="background-color: cornsilk;" readonly/>
-                    ItemName : <input type="text" id="txtItemName" class="form-control" value="" style="background-color: cornsilk;" readonly/>
-                    Quantity : <input type="text" id="txtQuantity" class="form-control" value="" style="background-color: cornsilk;" readonly/>
-                    FromBinEntry : <input type="text" id="txtfBinEntry" class="form-control" value="" style="background-color: cornsilk;" readonly/>
-                    <hr>
-                </div>
-
-                @* =================== TabScanBarCode =================== *@
-                <div id="TabScanBarCode" class="BoxScan">
-                    @* ================= ปิด ================= *@
-                    <div id="tabTypeBarcode" style="display: none;">
-                        <center>
-                            <label>
-                                <input type="radio" id="rdoTypeScan" name="typeScan" value="01" style="height: 15px; vertical-align: middle; width: 15px;" onclick="checkBarcodeUDOM()"/>
-                                <font size="3" style="font-weight: bold">Barcode UDOM</font>
-                            </label>
-                            &nbsp;&nbsp;&nbsp;
-                            <label>
-                                <input type="radio" id="rdoTypeScan" name="typeScan" value="02" style="height: 15px; vertical-align: middle; width: 15px;" onclick="checkBarcodeProduct()"/>
-                                <font size="3" style="font-weight: bold">Barcode Product</font>
-                            </label>
-                        </center>
-                    </div>
-                    @* ================= ปิด ================= *@
-
-                    <div id="divBarcodeUDOM" style="display: block;">
-                        <div id="TabQty" style="display: block;">
-                            Input Quantity :
+                        <div>
+                            Posting Date :
                             <div class="input-group">
-                                <input type="number" class="form-control" placeholder="" id="txtQuantity01" value="1" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center;">
-                                <button class="btn btn-warning" id="btnUpdateQty" style="display: none; margin-left: 5px;" onclick="fncUpdateQty();">Update Qty</button>
+                                <input type="date" class="form-control" id="DocDate">
                             </div>
                         </div>
                         <div>
-                            Scan Barcode :
+                            Document Date :
                             <div class="input-group">
-                                <input type="text" class="form-control" value="" id="txtScanBarCode01" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center;" autocomplete="off">
+                                <input type="date" class="form-control" id="DocumentDate">
                             </div>
-                            <button class="input-group-text" id="addRow01" style="display: none;" autocomplete="off">
-                                <i class="fa fa-plus"></i>
-                            </button>
                         </div>
+                        <hr>
                     </div>
 
-                    @* ไม่ใช้ *@
-                    <div id="divBarcodeProduct" style="display: none;">
-
-                        <center>
-                            <label>
-                                <input type="radio" id="rdoTypeItem1" name="typeItem" value="Batch" style="height: 12px; vertical-align: middle; width: 12px;" onclick="chTypeItem()"/>
-                                <font size="3" style="font-weight: bold">Batch</font>
-                            </label>
-                            &nbsp;&nbsp;&nbsp;
-                            <label>
-                                <input type="radio" id="rdoTypeItem2" name="typeItem" value="Serial" style="height: 12px; vertical-align: middle; width: 12px;" onclick="chTypeItem()"/>
-                                <font size="3" style="font-weight: bold">Serial</font>
-                            </label><br>
-                        </center>
-                        <label>
-                            Input Quantity :
-                        </label>
-                        <div class="input-group">
-                            <input type="number" class="form-control" placeholder="" id="txtQuantity02" value="1" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center;" autocomplete="off" disabled>
+                    <div class="col-sm-6">
+                        <div>
+                            From Warehouse :
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <button class="input-group-text" id="COcrCode"><i class="fa fa-check"></i></button>
+                                </div>
+                                <input type="text" class="form-control" placeholder="" value="" id="FromWhsCode" disabled>
+                                <!--<div class="input-group-append">
+                                <button class="input-group-text btnModelsOcrCode" data-toggle="modal" data-target="#ModalWarehouse"><i class="fa fa-search"></i></button>-->
+                                @*ModalFromWhsCode*@
+                                <!--</div>-->
+                            </div>
                         </div>
-
-                        <label>
-                            Scan Barcode :
-                        </label>
+                        <!--<div>
+                        From Bin Location :
                         <div class="input-group">
-                            <input type="text" class="form-control" value="" id="txtScanBarCode02" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center;" autocomplete="off" disabled>
+                            <div class="input-group-prepend">
+                                <button class="input-group-text" id="COcrCode2"><i class="fa fa-check"></i></button>
+                            </div>
+                            <input type="text" class="form-control" placeholder="" value="" id="FromBinCode">-->
+                        @*<input type="text" class="form-control" placeholder="Search Code" value="C62" id="OcrCode2">*@
+                        <!--<div class="input-group-append">
+                        <button class="input-group-text btnModelsOcrCode2" data-toggle="modal" data-target="#ModalBinLocation"><i class="fa fa-search"></i></button>-->
+                        @*ModalFromBinCode*@
+                        <!--</div>
+                            </div>
+                        </div>-->
+                        <div>
+                            To Warehouse :
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <button class="input-group-text" id="COcrCode3"><i class="fa fa-check"></i></button>
+                                </div>
+                                <input type="text" class="form-control" placeholder="" id="ToWhsCode" value="" disabled>
+                                <!--<div class="input-group-append">
+                                <button class="input-group-text btnModelsOcrCode3" data-toggle="modal" data-target="#ModalWarehouse"><i class="fa fa-search"></i></button>-->
+                                @*ModalToWhsCode*@
+                                <!--</div>-->
+                            </div>
                         </div>
-
-                        <label>
-                            Scan Batch/Serial :
-                        </label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" value="" id="txtScanBatchSerial02" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center;" autocomplete="off" disabled>
+                        <div class="hiddenAdmin">
+                            To Bin Location :
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <button class="input-group-text" id="COcrCode4"><i class="fa fa-check"></i></button>
+                                </div>
+                                <input type="text" id="txtBinEntry" autocomplete="off" disabled size="7" />
+                                <input type="text" class="form-control" placeholder="" id="ToBinCode" value="" disabled>
+                                <div class="input-group-append">
+                                    @*<button class="input-group-text btnModelsOcrCode4" id="btnToBinLocation" data-toggle="modal" data-target="#ModalToBinLocation"><i class="fa fa-search"></i></button>*@@*ModalToBinCode*@
+                                </div>
+                            </div>
                         </div>
-                        <button class="input-group-text" id="addRow02" style="display: none;">
-                            <i class="fa fa-plus"></i>
-                        </button>
+                        <div>
+                            Sale Employee :
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <button class="input-group-text" id="COcrCode4"><i class="fa fa-check"></i></button>
+                                </div>
+                                <input type="text" size="7" placeholder="" id="SlpCode0" value="" disabled>
+                                <input type="text" class="form-control" placeholder="" id="SlpCode" value="" disabled>
+                            </div>
+                        </div>
+                        <div>
+                            Journal Remark :
+                            <div class="input-group">
+                                <input type="text" class="form-control" value="" id="jrnlMemo">
+                            </div>
+                        </div>
+                        <div>
+                            Remark :
+                            <div class="input-group">
+                                <input type="text" class="form-control" value="" id="comments">
+                            </div>
+                        </div>
+                        <div align="center">
+                            <br>
+                            <div><button class="btn btn-primary btn-lg btn-block" id="btnSeatch" onclick="fncLoadData()"> Search </button></div>
+                            <div><button class="btn btn-danger btn-lg btn-block" id="btnClear"> Clear </button></div>
+                        </div>
                     </div>
-
                 </div>
-                @* ====================================================== *@
             </div>
-            <hr>
 
-            <div>
-                <font size="+1" style="font-weight: bold">
-                    <u>List Data From Scan</u>
-                </font>
+            <br>
+            <div class="row" id="dataDocnum" style="display:none">
+                <div class="col-sm-12">
+                    <div class="table-responsive">
+                        <div class="table-responsive" id="mainmdl">
+
+                            <table id="TbDataLine" class="table table-striped table-bordered table-condensed dt-responsive nowrap text-xsmall" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <thead>
+                                    <tr>
+                                        <th>ItemCode</th>
+                                        <th>ItemName</th>
+                                        <th>SAP-QTY</th>
+                                        <th>FromWarehouse</th>
+                                        <th>ToWarehouse</th>
+                                        <th>UomCode</th>
+                                        <th>FromBinCode</th>
+                                        <th>FromBinEntry</th>
+                                        <th>ToBinCode</th>
+                                        <th>ToBinEntry</th>
+                                    </tr>
+                                </thead>
+                            </table>
+
+                        </div>
+                        <br />
+                        <div class="col-sm-6">
+                            <div class="hiddenAdmin">
+                                ItemCode : <input type="text" id="txtItemCode" class="form-control" value="" style="background-color: cornsilk;" readonly />
+                                ItemName : <input type="text" id="txtItemName" class="form-control" value="" style="background-color: cornsilk;" readonly />
+                                Quantity : <input type="text" id="txtQuantity" class="form-control" value="" style="background-color: cornsilk;" readonly />
+                                FromBinEntry : <input type="text" id="txtfBinEntry" class="form-control" value="" style="background-color: cornsilk;" readonly />
+                                <hr>
+                            </div>
+
+                            @* =================== TabScanBarCode =================== *@
+                            <div id="TabScanBarCode" class="BoxScan">
+                                @* ================= ปิด ================= *@
+                                <div id="tabTypeBarcode" style="display:none;">
+                                    <center>
+                                        <label>
+                                            <input type="radio" id="rdoTypeScan" name="typeScan" value="01" style="height: 15px; width: 15px; vertical-align: middle;" onclick="checkBarcodeUDOM()" />
+                                            <font size="3" style="font-weight:bold">Barcode UDOM</font>
+                                        </label>
+                                        &nbsp;&nbsp;&nbsp;
+                                        <label>
+                                            <input type="radio" id="rdoTypeScan" name="typeScan" value="02" style="height: 15px; width: 15px; vertical-align: middle; " onclick="checkBarcodeProduct()" />
+                                            <font size="3" style="font-weight:bold">Barcode Product</font>
+                                        </label>
+                                    </center>
+                                </div>
+                                @* ================= ปิด ================= *@
+
+                                <div id="divBarcodeUDOM" style="display:block; ">
+                                    <div id="TabQty" style="display:block;">
+                                        Input Quantity :
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" placeholder="" id="txtQuantity01" value="1" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
+                                            <button class="btn btn-warning" id="btnUpdateQty" style="margin-left:5px; display:none" onclick="fncUpdateQty();">Update Qty</button>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        Scan Barcode :
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" value="" id="txtScanBarCode01" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center;" autocomplete="off">
+                                        </div>
+                                        <button class="input-group-text" id="addRow01" style="display: none;" autocomplete="off"><i class="fa fa-plus"></i></button>
+                                    </div>
+                                </div>
+
+                                @* ไม่ใช้ *@
+                                <div id="divBarcodeProduct" style="display: none; ">
+
+                                    <center>
+                                        <label>
+                                            <input type="radio" id="rdoTypeItem1" name="typeItem" value="Batch" style="height: 12px; width: 12px; vertical-align: middle;" onclick="chTypeItem()" />
+                                            <font size="3" style="font-weight:bold">Batch</font>
+                                        </label>
+                                        &nbsp;&nbsp;&nbsp;
+                                        <label>
+                                            <input type="radio" id="rdoTypeItem2" name="typeItem" value="Serial" style="height: 12px; width: 12px; vertical-align: middle; " onclick="chTypeItem()" />
+                                            <font size="3" style="font-weight:bold">Serial</font>
+                                        </label><br>
+                                    </center>
+                                    <label>
+                                        Input Quantity :
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" placeholder="" id="txtQuantity02" value="1" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center;" autocomplete="off" disabled>
+                                    </div>
+
+                                    <label>
+                                        Scan Barcode :
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" value="" id="txtScanBarCode02" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center;" autocomplete="off" disabled>
+                                    </div>
+
+                                    <label>
+                                        Scan Batch/Serial :
+                                    </label><div class="input-group">
+                                        <input type="text" class="form-control" value="" id="txtScanBatchSerial02" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center;" autocomplete="off" disabled>
+                                    </div>
+                                    <button class="input-group-text" id="addRow02" style="display:none;"><i class="fa fa-plus"></i></button>
+                                </div>
+
+                            </div>
+                            @* ====================================================== *@
+                        </div>
+                        <hr>
+
+                        <div><font size="+1" style="font-weight:bold"><u>List Data From Scan</u></font></div>
+                        <div id="GetStcokBatchSerial01" class="hiddenAdmin">
+                            <input type="text" id="getItemCode" />
+                            <input type="text" id="getOnHand" />
+                            <input type="text" id="getSerialNumber" />
+                            <input type="text" id="getBatchNumber" />
+                        </div>
+                        <button id="btnDelRow" class="btn btn-info">&nbsp;Delete Row&nbsp;</button>
+                        <table id="tbItemList" class="table table-striped table-bordered table-condensed dt-responsive nowrap text-xsmall" style="width: 100%; background: #f0eff1; color: #696969;">
+                            <thead>
+                                <tr>
+                                    <th>ItemCode</th>
+                                    <th>ItemName</th>
+                                    <th>Quantity</th>
+                                    <th>fromWhsCode</th>
+                                    <th>fromBinEntry</th>
+                                    <th>toWhsCode</th>
+                                    <th>toBinEntry</th>
+                                    <th>batchNumber</th>
+                                    <th>serialNumber</th>
+                                </tr>
+                            </thead>
+                        </table>
+
+                    </div>
+                </div>
+
+                <hr>
+                <div class="row" style="padding: 15px;margin-top:-20px;margin-bottom:-20px;">
+                    <div class="nav navbar-nav ml-auto">
+                        <div class="btn-group">
+                            <button class="btn btn-success" id="Save" style="margin-left:5px;" onclick="POSTDataAPI()">Send To SAP</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div id="GetStcokBatchSerial01" class="hiddenAdmin">
-                <input type="text" id="getItemCode"/>
-                <input type="text" id="getOnHand"/>
-                <input type="text" id="getSerialNumber"/>
-                <input type="text" id="getBatchNumber"/>
-            </div>
-            <button id="btnDelRow" class="btn btn-info">&nbsp;Delete Row&nbsp;</button>
-            <table id="tbItemList" class="table table-striped table-bordered table-condensed dt-responsive nowrap text-xsmall" style="background: #f0eff1; color: #696969; width: 100%;">
-                <thead>
-                <tr>
-                    <th>ItemCode</th>
-                    <th>ItemName</th>
-                    <th>Quantity</th>
-                    <th>fromWhsCode</th>
-                    <th>fromBinEntry</th>
-                    <th>toWhsCode</th>
-                    <th>toBinEntry</th>
-                    <th>batchNumber</th>
-                    <th>serialNumber</th>
-                </tr>
-                </thead>
-            </table>
 
         </div>
     </div>
-
-    <div class="row" style="margin-bottom: -20px; margin-top: -20px; padding: 15px;">
-        <div class="nav navbar-nav ml-auto">
-            <div class="btn-group">
-                <button class="btn btn-success" id="Save" style="margin-left: 5px;" onclick="POSTDataAPI()">Send To SAP</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-</div>
-</div>
 
 </div>
 
@@ -467,7 +455,7 @@
 @*0. Search Inventory Transfer IM *@
 <div class="modal fade" id="ModalInfIM">
     <div class="modal-dialog modal-xl">
-        <div class="modal-content" style="background: #f0eff1; color: #696969;">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
             <div class="modal-header">
                 <b>List of Inventory Transfer IM</b>
             </div>
@@ -475,20 +463,20 @@
                 <div class="table-responsive">
                     <div class="row">
                         <div class="col-sm-12">
-                            <table id="TbInf" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
+                            <table id="TbInf" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
                                 <thead>
-                                <tr>
-                                    <th>DocNum</th>
-                                    <th>Posting Date</th>
-                                    <th>CardCode</th>
-                                    <th>CardName</th>
-                                    <th>slpCode</th>
-                                    <th>slpName</th>
-                                    <th>fromWhs</th>
-                                    <th>toWhs</th>
-                                    <th>DocEntry</th>
-                                    <th>SeriesName</th>
-                                </tr>
+                                    <tr>
+                                        <th>DocNum</th>
+                                        <th>Posting Date</th>
+                                        <th>CardCode</th>
+                                        <th>CardName</th>
+                                        <th>slpCode</th>
+                                        <th>slpName</th>
+                                        <th>fromWhs</th>
+                                        <th>toWhs</th>
+                                        <th>DocEntry</th>
+                                        <th>SeriesName</th>
+                                    </tr>
                                 </thead>
                             </table>
                         </div>
@@ -496,8 +484,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-info" data-dismiss="modal" id="ChooseInf" style="background: #f0eff1; color: #696969;">Choose</button>
-                <button class="btn btn-info" data-dismiss="modal" id="CloseInf" style="background: #f0eff1; color: #696969;">Close</button>
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseInf" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" id="CloseInf" style="background:#f0eff1;color:#696969;">Close</button>
             </div>
         </div>
     </div>
@@ -506,7 +494,7 @@
 @*1. Search Customer Code*@
 <div class="modal fade" id="ModalCusCode">
     <div class="modal-dialog modal-xl">
-        <div class="modal-content" style="background: #f0eff1; color: #696969;">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
             <div class="modal-header">
                 <b>List of Customer</b>
             </div>
@@ -514,12 +502,12 @@
                 <div class="table-responsive">
                     <div class="row">
                         <div class="col-sm-12">
-                            <table id="TbCusCode" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
+                            <table id="TbCusCode" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
                                 <thead>
-                                <tr>
-                                    <th>Customer Code</th>
-                                    <th>Cusetomer Name</th>
-                                </tr>
+                                    <tr>
+                                        <th>Customer Code</th>
+                                        <th>Cusetomer Name</th>
+                                    </tr>
                                 </thead>
                             </table>
                         </div>
@@ -527,8 +515,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-info" data-dismiss="modal" id="ChooseCus" style="background: #f0eff1; color: #696969;">Choose</button>
-                <button class="btn btn-info" data-dismiss="modal" style="background: #f0eff1; color: #696969;">Close</button>
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseCus" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
             </div>
         </div>
     </div>
@@ -537,7 +525,7 @@
 @*2. Search Warehouse*@
 <div class="modal fade" id="ModalWarehouse">
     <div class="modal-dialog modal-xl">
-        <div class="modal-content" style="background: #f0eff1; color: #696969;">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
             <div class="modal-header">
                 <b>List of Warehouse</b>
             </div>
@@ -545,12 +533,12 @@
                 <div class="table-responsive">
                     <div class="row">
                         <div class="col-sm-12">
-                            <table id="TbCusCode" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
+                            <table id="TbCusCode" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
                                 <thead>
-                                <tr>
-                                    <th>WhsCode</th>
-                                    <th>WhsName</th>
-                                </tr>
+                                    <tr>
+                                        <th>WhsCode</th>
+                                        <th>WhsName</th>
+                                    </tr>
                                 </thead>
                             </table>
                         </div>
@@ -558,8 +546,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-info" data-dismiss="modal" id="ChooseCus" style="background: #f0eff1; color: #696969;">Choose</button>
-                <button class="btn btn-info" data-dismiss="modal" style="background: #f0eff1; color: #696969;">Close</button>
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseCus" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
             </div>
         </div>
     </div>
@@ -568,7 +556,7 @@
 @*3. Search Bin Location*@
 <div class="modal fade" id="ModalBinLocation">
     <div class="modal-dialog modal-xl">
-        <div class="modal-content" style="background: #f0eff1; color: #696969;">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
             <div class="modal-header">
                 <b>List of Bin Location</b>
             </div>
@@ -576,12 +564,12 @@
                 <div class="table-responsive">
                     <div class="row">
                         <div class="col-sm-12">
-                            <table id="TbCusCode" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
+                            <table id="TbCusCode" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
                                 <thead>
-                                <tr>
-                                    <th>BinCode</th>
-                                    <th>BinName</th>
-                                </tr>
+                                    <tr>
+                                        <th>BinCode</th>
+                                        <th>BinName</th>
+                                    </tr>
                                 </thead>
                             </table>
                         </div>
@@ -589,8 +577,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-info" data-dismiss="modal" id="ChooseCus" style="background: #f0eff1; color: #696969;">Choose</button>
-                <button class="btn btn-info" data-dismiss="modal" style="background: #f0eff1; color: #696969;">Close</button>
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseCus" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
             </div>
         </div>
     </div>
@@ -599,7 +587,7 @@
 @*4. Search SaleEmployee*@
 <div class="modal fade" id="ModalSaleEmployee">
     <div class="modal-dialog modal-xl">
-        <div class="modal-content" style="background: #f0eff1; color: #696969;">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
             <div class="modal-header">
                 <b>List of Employee</b>
             </div>
@@ -607,12 +595,12 @@
                 <div class="table-responsive">
                     <div class="row">
                         <div class="col-sm-12">
-                            <table id="TbCusCode" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
+                            <table id="TbCusCode" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
                                 <thead>
-                                <tr>
-                                    <th>SlpCode</th>
-                                    <th>SlpName</th>
-                                </tr>
+                                    <tr>
+                                        <th>SlpCode</th>
+                                        <th>SlpName</th>
+                                    </tr>
                                 </thead>
                             </table>
                         </div>
@@ -620,8 +608,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-info" data-dismiss="modal" id="ChooseCus" style="background: #f0eff1; color: #696969;">Choose</button>
-                <button class="btn btn-info" data-dismiss="modal" style="background: #f0eff1; color: #696969;">Close</button>
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseCus" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
             </div>
         </div>
     </div>
@@ -630,7 +618,7 @@
 @*5. Search Series CV*@
 <div class="modal fade" id="ModalSeries">
     <div class="modal-dialog modal-xl">
-        <div class="modal-content" style="background: #f0eff1; color: #696969;">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
             <div class="modal-header">
                 <b>List of Series</b>
             </div>
@@ -638,13 +626,13 @@
                 <div class="table-responsive">
                     <div class="row">
                         <div class="col-sm-12">
-                            <table id="TbSeries" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
+                            <table id="TbSeries" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
                                 <thead>
-                                <tr>
-                                    <th>Series</th>
-                                    <th>SeriesName</th>
-                                    <th>YYYY-MM</th>
-                                </tr>
+                                    <tr>
+                                        <th>Series</th>
+                                        <th>SeriesName</th>
+                                        <th>YYYY-MM</th>
+                                    </tr>
                                 </thead>
                             </table>
                         </div>
@@ -652,8 +640,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-info" data-dismiss="modal" id="ChooseSeries" style="background: #f0eff1; color: #696969;">Choose</button>
-                <button class="btn btn-info" data-dismiss="modal" id="CloseSeries" style="background: #f0eff1; color: #696969;">Close</button>
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseSeries" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" id="CloseSeries" style="background:#f0eff1;color:#696969;">Close</button>
             </div>
         </div>
     </div>
@@ -662,7 +650,7 @@
 @*6. Search To Bin Location*@
 <div class="modal fade" id="ModalToBinLocation">
     <div class="modal-dialog modal-xl">
-        <div class="modal-content" style="background: #f0eff1; color: #696969;">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
             <div class="modal-header">
                 <b>List of Bin Location</b>
             </div>
@@ -670,13 +658,13 @@
                 <div class="table-responsive">
                     <div class="row">
                         <div class="col-sm-12">
-                            <table id="TbToBinLocation" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
+                            <table id="TbToBinLocation" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
                                 <thead>
-                                <tr>
-                                    <th>BinCode</th>
-                                    <th>BinName</th>
-                                    <th>BinEntry</th>
-                                </tr>
+                                    <tr>
+                                        <th>BinCode</th>
+                                        <th>BinName</th>
+                                        <th>BinEntry</th>
+                                    </tr>
                                 </thead>
                             </table>
                         </div>
@@ -684,12 +672,13 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-info" data-dismiss="modal" id="ChooseToBinLocation" style="background: #f0eff1; color: #696969;">Choose</button>
-                <button class="btn btn-info" data-dismiss="modal" style="background: #f0eff1; color: #696969;">Close</button>
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseToBinLocation" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
             </div>
         </div>
     </div>
 </div>
+
 
 <script src="~/js/Array.js"></script>
 <script type="text/javascript">
@@ -701,7 +690,7 @@
             "type": "GET",
             "dataType": "JSON",
             "dataSrc": 'data',
-            "complete": function(data) {
+            "complete": function (data) {
                 console.log("GetOWTR Complete.");
             }
         },
@@ -727,57 +716,56 @@
 
     table0.columns([4, 5, 6, 7]).visible(false, false);
 
-    table0.on('select',
-        function() {
+    table0.on('select', function () {
 
-            var celldocNum = table0.rows({ selected: true }).data()[0]['docNum'];
-            var cellcardCode = table0.rows({ selected: true }).data()[0]['cardCode'];
-            var cellcardName = table0.rows({ selected: true }).data()[0]['cardName'];
-            var cellSlpCode = table0.rows({ selected: true }).data()[0]['slpCode'];
-            var cellSlp = table0.rows({ selected: true }).data()[0]['slpName'];
-            var cellfromWhs = table0.rows({ selected: true }).data()[0]['fromWhs'];
-            var celltoWhs = table0.rows({ selected: true }).data()[0]['toWhs'];
-            var celldocEntry = table0.rows({ selected: true }).data()[0]['docEntry'];
-            var cellseriesName = table0.rows({ selected: true }).data()[0]['seriesName'];
-            var celltoBinEntry = table0.rows({ selected: true }).data()[0]['toBinEntry'];
-            var celltoBinCode = table0.rows({ selected: true }).data()[0]['toBinCode'];
-            //console.log(rowData);
+        var celldocNum = table0.rows({ selected: true }).data()[0]['docNum'];
+        var cellcardCode = table0.rows({ selected: true }).data()[0]['cardCode'];
+        var cellcardName = table0.rows({ selected: true }).data()[0]['cardName'];
+        var cellSlpCode = table0.rows({ selected: true }).data()[0]['slpCode']
+        var cellSlp = table0.rows({ selected: true }).data()[0]['slpName'];
+        var cellfromWhs = table0.rows({ selected: true }).data()[0]['fromWhs'];
+        var celltoWhs = table0.rows({ selected: true }).data()[0]['toWhs'];
+        var celldocEntry = table0.rows({ selected: true }).data()[0]['docEntry'];
+        var cellseriesName = table0.rows({ selected: true }).data()[0]['seriesName'];
+        var celltoBinEntry = table0.rows({ selected: true }).data()[0]['toBinEntry'];
+        var celltoBinCode = table0.rows({ selected: true }).data()[0]['toBinCode'];
+        //console.log(rowData);
 
-            $('#ChooseInf').click(function() {
-                var txtDocNum = document.getElementById("txtDocNum");
-                var txtCardCode = document.getElementById("txtCardCode");
-                var txtCardName = document.getElementById("txtCardName");
-                var txtSlpCode0 = document.getElementById("SlpCode0");
-                var txtSlpCode = document.getElementById("SlpCode");
-                var txtFromWhsCode = document.getElementById("FromWhsCode");
-                var txtToWhsCode = document.getElementById("ToWhsCode");
-                var txtDocEntry = document.getElementById("txtDocEntry");
-                var txtSeriesIM = document.getElementById("txtSeriesIM");
-                var txtToBinEntry = document.getElementById("txtBinEntry");
-                var txtToBinCode = document.getElementById("ToBinCode");
+        $('#ChooseInf').click(function () {
+            var txtDocNum = document.getElementById("txtDocNum");
+            var txtCardCode = document.getElementById("txtCardCode");
+            var txtCardName = document.getElementById("txtCardName");
+            var txtSlpCode0 = document.getElementById("SlpCode0");
+            var txtSlpCode = document.getElementById("SlpCode");
+            var txtFromWhsCode = document.getElementById("FromWhsCode");
+            var txtToWhsCode = document.getElementById("ToWhsCode");
+            var txtDocEntry = document.getElementById("txtDocEntry");
+            var txtSeriesIM = document.getElementById("txtSeriesIM");
+            var txtToBinEntry = document.getElementById("txtBinEntry");
+            var txtToBinCode = document.getElementById("ToBinCode");
 
-                txtDocNum.value = celldocNum;
-                txtCardCode.value = cellcardCode;
-                txtCardName.value = cellcardName;
-                txtSlpCode0.value = cellSlpCode;
-                txtSlpCode.value = cellSlp;
-                txtFromWhsCode.value = celltoWhs;
-                txtToWhsCode.value = cellfromWhs;
-                txtDocEntry.value = celldocEntry;
-                txtSeriesIM.value = cellseriesName;
-                txtToBinEntry.value = celltoBinEntry;
-                txtToBinCode.value = celltoBinCode;
-            });
+            txtDocNum.value = celldocNum;
+            txtCardCode.value = cellcardCode;
+            txtCardName.value = cellcardName;
+            txtSlpCode0.value = cellSlpCode;
+            txtSlpCode.value = cellSlp;
+            txtFromWhsCode.value = celltoWhs;
+            txtToWhsCode.value = cellfromWhs;
+            txtDocEntry.value = celldocEntry;
+            txtSeriesIM.value = cellseriesName;
+            txtToBinEntry.value = celltoBinEntry;
+            txtToBinCode.value = celltoBinCode;
         });
+    });
 
     //+++++ Series CV +++++
     var tableSeriesCV = $('#TbSeries').DataTable({
-        "ajax": {
+            "ajax": {
             "url": '@Url.Action("GetSeriesCV", "Inventory")',
             "type": "GET",
             "dataType": "JSON",
             "dataSrc": 'data',
-            "complete": function(data) {
+            "complete": function (data) {
                 console.log("GetSeriesCV Complete.");
             }
         },
@@ -791,14 +779,13 @@
         "ordering": false,
         "info": false,
         "searching": false
-    });
+        });
 
-    tableSeriesCV.on('select',
-        function() {
+    tableSeriesCV.on('select', function () {
 
-            var cellSeries = tableSeriesCV.rows({ selected: true }).data()[0]['series'];
-            var cellSeriesName = tableSeriesCV.rows({ selected: true }).data()[0]['seriesName'];
-            $('#ChooseSeries').click(function() {
+        var cellSeries = tableSeriesCV.rows({ selected: true }).data()[0]['series'];
+        var cellSeriesName = tableSeriesCV.rows({ selected: true }).data()[0]['seriesName'];
+            $('#ChooseSeries').click(function () {
                 var txtSeries = document.getElementById("txtSeries");
                 var txtSeriesName = document.getElementById("txtSeriesName");
                 txtSeries.value = cellSeries;
@@ -810,13 +797,13 @@
     //+++++ GetToBinLocation +++++
     //var xtoWhsCode = document.getElementById("ToWhsCode").value;
 
-    var tableToBin = $('#TbToBinLocation').DataTable({
+    @*var tableToBin = $('#TbToBinLocation').DataTable({
         "ajax": {
             "url": '@Url.Action("GetBinLocation", "Home")',
             "type": "GET",
             "dataType": "JSON",
             "dataSrc": 'data',
-            "complete": function(data) {
+            "complete": function (data) {
                 console.log("GET To BinLocation Complete.");
             }
         },
@@ -832,17 +819,16 @@
 
     });
 
-    tableToBin.on('select',
-        function() {
+    tableToBin.on('select', function () {
             var cellbinCode = tableToBin.rows({ selected: true }).data()[0]['binCode'];
             var cellAbsEntry = tableToBin.rows({ selected: true }).data()[0]['absEntry'];
-            $('#ChooseToBinLocation').click(function() {
+            $('#ChooseToBinLocation').click(function () {
                 var txtToBinCode = document.getElementById("ToBinCode");
                 var txtBinEntry = document.getElementById("txtBinEntry");
                 txtToBinCode.value = cellbinCode;
                 txtBinEntry.value = cellAbsEntry;
             });
-        });
+    });*@
 
     //============== fncLoadData ==============
 
@@ -855,7 +841,8 @@
             type: "GET",
             dataType: "JSON",
             "dataSrc": 'data',
-            success: function(data) {
+            success: function (data) {
+                var rows_selected = [];
                 var tline = $('#TbDataLine').DataTable({
                     "bDestroy": true,
                     "aaData": data.data,
@@ -870,9 +857,10 @@
                         { "data": "fromWhsCod", "autoWidth": true },
                         { "data": "whsCode", "autoWidth": true },
                         { "data": "uomCode", "autoWidth": true },
-                        { "data": "u_unitprice", "autoWidth": true },
                         { "data": "binCode", "autoWidth": true },
-                        { "data": "fromBinEntry", "autoWidth": true }
+                        { "data": "fromBinEntry", "autoWidth": true },
+                        { "data": "toBinCode", "autoWidth": true },
+                        { "data": "toBinEntry", "autoWidth": true }
                     ],
                     "language": { "emptyTable": "No Events Found Related To This User" },
                     "order": [[0, 'desc']],
@@ -882,31 +870,31 @@
                     "info": false,
                     "searching": false
                 });
+                /*<input type="checkbox" !checked="checked" id = "chk' + full.itemCode + '" value = "'+ full.itemCode +'" onchange = "chkso(this)" >*/
                 console.log("Download Data Complete");
                 document.getElementById("dataDocnum").style.display = "block";
                 document.getElementById("txtScanBarCode01").value = '';
                 document.getElementById("txtScanBarCode01").focus();
                 //document.getElementById("txtScanBarCode").focus();
-                tline.on('select',
-                    function() {
-                        var cellitemcode = tline.rows({ selected: true }).data()[0]['itemCode'];
-                        var celldscription = tline.rows({ selected: true }).data()[0]['dscription'];
-                        var cellquantity = tline.rows({ selected: true }).data()[0]['quantity'];
-                        var cellfromBinEntry = tline.rows({ selected: true }).data()[0]['fromBinEntry'];
+                tline.on('select', function () {
+                    var cellitemcode = tline.rows({ selected: true }).data()[0]['itemCode'];
+                    var celldscription = tline.rows({ selected: true }).data()[0]['dscription'];
+                    var cellquantity = tline.rows({ selected: true }).data()[0]['quantity'];
+                    var cellfromBinEntry = tline.rows({ selected: true }).data()[0]['fromBinEntry'];
 
-                        var txtItemCode = document.getElementById("txtItemCode");
-                        var txtItemName = document.getElementById("txtItemName");
-                        var txtQuantity = document.getElementById("txtQuantity");
-                        var txtfBinEntry = document.getElementById("txtfBinEntry");
-                        txtItemCode.value = cellitemcode;
-                        txtItemName.value = celldscription;
-                        txtQuantity.value = cellquantity;
-                        txtfBinEntry.value = cellfromBinEntry;
+                    var txtItemCode = document.getElementById("txtItemCode");
+                    var txtItemName = document.getElementById("txtItemName");
+                    var txtQuantity = document.getElementById("txtQuantity");
+                    var txtfBinEntry = document.getElementById("txtfBinEntry");
+                    txtItemCode.value = cellitemcode;
+                    txtItemName.value = celldscription;
+                    txtQuantity.value = cellquantity;
+                    txtfBinEntry.value = cellfromBinEntry;
 
-                        //document.getElementById("txtScanBarCode").focus();
-                        //document.getElementById("txtScanBarCode").value = "";
-                        //document.getElementById("txtScanBatchSerial").value = "";
-                    });
+                    //document.getElementById("txtScanBarCode").focus();
+                    //document.getElementById("txtScanBarCode").value = "";
+                    //document.getElementById("txtScanBatchSerial").value = "";
+                });
 
             }
         });
@@ -922,14 +910,13 @@
         }
     }
 
-    $('#btnClear').on('click',
-        function() {
-            location.reload();
-        });
+    $('#btnClear').on('click', function () {
+        location.reload();
+    });
 
     //Add Data In Row
     var t = $('#tbItemList').DataTable({
-        "columns": [
+         "columns": [
             { "width": "10%" },
             { "width": "50%" },
             { "width": "5%" },
@@ -948,175 +935,177 @@
     });
 
     //BarcodeUDOM
-    $('#addRow01').on('click',
-        function() {
+    $('#addRow01').on('click', function () {
 
-            if ($('#txtScanBarCode01').val() != '') {
+        if ($('#txtScanBarCode01').val() != '') {
 
-                var txtScanBarCode = document.getElementById("txtScanBarCode01").value;
-                var txtWarehouse = document.getElementById("FromWhsCode").value;
-                const strArr = txtScanBarCode.split(";");
-                //document.getElementById("demo").innerHTML = StrBarCodeArr[4];
-                var sItemCode = strArr[0];
-                var sBatch = strArr[1];
-                var sSerial = strArr[2];
-                var sBatchSerial;
-                let jqueryXml = {};
-                console.log(sItemCode + "-" + sBatch + "-" + sSerial + "-" + txtWarehouse);
-                //url: '@Url.Action("GetStockItemBatchWhs", "Inventory")',
-                //data: { itemcode: sItemCode, batchnumber: sBatchSerial, whscode: txtWarehouse },
-                //GetStockItemBatch
-                if (sBatch != '') {
-                    sBatchSerial = sBatch;
-                    $.ajax({
-                        url: '@Url.Action("GetStockItemBatchW", "Inventory")',
-                        data: { itemcode: sItemCode, batchnumber: sBatchSerial, whscode: txtWarehouse },
-                        type: "GET",
-                        dataType: "JSON",
-                        "dataSrc": 'data',
-                        success: function(data) {
-                            //console.log(data);
-                            jqueryXml = $(data);
-
-                            if (jqueryXml[0].data.length != 0) {
-                                //=========================
-                                var bItemCode = jqueryXml[0].data[0].itemCode;
-                                var bItemName = jqueryXml[0].data[0].itemName;
-                                var bQuantity = document.getElementById("txtQuantity01").value;
-                                var bWhsCode = jqueryXml[0].data[0].whsCode;
-                                var bWhsEntry = jqueryXml[0].data[0].whsEntry;
-                                var bBinCode = jqueryXml[0].data[0].binCode;
-                                var bBinEntry = jqueryXml[0].data[0].binEntry;
-                                var bUOMCode = jqueryXml[0].data[0].uomCode;
-                                var bBatchNumber = jqueryXml[0].data[0].batchNumber;
-                                var bSerialNumber = jqueryXml[0].data[0].serialNumber;
-                                //if (bSerialNumber != '') { bSerialNumber = bSerialNumber } else { bSerialNumber = '' }
-                                var bExpDate = jqueryXml[0].data[0].expDate;
-                                if (bExpDate == '1899-12-30T00:00:00') {
-                                    bExpDate = '';
-                                } else {
-                                    bExpDate = bExpDate;
-                                }
-
-                                if ($('#txtScanBarCode01').val() != '') {
-                                    t.row.add([
-                                        bItemCode,
-                                        bItemName,
-                                        $('#txtQuantity01').val(),
-                                        $('#FromWhsCode').val(),
-                                        bBinEntry,
-                                        $('#ToWhsCode').val(),
-                                        $('#txtBinEntry').val(),
-                                        bBatchNumber,
-                                        ''
-                                    ]).draw(false);
-                                } else {
-                                    return false;
-                                }
-
-                                $('#txtScanBarCode01').val("");
-                                $('#txtScanBarCode01').focus();
-                                //=========================
+            var docentry = $("#txtDocEntry").val();
+            var txtScanBarCode = document.getElementById("txtScanBarCode01").value;
+            var txtWarehouse = document.getElementById("FromWhsCode").value;
+            const strArr = txtScanBarCode.split(";");
+            //document.getElementById("demo").innerHTML = StrBarCodeArr[4];
+            var sItemCode = strArr[0];
+            var sBatch = strArr[1];
+            var sSerial = strArr[2];
+            var sBatchSerial;
+            let jqueryXml = {};
+            console.log(sItemCode + "-" + sBatch + "-" + sSerial + "-" + txtWarehouse + "-" + docentry);
+            //url: '@Url.Action("GetStockItemBatchWhs", "Inventory")',
+            //data: { itemcode: sItemCode, batchnumber: sBatchSerial, whscode: txtWarehouse },
+            //GetStockItemBatch
+            if (sBatch != '') {
+                sBatchSerial = sBatch;
+                $.ajax({
+                url: '@Url.Action("GetStockItemx", "Inventory")',
+                data: { docentry: docentry, itemcode: sItemCode, batchserialno: sBatchSerial},
+                type: "GET",
+                dataType: "JSON",
+                "dataSrc": 'data',
+                    success: function (data) {
+                        jqueryXml = $(data);
+                        //console.log(jqueryXml);
+                        if (jqueryXml[0].data.length != 0) {
+                            //=========================
+                            var bItemCode = jqueryXml[0].data[0].itemCode;
+                            var bItemName = jqueryXml[0].data[0].itemName;
+                            var bQuantity = document.getElementById("txtQuantity01").value;
+                            var bWhsCode = jqueryXml[0].data[0].whsCode;
+                            var bWhsEntry = jqueryXml[0].data[0].whsEntry;
+                            var bBinCode = jqueryXml[0].data[0].binCode;
+                            var fBinEntry = jqueryXml[0].data[0].fBinEntry;
+                            var bUOMCode = jqueryXml[0].data[0].uomCode;
+                            var tBinEntry = jqueryXml[0].data[0].tBinEntry;
+                            var bBatchNumber = jqueryXml[0].data[0].batchNumber;
+                            var bSerialNumber = jqueryXml[0].data[0].serialNumber;
+                            //if (bSerialNumber != '') { bSerialNumber = bSerialNumber } else { bSerialNumber = '' }
+                            var bExpDate = jqueryXml[0].data[0].expDate;
+                            if (bExpDate == '1899-12-30T00:00:00') {
+                                bExpDate = '';
                             } else {
-                                alert("Batch Number does not exist.");
-                                $('#txtScanBarCode01').val("");
-                                $('#txtScanBarCode01').focus();
+                                bExpDate = bExpDate;
                             }
 
-                        }
-                    });
-                } else if (sSerial != '') {
-                    sBatchSerial = sSerial;
-                    $.ajax({
-                        url: '@Url.Action("GetStockItemSerialW", "Inventory")',
-                        data: { itemcode: sItemCode, serialnumber: sBatchSerial, whscode: txtWarehouse },
-                        type: "GET",
-                        dataType: "JSON",
-                        "dataSrc": 'data',
-                        success: function(data) {
-                            var jqueryXml = $(data);
-                            if (jqueryXml[0].data.length != 0) {
-                                //=========================
-                                var bItemCode = jqueryXml[0].data[0].itemCode;
-                                var bItemName = jqueryXml[0].data[0].itemName;
-                                var bQuantity = document.getElementById("txtQuantity01").value;
-                                var bWhsCode = jqueryXml[0].data[0].whsCode;
-                                var bWhsEntry = jqueryXml[0].data[0].whsEntry;
-                                var bBinCode = jqueryXml[0].data[0].binCode;
-                                var bBinEntry = jqueryXml[0].data[0].binEntry;
-                                var bUOMCode = jqueryXml[0].data[0].uomCode;
-                                var bBatchNumber = jqueryXml[0].data[0].batchNumber;
-                                var bSerialNumber = jqueryXml[0].data[0].serialNumber;
-                                //if (bSerialNumber != '') { bSerialNumber = bSerialNumber } else { bSerialNumber = '' }
-                                var bExpDate = jqueryXml[0].data[0].expDate;
-                                if (bExpDate == '1899-12-30T00:00:00') {
-                                    bExpDate = '';
-                                } else {
-                                    bExpDate = bExpDate;
-                                }
-
-                                if ($('#txtScanBarCode01').val() != '') {
-                                    t.row.add([
-                                        bItemCode,
-                                        bItemName,
-                                        $('#txtQuantity01').val(),
-                                        $('#FromWhsCode').val(),
-                                        bBinEntry,
-                                        $('#ToWhsCode').val(),
-                                        $('#txtBinEntry').val(),
-                                        '',
-                                        bBatchNumber
-                                    ]).draw(false);
-                                } else {
-                                    return false;
-                                }
-
-                                $('#txtScanBarCode01').val("");
-                                $('#txtScanBarCode01').focus();
-                                //=========================
-
+                            if ($('#txtScanBarCode01').val() != '') {
+                                t.row.add([
+                                    bItemCode,
+                                    bItemName,
+                                    $('#txtQuantity01').val(),
+                                    $('#FromWhsCode').val(),
+                                    fBinEntry,
+                                    $('#ToWhsCode').val(),
+                                    tBinEntry,
+                                    bBatchNumber,
+                                    ''
+                                ]).draw(false);
                             } else {
-                                alert("Serial Number does not exist.");
-                                $('#txtScanBarCode01').val("");
-                                $('#txtScanBarCode01').focus();
+                                return false;
                             }
 
+                            $('#txtScanBarCode01').val("");
+                            $('#txtScanBarCode01').focus();
+                            //=========================
+                        } else {
+                            alert("Batch Number does not exist.");
+                            $('#txtScanBarCode01').val("");
+                            $('#txtScanBarCode01').focus();
                         }
-                    });
-                }
-                //var batchSerial;
-                //let position = txtScanBarCode.search(";");
-                //let slenth = txtScanBarCode.length;
-                //let batchSerial = txtScanBarCode.substring(position + 1, slenth);
-                //console.log(batchSerial);
+                    }
+                });
+            } else if (sSerial != '') {
+                sBatchSerial = sSerial;
+                $.ajax({
+                url: '@Url.Action("GetStockItemx", "Inventory")',
+                data: { docentry: docentry, itemcode: sItemCode, batchserialno: sBatchSerial },
+                type: "GET",
+                dataType: "JSON",
+                "dataSrc": 'data',
+                    success: function (data) {
+                        //console.log(data);
+                        var jqueryXml = $(data);
+                        if (jqueryXml[0].data.length != 0) {
+                            //=========================
+                            var bItemCode = jqueryXml[0].data[0].itemCode;
+                            var bItemName = jqueryXml[0].data[0].itemName;
+                            var bQuantity = document.getElementById("txtQuantity01").value;
+                            var bWhsCode = jqueryXml[0].data[0].whsCode;
+                            var bWhsEntry = jqueryXml[0].data[0].whsEntry;
+                            var bBinCode = jqueryXml[0].data[0].binCode;
+                            var fBinEntry = jqueryXml[0].data[0].fBinEntry;
+                            var bUOMCode = jqueryXml[0].data[0].uomCode;
+                            var tBinEntry = jqueryXml[0].data[0].tBinEntry;
+                            var bBatchNumber = jqueryXml[0].data[0].batchNumber;
+                            var bSerialNumber = jqueryXml[0].data[0].serialNumber;
+
+
+                            //if (bSerialNumber != '') { bSerialNumber = bSerialNumber } else { bSerialNumber = '' }
+                            var bExpDate = jqueryXml[0].data[0].expDate;
+                            if (bExpDate == '1899-12-30T00:00:00') {
+                                bExpDate = '';
+                            } else {
+                                bExpDate = bExpDate;
+                            }
+
+                            if ($('#txtScanBarCode01').val() != '') {
+                                t.row.add([
+                                    bItemCode,
+                                    bItemName,
+                                    $('#txtQuantity01').val(),
+                                    $('#FromWhsCode').val(),
+                                    fBinEntry,
+                                    $('#ToWhsCode').val(),
+                                    tBinEntry,
+                                    '',
+                                    bSerialNumber
+                                ]).draw(false);
+
+                            } else {
+                                return false;
+                            }
+
+                            $('#txtScanBarCode01').val("");
+                            $('#txtScanBarCode01').focus();
+                            //=========================
+
+                        } else {
+                            alert("Serial Number does not exist.");
+                            $('#txtScanBarCode01').val("");
+                            $('#txtScanBarCode01').focus();
+                        }
+
+                    }
+                });
             }
-        });
+        //var batchSerial;
+        //let position = txtScanBarCode.search(";");
+        //let slenth = txtScanBarCode.length;
+        //let batchSerial = txtScanBarCode.substring(position + 1, slenth);
+        //console.log(batchSerial);
+        }
+    });
     $('#addRow01').click();
 
     var input01 = document.getElementById("txtScanBarCode01");
-    input01.addEventListener("keyup",
-        function(event) {
-            if (event.keyCode === 13) {
-                event.preventDefault();
-                document.getElementById("addRow01").click();
-            }
-        });
+    input01.addEventListener("keyup", function (event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            document.getElementById("addRow01").click();
+        }
+    });
 
     //BarcodeProduct
-    $('#addRow02').on('click',
-        function() {
+    $('#addRow02').on('click', function () {
 
             var getSelectedValue = document.querySelector('input[name="typeItem"]:checked');
             if (getSelectedValue != null) {
                 if (getSelectedValue.value == "Batch") {
-                    if ($('#txtScanBatchSerial02').val() != "") {
+                     if ($('#txtScanBatchSerial02').val() != "") {
                         $.ajax({
                             url: '@Url.Action("GetStockItemBatchW", "Inventory")',
                             data: { itemcode: $('#txtScanBarCode02').val(), batchnumber: $('#txtScanBatchSerial02').val(), whscode: $('#FromWhsCode').val() },
                             type: "GET",
                             dataType: "JSON",
                             "dataSrc": 'data',
-                            success: function(data) {
+                            success: function (data) {
                                 var jqueryXml = $(data);
                                 if (jqueryXml[0].data.length != 0) {
                                     //=========================
@@ -1169,17 +1158,18 @@
 
                             }
                         });
-                    }
-                } else if (getSelectedValue.value == "Serial") {
-                    if ($('#txtScanBatchSerial02').val() != '') {
+        }
+                }
+                else if (getSelectedValue.value == "Serial") {
+                     if ($('#txtScanBatchSerial02').val()!='') {
 
                         $.ajax({
                             url: '@Url.Action("GetStockItemSerialW", "Inventory")',
-                            data: { itemcode: $('#txtScanBarCode02').val(), serialnumber: $('#txtScanBatchSerial02').val(), whscode: $('#FromWhsCode').val() },
+                            data: { itemcode: $('#txtScanBarCode02').val(), serialnumber: $('#txtScanBatchSerial02').val(), whscode: $('#FromWhsCode').val()},
                             type: "GET",
                             dataType: "JSON",
                             "dataSrc": 'data',
-                            success: function(data) {
+                            success: function (data) {
                                 var jqueryXml = $(data);
                                 if (jqueryXml[0].data.length != 0) {
                                     //=========================
@@ -1234,98 +1224,212 @@
                         });
 
 
-                    }
+        }
                 }
-            } else {
+            }
+            else {
                 return false;
             }
 
-        });
+    });
     $('#addRow02').click();
 
     var input02 = document.getElementById("txtScanBarCode02");
     var input12 = document.getElementById("txtScanBatchSerial02");
-    input02.addEventListener("keyup",
-        function(event) {
-            if (event.keyCode === 13) {
-                event.preventDefault();
-                document.getElementById("txtScanBatchSerial02").focus();
-                input12.addEventListener("keyup",
-                    function(event) {
-                        if (event.keyCode === 13) {
-                            event.preventDefault();
-                            document.getElementById("addRow02").click();
-                        }
-                    });
-            }
-        });
+    input02.addEventListener("keyup", function (event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            document.getElementById("txtScanBatchSerial02").focus();
+            input12.addEventListener("keyup", function (event) {
+                if (event.keyCode === 13) {
+                    event.preventDefault();
+                    document.getElementById("addRow02").click();
+                }
+            });
+        }
+    });
 
     //Delete Line Item From ScanBarCode
-    $('#btnDelRow').click(function() {
+    $('#btnDelRow').click(function () {
         t.row('.selected').remove().draw(false);
     });
 
     //Add Data Head And Line -> SAP
     function POSTDataAPI() {
-        let regex = /\,(?!\s*?[\{\[\"\'\w])/g;
-        var str = '';
+        //======================================
 
-        if (!t.data().count()) {
-            alert('Empty table');
-        } else {
-
-            str = '{';
-            str = str + '"series": ' + document.getElementById("txtSeries").value + ',';
-            str = str + '"cardCode": "' + document.getElementById("txtCardCode").value + '",';
-            str = str + '"docDate": "' + document.getElementById("DocDate").value + '",';
-            str = str + '"taxDate": "' + document.getElementById("DocumentDate").value + '",';
-            str = str + '"fromWhsCode": "' + document.getElementById("FromWhsCode").value + '",';
-            str = str + '"toWhsCode": "' + document.getElementById("ToWhsCode").value + '",';
-            str = str + '"toBinCode": ' + document.getElementById("txtBinEntry").value + ',';
-            str = str + '"salesEmployeeCode": "' + document.getElementById("SlpCode0").value + '",';
-            str = str + '"comments": "' + document.getElementById("comments").value + '",';
-            str = str + '"journalRemark": "' + document.getElementById("jrnlMemo").value + '",';
-            str = str + '"line": [';
-            //Line
-            for (let rr = 0; rr < t.column(0).data().length; rr++) {
-                var data = t.row(rr).data();
-                str = str + '{';
-                str = str + '"itemCode": "' + data[0] + '",';
-                str = str + '"quantity": ' + data[2] + ',';
-                str = str + '"fromWhsCode": "' + data[3] + '",';
-                str = str + '"toWhsCode": "' + data[5] + '",';
-                str = str + '"batchNo": "' + data[7] + '",';
-                str = str + '"serialNo": "' + data[8] + '",';
-                str = str + '"fromBinEntry" : ' + data[4] + ',';
-                str = str + '"toBinEntry" : ' + data[6] + ',';
-                str = str + '"u_TranferNo" : "' + document.getElementById("txtDocNum").value + '"';
-                str = str + '},';
+        var sHead = {};
+        var sLine = [];
+        var arrayLine = {};
+        //Line
+        for (let rr = 0; rr < t.column(0).data().length; rr++) {
+            arrayLine = {};
+            var data = t.row(rr).data();
+            var productType = "";
+            if (data[7] != "") {
+                productType = "b";
+            } else {
+                if (data[8] != "") {
+                    productType = "s";
+                }
             }
-            str = str + ']';
-            str = str + '}';
-            console.log(str);
+
+            arrayLine.itemCode = data[0];
+            arrayLine.quantity = parseInt(data[2]);
+            arrayLine.fromWhsCode = data[3];
+            arrayLine.toWhsCode = data[5];
+            arrayLine.productType = productType;
+            arrayLine.batchNo = data[7];
+            arrayLine.serialNo = data[8];
+            arrayLine.fromBinEntry = data[4];
+            arrayLine.toBinEntry = data[6];
+            arrayLine.u_TranferNo = $('#txtDocNum').val();
+            sLine.push(arrayLine);
         }
 
-        let cStr = str.replace(regex, ''); // remove all trailing commas
-        let jStr = JSON.parse(cStr); // build a new JSON object based on correct string
-        //var jStr = JSON.parse(str);
-        //console.log(jStr);
+        //console.log(sLine);
 
-        //console.log(contact);location.reload();
+        //For Batch Number
+        var dataLine = sLine;
+        var gBatchNo = [];
+        dataLine.reduce(function (res, value) {
+
+            if (!res[value.productType]) {
+                if (!res[value.batchNo]) {
+                    res[value.batchNo] = {
+                        itemCode: value.itemCode
+                        , quantity: 0
+                        , fromBinEntry: value.fromBinEntry
+                        , fromWhsCode: value.fromWhsCode
+                        , toBinEntry: value.toBinEntry
+                        , toWhsCode: value.toWhsCode
+                        , u_TranferNo: value.u_TranferNo
+                        , batchNo: value.batchNo
+                        , serialNo: ''
+                        , productType: value.productType
+                    }
+                    gBatchNo.push(res[value.batchNo]);
+                }
+            }
+
+            res[value.batchNo].quantity += value.quantity;
+            return res;
+        }, {});
+
+        //For Serial Number
+        var gSerialNo = [];
+        dataLine.reduce(function (res, value) {
+            if (!res[value.productType]) {
+                if (!res[value.serialNo]) {
+                    res[value.serialNo] = {
+                        itemCode: value.itemCode
+                        , quantity: 0
+                        , fromBinEntry: value.fromBinEntry
+                        , fromWhsCode: value.fromWhsCode
+                        , toBinEntry: value.toBinEntry
+                        , toWhsCode: value.toWhsCode
+                        , u_TranferNo: value.u_TranferNo
+                        , batchNo: ''
+                        , serialNo: value.serialNo
+                        , productType: value.productType
+                    }
+                    gSerialNo.push(res[value.serialNo]);
+                }
+            }
+
+            res[value.serialNo].quantity += value.quantity;
+            return res;
+        }, {});
+
+        //console.log("= Batch Number =");
+        //console.log(gBatchNo);
+        //console.log("= Serial Number =");
+        //console.log(gSerialNo);
+        //console.log("=================");
+        //var newArray = $.merge([], oldArray);
+        var newLine = [];
+        newLine = $.merge($.merge([], gBatchNo), gSerialNo);
+        //Head
+        sHead.series = $('#txtSeries').val();
+        sHead.cardCode = $('#txtCardCode').val();
+        sHead.docDate = $('#DocDate').val();
+        sHead.taxDate = $('#DocumentDate').val();
+        sHead.fromWhsCode = $('#FromWhsCode').val();
+        sHead.toWhsCode = $('#ToWhsCode').val();
+        sHead.toBinCode = $('#ToBinCode').val();
+        sHead.toBinEntry = $('#txtBinEntry').val();
+        sHead.salesEmployeeCode = $('#SlpCode0').val();
+        sHead.comments = $('#comments').val();
+        sHead.journalRemark = $('#jrnlMemo').val();
+        sHead.u_loannum = $('#txtDocNum').val();
+        sHead.line = newLine;
+        console.log(sHead);
+        //======================================
         $.ajax({
             type: "POST",
             url: '@Url.Action("PostInventoryTransfer", "Inventory")',
-            data: { sendInventoryTransfer: jStr },
+            data: { sendInventoryTransfer: sHead},
             dataType: "JSON",
-            error: function(request, error) {
-                console.log(arguments);
-                alert(" Can't do because: " + error);
+            error: function (request, error) {
+                    console.log(arguments);
+                    alert(" Can't do because: " + error);
             },
-            success: function() {
+            success: function (data) {
                 alert(" Done ! ");
-                location.reload();
+                console.log(data);
+                    //location.reload();
             }
         });
     }
+    //btnSendSO;tline;#TbDataLine
 
+
+    //======================================================================================
+    //jqueryXml = $(data);
+
+    //if (jqueryXml[0].data.length != 0) {
+    //    //=========================
+    //    var bItemCode = jqueryXml[0].data[0].itemCode;
+    //    var bItemName = jqueryXml[0].data[0].itemName;
+    //    var bQuantity = document.getElementById("txtQuantity01").value;
+    //    var bWhsCode = jqueryXml[0].data[0].whsCode;
+    //    var bWhsEntry = jqueryXml[0].data[0].whsEntry;
+    //    var bBinCode = jqueryXml[0].data[0].binCode;
+    //    var bBinEntry = jqueryXml[0].data[0].binEntry;
+    //    var bUOMCode = jqueryXml[0].data[0].uomCode;
+    //    var bBatchNumber = jqueryXml[0].data[0].batchNumber;
+    //    var bSerialNumber = jqueryXml[0].data[0].serialNumber;
+    //    //if (bSerialNumber != '') { bSerialNumber = bSerialNumber } else { bSerialNumber = '' }
+    //    var bExpDate = jqueryXml[0].data[0].expDate;
+    //    if (bExpDate == '1899-12-30T00:00:00') {
+    //        bExpDate = '';
+    //    } else {
+    //        bExpDate = bExpDate;
+    //    }
+
+    //    if ($('#txtScanBarCode01').val() != '') {
+    //        t.row.add([
+    //            bItemCode,
+    //            bItemName,
+    //            $('#txtQuantity01').val(),
+    //            $('#FromWhsCode').val(),
+    //            bBinEntry,
+    //            $('#ToWhsCode').val(),
+    //            $('#txtBinEntry').val(),
+    //            bBatchNumber,
+    //            ''
+    //        ]).draw(false);
+    //    } else {
+    //        return false;
+    //    }
+
+    //    $('#txtScanBarCode01').val("");
+    //    $('#txtScanBarCode01').focus();
+    //    //=========================
+    //} else {
+    //    alert("Batch Number does not exist.");
+    //    $('#txtScanBarCode01').val("");
+    //    $('#txtScanBarCode01').focus();
+    //}
 </script>
+

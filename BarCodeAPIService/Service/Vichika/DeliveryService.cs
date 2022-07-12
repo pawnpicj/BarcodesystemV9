@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BarCodeAPIService.Connection;
+﻿using BarCodeAPIService.Connection;
+using BarCodeAPIService.Models;
 using BarCodeLibrary.Request.SAP;
 using BarCodeLibrary.Respones.SAP;
-using SAPbobsCOM;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BarCodeAPIService.Service
 {
@@ -95,7 +96,7 @@ namespace BarCodeAPIService.Service
         {
             var oRDR = new List<ORDR>();
             var lRDR1 = new List<RDR1>();
-            Company oCompany;
+            SAPbobsCOM.Company oCompany;
 
             try
             {
@@ -103,18 +104,16 @@ namespace BarCodeAPIService.Service
                 if (login.LErrCode == 0)
                 {
                     oCompany = login.Company;
-                    Recordset oRS = null;
-                    Recordset? oRSLine = null;
-                    oRS = (Recordset)oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
-                    oRSLine = (Recordset)oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
-                    var Query = "CALL \"" + ConnectionString.CompanyDB +
-                                "\"._USP_CALLTRANS_SOUNTITYA ('ORDR','','','','','')";
+                    SAPbobsCOM.Recordset oRS = null;
+                    SAPbobsCOM.Recordset? oRSLine = null;
+                    oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+                    oRSLine = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+                    string Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_SOUNTITYA ('ORDR','','','','','')";
                     oRS.DoQuery(Query);
                     while (!oRS.EoF)
                     {
                         //Line
-                        var QueryLine =
-                            $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_SOUNTITYA ('RDR1','{oRS.Fields.Item(1).Value}','','','','')";
+                        string QueryLine = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_SOUNTITYA ('RDR1','{oRS.Fields.Item(1).Value}','','','','')";
                         oRSLine.DoQuery(QueryLine);
                         lRDR1 = new List<RDR1>();
                         while (!oRSLine.EoF)
@@ -153,7 +152,6 @@ namespace BarCodeAPIService.Service
                         oRS.MoveNext();
                         //DocDate = Convert.ToDateTime(oRS.Fields.Item(2).Value.ToString()),
                     }
-
                     return Task.FromResult(new ResponseGetORDR
                     {
                         ErrorCode = 0,
@@ -161,13 +159,15 @@ namespace BarCodeAPIService.Service
                         Data = oRDR.ToList()
                     });
                 }
-
-                return Task.FromResult(new ResponseGetORDR
+                else
                 {
-                    ErrorCode = login.LErrCode,
-                    ErrorMessage = login.SErrMsg,
-                    Data = null
-                });
+                    return Task.FromResult(new ResponseGetORDR
+                    {
+                        ErrorCode = login.LErrCode,
+                        ErrorMessage = login.SErrMsg,
+                        Data = null
+                    });
+                }
             }
             catch (Exception ex)
             {
@@ -183,20 +183,18 @@ namespace BarCodeAPIService.Service
         public Task<ResponseGetORDRLine> responseGetORDRLine(int DocEntry)
         {
             var getRDRLine = new List<ORDRLine>();
-            Company oCompany;
+            SAPbobsCOM.Company oCompany;
             try
             {
                 Login login = new();
                 if (login.LErrCode == 0)
                 {
                     oCompany = login.Company;
-                    Recordset? oRS = null;
-                    Recordset? oRSLine = null;
-                    var sqlStr =
-                        $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_SOUNTITYA ('RDR1','{DocEntry}','','','','')";
-                    ;
-                    oRS = (Recordset)oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
-                    oRSLine = (Recordset)oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
+                    SAPbobsCOM.Recordset? oRS = null;
+                    SAPbobsCOM.Recordset? oRSLine = null;
+                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_SOUNTITYA ('RDR1','{DocEntry}','','','','')"; ;
+                    oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+                    oRSLine = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRS.DoQuery(sqlStr);
                     while (!oRS.EoF)
                     {
@@ -209,11 +207,14 @@ namespace BarCodeAPIService.Service
                             DiscPrcnt = Convert.ToDouble(oRS.Fields.Item(4).Value.ToString()),
                             VatGroup = oRS.Fields.Item(5).Value.ToString(),
                             LineTotal = Convert.ToDouble(oRS.Fields.Item(6).Value.ToString()),
-                            WhsCode = oRS.Fields.Item(7).Value.ToString()
+                            WhsCode = oRS.Fields.Item(7).Value.ToString(),
+                            CardCode = oRS.Fields.Item(8).Value.ToString(),
+                            CardName = oRS.Fields.Item(9).Value.ToString(),
+                            DocEntry = Convert.ToInt32(oRS.Fields.Item(10).Value.ToString()),
+                            DocNum = oRS.Fields.Item(11).Value.ToString()
                         });
                         oRS.MoveNext();
                     }
-
                     return Task.FromResult(new ResponseGetORDRLine
                     {
                         ErrorCode = 0,
@@ -221,13 +222,15 @@ namespace BarCodeAPIService.Service
                         Data = getRDRLine
                     });
                 }
-
-                return Task.FromResult(new ResponseGetORDRLine
+                else
                 {
-                    ErrorCode = login.LErrCode,
-                    ErrorMsg = login.SErrMsg,
-                    Data = null
-                });
+                    return Task.FromResult(new ResponseGetORDRLine
+                    {
+                        ErrorCode = login.LErrCode,
+                        ErrorMsg = login.SErrMsg,
+                        Data = null
+                    });
+                }
             }
             catch (Exception ex)
             {
@@ -238,6 +241,7 @@ namespace BarCodeAPIService.Service
                     Data = null
                 });
             }
+
         }
     }
 }

@@ -1,0 +1,209 @@
+﻿@{
+    ViewData["Title"] = "User Setup";
+}
+<link href="~/css/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
+
+<style>
+    tr.selected {
+        background: red;
+        color: red;
+    }
+
+    #main {
+        position: absolute;
+    }
+
+    .color_tap {
+        background-color: #5f95c3;
+        color: #ffffff;
+        font-weight: 600;
+        margin-right: 1px;
+        min-width: 60px;
+    }
+
+    .nav-tabs .nav-link {
+        border: 1px solid rgb(193, 193, 193);
+        border-radius: 0px 12px 0px 0px;
+        height: 40px;
+        line-height: 20px;
+    }
+
+    .modal {
+        z-index: 200000;
+    }
+
+    .modal-header {
+        background: #5f95c3;
+        color: #ffffff;
+        height: 40px;
+    }
+
+        .modal-header b {
+            margin-top: -10px;
+        }
+
+    #TbAR table tr td {
+        background-color: none;
+        height: 35px;
+        margin-left: 15px;
+        margin-top: 10px;
+        padding: 0px !important;
+        position: relative !important;
+    }
+
+    table tbody tr td {
+        background-color: #ffffff;
+        color: black;
+    }
+
+    table tbody tr.selected td {
+        background: #ffce99; /*#94d8e1*/
+        color: red;
+    }
+
+        table tbody tr.selected td .clsinput {
+            background: #ffce99;
+            color: red;
+        }
+
+    .clsinput:focus {
+        outline: none;
+    }
+
+    input.form-check-input {
+        height: 20px;
+        width: 20px;
+    }
+</style>
+<div id="#main">
+    <div class="row" style="color: #696969; margin-left: 5px; margin-top: 5px;">
+        <h5 style="color: #696969; margin-top: 5px;"></h5>
+    </div>
+    <ul class="nav nav-tabs Tap-PA" id="mytab" role="tablist">
+        <li class="nav-item">
+            @*<a class="nav-link active color_tap" id="create-tab" data-toggle="tab" href="#create" role="tab" aria-controls="Create" aria-selected="true">Create User</a>*@
+        </li>
+        @*<li class="nav-item">
+                <a class="nav-link color_tap" id="print-tab" data-toggle="tab" href="#print" role="tab" aria-controls="Print" aria-selected="false">Print</a>
+            </li>*@
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="create" role="tabpanel" aria-labelledby="create-tab">
+            <div class="row">
+                <strong>User  :</strong><select style="width:150px;margin-left:15px;" size="1" class="c6 styleOption"> <option>User 1</option><option>User 2</option></select>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="container-fluid" style="border-inline-style: initial;color: midnightblue;margin-top:10px;">
+                        <div class="card" style="border:initial;width:300px;height:200px">
+                            <div class="card-header">
+                                <strong>SALES A/R </strong><input type="checkbox" class="input-group-text" style="float:right" />
+                            </div>
+                            <div class="card-body">
+                                <label>Delivery</label><input type="checkbox" style="float:right" /><br />
+                                <label>Return</label><input type="checkbox" style="float:right" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="container-fluid" style="border-inline-style: initial;color: midnightblue;margin-top:10px;">
+                        <div class="card" style="border:initial;width:300px;height:200px">
+                            <div class="card-header">
+                                <strong>Purchase A/P </strong><input type="checkbox" class="input-group-text" style="float:right" />
+                            </div>
+                            <div class="card-body">
+                                <label>Goods Receipt PO</label><input type="checkbox" style="float:right" />
+                                <label>Goods Return</label><input type="checkbox" style="float:right" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="container-fluid" style="border-inline-style: initial;color: midnightblue;margin-top:10px;">
+                        <div class="card" style="border:initial;width:300px;height:200px">
+                            <div class="card-header">
+                                <strong>Inventory</strong><input type="checkbox" class="input-group-text" style="float:right" />
+                            </div>
+                            <div class="card-body">
+                                <label>Inventory Transfer</label><input type="checkbox" style="float:right" />
+                                <label>Inventory Transfer Return</label><input type="checkbox" style="float:right" />
+                                <label>Inventory Counting</label><input type="checkbox" style="float:right" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="container-fluid" style="border-inline-style: initial;color: midnightblue;margin-top:10px;">
+                        <div class="card" style="border:initial;width:300px;height:200px">
+                            <div class="card-header">
+                                <strong>User</strong><input type="checkbox" class="input-group-text" style="float:right" />
+                            </div>
+                            <div class="card-body">
+                                <label>Create User</label><input type="checkbox" style="float:right" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <br />
+            <button class="btn btn-success" id="Save" style="margin-left: 5px;margin-top:5px;float:left">Save</button>
+        </div>
+    </div>
+    <div class="d-none" id="body1">
+        <div class="row">
+            <div class="col-12" style="text-align: center">
+                <h1>
+                    <label>Print Item Lable</label>
+                </h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <div class="col-6">
+                    <button onclick="window.history.back();" class="button">Back</button>
+                </div>
+            </div>
+            <div class="col-10">
+                <p align="right">
+                    @*<button class="button" onclick="@("window.location.href='" + @Url.Action("PrintItemLablePDF", "BinLocation") + "'");">PDF</button>*@
+                    <button class="button" onclick="PrintPDF();">PDF</button>
+                </p>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/Array.js"></script>
+    <script src="~/css/DataTable/jquery-3.3.1.js"></script>
+    <script src="~/css/DataTable/jquery.dataTables.min.js"></script>
+    <script>
+        function ShowPassword() {
+            const password = document.getElementById('password');
+            const icon = document.getElementById('togglePassword');
+            if (password.getAttribute('Type') === 'password') {
+                password.setAttribute('type', 'text');
+                icon.setAttribute('class', 'fa-eye');
+            } else {
+                password.setAttribute('type', 'password');
+                icon.setAttribute('class', 'fa-eye-slash');
+            }
+        }
+
+
+        function Load() {
+            $.ajax({
+                url: '@Url.Action("GetUserLogin", "Admin")',
+                type: 'GET',
+                dataType: 'JSON',
+                success: function(data) {
+                    LsUser = [];
+                    console.log(data);
+                    LsUser = data.data;
+                    tbUser.clear();
+                    tbUser.rows.add(LsUser);
+                    tbUser.draw();
+                }
+            });
+        }
+    </script>
+</div>

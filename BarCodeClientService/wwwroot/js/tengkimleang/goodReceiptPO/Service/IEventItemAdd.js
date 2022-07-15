@@ -83,15 +83,24 @@
     }
 
     GenerateSerialOrBatch(url, itemcode, qty, type) {
-        const a = {};
-        a.itemCode = itemcode;
-        a.qty = qty;
+        var a = {};
+        var obj = [];
+        obj.push({
+            "SerialFrom": 0,
+            "SerialTo": 0,
+            "MfrNo": "",
+            "ExpireDate": "",
+            "itemCode": itemcode,
+            "qty": qty,
+            "TypeSerialGen": "1"
+        });
+        a.ListSerials = obj;
         $.ajax({
             url: url,
             type: "POST",
             dataType: "JSON",
             data: { generateSerialBatchRequest: a },
-            success: function(data) {
+            success: function (data) {
                 $("#SerialNumber").val(data[0].serialAndBatch);
                 $("#txtScriptID").val(data[0].script);
             },

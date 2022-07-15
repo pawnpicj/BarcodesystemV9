@@ -69,27 +69,33 @@
             </div>
             <div class="menu">
                 <div class="logo" style="color:#f0eff1">
-                    <b>Barcode System</b>
+                    <label style="font-size:18px;font-weight:500">Barcode System</label>
                 </div>
                 <div class="right_menu">
                     <ul>
                         @*<li style="margin-top:10px;margin-right:10px;">
-                                <a id="user" href="#"><i class="fas fa-user"></i></a>
-                                <div class="profile_dd">
+                <a id="user" href="#"><i class="fas fa-user"></i></a>
+                <div class="profile_dd">
 
-                                    <div class="dd_item" id="changepass">Change Password</div>
-                                    <div class="dd_item" id="logout">Logout</div>
-                                </div>
-                            </li>
-                            <li style="margin-top:10px">
-                                    <a id="setting" href="#"><i class="fas fa-cog"></i></a>
-                                    <div class="profile_dd1">
-                                        <div class="dd_item1" id="CreateUser">Create User</div>
-                                        <div class="dd_item1" id="Quit">Quit</div>
-                                    </div>
-                                </li>*@
-                </ul>
-            </div>
+                    <div class="dd_item" id="changepass">Change Password</div>
+                    <div class="dd_item" id="logout">Logout</div>
+                </div>
+            </li>
+            <li style="margin-top:10px">
+                    <a id="setting" href="#"><i class="fas fa-cog"></i></a>
+                    <div class="profile_dd1">
+                        <div class="dd_item1" id="CreateUser">Create User</div>
+                        <div class="dd_item1" id="Quit">Quit</div>
+                    </div>
+                </li>*@
+
+                    </ul>
+                    <div class="row">
+                        <div class="co-2">
+                            <button id="sign_out" style="background-color:transparent;margin-top:-10px;cursor:pointer;border:0px" title="sing out"><span class="icon"><i class="fa fa-user-circle" style="margin-top:-5px;width:40px;height:30px ;color: rgba(0, 51, 102,0.8);background-color:transparent"></i></span></button>
+                        </div>
+                    </div>
+                </div>
         </div>
     </div>
 
@@ -105,48 +111,49 @@
                 </div>
                 <ul>
                     <li>
-                        <a asp-controller="Admin" asp-action="Index" id="AR" class="active" style="color: #696969">
+                        <a asp-controller="Admin" asp-action="Index" id="AR" class="active" style="color: #696969;">
                             @*href="@Url.Action("SaleARCreation","Home")"*@
                             <span class="icon">
-                                <i class="fas fa-user-cog" style="margin-left: -20px;"></i>
+                                <i class="fa fa-users" style="margin-left: -20px; color: rgba(0, 51, 102,0.8)"></i>
                             </span>
-                            <span class="title">Administration</span>
+                            <span class="title"><label style="font-size:18px;font-weight:500">Administration</label></span>
                         </a>
                     </li>
                     <li>
                         <a asp-controller="Dashboard" asp-action="DashboardSaleAR" id="AR" class="active" style="color: #696969">
                             @*href="@Url.Action("SaleARCreation","Home")"*@
                             <span class="icon">
-                                <i class="fas fa-cart-arrow-down" style="margin-left: -20px;"></i>
+                                <i class="fas fa-cart-arrow-down" style="margin-left: -20px; color:rgba(0, 51, 102,0.8)"></i>
                             </span>
-                            <span class="title">Sale A/R</span>
+                            <span class="title"><label style="font-size:18px;font-weight:500">Sale A/R</label></span>
                         </a>
                     </li>
                     <li>
                         <a asp-controller="Dashboard" asp-action="DashboardPurchasingAP" id="AP" class="active" style="color: #696969">
                             @*href="@Url.Action("Purchasing","Home")"*@
                             <span class="icon">
-                                <i class="fas fa-chart-pie" style="margin-left: -20px;"></i>
+                                <i class="fas fa-chart-pie" style="margin-left: -20px; color: rgba(0, 51, 102,0.8)"></i>
                             </span>
-                            <span class="title">Purchasing - A/P</span>
+                            <span class="title"><label style="font-size:18px;font-weight:500">Purchasing - A/P</label></span>  
                         </a>
                     </li>
                     <li>
                         <a asp-controller="Dashboard" asp-action="DashboardInventory" id="INT" class="active" style="color: #696969">
                             @*href="@Url.Action("InventoryCreation","Home")"*@
                             <span class="icon">
-                                <i class="fas fa-warehouse" style="margin-left: -20px;"></i>
+                                <i class="fas fa-warehouse" style="margin-left: -20px; color: rgba(0, 51, 102,0.8)"></i>
                             </span>
-                            <span class="title">Inventory</span>
+                            <span class="title"><label style="font-size:18px;font-weight:500">Inventory</label></span>
+                            
                         </a>
                     </li>
                     <li>
                         <a asp-controller="QRBarcode" asp-action="CreateBinLocation" id="INT" class="active" style="color: #696969">
                             @*href="@Url.Action("InventoryCreation","Home")"*@
                             <span class="icon">
-                                <i class="fas fa-barcode" style="margin-left: -20px;"></i>
+                                <i class="fas fa-barcode" style="margin-left: -20px; color: rgba(0, 51, 102,0.8)"></i>
                             </span>
-                            <span class="title">BarCode/QR Code</span>
+                            <span class="title"><label style="font-size:18px;font-weight:500">BarCode/QR Code</label></span>
                         </a>
                     </li>
                 </ul>

@@ -408,16 +408,39 @@ namespace BarCodeAPIService.Service
                 var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SqlHana);
                 if (login.lErrCode == 0)
                 {
-                    var Query =
-                        $"CALL \"{ConnectionString.BarcodeDb}\".\"{ProcedureRoute._USP_GENERATE_SERIAL_SqlHana}\" ('{generateSerialBatchRequest.itemCode}','{generateSerialBatchRequest.qty}')";
-                    login.AD = new OdbcDataAdapter(Query, login.CN);
-                    login.AD.Fill(dt);
-                    foreach (DataRow row in dt.Rows)
-                        getGenerateBatchSerials.Add(new GetGenerateBatchSerial
+                    var Query = "";
+                    foreach (var qu in generateSerialBatchRequest.ListSerials)
+                        if (qu.TypeSerialGen == "2")
                         {
-                            SerialAndBatch = row["SerialOrBatchGen"].ToString(),
-                            Script = row["SCRIPT_SERIAL"].ToString()
-                        });
+                            for (var k = qu.SerialFrom; k <= qu.SerialTo; k++)
+                            {
+                                Query =
+                                    $"CALL \"{ConnectionString.BarcodeDb}\".\"{ProcedureRoute._USP_GENERATE_SERIAL_SqlHana}\" ('{qu.itemCode}','{qu.qty}')";
+                                login.AD = new OdbcDataAdapter(Query, login.CN);
+                                login.AD.Fill(dt);
+                                foreach (DataRow row in dt.Rows)
+                                    getGenerateBatchSerials.Add(new GetGenerateBatchSerial
+                                    {
+                                        SerialAndBatch = row["SerialOrBatchGen"].ToString(),
+                                        Script = row["SCRIPT_SERIAL"].ToString(),
+                                        MfrDate = qu.MfrNo,
+                                        ExpirationDate = qu.ExpireDate
+                                    });
+                            }
+                        }
+                        else
+                        {
+                            Query =
+                                $"CALL \"{ConnectionString.BarcodeDb}\".\"{ProcedureRoute._USP_GENERATE_SERIAL_SqlHana}\" ('{qu.itemCode}','{qu.qty}')";
+                            login.AD = new OdbcDataAdapter(Query, login.CN);
+                            login.AD.Fill(dt);
+                            foreach (DataRow row in dt.Rows)
+                                getGenerateBatchSerials.Add(new GetGenerateBatchSerial
+                                {
+                                    SerialAndBatch = row["SerialOrBatchGen"].ToString(),
+                                    Script = row["SCRIPT_SERIAL"].ToString()
+                                });
+                        }
                     return Task.FromResult(new ResponseGetGenerateBatchSerial
                     {
                         ErrorCode = 0,
@@ -714,6 +737,58 @@ namespace BarCodeAPIService.Service
                 });
             }
         }
+
+        public Task<ResponseGetBarCode> responseGetBarCode(string BarCode)
+        {
+            var listOrpds = new List<OBCD>();
+            var dt = new DataTable();
+            try
+            {
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
+                if (login.lErrCode == 0)
+                {
+                    var Query =
+                        $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetBarCode}','{BarCode}','','','','')";
+                    login.AD = new OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
+                        listOrpds.Add(new OBCD
+                        {
+                            BarCode = row["BarCode"].ToString(),
+                            BarCodeName = row["BarCodeName"].ToString(),
+                            ItemCode = row["ItemCode"].ToString(),
+                            ItemName = row["ItemName"].ToString(),
+                            UomCode = row["UOMCode"].ToString(),
+                            Price = Convert.ToDouble(row["Price"].ToString()),
+                            UomName = row["UOMNAME"].ToString(),
+                            ManageItem = row["MANAGEITEM"].ToString(),
+                        });
+                    return Task.FromResult(new ResponseGetBarCode
+                    {
+                        ErrorCode = 0,
+                        ErrorMessage = "",
+                        Data = listOrpds.ToList()
+                    });
+                }
+
+                return Task.FromResult(new ResponseGetBarCode
+                {
+                    ErrorCode = login.lErrCode,
+                    ErrorMessage = login.sErrMsg,
+                    Data = null
+                });
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseGetBarCode
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMessage = ex.Message,
+                    Data = null
+                });
+            }
+        }
+
         public Task<ResponseORPDGetGoodReturn> responseORPDGetGoodReturn(string cardName)
         {
             var listOrpds = new List<ORPD>();

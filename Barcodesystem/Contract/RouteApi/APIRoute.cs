@@ -26,6 +26,7 @@
             public const string GetWarehouse = "GetWarehouse";
             public const string GetUnitOfMeasure = "GetUOM/";
             public const string GetBatchGenerator = "GetBatchGen";
+            public const string GetBarCodeItem = "GetBarCode/";
         }
         public static class GoodReturn
         {

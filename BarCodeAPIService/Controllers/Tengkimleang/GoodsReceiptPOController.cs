@@ -112,5 +112,11 @@ namespace BarCodeAPIService.Controllers
             var a = await goodsReceiptPO.responseGetGenerateBatchAsync(generateSerialBatchRequest);
             return Ok(a);
         }
+        [HttpGet(APIRoute.GoodReceiptPO.GetBarCodeItem+"{BarCode}")]
+        public async Task<IActionResult> GetBarCodeItem(string BarCode)
+        {
+            var a = await goodsReceiptPO.responseGetBarCode(BarCode);
+            return Ok(a);
+        }
     }
 }

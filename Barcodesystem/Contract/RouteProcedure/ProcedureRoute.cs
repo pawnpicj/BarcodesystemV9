@@ -20,6 +20,7 @@
             public const string GetUom = "OUOM";
             public const string GetGoodRecieptPO = "OPDN";
             public const string GetGoodReturn = "ORPD";
+            public const string GetBarCode = "OBCD";
         }
     }
 }

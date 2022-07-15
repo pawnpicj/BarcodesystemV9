@@ -80,17 +80,19 @@ namespace BarCodeLibrary.APICall
             {
                 errorMessage = "";
                 Response = Client.PostAsJsonAsync(requestURI, value).Result;
-                if (Response.IsSuccessStatusCode)
-                {
+                //if (Response.IsSuccessStatusCode)
+                //{
                     if (Response.StatusCode == HttpStatusCode.OK)
                         return JsonConvert.DeserializeObject<T>(Response.Content.ReadAsStringAsync().Result);
                     else if (Response.StatusCode == HttpStatusCode.NotFound)
                         throw new Exception("");
-                    else if (Response.StatusCode == HttpStatusCode.BadRequest)
-                        throw new Exception(Response.Content.ReadAsStringAsync().Result);
-                    else throw new Exception("Invalid URI" + "\n\nReason Phrase: " + Response.ReasonPhrase);
-                }
-                else throw new Exception("Post was not successful \n\nReason Phrase: " + Response.Content.ReadAsStringAsync().Result);
+                    if (Response.StatusCode == HttpStatusCode.BadRequest)
+                        return JsonConvert.DeserializeObject<T>(Response.Content.ReadAsStringAsync().Result);
+                    throw new Exception("Invalid URI" + "\n\nReason Phrase: " + Response.ReasonPhrase);
+                //}
+
+                //throw new Exception("Post was not successful \n\nReason Phrase: " +
+                //                    Response.Content.ReadAsStringAsync().Result);
             }
             catch (Exception ex)
             {

@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "O2O";
+    ViewData["Title"] = "Item-Sticker";
     DateTime dt = DateTime.Now;
     ViewData["Date"] = dt.ToShortDateString();
 }
@@ -74,7 +74,44 @@
     .clsinput:focus {
         outline: none;
     }
+
+    .loader {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        z-index: 1;
+        width: 120px;
+        height: 120px;
+        margin: -76px 0 0 -76px;
+        border: 16px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 16px solid #3498db;
+        -webkit-animation: spin 2s linear infinite;
+        animation: spin 2s linear infinite;
+    }
+    .backg {
+        position: absolute;
+        left: 1%;
+        top: 1%;
+        z-index: 1;
+        width: 500px;
+        height: 750px;
+        /*margin: 0 0 0 0;*/
+        background: rgba(20,20,20,0.4);
+    }
+
+    /* Safari */
+    @@-webkit-keyframes spin {
+        0% { -webkit-transform: rotate(0deg); }
+        100% { -webkit-transform: rotate(360deg); }
+    }
+
+    @@keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
 </style>
+
 <div id="#main">
     <div class="row" style="margin-left:5px;margin-top:5px;color:#696969;">
         <h5 style="margin-top:5px;color:#696969;"></h5>
@@ -94,12 +131,13 @@
                     Batch / SN:
                     <div class="col-12" style="padding-left:2px;padding-right:10px">
                         <div class="row">
-                            <div class="col-10">
+                            <div class="col-12">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <button class="input-group-text" id="GbatchSN"><i class="fa fa-check"></i></button>
                                     </div>
-                                    <input type="text" class="form-control" placeholder="" id="batchSN" required>&nbsp;
+                                    <input type="text" placeholder="" id="batchSN" value="" autocomplete="off" size="25" required>
+                                    <button class="btn btn-info" id="btnSearchItem" style="background:#f0eff1;color:#696969"><i class="fa fa-search"></i></button>
                                     <button class="btn btn-info" id="btnAuto" style="background:#f0eff1;color:#696969">Generate</button>
                                 </div>
                             </div>
@@ -112,7 +150,7 @@
                             <button class="input-group-text" id="GItemCode"><i class="fa fa-check"></i></button>
                         </div>
                         <input type="text" class="form-control" placeholder="" id="ItemCode" readonly>
-                        <input type="text" class="form-control" placeholder="" id="txtFDA" readonly style="display:none">
+                        
                         <div class="input-group-append">
                             <button class="input-group-text btnItemCode" data-toggle="modal" data-target="#ModalItemCode"><i class="fa fa-search"></i></button>
                         </div>
@@ -124,6 +162,16 @@
                         </div>
                         <input type="text" class="form-control" placeholder="" id="ItemName" readonly>
                     </div>
+
+                    Food And Drug No. (อย.):
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button class="input-group-text" id="GexpireDate"><i class="fa fa-check"></i></button>
+                        </div>
+                        <input type="text" class="form-control" placeholder="" id="txtFDA" readonly style="display:block">
+
+                    </div>
+
                     Product Group :
                     <div class="input-group">
                         <div class="input-group-prepend">
@@ -147,8 +195,8 @@
                         </div>
                         <input type="number" value="1" class="form-control" placeholder="" id="Qty" required>
                         @*<div class="input-group-append">
-                            <button class="input-group-text btnbinLocation" data-toggle="modal" data-target="#ModalBinCode"><i class="fa fa-search"></i></button>
-                        </div>*@
+                <button class="input-group-text btnbinLocation" data-toggle="modal" data-target="#ModalBinCode"><i class="fa fa-search"></i></button>
+            </div>*@
                     </div>
                     <div class="col-12">
                         <div class="row" style="display:none">
@@ -274,6 +322,10 @@
                 </div>
             </div>*@
     </div>
+</div>
+
+<div id="frmLoading" class="backg" style="display:none">
+    <div class="loader"></div>
 </div>
 <script src="~/js/Array.js"></script>
 <script src="~/css/DataTable/jquery-3.3.1.js"></script>
@@ -469,7 +521,7 @@
                 $('#ProductGroup').val("");
                 $('#batchSN').val("");
                 $('#expireDate').val("");
-                $('#txtFDA').val();
+                $('#txtFDA').val("");
             }
 
         });
@@ -537,6 +589,81 @@
 
     });
 
+    var input01 = document.getElementById("batchSN");
+    input01.addEventListener("keyup", function (event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            document.getElementById("btnSearchItem").click();
+            document.getElementById("frmLoading").style.display = "block";
+        }
+    });
+
+    $('#btnSearchItem').click(function () {
+        console.log("Loading...");
+        
+        $.ajax({
+            url: '@Url.Action("GetItemByBarcode", "CreateLabelSticker")',
+            data: { barCode: $('#batchSN').val()},
+            type: "GET",
+            dataType: "JSON",
+            error: function (request, error) {
+                console.log(arguments);
+                alert(" Can't do because: " + error);
+                $('#batchSN').val("").focus();
+                document.getElementById("frmLoading").style.display = "none";
+            },
+            success: function (data) {
+                var jqueryXml = $(data);
+                console.log(data);
+                if (jqueryXml[0].data.length != 0) {
+                    var bItemCode = jqueryXml[0].data[0].itemCode;
+                    var bItemName = jqueryXml[0].data[0].itemName;
+                    var bExpDate = jqueryXml[0].data[0].expDate;
+                    let isExpDate = bExpDate.substring(0, 10);
+                    var bQty = jqueryXml[0].data[0].quantity;
+                    var bQty = jqueryXml[0].data[0].quantity;
+                    var bBatchNumber = jqueryXml[0].data[0].batchNumber;
+                    var bSerialNumber = jqueryXml[0].data[0].serialNumber
+                    if (bBatchNumber != null) {
+                        batch = "Y";
+                    }
+                    if (bSerialNumber != null) {
+                        serial = "Y";
+                    }
+                    //var cExpDate = new Date().toLocaleDateString();
+                    //const str = bExpDate;
+                    //const date = new Date(str);
+                    //var dateString = date.toLocaleDateString();
+                    //const [month, day, year] = dateString.split('/');
+                    //var isExpDate = year + "-" + month + "-" + day;
+
+                    var bFDA = jqueryXml[0].data[0].fda;
+
+                    $('#ItemCode').val(bItemCode);
+                    $('#ItemName').val(bItemName);
+                    $('#expireDate').val(isExpDate); //yyyy-MM-dd
+                    $('#txtFDA').val(bFDA);
+                    $('#ProductGroup').val("-");
+                    $('#Qty').val("1");
+                    document.getElementById("frmLoading").style.display = "none";
+                    console.log('Successed');
+
+                } else {
+                    $('#batchSN').val("").focus();
+                    document.getElementById("frmLoading").style.display = "none";
+                    $('#ItemCode').val("");
+                    $('#ItemName').val("");
+                    $('#Qty').val("1");
+                    $('#ProductGroup').val("");
+                    $('#batchSN').val("");
+                    $('#expireDate').val("");
+                    $('#txtFDA').val("");
+                    alert("Item does not exist.");
+                    console.log('Item does not exist.');
+                }
+            }
+        });
+    });
 
     //Button for Generate Batch/Serial
     $('#btnAuto').click(function () {

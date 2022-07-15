@@ -12,6 +12,7 @@ using System.Web;
 using Rotativa.AspNetCore;
 using BarCodeLibrary.Respones.SAP;
 using BarCodeClientService;
+using BarCodeLibrary.Respones.SAP.Bank;
 
 namespace BarCodeClientService.Controllers
 {
@@ -55,6 +56,14 @@ namespace BarCodeClientService.Controllers
             var a = API.Read<ResponeNNG1GetGenerateBinCode>("api/GenerateBinCode/GetGenerateBinCode");
             return Ok(a);
         }
+
+        [HttpGet]
+        public IActionResult GetItemByBarcode(string barCode)
+        {
+            var a = API.Read<ResponseGetStockItemBatchAndSerial>("GetItemByBarcode/" + barCode);
+            return Ok(a);
+        }
+
         // Method for Pint Item Label's size 6x7
         public IActionResult PrintItemLablePDF()
         {

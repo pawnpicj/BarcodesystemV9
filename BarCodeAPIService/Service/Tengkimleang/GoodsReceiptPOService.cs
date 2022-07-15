@@ -408,16 +408,39 @@ namespace BarCodeAPIService.Service
                 var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SqlHana);
                 if (login.lErrCode == 0)
                 {
-                    var Query =
-                        $"CALL \"{ConnectionString.BarcodeDb}\".\"{ProcedureRoute._USP_GENERATE_SERIAL_SqlHana}\" ('{generateSerialBatchRequest.itemCode}','{generateSerialBatchRequest.qty}')";
-                    login.AD = new OdbcDataAdapter(Query, login.CN);
-                    login.AD.Fill(dt);
-                    foreach (DataRow row in dt.Rows)
-                        getGenerateBatchSerials.Add(new GetGenerateBatchSerial
+                    var Query = "";
+                    foreach (var qu in generateSerialBatchRequest.ListSerials)
+                        if (qu.TypeSerialGen == "2")
                         {
-                            SerialAndBatch = row["SerialOrBatchGen"].ToString(),
-                            Script = row["SCRIPT_SERIAL"].ToString()
-                        });
+                            for (var k = qu.SerialFrom; k <= qu.SerialTo; k++)
+                            {
+                                Query =
+                                    $"CALL \"{ConnectionString.BarcodeDb}\".\"{ProcedureRoute._USP_GENERATE_SERIAL_SqlHana}\" ('{qu.itemCode}','{qu.qty}')";
+                                login.AD = new OdbcDataAdapter(Query, login.CN);
+                                login.AD.Fill(dt);
+                                foreach (DataRow row in dt.Rows)
+                                    getGenerateBatchSerials.Add(new GetGenerateBatchSerial
+                                    {
+                                        SerialAndBatch = row["SerialOrBatchGen"].ToString(),
+                                        Script = row["SCRIPT_SERIAL"].ToString(),
+                                        MfrDate = qu.MfrNo,
+                                        ExpirationDate = qu.ExpireDate
+                                    });
+                            }
+                        }
+                        else
+                        {
+                            Query =
+                                $"CALL \"{ConnectionString.BarcodeDb}\".\"{ProcedureRoute._USP_GENERATE_SERIAL_SqlHana}\" ('{qu.itemCode}','{qu.qty}')";
+                            login.AD = new OdbcDataAdapter(Query, login.CN);
+                            login.AD.Fill(dt);
+                            foreach (DataRow row in dt.Rows)
+                                getGenerateBatchSerials.Add(new GetGenerateBatchSerial
+                                {
+                                    SerialAndBatch = row["SerialOrBatchGen"].ToString(),
+                                    Script = row["SCRIPT_SERIAL"].ToString()
+                                });
+                        }
                     return Task.FromResult(new ResponseGetGenerateBatchSerial
                     {
                         ErrorCode = 0,

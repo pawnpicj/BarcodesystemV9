@@ -634,8 +634,10 @@
                 document.getElementById("btnSearchItem").click();
                 //document.getElementById("btnItemCode").click();
                 document.getElementById("frmLoading").style.display = "block";
+                document.getElementById("batchSN").disabled = true;
             } else {
                 document.getElementById("frmLoading").style.display = "none";
+                document.getElementById("batchSN").disabled = false;
             }
             
         }
@@ -691,6 +693,7 @@
                         //$('#ProductGroup').val("-");
                         $('#Qty').val("1");
                         document.getElementById("frmLoading").style.display = "none";
+                        document.getElementById("batchSN").disabled = false;
                         console.log('Successed');
                         document.getElementById("Add").focus();
                     } else {

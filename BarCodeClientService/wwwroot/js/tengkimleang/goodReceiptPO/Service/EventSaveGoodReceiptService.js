@@ -42,11 +42,14 @@
                     success: function (data) {
                         console.log(data);
                         alert("Successfull");
+                        document.getElementById("frmLoading").style.display = "none";
+                        location.reload();
                         //$("#SerialNumber").val(data[0].serialAndBatch);
                         //$("#txtScriptID").val(data[0].script);
                     },
                     error: function (erro) {
                         alert(erro.errorMsg);
+                        document.getElementById("frmLoading").style.display = "none";
                     }
                 });
             }   

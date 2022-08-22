@@ -4,8 +4,8 @@
     ViewData["Date"] = dt.ToShortDateString();
 }
 
-<link href="~/css/DataTable/jquery.dataTables.min.css" rel="stylesheet"/>
-<link href="~/css/DataTable/rowReorder.dataTables.min.css" rel="stylesheet"/>
+<link href="~/css/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/css/DataTable/rowReorder.dataTables.min.css" rel="stylesheet" />
 <link href="~/tengkimleang/goodReceiptPO/Style.css" />
 @*<link href="~/css/DataTable/responsive.dataTables.min.css" rel="stylesheet" />*@
 <script src="~/css/DataTable/jquery-3.3.1.js"></script>
@@ -13,13 +13,19 @@
 <script src="~/css/DataTable/dataTables.rowReorder.min.js"></script>
 @*<script src="~/css/DataTable/dataTables.responsive.min.js"></script>*@
 
+@* Icon *@
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 <style>
     tr.selected {
         background: red;
         color: red;
     }
 
-    #main { position: absolute; }
+    #main {
+        position: absolute;
+    }
 
     .color_tap {
         background-color: #5f95c3;
@@ -36,7 +42,9 @@
         line-height: 20px;
     }
 
-    .modal { z-index: 200000; }
+    .modal {
+        z-index: 200000;
+    }
 
     .modal-header {
         background: #5f95c3;
@@ -44,7 +52,9 @@
         height: 40px;
     }
 
-    .modal-header b { margin-top: -10px; }
+        .modal-header b {
+            margin-top: -10px;
+        }
 
     #TbAR table tr td {
         height: 35px;
@@ -65,270 +75,351 @@
         color: red;
     }
 
-    table tbody tr.selected td .clsinput {
-        background: #94d8e1;
-        color: red;
+        table tbody tr.selected td .clsinput {
+            background: #94d8e1;
+            color: red;
+        }
+
+    .clsinput:focus {
+        outline: none;
     }
 
-    .clsinput:focus { outline: none; }
+    .hrnew4 {
+        border: 1px solid black;
+    }
+
+    /* =================================================== */
+    .cover-spin {
+        position: fixed;
+        width: 100%;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background-color: rgba(255,255,255,0.7);
+        z-index: 9999;
+        display: none;
+    }
+
+    @@-webkit-keyframes spin {
+        from {
+            -webkit-transform: rotate(0deg);
+        }
+
+        to {
+            -webkit-transform: rotate(360deg);
+        }
+    }
+
+    @@keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .cover-spin::after {
+        content: '';
+        display: block;
+        position: absolute;
+        left: 48%;
+        top: 40%;
+        width: 40px;
+        height: 40px;
+        border-style: solid;
+        border-color: black;
+        border-top-color: transparent;
+        border-width: 4px;
+        border-radius: 50%;
+        -webkit-animation: spin .8s linear infinite;
+        animation: spin .8s linear infinite;
+    }
+    /* =================================================== */
+
 </style>
 
 <div id="#main">
 
-<div class="row" style="color: #696969; margin-left: 5px; margin-top: 5px;">
-    <h5 style="color: #696969; margin-top: 5px;">
-        <a onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fas fa-home"></i> Dashboard</a>
-        <span>
-            <a onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fa fa-caret-right align-right"></i><label style="font-size:18px;font-weight:500">Goods Receipt PO</label></a>
-            <i class="fa fa-caret-right align-right"></i></span><label style="font-size:18px;font-weight:500">Create Goods Receipt PO</label>
-        
-    </h5>
-</div>
-<hr/>
-<div style="color: #696969; padding: 10px;">
-<ul class="nav nav-tabs Tap-PA" id="mytab" role="tablist">
-    <li class="nav-item">
-        <a class="nav-link active color_tap" id="cus-tab" data-toggle="tab" href="#cus" role="tab" aria-controls="Customer" aria-selected="true"><label style="font-size:18px;font-weight:500">Customer</label></a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link color_tap" id="item-tab" data-toggle="tab" href="#item" role="tab" aria-controls="Items" aria-selected="false"><label style="font-size:18px;font-weight:500">Items</label></a>
-    </li>
-</ul>
-<div class="tab-content" id="myTabContent">
-<div class="tab-pane fade show active" id="cus" role="tabpanel" aria-labelledby="cus-tab" style="margin-top: 10px">
-    <div class="row">
-        <div class="col-sm-6">
-            <div>
-                <label style="font-size:18px;font-weight:500">Vendor Code :</label>
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <button class="input-group-text" id="CcusID">
-                            <i class="fa fa-check"></i>
-                        </button>
-                    </div>
-                    <input type="text" class="form-control" placeholder="Search Code" id="CusID" value="" readonly>
-                    <div class="input-group-append">
-                        <button class="input-group-text btnModelsCus" data-toggle="modal" data-target="#ModalCusCode">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <label style="font-size:18px;font-weight:500">Vender Name :</label>
-                <div class="input-group">
-                    <input type="text" class="form-control" id="CusName" value="" readonly>
-                </div>
-            </div>
-            Order Number :
-            <div class="input-group">
-                <input type="text" class="form-control" id="OrderNumberID">
-            </div>
-            Remarks :
-            <div class="input-group">
-                <textarea class="form-control" id="Remark" rows="3"></textarea>
-            </div>
-        </div>
-        <div class="col-sm-6">
-            <div>
-                Series :
-                <div class="input-group">
-                    <select id="SeriesID" class="form-control">
-                    </select>
-                </div>
-            </div>
-            <div>
-                Posting Date :
-                <div class="input-group">
-                    <input type="date" class="form-control" id="DocDate">
-                </div>
-            </div>
-            <div>
-                Document Date :
-                <div class="input-group">
-                    <input type="date" class="form-control" id="DocumentDate">
-                </div>
-            </div>
-            <div>
-                BP Currency :
-                <div class="input-group">
-                    <select class="form-control" id="BPDocCurr"></select>
-                </div>
-            </div>
-            Sales Employees :
-            <div class="input-group">
-                <select class="form-control" id="SaleEmp"></select>
-            </div>
+    <div id="frmLoading" class="cover-spin" style="display:none"></div>
 
-        </div>
+    <div class="row" style="color: #696969; margin-left: 5px; margin-top: 5px;">
+        <h5 style="color: #696969; margin-top: 5px;">
+            <a onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fas fa-home"></i> Dashboard</a>
+            <span>
+                <a onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fa fa-caret-right align-right"></i><label style="font-size:18px;font-weight:500">Goods Receipt PO</label></a>
+                <i class="fa fa-caret-right align-right"></i>
+            </span><label style="font-size:18px;font-weight:500">Create Goods Receipt PO</label>
+
+        </h5>
     </div>
-</div>
+    <hr />
+    <div style="color: #696969; padding: 10px;">
+        <ul class="nav nav-tabs Tap-PA" id="mytab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active color_tap" id="cus-tab" data-toggle="tab" href="#cus" role="tab" aria-controls="Customer" aria-selected="true"><label style="font-size:18px;font-weight:500">Customer</label></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link color_tap" id="item-tab" data-toggle="tab" href="#item" role="tab" aria-controls="Items" aria-selected="false"><label style="font-size:18px;font-weight:500">Items</label></a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="cus" role="tabpanel" aria-labelledby="cus-tab" style="margin-top: 10px">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div>
+                            <label style="font-size:18px;font-weight:500">Vendor Code :</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <button class="input-group-text" id="CcusID">
+                                        <i class="fa fa-check"></i>
+                                    </button>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Search Code" id="CusID" value="" readonly>
+                                <div class="input-group-append">
+                                    <button class="input-group-text btnModelsCus" data-toggle="modal" data-target="#ModalCusCode">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <label style="font-size:18px;font-weight:500">Vender Name :</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="CusName" value="" readonly>
+                            </div>
+                        </div>
 
-<div class="tab-pane fade" id="item" role="tabpanel" aria-labelledby="item-tab" style="margin-top: 10px">
-    <div class="row">
-        <div class="col-sm-6">
-            <input type="hidden" id="itemManage"/>
-            Item Code :
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <button class="input-group-text" id="CItemCode">
-                        <i class="fa fa-check"></i>
+                        <div class="nav navbar-nav mr-auto">
+                            <div class="btn-group">
+                                <button class="btn btn-info" id="CopyFromPO" data-toggle="modal" data-target="#ModalCopyFromPO" disabled>
+                                    Select PO
+                                </button>
+                            </div>
+                        </div>
+
+                        Order Number :
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="OrderNumberID">
+                        </div>
+                        Remarks :
+                        <div class="input-group">
+                            <textarea class="form-control" id="Remark" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div>
+                            Series :
+                            <div class="input-group">
+                                <select id="SeriesID" class="form-control">
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            Posting Date :
+                            <div class="input-group">
+                                <input type="date" class="form-control" id="DocDate">
+                            </div>
+                        </div>
+                        <div>
+                            Document Date :
+                            <div class="input-group">
+                                <input type="date" class="form-control" id="DocumentDate">
+                            </div>
+                        </div>
+                        <div>
+                            BP Currency :
+                            <div class="input-group">
+                                <select class="form-control" id="BPDocCurr"></select>
+                            </div>
+                        </div>
+                        Sales Employees :
+                        <div class="input-group">
+                            <select class="form-control" id="SaleEmp"></select>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="item" role="tabpanel" aria-labelledby="item-tab" style="margin-top: 10px;">
+
+                <div>
+                    Add More Item
+                    <button class="btn btn-info" id="btnShowAddItemBar" style="background:#f0eff1;color:#696969" onclick="shAddItemBar()">
+                        <i class="fa fa-window-minimize" aria-hidden="true"></i>
                     </button>
                 </div>
-                <input type="text" class="form-control" placeholder="Search Code" id="ItemCode">
-                <div class="input-group-append">
-                    <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalItem">
-                        <i class="fa fa-search"></i>
+
+                <div class="row" id="DivBarAddItem" style="display: none;">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <input type="hidden" id="itemManage" />
+                            Item Code -:
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <button class="input-group-text" id="CItemCode">
+                                        <i class="fa fa-check"></i>
+                                    </button>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Search Code" id="ItemCode">
+                                <div class="input-group-append">
+                                    <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalItem">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            Item Descrition :
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="ItemDescr" readonly>
+                            </div>
+                            Quantity :
+                            <div class="input-group">
+                                <input type="number" class="form-control" value="1" id="Qty" onchange="QtyChange()">
+                            </div>
+
+                            <div>
+                                Unit Price :
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <input type="button" class="input-group-text" id="DocCurr" />
+                                    </div>
+                                    <input type="number" class="form-control" id="Price" value="0">
+                                </div>
+                            </div>
+
+                            <div>
+                                Discount(%) :
+                                <div class="input-group">
+                                    <input type="number" class="form-control" value="0" id="Discount" onchange="DisCountPerChange()">
+                                </div>
+                                Discount Amount :
+                                <div class="input-group">
+                                    <input type="number" class="form-control" value="0" id="DiscountAmt" onchange="DisAmtChange()">
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div>
+                                Bar Code :
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="BarCode" onchange="">
+                                </div>
+                            </div>
+                            <div>
+                                VAT Code :
+                                <div class="input-group">
+                                    <select id="TaxCode" class="form-control">
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                Warehouse :
+                                <div class="input-group">
+                                    <select id="whscode" class="form-control">
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                Uom Name :
+                                <div class="input-group">
+                                    <select id="UomID" class="form-control">
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                Total :
+                                <div class="input-group">
+                                    <input type="number" class="form-control" value="0" id="totalItem" disabled>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row" style="padding: 15px;">
+                        <div class="nav navbar-nav ml-auto">
+                            <button class="btn btn-info" id="AddItem" style="background: #f0eff1; color: #696969">Add Item</button>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="hrnew4">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="TbAR" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
+                                <thead>
+                                    <tr>
+                                        <th>ItemCode</th>
+                                        <th>UnitPrice</th>
+                                        <th>Discount(%)</th>
+                                        <th>Dis.Amount</th>
+                                        <th>Qty</th>
+                                        <th>Price Before Discount</th>
+                                        <th>Line Total</th>
+                                        <th>Uom Name</th>
+                                        <th>TaxCode</th>
+                                        <th>Warehouse</th>
+                                        <th>BatchOrSerial</th>
+                                        <th>Command</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 5px;">
+                    <div class="col-sm-4">
+                    </div>
+                    <div class="col-sm-4">
+                        Discount % :
+                        <input type="number" class="form-control" value="0" id="DisPer" />
+                        Discount Amount :
+                        <input type="number" class="form-control" value="0" id="DisAmt" />
+                    </div>
+                    <div class="col-sm-4">
+                        Before Discount :
+                        <input class="form-control" readonly id="BTax" />
+                        Discount By Items :
+                        <input class="form-control" readonly id="DisA" />
+                        @*Tax Amount :*@
+                        <input class="form-control d-none" readonly id="Tax" />
+                        <input class="d-none" id="TaxBeforeDis" />
+                        Total Amount :
+                        <input class="form-control" readonly id="Total" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="row" style="margin-bottom: -20px; margin-top: -20px; padding: 15px;">
+            <div class="nav navbar-nav mr-auto">
+                <div class="btn-group">
+                    @*<button class="btn btn-info" id="CopyFromPO" style="background: #f0eff1; color: #696969;"
+                                    data-toggle="modal" data-target="#ModalCopyFromPO" disabled>
+                                Copy From PO
+                        </button>*@
+                    <button class="btn btn-info" id="CopyToGoodReturn" style="background: #f0eff1; color: #696969;"
+                            data-toggle="modal" data-target="#ModalCopyToGoodReturn" disabled>
+                        Copy To Good Return
                     </button>
                 </div>
             </div>
-            Item Descrition :
-            <div class="input-group">
-                <input type="text" class="form-control" id="ItemDescr" readonly>
-            </div>
-            Quantity :
-            <div class="input-group">
-                <input type="number" class="form-control" value="1" id="Qty" onchange="QtyChange()">
-            </div>
-
-            <div>
-                Unit Price :
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <input type="button" class="input-group-text" id="DocCurr"/>
-                    </div>
-                    <input type="number" class="form-control" id="Price" value="0">
-                </div>
-            </div>
-
-            <div>
-                Discount(%) :
-                <div class="input-group">
-                    <input type="number" class="form-control" value="0" id="Discount" onchange="DisCountPerChange()">
-                </div>
-                Discount Amount :
-                <div class="input-group">
-                    <input type="number" class="form-control" value="0" id="DiscountAmt" onchange="DisAmtChange()">
-                </div>
-            </div>
-
-        </div>
-        <div class="col-sm-6">
-            <div>
-                Bar Code :
-                <div class="input-group">
-                    <input type="text" class="form-control" id="BarCode" onchange="">
-                </div>
-            </div>
-            <div>
-                VAT Code :
-                <div class="input-group">
-                    <select id="TaxCode" class="form-control">
-                    </select>
-                </div>
-            </div>
-            <div>
-                Warehouse :
-                <div class="input-group">
-                    <select id="whscode" class="form-control">
-                    </select>
-                </div>
-            </div>
-            <div>
-                Uom Name :
-                <div class="input-group">
-                    <select id="UomID" class="form-control">
-                    </select>
-                </div>
-            </div>
-            <div>
-                Total :
-                <div class="input-group">
-                    <input type="number" class="form-control" value="0" id="totalItem" disabled>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row" style="padding: 15px;">
-        <div class="nav navbar-nav ml-auto">
-            <button class="btn btn-info" id="AddItem" style="background: #f0eff1; color: #696969">Add Item</button>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="table-responsive">
-                <table id="TbAR" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
-                    <thead>
-                    <tr>
-                        <th>ItemCode</th>
-                        <th>UnitPrice</th>
-                        <th>Discount(%)</th>
-                        <th>Dis.Amount</th>
-                        <th>Qty</th>
-                        <th>Price Before Discount</th>
-                        <th>Line Total</th>
-                        <th>Uom Name</th>
-                        <th>TaxCode</th>
-                        <th>Warehouse</th>
-                        <th>BatchOrSerial</th>
-                        <th>Command</th>
-                    </tr>
-                    </thead>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <div class="row" style="margin-top: 5px;">
-        <div class="col-sm-4">
-        </div>
-        <div class="col-sm-4">
-            Discount % :
-            <input type="number" class="form-control" value="0" id="DisPer"/>
-            Discount Amount :
-            <input type="number" class="form-control" value="0" id="DisAmt"/>
-        </div>
-        <div class="col-sm-4">
-            Before Discount :
-            <input class="form-control" readonly id="BTax"/>
-            Discount By Items :
-            <input class="form-control" readonly id="DisA"/>
-            @*Tax Amount :*@
-            <input class="form-control d-none" readonly id="Tax"/>
-            <input class="d-none" id="TaxBeforeDis"/>
-            Total Amount :
-            <input class="form-control" readonly id="Total"/>
-        </div>
-    </div>
-</div>
-</div>
-<hr/>
-<div class="row" style="margin-bottom: -20px; margin-top: -20px; padding: 15px;">
-    <div class="nav navbar-nav mr-auto">
-        <div class="btn-group">
-            @*<button class="btn btn-info previous" style="background:#f0eff1;color:#696969">Previous</button>
-                <button class="btn btn-info next" style="background: #f0eff1;color: #696969;">Next</button>*@
-            <button class="btn btn-info" id="CopyFromPO" style="background: #f0eff1; color: #696969;"
-                        data-toggle="modal" data-target="#ModalCopyFromPO" disabled>
-                    Copy From PO
-            </button>
-        </div>
-    </div>
-    <div class="nav navbar-nav ml-auto">
-        <div class="btn-group">
-            @*<button class="btn btn-info previous" style="background:#f0eff1;color:#696969">Previous</button>
+            <div class="nav navbar-nav ml-auto">
+                <div class="btn-group">
+                    @*<button class="btn btn-info previous" style="background:#f0eff1;color:#696969">Previous</button>
                         <button class="btn btn-info next" style="background: #f0eff1;color: #696969;">Next</button>*@
-            <button class="btn btn-info" id="CopyToGoodReturn" style="background: #f0eff1; color: #696969;"
-                    data-toggle="modal" data-target="#ModalCopyToGoodReturn" disabled>
-                Copy To Good Return
-            </button>
-            <button class="btn btn-info" id="Save" style="background: #f0eff1; color: #696969; margin-left: 5px;">Add New</button>
+                    <button class="btn btn-info" id="Save" style="background: #f0eff1; color: #696969; margin-left: 5px;">Send SAP</button>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-</div>
-<hr/>
+    <hr />
 </div>
 
 @*Block Models*@
@@ -376,12 +467,12 @@
                         <div class="col-sm-12">
                             <table id="TbCusCode" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
                                 <thead>
-                                <tr>
-                                    <th>Customer Code</th>
-                                    <th>Cusetomer Name</th>
-                                    <th>Phone</th>
-                                    <th>Address</th>
-                                </tr>
+                                    <tr>
+                                        <th>Customer Code</th>
+                                        <th>Cusetomer Name</th>
+                                        <th>Phone</th>
+                                        <th>Address</th>
+                                    </tr>
                                 </thead>
                             </table>
                         </div>
@@ -409,13 +500,13 @@
                         <div class="col-sm-12">
                             <table id="TbItem" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
                                 <thead>
-                                <tr>
-                                    <th>Item Code</th>
-                                    <th>Item Descrition</th>
-                                    <th>Unit Price</th>
-                                    <th>In Stock</th>
-                                    <th>BarCode</th>
-                                </tr>
+                                    <tr>
+                                        <th>Item Code</th>
+                                        <th>Item Descrition</th>
+                                        <th>Unit Price</th>
+                                        <th>In Stock</th>
+                                        <th>BarCode</th>
+                                    </tr>
                                 </thead>
                             </table>
                         </div>
@@ -444,13 +535,13 @@
                         <div class="col-sm-12">
                             <table id="TbCopyFromPO" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
                                 <thead>
-                                <tr>
-                                    <th>Receipt No(SAP)</th>
-                                    <th>Vendor Name</th>
-                                    <th>Document Date</th>
-                                    <th>DocTotal</th>
-                                    <th>Document Status</th>
-                                </tr>
+                                    <tr>
+                                        <th>Receipt No(SAP)</th>
+                                        <th>Vendor Name</th>
+                                        <th>Document Date</th>
+                                        <th>DocTotal</th>
+                                        <th>Document Status</th>
+                                    </tr>
                                 </thead>
                             </table>
                         </div>
@@ -478,13 +569,13 @@
                         <div class="col-sm-12">
                             <table id="TbCopyToGoodReturn" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
                                 <thead>
-                                <tr>
-                                    <th>Receipt No(SAP)</th>
-                                    <th>Vendor Name</th>
-                                    <th>Document Date</th>
-                                    <th>DocTotal</th>
-                                    <th>Document Status</th>
-                                </tr>
+                                    <tr>
+                                        <th>Receipt No(SAP)</th>
+                                        <th>Vendor Name</th>
+                                        <th>Document Date</th>
+                                        <th>DocTotal</th>
+                                        <th>Document Status</th>
+                                    </tr>
                                 </thead>
                             </table>
                         </div>
@@ -510,8 +601,8 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-                            <input type="hidden" id="txtRowID"/>
-                            <input type="hidden" id="txtScriptID"/>
+                            <input type="hidden" id="txtRowID" />
+                            <input type="hidden" id="txtScriptID" />
                             Item Code :
                             <div class="input-group">
                                 <input type="text" class="form-control" id="ItemCodeSerial" disabled="disabled">
@@ -525,16 +616,16 @@
                         </div>
                     </div>
                     @*<div class="row">
-                        <div class="col-12">
-                            Serial Number :
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="SerialNumber">
-                                <div class="input-group-append">
-                                    <button class="input-group-text" id="btnSerialNumGennerate"><i class="fa fa-file-medical"></i>&nbsp; Generate</button>
+                            <div class="col-12">
+                                Serial Number :
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="SerialNumber">
+                                    <div class="input-group-append">
+                                        <button class="input-group-text" id="btnSerialNumGennerate"><i class="fa fa-file-medical"></i>&nbsp; Generate</button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>*@
+                        </div>*@
                     <div class="row">
                         <div class="col-12">
                             Serial Number :
@@ -616,23 +707,23 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div id="DisPlayCustomizeTableSerial" style="display: none;">
                     <div class="table-responsive">
                         <div class="row">
                             <div class="col-12">
                                 <table id="tmpSerial" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
                                     <thead>
-                                    <tr>
-                                        <th>Batch From</th>
-                                        <th>Batch To</th>
-                                        <th>Mfr Serial No.</th>
-                                        <th>Expire Date</th>
-                                        <th>Action</th>
-                                    </tr>
+                                        <tr>
+                                            <th>Batch From</th>
+                                            <th>Batch To</th>
+                                            <th>Mfr Serial No.</th>
+                                            <th>Expire Date</th>
+                                            <th>Action</th>
+                                        </tr>
                                     </thead>
                                 </table>
-                            </div> 
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -642,15 +733,15 @@
                         <div class="col-12">
                             <table id="TbSerial" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
                                 <thead>
-                                <tr>
-                                    <th>Serial Number</th>
-                                    <th>Mfr Serial No.</th>
-                                    <th>Expiration Date</th>
-                                    <th>Action</th>
-                                </tr>
+                                    <tr>
+                                        <th>Serial Number</th>
+                                        <th>Mfr Serial No.</th>
+                                        <th>Expiration Date</th>
+                                        <th>Action</th>
+                                    </tr>
                                 </thead>
                             </table>
-                        </div> 
+                        </div>
                     </div>
                 </div>
             </div>
@@ -671,9 +762,9 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-                            <input type="hidden" id="txtRowIDBatch"/>
-                            <input type="hidden" id="txtIDRowB"/>
-                            <input type="hidden" id="txtScriptIDBatch"/>
+                            <input type="hidden" id="txtRowIDBatch" />
+                            <input type="hidden" id="txtIDRowB" />
+                            <input type="hidden" id="txtScriptIDBatch" />
                             Item Code :
                             <div class="input-group">
                                 <input type="text" class="form-control" id="ItemCodeBatch" disabled="disabled">
@@ -779,17 +870,17 @@
                             <div class="col-12">
                                 <table id="tmpBatchFromTo" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
                                     <thead>
-                                    <tr>
-                                        <th>Batch From</th>
-                                        <th>Batch To</th>
-                                        <th>Expiration Date</th>
-                                        <th>Mfr Date</th>
-                                        <th>Admission Date</th>
-                                        <th>Action</th>
-                                    </tr>
+                                        <tr>
+                                            <th>Batch From</th>
+                                            <th>Batch To</th>
+                                            <th>Expiration Date</th>
+                                            <th>Mfr Date</th>
+                                            <th>Admission Date</th>
+                                            <th>Action</th>
+                                        </tr>
                                     </thead>
                                 </table>
-                            </div> 
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -798,18 +889,18 @@
                         <div class="col-12">
                             <table id="TbBatch" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
                                 <thead>
-                                <tr>
-                                    <th>ItemCode</th>
-                                    <th>Qty</th>
-                                    <th>Batch Number</th>
-                                    <th>Mfr Date</th>
-                                    <th>Expiration Date</th>
-                                    <th>Admission Date</th>
-                                    <th>Action</th>
-                                </tr>
+                                    <tr>
+                                        <th>ItemCode</th>
+                                        <th>Qty</th>
+                                        <th>Batch Number</th>
+                                        <th>Mfr Date</th>
+                                        <th>Expiration Date</th>
+                                        <th>Admission Date</th>
+                                        <th>Action</th>
+                                    </tr>
                                 </thead>
                             </table>
-                        </div> 
+                        </div>
                     </div>
                 </div>
             </div>
@@ -833,19 +924,19 @@
                         <div class="col-12">
                             <table id="TbBarCode" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
                                 <thead>
-                                <tr>
-                                    <th>BarCode</th>
-                                    <th>BarCodeName</th>
-                                    <th>ItemCode</th>
-                                    <th>ItemName</th>
-                                    <th>UOMCode</th>
-                                    <th>Price</th>
-                                    <th>Uom Name</th>
-                                    <th>Manage Item</th>
-                                </tr>
+                                    <tr>
+                                        <th>BarCode</th>
+                                        <th>BarCodeName</th>
+                                        <th>ItemCode</th>
+                                        <th>ItemName</th>
+                                        <th>UOMCode</th>
+                                        <th>Price</th>
+                                        <th>Uom Name</th>
+                                        <th>Manage Item</th>
+                                    </tr>
                                 </thead>
                             </table>
-                        </div> 
+                        </div>
                     </div>
                 </div>
             </div>
@@ -869,6 +960,18 @@
 
 
 <script type="text/javascript">
+
+    //ShowHide Add Item Bar
+    function shAddItemBar() {
+        var x = document.getElementById("DivBarAddItem");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+    }
+
+
     /* Init DataTable */
 
 
@@ -1235,7 +1338,8 @@
         }
     });
 
-    $('#Save').click(function() {
+    $('#Save').click(function () {
+        document.getElementById("frmLoading").style.display = "block";
         EventSaveGoodReceiptPO.sendGoodReceiptPO('@Url.Action("CreateGoodsReceiptPoResult", "GoodsReceiptPO")');
     });
 
@@ -1479,7 +1583,7 @@
             }
 
         }
-        
+
     });
     //To Do List
     $("#btnBatchNumGennerate").click(function() {
@@ -1698,8 +1802,8 @@
                 $("#optBatchTo").append('<option value="-1" selected="selected">ALL</option>');
                 $("#optBatchFrom").append('<option value="-1" selected="selected">ALL</option>');
                 for (i = 1; i <= totalGenBatch; i++) {
-                    $("#optBatchFrom").append(new Option(i, i));   
-                    $("#optBatchTo").append(new Option(i, i));   
+                    $("#optBatchFrom").append(new Option(i, i));
+                    $("#optBatchTo").append(new Option(i, i));
                 }
             }
         }
@@ -1743,17 +1847,17 @@
                 $("#optSerialTo").append('<option value="-1" selected="selected">ALL</option>');
                 $("#optSerialFrom").append('<option value="-1" selected="selected">ALL</option>');
                 for (i = 1; i <= totalGenBatch; i++) {
-                    $("#optSerialFrom").append(new Option(i, i));   
-                    $("#optSerialTo").append(new Option(i, i));   
+                    $("#optSerialFrom").append(new Option(i, i));
+                    $("#optSerialTo").append(new Option(i, i));
                 }
             }
         }
     });
     $("#BtnSaveBatch").click(function() {
         if ($("#BtnSaveBatch").text()==="Save") {
-            alert("Save Btn");
+            //alert("Save Btn");
             LBatch.push(
-                { 
+                {
                     "itemCode":$("#ItemCodeBatch").val(),
                     "qty":1,
                     "serialAndBatch":$("#BatchNumber").val(),
@@ -1915,9 +2019,9 @@
 
     $("#btnCLoseBatch").click(function() {
         if ($("#txtIDRowB").val() !== "") {
-            alert("Hello");
+            //alert("Hello");
             console.log(parseInt($("#txtIDRowB").val()));
-            console.log("Hello World");
+            console.log("BatchSerial Save And Close.");
             console.log(LinesAR[parseInt($("#txtIDRowB").val())].Batches);
             console.log(LBatch);
             LinesAR[parseInt($("#txtIDRowB").val())].Batches = LBatch;

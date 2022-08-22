@@ -213,13 +213,13 @@
                             Series :
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <button class="input-group-text" id="Cifr"><i class="fa fa-check"></i></button>
+                                    <button class="input-group-text" id="Cifr"><i id="btnCheckSeries" class="fa fa-check"></i></button>
                                 </div>
                                 <input type="text" placeholder="" id="txtSeries" value="" autocomplete="off" disabled size="7">
                                 <input type="text" class="form-control" placeholder="" id="txtSeriesName" value="" autocomplete="off" disabled>
-                                <div class="input-group-append">
+                                @*<div class="input-group-append">
                                     <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalSeries"><i class="fa fa-search"></i></button>
-                                </div>
+                                </div>*@
                             </div>
                         </div>
                         <div>
@@ -594,37 +594,22 @@
     }
 
     //+++++ Series Code +++++
-    var tableSeries = $('#TbSeries').DataTable({
-            "ajax": {
-            "url": '@Url.Action("GetSeriesCode", "Inventory")',
-            "type": "GET",
-            "dataType": "JSON",
-            "dataSrc": 'data',
-            "complete": function (data) {
-                console.log("GET Series Complete.");
-            }
-        },
-        "columns": [
-            { "data": "series" },
-            { "data": "seriesName" },
-            { "data": "indicator" }
-        ],
-        "select": true,
-        "paging": false,
-        "ordering": false,
-        "info": false,
-        "searching": false
-        });
-    tableSeries.on('select', function () {
-        var cellCode = tableSeries.rows({ selected: true }).data()[0]['series'];
-        var cellName = tableSeries.rows({ selected: true }).data()[0]['seriesName'];
-
-        $('#ChooseSeries').click(function () {
-            var xCode = document.getElementById("txtSeries");
-            var xName = document.getElementById("txtSeriesName");
-            xCode.value = cellCode;
-            xName.value = cellName;
-        });
+    $.ajax({
+        type: "GET",
+        url: "@Url.Action("GetSeriesCode", "Inventory")",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        dataSrc: 'data',
+        success: function (data) {
+            jqueryXml = $(data);
+            //console.log(jqueryXml);
+            console.log("GET Series Complete.");
+            $('#txtSeries').val(jqueryXml[0].data[0].series);
+            $('#txtSeriesName').val(jqueryXml[0].data[0].seriesName);
+            //style = "color:green",btnCheckSeries,style="background-color:red
+            document.getElementById("Cifr").style.backgroundColor = "green";
+            document.getElementById("btnCheckSeries").style.color = "#FFFFFF";
+        }
     });
 
     // Get SaleEmployee
@@ -1199,7 +1184,7 @@
 
     function POSTDataAPI() {
 
-        document.getElementById("btnSave").style.display = 'none';
+        //document.getElementById("btnSave").style.display = 'none';
         //List Data Line
         //var tline = $('#TbLineStock').DataTable({
         var arrDataLine = {};
@@ -1208,7 +1193,7 @@
 
         var whsCode = document.getElementById("txtWhsCode");
         var binCode = document.getElementById("txtBinCode");
-        
+
         let regex = /\,(?!\s*?[\{\[\"\'\w])/g;
         var str = '';
 
@@ -1321,7 +1306,7 @@
                     }
                 }
                 arrDataLine.itemCode = ldata.itemCode;
-                arrDataLine.quantity = 0;
+                arrDataLine.quantity = ldata.quantity;
                 arrDataLine.uomCode = ldata.uomCode;
                 arrDataLine.whsCode = whsCode.value;
                 arrDataLine.binEntry = parseInt(binCode.value);
@@ -1330,14 +1315,33 @@
                 arrDataLine.serialNo = ldata.serialNo;
                 dLine.push(arrDataLine);
             }
-        //console.log(dLine);
 
-        //====================
+            //console.log(dLine);
+            var mergeData = [];
+            dLine.reduce(function (res, value) {
+                if (!res[value.itemCode]) {
+                    res[value.itemCode] = {
+                        itemCode: value.itemCode
+                        , quantity: 0
+                        , whsCode: value.whsCode
+                        , binEntry: value.binEntry
+                        , uomCode: value.uomCode
+                        , batchNo: value.batchNo
+                        , serialNo: value.serialNo
+                    }
+                    mergeData.push(res[value.itemCode]);
+                }
 
+                res[value.itemCode].quantity += value.quantity;
+                return res;
+            }, {});
+            //console.log(mergeData);
+            //====================
 
             var newLine = [];
             //newLine = $.merge($.merge($.merge([], gBatchNo), gSerialNo), dLine);
             newLine = $.merge($.merge([], gBatchNo), gSerialNo);
+            newLine2 = $.merge([], dLine);
             //console.log(newLine);
             //dLine
             //console.log("= Batch Number =");
@@ -1349,12 +1353,40 @@
             const arr = newLine;
             jqueryXml = $(newLine);
             console.log(jqueryXml);
-            console.log(jqueryXml[0]);
-            //for (var i = 0; i < arr.length; i++) {
-            //    var obj = arr;
-            //    console.log(" Row : " + obj);
-            //}
+            console.log('=======================');
+            jqueryXml2 = $(mergeData);
+            console.log(jqueryXml2);
 
+            var jsonText = JSON.stringify(jqueryXml); //Table Data From Scan Barcode
+            const obj = JSON.parse(jsonText);
+
+            var jsonText2 = JSON.stringify(jqueryXml2); //Table Data From Get BinLocation
+            const obj2 = JSON.parse(jsonText2);
+
+            var arrSumLine = {};
+            var s1Line = [];
+            var iQty ;
+
+            for (var i = 0; i < obj2.length; i++) {
+                //iQty = 0;
+                for (var j = 0; j < obj.length; j++) {
+                    arrSumLine = {};
+                    
+                    console.log(obj2[i].itemCode + " == " + obj[j].itemCode);
+
+                    if (obj2[i].itemCode == obj[j].itemCode) {
+                        iQty += parseFloat(obj[j].quantity);
+                    } else {
+                        iQty = 0;
+                    }
+
+                    arrSumLine.itemCode = obj2[i].itemCode;
+                    arrSumLine.totalQTY = parseFloat(iQty);
+
+                }
+                s1Line.push(arrSumLine);
+            }
+            console.log(s1Line);
 
             //Head
             sHead.series = $('#txtSeries').val();
@@ -1363,7 +1395,7 @@
             sHead.ref2 = $('#ref2').val();
             sHead.comments = $('#comments').val();
             sHead.line = newLine;
-            console.log(sHead);
+            //console.log(sHead);
 
             @*$.ajax({
                 type: "POST",

@@ -7,6 +7,7 @@
 
 <link href="~/css/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <style>
     tr.selected {
@@ -100,16 +101,42 @@
         background: rgba(20,20,20,0.4);
     }
 
-    /* Safari */
-    @@-webkit-keyframes spin {
-        0% { -webkit-transform: rotate(0deg); }
-        100% { -webkit-transform: rotate(360deg); }
-    }
+    /* =================================================== */
+        .cover-spin {
+            position:fixed;
+            width:100%;
+            left:0;right:0;top:0;bottom:0;
+            background-color: rgba(255,255,255,0.7);
+            z-index:9999;
+            display:none;
+        }
 
-    @@keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
+        @@-webkit-keyframes spin {
+	        from {-webkit-transform:rotate(0deg);}
+	        to {-webkit-transform:rotate(360deg);}
+        }
+
+        @@keyframes spin {
+	        from {transform:rotate(0deg);}
+	        to {transform:rotate(360deg);}
+        }
+
+        .cover-spin::after {
+            content:'';
+            display:block;
+            position:absolute;
+            left:48%;top:40%;
+            width:40px;height:40px;
+            border-style:solid;
+            border-color:black;
+            border-top-color:transparent;
+            border-width: 4px;
+            border-radius:50%;
+            -webkit-animation: spin .8s linear infinite;
+            animation: spin .8s linear infinite;
+        }
+    /* =================================================== */
+
 </style>
 
 <div id="#main">
@@ -128,29 +155,13 @@
         <div class="tab-pane fade show active" id="create" role="tabpanel" aria-labelledby="create-tab">
             <div class="row" id="BinCode">
                 <div class="col-sm-8" style="padding: 10px;">
-                    Batch / SN:
-                    <div class="col-12" style="padding-left:2px;padding-right:10px">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <button class="input-group-text" id="GbatchSN"><i class="fa fa-check"></i></button>
-                                    </div>
-                                    <input type="text" placeholder="" id="batchSN" value="" autocomplete="off" size="25" required>
-                                    <button class="btn btn-info" id="btnSearchItem" style="background:#f0eff1;color:#696969"><i class="fa fa-search"></i></button>
-                                    <button class="btn btn-info" id="btnAuto" style="background:#f0eff1;color:#696969">Generate</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     Item :
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <button class="input-group-text" id="GItemCode"><i class="fa fa-check"></i></button>
                         </div>
                         <input type="text" class="form-control" placeholder="" id="ItemCode" readonly>
-                        
+
                         <div class="input-group-append">
                             <button class="input-group-text btnItemCode" data-toggle="modal" data-target="#ModalItemCode"><i class="fa fa-search"></i></button>
                         </div>
@@ -162,6 +173,23 @@
                         </div>
                         <input type="text" class="form-control" placeholder="" id="ItemName" readonly>
                     </div>
+
+                    Batch / SN:
+                    <div class="col-12" style="padding-left:2px;padding-right:10px">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <button class="input-group-text" id="GbatchSN"><i class="fa fa-check"></i></button>
+                                    </div>
+                                    <input type="text" placeholder="" id="batchSN" value="" autocomplete="off" size="25" required>
+                                    <button class="btn btn-info" id="btnSearchItem" style="background:#f0eff1;color:#696969"><i class="fa fa-play-circle" aria-hidden="true"></i></button>
+                                    <button class="btn btn-info" id="btnAuto" style="background:#f0eff1;color:#696969">Generate</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
 
                     Food And Drug No. (อย.):
                     <div class="input-group">
@@ -324,14 +352,14 @@
     </div>
 </div>
 
-<div id="frmLoading" class="backg" style="display:none">
-    <div class="loader"></div>
+<div id="frmLoading" class="cover-spin" style="display:none">
+    @*<div class="loader"></div>*@
 </div>
 <script src="~/js/Array.js"></script>
 <script src="~/css/DataTable/jquery-3.3.1.js"></script>
 <script src="~/css/DataTable/jquery.dataTables.min.js"></script>
 <script type="text/javascript">
-    document.getElementById("batchSN").focus();
+    //document.getElementById("batchSN").focus();
     //Get Item Master
     $('#tbItem').DataTable({
         bLengthChange: false,
@@ -388,6 +416,11 @@
         $('#ItemName').val(data.itemName);
         $('#ProductGroup').val(data.itemGroup);
 
+        //console.log(data);
+        //var bExpDate = data.expDate;
+        //let isExpDate = bExpDate.substring(0, 10);
+        //$('#expireDate').val(isExpDate);
+
         let fda13 = data.fda
         let mixfda = "";
 
@@ -402,11 +435,13 @@
             mixfda = "";
         }
 
-        $('#txtFDA').val(mixfda);
+        //$('#txtFDA').val(data.fda);
         //FDA = "1234";
-        batch = data.manBtchNum;
-        serial = data.manSerNum;
+        //batch = data.manBtchNum;
+        //serial = data.manSerNum;
 
+
+        document.getElementById("batchSN").focus();
     });
     // Add Item to Table
     $('#TbListItem').DataTable({
@@ -515,13 +550,14 @@
                     //table.clear();
                     //table.rows.add(allitemLInes).draw(false);
                 }
-                $('#ItemCode').val("");
-                $('#ItemName').val("");
+                //$('#ItemCode').val("");
+                //$('#ItemName').val("");
                 $('#Qty').val("1");
-                $('#ProductGroup').val("");
+                //$('#ProductGroup').val("");
                 $('#batchSN').val("");
                 $('#expireDate').val("");
                 $('#txtFDA').val("");
+            document.getElementById("batchSN").focus();
             }
 
         });
@@ -554,7 +590,7 @@
             arrayLine.fda = data.fda;
             sLine.push(arrayLine);
         }
-        //console.log(sLine);
+        console.log(sLine);
 
         print.Data = sLine;
         if (sLine.length > 0) {
@@ -593,76 +629,88 @@
     input01.addEventListener("keyup", function (event) {
         if (event.keyCode === 13) {
             event.preventDefault();
-            document.getElementById("btnSearchItem").click();
-            document.getElementById("frmLoading").style.display = "block";
+
+            if ($('#batchSN').val() != '') {
+                document.getElementById("btnSearchItem").click();
+                //document.getElementById("btnItemCode").click();
+                document.getElementById("frmLoading").style.display = "block";
+            } else {
+                document.getElementById("frmLoading").style.display = "none";
+            }
+            
         }
     });
 
     $('#btnSearchItem').click(function () {
-        console.log("Loading...");
-        
-        $.ajax({
-            url: '@Url.Action("GetItemByBarcode", "CreateLabelSticker")',
-            data: { barCode: $('#batchSN').val()},
-            type: "GET",
-            dataType: "JSON",
-            error: function (request, error) {
-                console.log(arguments);
-                alert(" Can't do because: " + error);
-                $('#batchSN').val("").focus();
-                document.getElementById("frmLoading").style.display = "none";
-            },
-            success: function (data) {
-                var jqueryXml = $(data);
-                console.log(data);
-                if (jqueryXml[0].data.length != 0) {
-                    var bItemCode = jqueryXml[0].data[0].itemCode;
-                    var bItemName = jqueryXml[0].data[0].itemName;
-                    var bExpDate = jqueryXml[0].data[0].expDate;
-                    let isExpDate = bExpDate.substring(0, 10);
-                    var bQty = jqueryXml[0].data[0].quantity;
-                    var bQty = jqueryXml[0].data[0].quantity;
-                    var bBatchNumber = jqueryXml[0].data[0].batchNumber;
-                    var bSerialNumber = jqueryXml[0].data[0].serialNumber
-                    if (bBatchNumber != null) {
-                        batch = "Y";
-                    }
-                    if (bSerialNumber != null) {
-                        serial = "Y";
-                    }
-                    //var cExpDate = new Date().toLocaleDateString();
-                    //const str = bExpDate;
-                    //const date = new Date(str);
-                    //var dateString = date.toLocaleDateString();
-                    //const [month, day, year] = dateString.split('/');
-                    //var isExpDate = year + "-" + month + "-" + day;
+        if ($('#batchSN').val() != '') {
+            //===================== Check Textbox batchSN Null Or Not! ===========================
+            console.log("Loading...");
 
-                    var bFDA = jqueryXml[0].data[0].fda;
-
-                    $('#ItemCode').val(bItemCode);
-                    $('#ItemName').val(bItemName);
-                    $('#expireDate').val(isExpDate); //yyyy-MM-dd
-                    $('#txtFDA').val(bFDA);
-                    $('#ProductGroup').val("-");
-                    $('#Qty').val("1");
-                    document.getElementById("frmLoading").style.display = "none";
-                    console.log('Successed');
-
-                } else {
+            $.ajax({
+                url: '@Url.Action("GetItemByBarcode", "CreateLabelSticker")',
+                data: { barCode: $('#batchSN').val(), itemCode: $('#ItemCode').val() },
+                type: "GET",
+                dataType: "JSON",
+                error: function (request, error) {
+                    console.log(arguments);
+                    alert(" Can't do because: " + error);
                     $('#batchSN').val("").focus();
                     document.getElementById("frmLoading").style.display = "none";
-                    $('#ItemCode').val("");
-                    $('#ItemName').val("");
-                    $('#Qty').val("1");
-                    $('#ProductGroup').val("");
-                    $('#batchSN').val("");
-                    $('#expireDate').val("");
-                    $('#txtFDA').val("");
-                    alert("Item does not exist.");
-                    console.log('Item does not exist.');
+                },
+                success: function (data) {
+                    var jqueryXml = $(data);
+                    console.log(data);
+                    if (jqueryXml[0].data.length != 0) {
+                        var bItemCode = jqueryXml[0].data[0].itemCode;
+                        var bItemName = jqueryXml[0].data[0].itemName;
+                        var bExpDate = jqueryXml[0].data[0].expDate;
+                        let isExpDate = bExpDate.substring(0, 10);
+                        var bQty = jqueryXml[0].data[0].quantity;
+                        //var bQty = jqueryXml[0].data[0].quantity;
+                        var bBatchNumber = jqueryXml[0].data[0].batchNumber;
+                        var bSerialNumber = jqueryXml[0].data[0].serialNumber
+                        if (bBatchNumber != null) {
+                            batch = "Y";
+                        }
+                        if (bSerialNumber != null) {
+                            serial = "Y";
+                        }
+                        //var cExpDate = new Date().toLocaleDateString();
+                        //const str = bExpDate;
+                        //const date = new Date(str);
+                        //var dateString = date.toLocaleDateString();
+                        //const [month, day, year] = dateString.split('/');
+                        //var isExpDate = year + "-" + month + "-" + day;
+
+                        var bFDA = jqueryXml[0].data[0].fda;
+
+                        $('#ItemCode').val(bItemCode);
+                        $('#ItemName').val(bItemName);
+                        $('#expireDate').val(isExpDate); //yyyy-MM-dd
+                        $('#txtFDA').val(bFDA);
+                        //$('#ProductGroup').val("-");
+                        $('#Qty').val("1");
+                        document.getElementById("frmLoading").style.display = "none";
+                        console.log('Successed');
+                        document.getElementById("Add").focus();
+                    } else {
+                        $('#batchSN').val("").focus();
+                        document.getElementById("frmLoading").style.display = "none";
+                        //$('#ItemCode').val("");
+                        //$('#ItemName').val("");
+                        $('#Qty').val("1");
+                        //$('#ProductGroup').val("");
+                        $('#batchSN').val("");
+                        //$('#expireDate').val("");
+                        //$('#txtFDA').val("");
+                        alert("Item does not exist.");
+                        console.log('Item does not exist.');
+                    }
                 }
-            }
-        });
+            });
+            //====================================================================================
+        }
+
     });
 
     //Button for Generate Batch/Serial

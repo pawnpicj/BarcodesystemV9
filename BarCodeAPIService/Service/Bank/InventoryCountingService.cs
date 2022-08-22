@@ -46,8 +46,6 @@ namespace BarCodeAPIService.Service
 
                     foreach (SendInventoryCountingLine l in sendInventoryCounting.Line)
                     {
-
-
                         if ((l.BatchNo != "" && l.BatchNo != null) && l.ProductType == "b")
                         {
                             SAPbobsCOM.InventoryCountingLines oICLS = oIC.InventoryCountingLines;
@@ -74,10 +72,15 @@ namespace BarCodeAPIService.Service
                                 oICL.BinEntry = l.BinEntry;
                                 oICL.UoMCode = l.UomCode;
                                 oICL.Counted = SAPbobsCOM.BoYesNoEnum.tYES;
-                                SAPbobsCOM.InventoryCountingSerialNumber oInventoryCountingSerialNumber = oICL.InventoryCountingSerialNumbers.Add();
-                                oInventoryCountingSerialNumber.InternalSerialNumber = l.SerialNo;
-                                oInventoryCountingSerialNumber.ManufacturerSerialNumber = l.SerialNo;
-                                oInventoryCountingSerialNumber.Quantity = l.Quantity;
+
+                                for (int itm = 0; itm < l.Quantity; itm++)
+                                {
+                                    SAPbobsCOM.InventoryCountingSerialNumber oInventoryCountingSerialNumber = oICL.InventoryCountingSerialNumbers.Add();
+                                    oInventoryCountingSerialNumber.InternalSerialNumber = l.SerialNo;
+                                    oInventoryCountingSerialNumber.ManufacturerSerialNumber = l.SerialNo;
+                                    oInventoryCountingSerialNumber.Quantity = l.Quantity;
+                                }
+
                             }
                         }
 

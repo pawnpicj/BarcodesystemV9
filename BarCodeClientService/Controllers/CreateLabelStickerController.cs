@@ -58,9 +58,9 @@ namespace BarCodeClientService.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetItemByBarcode(string barCode)
+        public IActionResult GetItemByBarcode(string barCode, string itemCode)
         {
-            var a = API.Read<ResponseGetStockItemBatchAndSerial>("GetItemByBarcode/" + barCode);
+            var a = API.Read<ResponseGetStockItemBatchAndSerial>("GetItemByBarcode/" + barCode + "/" + itemCode);
             return Ok(a);
         }
 

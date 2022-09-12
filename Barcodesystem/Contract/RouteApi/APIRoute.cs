@@ -23,6 +23,7 @@
             public const string GetItemCode = "GetItem";
             public const string GetTaxCode = "GetTaxCode";
             public const string GetWarehouse = "GetWarehouse";
+            public const string GetUnitOfMeasure = "GetUOM";
         }
     }
 }

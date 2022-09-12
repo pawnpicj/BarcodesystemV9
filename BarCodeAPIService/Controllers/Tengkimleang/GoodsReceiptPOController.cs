@@ -91,5 +91,11 @@ namespace BarCodeAPIService.Controllers
             var a = await goodsReceiptPO.responseGetWarehouses();
             return Ok(a);
         }
+        [HttpGet(APIRoute.GoodReceiptPO.GetUnitOfMeasure)]
+        public async Task<IActionResult> GetUnitOfMeasure()
+        {
+            var a = await goodsReceiptPO.responseGetWarehouses();
+            return Ok(a);
+        }
     }
 }

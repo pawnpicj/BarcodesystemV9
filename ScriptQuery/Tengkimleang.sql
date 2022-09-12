@@ -220,46 +220,10 @@ BEGIN
 	ELSE IF :DTYPE='OWHS' THEN
 		SELECT "WhsCode" AS Code,"WhsName" AS Name FROM UDOM_BARCODEV2."OWHS" WHERE "Locked"='N';
 	ELSE IF :DTYPE='OUOM' THEN
-		SELECT "UomEntry" AS Code,"UomName" AS Name FROM UDOM_BARCODEV2."OUOM" 
+		SELECT "UomCode" AS Code,"UomName" AS Name FROM UDOM_BARCODEV2."OUOM" 
 		WHERE "UomEntry" IN (
 			SELECT "UomEntry" FROM UDOM_BARCODEV2."ITM12" WHERE "UomType"='P' AND "ItemCode"=:par1
 		);
-	ELSE IF :DTYPE='GetSerialNumber' THEN
-		SELECT 
-		B."DistNumber",1 AS "Quantity"
-		FROM "UDOM_BARCODEV2"."SRI1" AS A 
-		LEFT JOIN "UDOM_BARCODEV2"."OSRN" AS B ON A."SysSerial"=B."SysNumber" AND A."ItemCode"=B."ItemCode"
-		WHERE A."BaseType"='20' AND A."BaseEntry"=:par1 AND A."BaseLinNum"=:par2 AND A."ItemCode"=:par3;
-	ELSE IF :DTYPE='GetBatchNumber' THEN
-		SELECT 
-			A."BatchNum",A."Quantity"
-		FROM "UDOM_BARCODEV2"."IBT1" AS A 
-		WHERE A."BaseType"='20' AND A."BaseEntry"=:par1 AND A."BaseLinNum"=:par2 AND A."ItemCode"=:par3;
-	ELSE IF :DTYPE='OBCD' THEN
-		SELECT 
-			 A."BcdCode" AS "BarCode"
-			,A."BcdName" AS "BarCodeName"
-			,C."ItemCode" AS "ItemCode"
-			,C."ItemName" AS "ItemName"
-			,B."UomCode" AS "UOMCode"
-			,(SELECT IFNULL("Price",0) FROM UDOM_BARCODEV2."ITM1" WHERE "ItemCode"="C"."ItemCode" And "PriceList"=1) AS "Price"
-			,"IUoMEntry" AS "UOMNAME"
-			,CASE 
-				WHEN "ManSerNum"='Y' THEN 'S' 
-				WHEN "ManBtchNum"='Y' THEN 'B'
-				ELSE 'N' 
-			 END AS "MANAGEITEM"
-		FROM UDOM_BARCODEV2."OBCD" AS A
-		LEFT JOIN UDOM_BARCODEV2."OUOM" AS B ON A."UomEntry"=B."UomEntry"
-		LEFT JOIN UDOM_BARCODEV2."OITM" AS C ON A."ItemCode"=C."ItemCode"
-		WHERE A."BcdCode"=:par1
-			  AND A."UomEntry" IN (SELECT "UomEntry" FROM UDOM_BARCODEV2."ITM12" WHERE "UomType"='P' AND "ItemCode"=A."ItemCode");
-			  
-	END IF;
-	END IF;
-	END IF;
-	END IF;
-	END IF;
 	END IF;
 	END IF;
 	END IF;

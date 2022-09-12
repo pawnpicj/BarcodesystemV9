@@ -3,6 +3,12 @@ using BarCodeLibrary.APICall;
 using BarCodeLibrary.Request.SAP.Pannreaksmey;
 using BarCodeLibrary.Respones.SAP.Pannreaksmey;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.IO;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using System;
 
 namespace BarCodeClientService.Controllers
 {
@@ -23,6 +29,12 @@ namespace BarCodeClientService.Controllers
         {
             return View();
         }
+
+        public IActionResult ProgramAndDriver()
+        {
+            return View();
+        }
+
         [HttpPost]
         public IActionResult PostUserAsync(SendUser send)
         {
@@ -36,5 +48,6 @@ namespace BarCodeClientService.Controllers
             var a = API.Read<ResponseGetUser>("api/User/GetUserLogin");
             return Ok(a);
         }
+
     }
 }

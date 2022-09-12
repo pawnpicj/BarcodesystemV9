@@ -1,0 +1,87 @@
+﻿@{
+    ViewData["Title"] = "Program and Driver";
+
+}
+<style type="text/css">
+    #Icon {
+        color: #5f95c3;
+        font-size: 50px;
+        margin-top: 60px;
+        text-align: center;
+    }
+
+        #Icon:hover {
+            margin-top: 55px;
+            font-size: 60px;
+        }
+
+    .slink{
+        color:darkblue;
+        font-weight:bold;
+    }
+</style>
+
+<div class="container">
+
+    @{
+        string linkA1 = "";
+        string linkA2 = "";
+        string linkA3 = "";
+    }
+    @if (Context.Request.PathBase == "/")
+    {
+        linkA1 = Context.Request.Scheme + "://" + Convert.ToString(Context.Request.Host) + "/ProgramAndDriver/PC/TSC_TE310.zip";
+        linkA2 = Context.Request.Scheme + "://" + Convert.ToString(Context.Request.Host) + "/ProgramAndDriver/PC/AutoIDKeyboardWedge_120_1_kotei_HP.zip";
+    }
+    else
+    {
+        linkA1 = Context.Request.Scheme + "://" + Convert.ToString(Context.Request.Host) + "" + Convert.ToString(Context.Request.PathBase) + "/ProgramAndDriver/PC/TSC_TE310.zip";
+        linkA2 = Context.Request.Scheme + "://" + Convert.ToString(Context.Request.Host) + "" + Convert.ToString(Context.Request.PathBase) + "/ProgramAndDriver/PC/AutoIDKeyboardWedge_120_1_kotei_HP.zip";
+    }
+    <div class="row">
+        <div class="col"><font size="+2" style="font-weight:bold">PC</font></div>
+        <div class="w-100"></div>
+        <div class="col-6"><font style="font-weight:bold">Driver Printer TSC TE310</font></div>
+        <div class="col-6"><a href="@linkA1" download class="slink">Download</a></div>
+    </div>
+    <div class="row">
+        <div class="w-100"></div>
+        <div class="col-6"><font style="font-weight:bold">AutoID Keyboard Wedge</font></div>
+        <div class="col-6"><a href="@linkA2" download class="slink">Download</a></div>
+    </div>
+
+    <hr>
+    @{
+        string linkB1 = "";
+        string linkB2 = "";
+        string linkB3 = "";
+    }
+    @if (Context.Request.PathBase == "/")
+    {
+        linkB1 = Context.Request.Scheme + "://" + Convert.ToString(Context.Request.Host) + "/ProgramAndDriver/Android/GoogleChrome.zip";
+        linkB2 = Context.Request.Scheme + "://" + Convert.ToString(Context.Request.Host) + "/ProgramAndDriver/Android/WLAN_KeyboardWedge.zip";
+        linkB3 = Context.Request.Scheme + "://" + Convert.ToString(Context.Request.Host) + "/ProgramAndDriver/Android/HIDKeyboardWedge.zip";
+    }
+    else
+    {
+        linkB1 = Context.Request.Scheme + "://" + Convert.ToString(Context.Request.Host) + "" + Convert.ToString(Context.Request.PathBase) + "/ProgramAndDriver/Android/GoogleChrome.zip";
+        linkB2 = Context.Request.Scheme + "://" + Convert.ToString(Context.Request.Host) + "" + Convert.ToString(Context.Request.PathBase) + "/ProgramAndDriver/Android/WLAN_KeyboardWedge.zip";
+        linkB3 = Context.Request.Scheme + "://" + Convert.ToString(Context.Request.Host) + "" + Convert.ToString(Context.Request.PathBase) + "/ProgramAndDriver/Android/HIDKeyboardWedge.zip";
+    }
+    <div class="row">
+        <div class="col"><font size="+2" style="font-weight:bold">Keyence BT-A500 (Application)</font></div>
+        <div class="w-100"></div>
+        <div class="col-6"><font style="font-weight:bold">Google Chrome for Android</font></div>
+        <div class="col-6"><a href="@linkB1" download rel="noopener noreferrer" target="_blank" class="slink">Download</a></div>
+    </div>
+    <div class="row">
+        <div class="w-100"></div>
+        <div class="col-6"><font style="font-weight:bold">WLAN KeyboardWedge for Android</font></div>
+        <div class="col-6"><a href="@linkB2" download rel="noopener noreferrer" target="_blank" class="slink">Download</a></div>
+    </div>
+    <div class="row">
+        <div class="w-100"></div>
+        <div class="col-6"><font style="font-weight:bold">HIDKeyboardWedge for Android [Bluetooth]</font></div>
+        <div class="col-6"><a href="@linkB3" download rel="noopener noreferrer" target="_blank" class="slink">Download</a></div>
+    </div>
+</div>

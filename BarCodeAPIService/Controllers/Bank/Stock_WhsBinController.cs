@@ -130,10 +130,10 @@ namespace BarCodeAPIService.Controllers.Bank
             }
         }
 
-        [HttpGet("GetItemByBarcode/{barCode}")]
-        public async Task<IActionResult> GetItemByBarcodeAsync(string barCode)
+        [HttpGet("GetItemByBarcode/{barCode}/{itemCode}")]
+        public async Task<IActionResult> GetItemByBarcodeAsync(string barCode, string itemCode)
         {
-            var a = await stockWhsBinService.responseGetItemByBarcode(barCode);
+            var a = await stockWhsBinService.responseGetItemByBarcode(barCode, itemCode);
             if (a.ErrorCode == 0)
             {
                 return Ok(a);

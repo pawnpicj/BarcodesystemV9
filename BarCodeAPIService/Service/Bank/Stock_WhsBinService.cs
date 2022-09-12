@@ -491,7 +491,7 @@ namespace BarCodeAPIService.Service.Bank
             }
         }
 
-        public Task<ResponseGetStockItemBatchAndSerial> responseGetItemByBarcode(string barCode)
+        public Task<ResponseGetStockItemBatchAndSerial> responseGetItemByBarcode(string barCode, string itemCode)
         {
             var getItemList = new List<GetStockItemBatchAndSerial>();
             SAPbobsCOM.Company oCompany;
@@ -502,13 +502,13 @@ namespace BarCodeAPIService.Service.Bank
                 {
                     oCompany = login.Company;
                     SAPbobsCOM.Recordset? oRS = null;
-                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('GetBatchNumber','{barCode}','','','','')"; ;
+                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('GetBatchNumber','{barCode}','{itemCode}','','','')"; ;
                     oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRS.DoQuery(sqlStr);
 
                     if (oRS.BoF && oRS.EoF)
                     {
-                        string sqlStr2 = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('GetSerialNumber','{barCode}','','','','')"; ;
+                        string sqlStr2 = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('GetSerialNumber','{barCode}','{itemCode}','','','')"; ;
                         oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                         oRS.DoQuery(sqlStr2);
                         while (!oRS.EoF)

@@ -19,7 +19,7 @@
 
         $(document).ready(function() {
             $(".hamburger .hamburger__inner").click(function() {
-                $(".wrapper").toggleClass("active");
+                @*$(".wrapper").toggleClass("active");
 
                 $.ajax({
                     url: '@Url.Action("Layout", "Home")',
@@ -27,7 +27,7 @@
                     dataType: "JSON",
                     success: function(data) {
                     }
-                });
+                });*@
             });
 
             $("#user").click(function() {
@@ -60,70 +60,64 @@
     @*@HttpContextAccessor.HttpContext.Session.GetString("Layout")*@
     <div class="wrapper active">
         <div class="top_navbar" style="background:#5f95c3;">
-            <div class="hamburger" style="background:#f0eff1">
+            <div class="hamburger" style="background: #5f95c3 ">
                 <div class="hamburger__inner">
-                    <div class="one" style="background:#000000"></div>
-                    <div class="two" style="background:#000000"></div>
-                    <div class="three" style="background:#000000"></div>
+                    <a href="@Url.Action("Index", "Home")" id="Home">
+                        <span class="icon">
+                            <i class="fa fa-home" style="color: #ffffff; width:35px; height:28px;"></i>
+                        </span>
+                        @*<img src="~/Icon/sap.png" alt="profile_pic" style="width: 200%;">*@
+                    </a>
+                    @*<div class="one" style="background:#000000"></div>
+        <div class="two" style="background:#000000"></div>
+        <div class="three" style="background:#000000"></div>*@
                 </div>
             </div>
+
             <div class="menu">
                 <div class="logo" style="color:#f0eff1">
-                    <label style="font-size:18px;font-weight:500">Barcode System</label>
+                    Barcode System <font style="font-size:6px;"><b>V.010922.2</b></font>
                 </div>
                 <div class="right_menu">
                     <ul>
                         @*<li style="margin-top:10px;margin-right:10px;">
-                <a id="user" href="#"><i class="fas fa-user"></i></a>
-                <div class="profile_dd">
+                        <a id="user" href="#"><i class="fas fa-user"></i></a>
+                        <div class="profile_dd">
 
-                    <div class="dd_item" id="changepass">Change Password</div>
-                    <div class="dd_item" id="logout">Logout</div>
-                </div>
-            </li>
-            <li style="margin-top:10px">
-                    <a id="setting" href="#"><i class="fas fa-cog"></i></a>
-                    <div class="profile_dd1">
-                        <div class="dd_item1" id="CreateUser">Create User</div>
-                        <div class="dd_item1" id="Quit">Quit</div>
-                    </div>
-                </li>*@
+                            <div class="dd_item" id="changepass">Change Password</div>
+                            <div class="dd_item" id="logout">Logout</div>
+                        </div>
+                    </li>
+                    <li style="margin-top:10px">
+                            <a id="setting" href="#"><i class="fas fa-cog"></i></a>
+                            <div class="profile_dd1">
+                                <div class="dd_item1" id="CreateUser">Create User</div>
+                                <div class="dd_item1" id="Quit">Quit</div>
+                            </div>
+                        </li>
+
+                        *@
 
                     </ul>
                     <div class="row">
                         <div class="co-2">
-                            <button id="sign_out" style="background-color:transparent;margin-top:-10px;cursor:pointer;border:0px" title="sing out"><span class="icon"><i class="fa fa-user-circle" style="margin-top:-5px;width:40px;height:30px ;color: rgba(0, 51, 102,0.8);background-color:transparent"></i></span></button>
+                            <button id="sign_out" style="background-color:transparent;margin-top:-10px;cursor:pointer;border:0px" title="sing out"><span class="icon"><i class="fa fa-user-circle" style="margin-top:-5px;width:25px;height:25px ;color: rgba(0, 51, 102,0.8);background-color:transparent"></i></span></button>
                         </div>
                     </div>
                 </div>
+            </div>
         </div>
-    </div>
 
     <div class="main_container">
         <div class="sidebar" style="background: #f0eff1">
-            <div class="sidebar__inner">
-                <div class="profile">
-                    <div class="img">
-                        <a href="@Url.Action("Index", "Home")" id="Home">
-                            <img src="~/Icon/sap.png" alt="profile_pic" style="margin-left: -10px; width: 100%;">
-                        </a>
-                    </div>
-                </div>
+            <div class="">
+                
                 <ul>
-                    <li>
-                        <a asp-controller="Admin" asp-action="Index" id="AR" class="active" style="color: #696969;">
-                            @*href="@Url.Action("SaleARCreation","Home")"*@
-                            <span class="icon">
-                                <i class="fa fa-users" style="margin-left: -20px; color: rgba(0, 51, 102,0.8)"></i>
-                            </span>
-                            <span class="title"><label style="font-size:18px;font-weight:500">Administration</label></span>
-                        </a>
-                    </li>
                     <li>
                         <a asp-controller="Dashboard" asp-action="DashboardSaleAR" id="AR" class="active" style="color: #696969">
                             @*href="@Url.Action("SaleARCreation","Home")"*@
                             <span class="icon">
-                                <i class="fas fa-cart-arrow-down" style="margin-left: -20px; color:rgba(0, 51, 102,0.8)"></i>
+                                <i class="fas fa-truck" style="margin-left: -20px; color:rgba(0, 51, 102,0.8)"></i>
                             </span>
                             <span class="title"><label style="font-size:18px;font-weight:500">Sale A/R</label></span>
                         </a>
@@ -132,9 +126,9 @@
                         <a asp-controller="Dashboard" asp-action="DashboardPurchasingAP" id="AP" class="active" style="color: #696969">
                             @*href="@Url.Action("Purchasing","Home")"*@
                             <span class="icon">
-                                <i class="fas fa-chart-pie" style="margin-left: -20px; color: rgba(0, 51, 102,0.8)"></i>
+                                <i class="fas fa-cart-arrow-down" style="margin-left: -20px; color: rgba(0, 51, 102,0.8)"></i>
                             </span>
-                            <span class="title"><label style="font-size:18px;font-weight:500">Purchasing - A/P</label></span>  
+                            <span class="title"><label style="font-size:18px;font-weight:500">Purchasing - A/P</label></span>
                         </a>
                     </li>
                     <li>
@@ -144,7 +138,7 @@
                                 <i class="fas fa-warehouse" style="margin-left: -20px; color: rgba(0, 51, 102,0.8)"></i>
                             </span>
                             <span class="title"><label style="font-size:18px;font-weight:500">Inventory</label></span>
-                            
+
                         </a>
                     </li>
                     <li>
@@ -154,6 +148,16 @@
                                 <i class="fas fa-barcode" style="margin-left: -20px; color: rgba(0, 51, 102,0.8)"></i>
                             </span>
                             <span class="title"><label style="font-size:18px;font-weight:500">BarCode/QR Code</label></span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a asp-controller="Admin" asp-action="Index" id="AR" class="active" style="color: #696969;">
+                            @*href="@Url.Action("SaleARCreation","Home")"*@
+                            <span class="icon">
+                                <i class="fa fa-users" style="margin-left: -20px; color: rgba(0, 51, 102,0.8)"></i>
+                            </span>
+                            <span class="title"><label style="font-size:18px;font-weight:500">Administration</label></span>
                         </a>
                     </li>
                 </ul>

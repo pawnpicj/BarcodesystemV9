@@ -72,9 +72,63 @@
     }
 
     .clsinput:focus { outline: none; }
+
+    /* =================================================== */
+    .cover-spin {
+        position: fixed;
+        width: 100%;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background-color: rgba(255,255,255,0.7);
+        z-index: 9999;
+        display: none;
+    }
+
+    @@-webkit-keyframes spin {
+        from {
+            -webkit-transform: rotate(0deg);
+        }
+
+        to {
+            -webkit-transform: rotate(360deg);
+        }
+    }
+
+    @@keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .cover-spin::after {
+        content: '';
+        display: block;
+        position: absolute;
+        left: 48%;
+        top: 40%;
+        width: 40px;
+        height: 40px;
+        border-style: solid;
+        border-color: black;
+        border-top-color: transparent;
+        border-width: 4px;
+        border-radius: 50%;
+        -webkit-animation: spin .8s linear infinite;
+        animation: spin .8s linear infinite;
+    }
+    /* =================================================== */
+
 </style>
 
 <div id="#main">
+
+    <div id="frmLoading" class="cover-spin" style="display:none"></div>
 
     <div class="row" style="color: #696969; margin-left: 5px; margin-top: 5px;">
         <h5 style="color: #696969; margin-top: 5px;">
@@ -85,13 +139,16 @@
             </span>
         </h5>
     </div>
-    <hr/>
+    <hr />
     <div style="color: #696969; padding: 10px;">
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="cus" role="tabpanel" aria-labelledby="cus-tab" style="margin-top: 10px">
                 <div class="row">
                     <div class="col-sm-6">
                         <div>
+                            <button class="btn btn-info" id="CopyFromPO" data-toggle="modal" data-target="#ModalCopyFromPO">
+                                Select GoodsReceiptPO
+                            </button><br>
                             Vendor Code :
                             <div class="input-group">
                                 <div class="input-group-prepend">
@@ -139,14 +196,14 @@
                         <div>
                             BP Currency :
                             <div class="input-group">
-                                <input disabled="disabled" type="text" class="form-control" id="BPDocCurr"/>
+                                <input disabled="disabled" type="text" class="form-control" id="BPDocCurr" />
                             </div>
                         </div>
                         Sales Employees :
                         <div class="input-group">
-                            <input disabled="disabled" type="text" class="form-control" id="SaleEmp"/>
+                            <input disabled="disabled" type="text" class="form-control" id="SaleEmp" />
                         </div>
-                        <br/>
+                        <br />
                     </div>
                 </div>
                 <div class="row">
@@ -154,18 +211,18 @@
                         <div class="table-responsive">
                             <table id="TbAR" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
                                 <thead>
-                                <tr>
-                                    <th>ItemCode</th>
-                                    <th>Description</th>
-                                    <th>Quatity</th>
-                                    <th>Price</th>
-                                    <th>Discount Percentage</th>
-                                    <th>VatGroup</th>
-                                    <th>WhsCode</th>
-                                    <th>LineTotal</th>
-                                    <th>lineNum</th>
-                                    <th>DocENtry</th>
-                                </tr>
+                                    <tr>
+                                        <th>ItemCode</th>
+                                        <th>Description</th>
+                                        <th>Quatity</th>
+                                        <th>Price</th>
+                                        <th>Discount Percentage</th>
+                                        <th>VatGroup</th>
+                                        <th>WhsCode</th>
+                                        <th>LineTotal</th>
+                                        <th>lineNum</th>
+                                        <th>DocENtry</th>
+                                    </tr>
                                 </thead>
                             </table>
                         </div>
@@ -173,20 +230,16 @@
                 </div>
             </div>
         </div>
-        <hr/>
+        <hr />
         <div class="row" style="margin-bottom: -20px; margin-top: -20px; padding: 15px;">
             <div class="nav navbar-nav ml-auto">
                 <div class="btn-group">
-                    <button class="btn btn-info" id="CopyFromPO" style="background: #f0eff1; color: #696969;"
-                            data-toggle="modal" data-target="#ModalCopyFromPO">
-                        Copy From PO
-                    </button>
-                    <button disabled="disabled" class="btn btn-info" id="Save" style="background: #f0eff1; color: #696969; margin-left: 5px;">Add New</button>
+                    <button disabled="disabled" class="btn btn-info" id="Save" style="background: #f0eff1; color: #696969; margin-left: 5px;">Send SAP</button>
                 </div>
             </div>
         </div>
     </div>
-    <hr/>
+    <hr />
 </div>
 
 @*Copy From PO*@
@@ -371,7 +424,9 @@
         }
     }
 
-    $("#Save").click(function() {
+    $("#Save").click(function () {
+        document.getElementById("frmLoading").style.display = "block";
+
         var object = {};
         object.CardCode = $("#CusID").val();
         object.NumAtCard = $("#OrderNumberID").val();
@@ -405,14 +460,17 @@
             dataType: "JSON",
             success: function(data) {
                 alert("Success");
+                document.getElementById("frmLoading").style.display = "none";
+                location.reload();
             },
             error: function(erro) {
                 alert(erro.responseText);
+                document.getElementById("frmLoading").style.display = "none";
             }
         });
     });
     $("#ChoosePO").click(function() {
-        alert("Hello");
+        //alert("Hello");
         const index = TbCopyFromPO.row('.selected').index();
         const data = TbCopyFromPO.row(index).data();
         GetDocNum(data.docNum);

@@ -25,7 +25,7 @@
         /*margin: 0;*/
         margin: 0px 0px -20px 5px;
         background-color: #FFFFFF;
-        padding: 0;
+        padding: 0px 0px 0px 0px;
     }
     .container-fluid {
         font-family: arial;
@@ -37,18 +37,21 @@
     }
     #ImgFDA {
         max-width: 250px;
-        max-height: 90px;
+        max-height: 80px;
     }
     #img1 {
-        width: 125px;
-        height: 125px;
+        width: 115px;
+        height: 115px;
     }
-    #img {
-        width: 230px;
-        height: 230px;
-        /*margin-left: 78px;
-        margin-top:-17px;*/
+    #imgQrFDA {
+        width: 210px;
+        height: 210px;
     }
+    #imgQrNoFDA {
+        width: 225px;
+        height: 225px;
+    }
+
     div.logo {
         background-image: url("/Icon/FDA Number.jpg");
       /*  -moz-transform:scale(0.75);
@@ -107,7 +110,7 @@
 
         //properties = Context.Request.Path + "<br>" + Context.Request.Scheme + "<br>" + Context.Request.Host + "<br>" + Context.Request.Method + "<br>" + Context.Request.Body + "<br>" + Context.Request.Headers + "<br>" + Context.Request.Protocol + "<br>" + Context.Request.HttpContext + "<br>" + Context.Request.Query + "<br>" + Context.Request.ContentLength + "<br>" + Context.Request.ContentType + "<br>" + Context.Request.BodyReader + "<br>" + Context.Request.Cookies + "<br>" + Context.Request.IsHttps + "<br>" + Context.Request.RouteValues + "<br>" + Context.Request.HasFormContentType;
 
-        @if (Context.Request.PathBase == "/")
+    @if (Context.Request.PathBase == "/")
         {
             linkfda = Context.Request.Scheme + "://" + Convert.ToString(Context.Request.Host) + "/Icon/FDA_Number1-removebg.png";
         }
@@ -115,61 +118,47 @@
         {
             linkfda = Context.Request.Scheme + "://" + Convert.ToString(Context.Request.Host) + ""+ Convert.ToString(Context.Request.PathBase) + "/Icon/FDA_Number1-removebg.png";
         }
-        @*<div class="container-fluid"></div>*@
+    @*<div class="container-fluid"></div>*@
+    <table width="100%" class="container-fluid" border="0">
+        @*<tr><td colspan="2">&nbsp;<br>&nbsp;</td></tr>*@
+        <tr>
+            <td width="70%">
+                <strong>
+                    <font size="3" face="Tahoma">
+                        &nbsp;นำเข้าและจัดจำหน่ายโดย<br>
+                        &nbsp;บริษัท อุดมเมดิคอล อิควิปเม้นท์ จำกัด<br>
+                        &nbsp;เลขที่ 80 ซอยพัฒนาการ69 แขวงประเวศ<br>
+                        &nbsp;เขตประเวศ กรุงเทพฯ 10250<br>
+                        &nbsp;โทร.02-320-1234 , 085-344-3444<br>
+                    </font>
+                </strong>
+            </td>
+            <td width="30%" align="center">
+                <img src="@Url.Action("GenerateQRCode","QRBarcode")?itemcode=@l.ItemCode&&itemname=@l.ItemName&&fda=@l.fda&&str=@string.Empty" id="img1" @*style="float:right;margin-right:-20px;margin-top:-6%"*@ />
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center">
+                @if (l.fda != null){
+                <img src="@linkfda" id="ImgFDA">
+                <p style="margin-left:4%;margin-top:-40px;font-size:16px">
+                    <b>@l.fda</b>
+                </p>
+                <img src="@Url.Action("GenerateQRCode","QRBarcode")?itemcode=@string.Empty&&itemname=@string.Empty&&fda=@string.Empty&&str=@l.ConcatText2" id="imgQrFDA" @i />
+                }else{
+                <label>&nbsp;</label><br />
+                <label>&nbsp;</label><br />
+                <img src="@Url.Action("GenerateQRCode","QRBarcode")?itemcode=@string.Empty&&itemname=@string.Empty&&fda=@string.Empty&&str=@l.ConcatText2" id="imgQrNoFDA" @i />
+                }
+                <br><font size="+1">@l.BatchSN</font>
+            </td>
+        </tr>
+    </table>
 
-        <table width="100%" class="container-fluid" border="0">
-            <tr>
-                <td width="70%">
-                    <strong>
-                        <font size="3" face="Tahoma">
-                            &nbsp;นำเข้าและจัดจำหน่ายโดย<br>
-                            &nbsp;บริษัท อุดมเมดิคอล อิควิปเม้นท์ จำกัด<br>
-                            &nbsp;เลขที่ 80 ซอยพัฒนาการ69 แขวงประเวศ<br>
-                            &nbsp;เขตประเวศ กรุงเทพฯ 10250<br>
-                            &nbsp;โทร.02-320-1234 , 085-344-3444<br>
-                        </font>
-                    </strong>
-                </td>
-                <td width="30%" align="center">
-                    <img src="@Url.Action("GenerateQRCode","QRBarcode")?itemcode=@l.ItemCode&&itemname=@l.ItemName&&fda=@l.fda&&str=@string.Empty" id="img1" @*style="float:right;margin-right:-20px;margin-top:-6%"*@ />
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2" align="center">
-
-                    @if (l.fda != null)
-                    {
-                        <img src="@linkfda" id="ImgFDA">
-                        <p style="margin-left:4%;margin-top:-40px;font-size:16px">
-                            <b>@l.fda</b>
-                        </p>
-                    }
-                    else
-                    {
-                        <label>&nbsp;</label><br />
-                        <label>&nbsp;</label><br />
-                    }
-
-                    <img src="@Url.Action("GenerateQRCode","QRBarcode")?itemcode=@string.Empty&&itemname=@string.Empty&&fda=@string.Empty&&str=@l.ConcatText2" id="img" @i />
-                </td>
-            </tr>
-            @*<tr>
-                    <td colspan="2" align="center">
-                        <hr style="border-color: #FFFFFF;">
-                        <hr style="border-color: #FFFFFF;">
-                    </td>
-                </tr>*@
-        </table>
-
-        @*<div class="br1"><br></div>*@
+    @*<div class="br1"><br></div>*@
         i = i + 1;
-
-        @*@if (i > 1)
-            {
-                <div class="br1"><br></div>
-            }*@
+    @*<label><font size="3">&nbsp;</font></label>*@
     }
-
     @*</tr>
             </tbody>
         </table>*@

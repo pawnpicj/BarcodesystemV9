@@ -3,10 +3,10 @@
 }
 <style type="text/css">
     #Icon {
-        text-align: center;
-        margin-top: 60px;
-        font-size: 50px;
         color: #5f95c3;
+        font-size: 45px;
+        margin-top: 60px;
+        text-align: center;
     }
 
         #Icon:hover {
@@ -16,26 +16,26 @@
 </style>
 <div class="container">
     <div class="row">
-        <div class="col-lg-3" style="width: 250px;height: 250px;margin-top:30px;">
+        <div class="alink col-lg-3">
             <a asp-controller="SaleOrder" asp-action="CreateDelivery">
                 <div style="width:100%;height:100%;background:#f0eff1">
                     <div style="text-align:center">
-                        <p style="text-align:center;padding-top:15px;">Delivery</p>
-                    </div>
-                    <div style="width:100%;height:100%;text-align:center">
-                        <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
+                        <p style="text-align:center;padding-top:15px;">
+                            <b>Delivery</b><br>
+                            <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
+                        </p>
                     </div>
                 </div>
             </a>
         </div>
-        <div class="col-lg-3" style="width: 250px;height: 250px;margin-top:30px;">
+        <div class="alink col-lg-3">
             <a asp-controller="DeliveryReturn" asp-action="CreateDeliveryReturn">
             <div style="width:100%;height:100%;background:#f0eff1">
                 <div style="text-align:center">
-                    <p style="text-align:center;padding-top:15px;">Delivery Return</p>
-                </div>
-                <div style="width:100%;height:100%;text-align:center">
-                    <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
+                    <p style="text-align:center;padding-top:15px;">
+                        <b>Delivery Return</b><br>
+                        <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
+                    </p>
                 </div>
             </div>
             </a>

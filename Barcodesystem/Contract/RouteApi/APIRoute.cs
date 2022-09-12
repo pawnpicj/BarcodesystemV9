@@ -24,6 +24,16 @@
             public const string GetItemCode = "GetItem";
             public const string GetTaxCode = "GetTaxCode";
             public const string GetWarehouse = "GetWarehouse";
+            public const string GetUnitOfMeasure = "GetUOM/";
+            public const string GetBatchGenerator = "GetBatchGen";
+            public const string GetBarCodeItem = "GetBarCode/";
+        }
+        public static class GoodReturn
+        {
+            public const string Controller = "api/GoodsReturn/";
+            public const string GetGoodReceiptPO = "GetGoodsReceiptPO/";
+            public const string GetGoodReceiptPOByDocNum = "GetGoodsReceiptPOByDocNum/";
+            public const string SendGoodsReturn = "SendGoodsReturn";
             public const string GetUnitOfMeasure = "GetUOM";
         }
     }

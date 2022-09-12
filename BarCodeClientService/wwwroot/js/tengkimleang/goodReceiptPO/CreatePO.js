@@ -14,13 +14,20 @@ let GetMasterData = {
         GetMasterData.overallFunction.getCustomer(url);
     },
     getPurchaseOrder(url, cardCode) {
-        GetMasterData.overallFunction.getPurchaseOrder(url, cardCode)
+        GetMasterData.overallFunction.getPurchaseOrder(url, cardCode);
+    },
+    getGoodReceiptPO(url, cardCode) {
+        console.log("Hello");
+        GetMasterData.overallFunction.getGoodReceiptPO(url, cardCode);
     },
     getTaxCode(url) {
         GetMasterData.overallFunction.getTaxCode(url);
     },
     getWarehouse(url) {
         GetMasterData.overallFunction.getWarehouse(url);
+    },
+    getUomCode(url, ItemCode) {
+        GetMasterData.overallFunction.getUomCode(url, ItemCode);
     }
 }
 
@@ -111,6 +118,23 @@ let DataTableInit ={
             }
         });
     },
+    TableGoodReturn() {
+        $('#TbCopyToGoodReturn').DataTable({
+            responsive: true,
+            bLengthChange: false,
+            binfo: false,
+            data: LCopyToGoodReturn,
+            columns: [
+                { data: "docNum", autoWidth: true },
+                { data: "cardName", autoWidth: true },
+                { data: "docDate", autoWidth: true },
+                { data: "docTotal", autoWidth: true },
+                { data: "docStatus", autoWidth: true }
+            ],
+            rowCallback: function (row, data, index) {
+            }
+        });
+    },
     TableCustomer() {
         $('#TbCusCode').DataTable({
             responsive: true,
@@ -122,6 +146,132 @@ let DataTableInit ={
                 { data: "cardName", autoWidth: true },
                 { data: "phone", autoWidth: true },
                 { data: "address", autoWidth: true }
+            ],
+            rowCallback: function (row, data, index) {
+                //$('td', row).css('background-color', '#ffffff');
+                //$('td', row).css('color', '#717171');
+            }
+        });
+    },
+    TableSerialGen() {
+        $('#TbSerial').dataTable({
+            bLengthChange: false,
+            bFilter: false,
+            bInfo: false,
+            bPaginate: false,
+            data: lsSerial,
+            columns:
+            [
+                { data: "SerialNumber", autoWidth: true },
+                {
+                    data: "MfrSerialNo",
+                    autoWidth: true
+                    // render: function (data, type, full, meta) { return '<input type="number" class="clsinput" style="padding:0px; position:absolute;width:100px;border:none;" onchange="PriceChange(' + meta.row + ')" id="tbPrice' + meta.row + '" value="' + full.UnitPrice + '">'; }, autoWidth: true
+                },
+                {
+                    data: "ExpDate",
+                    autoWidth: true
+                    //render: function (data, type, full, meta) { return '<input type="number" class="clsinput" style="padding:0px; position:absolute;width:100px;border:none;" onchange="DisChange('+meta.row+')" value="'+full.Discount+'" id="tbDis'+meta.row+'" >'; }, autoWidth: true
+                },
+                {
+                    render: function(data, type, full, meta) {
+                        return '<button class="btn-sm btn-danger" style="margin-left: 40%;" onClick="EventItemAdd.DeleteArray(lsSerial,\''+full.SerialNumber+'\')"><i class="fas fa-trash-alt"></i></button>';
+                    }
+                }
+            ],
+            rowCallback: function(row, data, index) {
+                //$('td', row).css('background-color', '#ffffff');
+                //$('td', row).css('color', '#717171');
+            }
+        });
+    },
+    TableBatch() {
+        $('#TbBatch').DataTable({
+            responsive: true,
+            bLengthChange: false,
+            binfo: false,
+            data: LBatch,
+            columns: [
+                { data: "itemCode", autoWidth: true },
+                { data: "qty", autoWidth: true },
+                { data: "serialAndBatch", autoWidth: true },
+                { data: "mfrDate", autoWidth: true },
+                { data: "expirationDate", autoWidth: true },
+                { data: "admissionDate", autoWidth: true },
+                {
+                    render: function (data, type, full, meta) {
+                        return '<button class="btn-sm btn-danger" style="margin-left: 40%;" onClick="DeleteBatch(LBatch,\'' + full.serialAndBatch + '\')"><i class="fas fa-trash-alt"></i></button>';
+                    }
+                }
+            ],
+            rowCallback: function (row, data, index) {
+                //$('td', row).css('background-color', '#ffffff');
+                //$('td', row).css('color', '#717171');
+            }
+        });
+    },
+    TabletmpBatchFromTo() {
+        $('#tmpBatchFromTo').DataTable({
+            responsive: true,
+            bLengthChange: false,
+            binfo: false,
+            data: LtmpBatch,
+            columns: [
+                { data: "BatchFrom", autoWidth: true },
+                { data: "BatchTo", autoWidth: true },
+                { data: "ExpirationDate", autoWidth: true },
+                { data: "MfrDate", autoWidth: true },
+                { data: "AdmissionDate", autoWidth: true },
+                {
+                    render: function(data, type, full, meta) {
+                        return '<button class="btn-sm btn-danger" style="margin-left: 40%;" onClick="DeleteTmpBatch(LtmpBatch,\'' + full.BatchFrom + '\',\'' + full.BatchTo +'\')"><i class="fas fa-trash-alt"></i></button>';
+                    }
+                }
+            ],
+            rowCallback: function (row, data, index) {
+                //$('td', row).css('background-color', '#ffffff');
+                //$('td', row).css('color', '#717171');
+            }
+        });
+    },
+    TableSerialFromTo() {
+        $('#tmpSerial').DataTable({
+            responsive: true,
+            bLengthChange: false,
+            binfo: false,
+            data: LtmpSerial,
+            columns: [
+                { data: "SerialFrom", autoWidth: true },
+                { data: "SerialTo", autoWidth: true },
+                { data: "MfrNo", autoWidth: true },
+                { data: "ExpireDate", autoWidth: true },
+                {
+                    render: function (data, type, full, meta) {
+                        return '<button class="btn-sm btn-danger" style="margin-left: 40%;" onClick="DeleteTmpSerial(LtmpSerial,\'' + full.SerialFrom + '\',\'' + full.SerialTo + '\')"><i class="fas fa-trash-alt"></i></button>';
+                    }
+                }
+            ],
+            rowCallback: function (row, data, index) {
+                //$('td', row).css('background-color', '#ffffff');
+                //$('td', row).css('color', '#717171');
+            }
+        });
+    },
+    TableBarCode() {
+        $('#TbBarCode').DataTable({
+            responsive: true,
+            bLengthChange: false,
+            binfo: false,
+            data: LBarCode,
+            columns: [
+                { data: "barCode", autoWidth: true },
+                { data: "barCodeName", autoWidth: true },
+                { data: "itemCode", autoWidth: true },
+                { data: "itemName", autoWidth: true },
+                { data: "uomCode", autoWidth: true },
+                { data: "price", autoWidth: true },
+                { data: "uomName", autoWidth: true, visible: false },
+                { data: "manageItem", autoWidth: true, visible: false }
             ],
             rowCallback: function (row, data, index) {
                 //$('td', row).css('background-color', '#ffffff');

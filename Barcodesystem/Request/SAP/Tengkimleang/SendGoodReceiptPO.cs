@@ -43,10 +43,11 @@ namespace BarCodeLibrary.Request.SAP.TengKimleang
 
     public class Batch
     {
-        public string SerialNumber { get; set; }
-        public string MfrSerialNo { get; set; }
-        public DateTime ExpDate { get; set; }
+        public DateTime AdmissionDate { get; set; }
+        public DateTime ExpirationDate { get; set; }
+        public string ItemCode { get; set; }
+        public DateTime MfrDate { get; set; }
         public int Qty { get; set; }
-        public string Script { get; set; }
+        public string SerialAndBatch { get; set; }
     }
 }

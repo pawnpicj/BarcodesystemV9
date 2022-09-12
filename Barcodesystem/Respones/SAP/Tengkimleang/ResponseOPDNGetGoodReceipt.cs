@@ -17,12 +17,17 @@ namespace BarCodeLibrary.Respones.SAP
         public int CntctCode { get; set; }
         public string NumAtCard { get; set; }
         public int DocNum { get; set; }
+        public int DocEntry { get; set; }
         public string DocStatus { get; set; }
         public DateTime DocDate { get; set; }
         public DateTime DocDueDate { get; set; }
         public DateTime TaxDate { get; set; }
         public double DocTotal { get; set; }
         public double DiscPrcnt { get; set; }
+        public string Remark { get; set; }
+        public string SlpCode { get; set; }
+        public string SlpName { get; set; }
+        public string BPCurrency { get; set; }
         public List<PDN1> Line { get; set; }
     }
 
@@ -36,5 +41,8 @@ namespace BarCodeLibrary.Respones.SAP
         public string VatGroup { get; set; }
         public double LineTotal { get; set; }
         public string WhsCode { get; set; }
+        public int LineNum { get; set; }
+        public int BaseEntry { get; set; }
+        public string ManageItem { get; set; }
     }
 }

@@ -87,6 +87,27 @@
             }
         });
     }
+
+    getGoodReceiptPO(url, cardCode) {
+        $.ajax({
+            url: url,
+            type: "GET",
+            data: { CardCode: cardCode },
+            dataType: "JSON",
+            success: function (data) {
+                console.log(data);
+                LCopyToGoodReturn = data;
+                console.log(LCopyToGoodReturn);
+                TbCopyFromGoodReciptPO.clear();
+                TbCopyFromGoodReciptPO.rows.add(LCopyToGoodReturn);
+                TbCopyFromGoodReciptPO.search("").columns().search("").draw();
+            },
+            error: function (erro) {
+                console.log(erro.responseText);
+            }
+        });
+    }
+
     getTaxCode(url) {
         $.ajax({
             url: url,
@@ -109,6 +130,20 @@
                 $("#whscode").empty();
                 for (var i = 0; i < data.length; i++) {
                     $("#whscode").append("<option value='" + data[i].code + "'>" + data[i].name + "</option>");
+                }
+            }
+        });
+    }
+    getUomCode(url, ItemCode) {
+        $.ajax({
+            url: url,
+            type: "GET",
+            data: { ItemCode: ItemCode },
+            dataType: "JSON",
+            success: function (data) {
+                $("#UomID").empty();
+                for (var i = 0; i < data.length; i++) {
+                    $("#UomID").append("<option value='" + data[i].code + "'>" + data[i].code +"-"+ data[i].name + "</option>");
                 }
             }
         });

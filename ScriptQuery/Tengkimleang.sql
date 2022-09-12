@@ -61,8 +61,18 @@ BEGIN
 			IFNULL("OPDN"."DocDueDate",'') AS "DocDueDate",
 			IFNULL("OPDN"."TaxDate",'') AS "TaxDate",
 			IFNULL("OPDN"."DocTotal",0) AS "DocTotal",
-			IFNULL("OPDN"."DiscPrcnt",0) AS "DiscPrcnt"
-		FROM "UDOM_BARCODEV2"."OPDN" WHERE "DocType"='I';
+			IFNULL("OPDN"."DiscPrcnt",0) AS "DiscPrcnt",
+			IFNULL("OPDN"."Comments",'') AS "Remark",
+			IFNULL("OPDN"."SlpCode",0) AS "SlpCode",
+			IFNULL("OSLP"."SlpName",'') AS "SlpName",
+			IFNULL("OPDN"."DocCur",'') AS "BPCurrency"
+		FROM "UDOM_BARCODEV2"."OPDN" 
+		LEFT JOIN "UDOM_BARCODEV2"."OSLP" ON "OSLP"."SlpCode"="OPDN"."SlpCode"
+										WHERE "DocType"='I' 
+										AND "OPDN"."DocStatus"='O'
+										AND IFNULL("OPDN"."U_WebID",'')<>'' 
+										AND "OPDN"."CardCode"=CASE WHEN :par1='' THEN "OPDN"."CardCode" ELSE :par1 END 
+										AND CAST("OPDN"."DocNum" AS NVARCHAR(100))=CASE WHEN :par2='' THEN CAST("OPDN"."DocNum" AS NVARCHAR(100)) ELSE :par2 END;
 	ELSE IF :DTYPE = 'PDN1' THEN 
 		SELECT 
 			A."ItemCode", 
@@ -72,8 +82,45 @@ BEGIN
 			A."DiscPrcnt", 
 			A."VatGroup", 
 			A."LineTotal", 
-			A."WhsCode"
+			A."WhsCode",
+			A."LineNum",
+			CASE 
+				WHEN B."ManSerNum"='Y' THEN 'S' 
+				WHEN B."ManBtchNum"='Y' THEN 'B'
+				ELSE 'N' 
+			END AS ManageItem
 		FROM "UDOM_BARCODEV2"."PDN1" AS A 
+		LEFT JOIN UDOM_BARCODEV2."OITM" AS B ON A."ItemCode"=B."ItemCode"
+		WHERE A."DocEntry"=:par1;
+	ELSE IF :DTYPE = 'ORPD' THEN 
+		SELECT TOP 50
+			"ORPD"."DocEntry",
+			"ORPD"."CardCode", 
+			"ORPD"."CardName", 
+			IFNULL("ORPD"."CntctCode",0) AS "CntctCode", 
+			IFNULL("ORPD"."NumAtCard",'') AS "NumAtCard",
+			IFNULL("ORPD"."DocNum",0) AS "DocNum",
+			IFNULL("ORPD"."DocStatus",'') AS "DocStatus",
+			IFNULL("ORPD"."DocDate",'') AS "DocDate",
+			IFNULL("ORPD"."DocDueDate",'') AS "DocDueDate",
+			IFNULL("ORPD"."TaxDate",'') AS "TaxDate",
+			IFNULL("ORPD"."DocTotal",0) AS "DocTotal",
+			IFNULL("ORPD"."DiscPrcnt",0) AS "DiscPrcnt",
+			IFNULL("ORPD"."Comments",'') AS "Remark",
+			IFNULL("ORPD"."SlpCode",0) AS "SlpCode",
+			IFNULL("ORPD"."DocCur",'') AS "BPCurrency"
+		FROM "UDOM_BARCODEV2"."ORPD" WHERE "DocType"='I' AND IFNULL("ORPD"."U_WebID",'')<>'';
+	ELSE IF :DTYPE = 'RPD1' THEN 
+		SELECT 
+			A."ItemCode", 
+			A."Dscription", 
+			A."Quantity", 
+			A."Price", 
+			A."DiscPrcnt", 
+			A."VatGroup", 
+			A."LineTotal", 
+			A."WhsCode"
+		FROM "UDOM_BARCODEV2"."RPD1" AS A 
 		WHERE A."DocEntry"=:par1;
 	ELSE IF :DTYPE = 'PDN1' THEN 
 		SELECT 
@@ -109,7 +156,7 @@ BEGIN
 			   ,"CardName" AS CardName
 			   ,IFNULL("Building",'') AS Address
 			   ,IFNULL("Phone1",'') AS Phone
-		FROM "UDOM_BARCODEV2"."OCRD";
+		FROM "UDOM_BARCODEV2"."OCRD" WHERE "CardType"='S';
 	--Call Master Data
 	ELSE IF :DTYPE='NNM1' THEN
 		SELECT 

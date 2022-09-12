@@ -19,5 +19,9 @@ namespace BarCodeLibrary.Respones.SAP
         public string VatGroup { get; set; }
         public double LineTotal { get; set; }
         public string WhsCode { get; set; }
+        public string CardCode { get; set; }
+        public string CardName { get; set; }
+        public int DocEntry { get; set; }
+        public string DocNum { get; set; }
     }
 }

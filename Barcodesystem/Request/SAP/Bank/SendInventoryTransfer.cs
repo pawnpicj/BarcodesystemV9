@@ -25,6 +25,8 @@ namespace BarCodeLibrary.Request.SAP
         public string Comments { get; set; }
         public string JournalRemark { get; set; }
 
+        public string U_loannum { get; set; }
+
         public List<SendInventoryTransferLine> Line { get; set; }
         //public List<SendInventoryTransferBatch> Batch { get; set; }
         //public List<SendInventoryTransferSerial> Serial { get; set; }

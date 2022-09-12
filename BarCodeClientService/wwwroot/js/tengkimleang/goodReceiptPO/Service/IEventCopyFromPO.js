@@ -32,7 +32,7 @@
                 objLineItem.LineNum = data.line[k].lineNum;
                 objLineItem.ManageItem = data.line[k].manageItem;
                 objLineItem.Serial = [];
-                objLineItem.Batch = [];
+                objLineItem.Batches = [];
                 LinesAR.push(objLineItem);
             }
         }

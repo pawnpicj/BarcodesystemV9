@@ -15,6 +15,7 @@
             public const string Controller = "api/GoodsReceiptPO/";
             public const string GetCustomer = "GetCustomer";
             public const string GetPO = "GetPO/";
+            public const string GetGoodReturn = "GoodReturn/";
             public const string SendGoodReceiptPO = "SendGoodReceiptPO";
             public const string GetSeries = "Series/";
             public const string GetSaleEmployee = "SaleEmployee";

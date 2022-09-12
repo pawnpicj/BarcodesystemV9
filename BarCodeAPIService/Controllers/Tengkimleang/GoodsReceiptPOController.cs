@@ -28,6 +28,15 @@ namespace BarCodeAPIService.Controllers
             return BadRequest(a);
         }
 
+        //[HttpGet(APIRoute.GoodReceiptPO.GetGoodReturn + "{cardName}")]
+        //public async Task<IActionResult> GetGoodReturnAsync(string cardName)
+        //{
+        //    var a = await goodsReceiptPO.responseORPDGetGoodReturn(cardName);
+        //    if (a.ErrorCode == 0)
+        //        return Ok(a);
+        //    return BadRequest(a);
+        //}
+
         [HttpPost(APIRoute.GoodReceiptPO.SendGoodReceiptPO)]
         public async Task<IActionResult> PostGoodReceiptPOAsync(SendGoodReceiptPO sendGoodReceiptPO)
         {

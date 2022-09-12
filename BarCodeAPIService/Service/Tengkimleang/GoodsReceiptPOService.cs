@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Odbc;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using BarCodeAPIService.Connection;
 using BarCodeAPIService.Models;
@@ -20,7 +21,6 @@ namespace BarCodeAPIService.Service
         private string ErrMsg;
 
         #region Post
-
         public Task<ResponseGoodReceiptPO> PostGoodReceiptPO(SendGoodReceiptPO sendGoodReceiptPO)
         {
             try
@@ -38,7 +38,16 @@ namespace BarCodeAPIService.Service
                     oGoodReceiptPO.DocDueDate = sendGoodReceiptPO.TaxDate;
                     oGoodReceiptPO.Series = Convert.ToInt32(sendGoodReceiptPO.Series);
                     oGoodReceiptPO.DocCurrency = sendGoodReceiptPO.CurrencyCode;
-                    oGoodReceiptPO.Comments = sendGoodReceiptPO.Remark;
+                    oGoodReceiptPO.Comments = (sendGoodReceiptPO.Remark==null)? "": sendGoodReceiptPO.Remark;
+                    oGoodReceiptPO.SalesPersonCode = Convert.ToInt32(sendGoodReceiptPO.SlpCode);
+                    oGoodReceiptPO.UserFields.Fields.Item("U_WebID").Value = sendGoodReceiptPO.Series + DateTime.Today.Day
+                        + DateTime.Today.Month
+                        + DateTime.Today.Year
+                        + DateTime.Today.DayOfYear
+                        + DateTime.Today.Hour
+                        + DateTime.Today.Minute
+                        + DateTime.Today.Second
+                        + DateTime.Today.Millisecond;
                     foreach (var l in sendGoodReceiptPO.Line)
                     {
                         oGoodReceiptPO.Lines.ItemCode = l.ItemCode;
@@ -47,7 +56,7 @@ namespace BarCodeAPIService.Service
                         oGoodReceiptPO.Lines.DiscountPercent = l.Discount;
                         oGoodReceiptPO.Lines.WarehouseCode = l.Whs;
                         oGoodReceiptPO.Lines.UoMEntry = Convert.ToInt32(l.UomName);
-                        if (l.DocEntry!=null)
+                        if (l.DocEntry != null)
                         {
                             oGoodReceiptPO.Lines.BaseEntry = Convert.ToInt32(l.DocEntry);
                             oGoodReceiptPO.Lines.BaseType = 22;
@@ -55,7 +64,6 @@ namespace BarCodeAPIService.Service
                         }
 
                         if (l.ManageItem == "S")
-                        {
                             foreach (var serial in l.Serial)
                             {
                                 oGoodReceiptPO.Lines.SerialNumbers.Quantity = 1;
@@ -63,17 +71,17 @@ namespace BarCodeAPIService.Service
                                 oGoodReceiptPO.Lines.SerialNumbers.InternalSerialNumber = serial.SerialNumber;
                                 oGoodReceiptPO.Lines.SerialNumbers.Add();
                             }
-                        }else if (l.ManageItem == "B")
-                        {
+                        else if (l.ManageItem == "B")
                             foreach (var batch in l.Batches)
                             {
+                                oGoodReceiptPO.Lines.BatchNumbers.AddmisionDate = batch.AdmissionDate;
+                                oGoodReceiptPO.Lines.BatchNumbers.ExpiryDate = batch.ExpirationDate;
+                                oGoodReceiptPO.Lines.BatchNumbers.ManufacturingDate = batch.MfrDate;
                                 oGoodReceiptPO.Lines.BatchNumbers.Quantity = batch.Qty;
-                                oGoodReceiptPO.Lines.BatchNumbers.ManufacturerSerialNumber = batch.MfrSerialNo;
-                                oGoodReceiptPO.Lines.BatchNumbers.ExpiryDate = batch.ExpDate;
-                                oGoodReceiptPO.Lines.BatchNumbers.BatchNumber = batch.SerialNumber;
+                                oGoodReceiptPO.Lines.BatchNumbers.BatchNumber = batch.SerialAndBatch;
                                 oGoodReceiptPO.Lines.BatchNumbers.Add();
                             }
-                        }
+
                         oGoodReceiptPO.Lines.Add();
                     }
 
@@ -390,7 +398,8 @@ namespace BarCodeAPIService.Service
             }
         }
 
-        public Task<ResponseGetGenerateBatchSerial> responseGetGenerateBatchSerial(GetGenerateSerialBatchRequest generateSerialBatchRequest)
+        public Task<ResponseGetGenerateBatchSerial> responseGetGenerateBatchSerial(
+            GetGenerateSerialBatchRequest generateSerialBatchRequest)
         {
             var getGenerateBatchSerials = new List<GetGenerateBatchSerial>();
             var dt = new DataTable();
@@ -399,16 +408,119 @@ namespace BarCodeAPIService.Service
                 var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SqlHana);
                 if (login.lErrCode == 0)
                 {
-                    var Query =
-                        $"CALL \"{ConnectionString.BarcodeDb}\".{ProcedureRoute._USP_GENERATE_BATCH_SqlHana} ('{generateSerialBatchRequest.itemCode}','{generateSerialBatchRequest.qty}')";
-                    login.AD = new OdbcDataAdapter(Query, login.CN);
-                    login.AD.Fill(dt);
-                    foreach (DataRow row in dt.Rows)
-                        getGenerateBatchSerials.Add(new GetGenerateBatchSerial
+                    var Query = "";
+                    foreach (var qu in generateSerialBatchRequest.ListSerials)
+                        if (qu.TypeSerialGen == "2")
                         {
-                            SerialAndBatch = row["SerialOrBatchGen"].ToString(),
-                            Script = row["SCRIPT_SERIAL"].ToString()
-                        });
+                            for (var k = qu.SerialFrom; k <= qu.SerialTo; k++)
+                            {
+                                Query =
+                                    $"CALL \"{ConnectionString.BarcodeDb}\".\"{ProcedureRoute._USP_GENERATE_SERIAL_SqlHana}\" ('{qu.itemCode}','{qu.qty}')";
+                                login.AD = new OdbcDataAdapter(Query, login.CN);
+                                login.AD.Fill(dt);
+                                foreach (DataRow row in dt.Rows)
+                                    getGenerateBatchSerials.Add(new GetGenerateBatchSerial
+                                    {
+                                        SerialAndBatch = row["SerialOrBatchGen"].ToString(),
+                                        Script = row["SCRIPT_SERIAL"].ToString(),
+                                        MfrDate = qu.MfrNo,
+                                        ExpirationDate = qu.ExpireDate
+                                    });
+                            }
+                        }
+                        else
+                        {
+                            Query =
+                                $"CALL \"{ConnectionString.BarcodeDb}\".\"{ProcedureRoute._USP_GENERATE_SERIAL_SqlHana}\" ('{qu.itemCode}','{qu.qty}')";
+                            login.AD = new OdbcDataAdapter(Query, login.CN);
+                            login.AD.Fill(dt);
+                            foreach (DataRow row in dt.Rows)
+                                getGenerateBatchSerials.Add(new GetGenerateBatchSerial
+                                {
+                                    SerialAndBatch = row["SerialOrBatchGen"].ToString(),
+                                    Script = row["SCRIPT_SERIAL"].ToString()
+                                });
+                        }
+                    return Task.FromResult(new ResponseGetGenerateBatchSerial
+                    {
+                        ErrorCode = 0,
+                        ErrorMessage = "",
+                        Data = getGenerateBatchSerials.ToList()
+                    });
+                }
+
+                return Task.FromResult(new ResponseGetGenerateBatchSerial
+                {
+                    ErrorCode = login.lErrCode,
+                    ErrorMessage = login.sErrMsg,
+                    Data = null
+                });
+            }
+
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseGetGenerateBatchSerial
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMessage = ex.Message,
+                    Data = null
+                });
+            }
+        }
+
+        public Task<ResponseGetGenerateBatchSerial> responseGetGenerateBatchAsync(
+            GetBatchGenRequest generateBatchRequest)
+        {
+            var getGenerateBatchSerials = new List<GetGenerateBatchSerial>();
+            var dt = new DataTable();
+            try
+            {
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SqlHana);
+                if (login.lErrCode == 0)
+                {
+                    var Query = "";
+                    foreach (var qu in generateBatchRequest.ListBatches)
+                        if (qu.TypeBatchGen == "2")
+                        {
+                            for (var k = qu.BatchFrom; k <= qu.BatchTo; k++)
+                            {
+                                Query =
+                                    $"CALL \"{ConnectionString.BarcodeDb}\".\"{ProcedureRoute._USP_GENERATE_Batch_SqlHana}\" ('{qu.ItemCode}','{qu.Qty.ToString()}')";
+                                login.AD = new OdbcDataAdapter(Query, login.CN);
+                                dt = new DataTable();
+                                login.AD.Fill(dt);
+                                foreach (DataRow row in dt.Rows)
+                                    getGenerateBatchSerials.Add(new GetGenerateBatchSerial
+                                    {
+                                        ItemCode = qu.ItemCode,
+                                        Qty = qu.Qty,
+                                        SerialAndBatch = row["SerialOrBatchGen"].ToString(),
+                                        Script = row["SCRIPT_SERIAL"].ToString(),
+                                        MfrDate = qu.ManufactureDate.ToShortDateString(),
+                                        ExpirationDate = qu.ExpireDate.ToShortDateString(),
+                                        AdmissionDate = qu.AdmissionDate.ToShortDateString()
+                                    });
+                            }
+                        }
+                        else
+                        {
+                            Query =
+                                $"CALL \"{ConnectionString.BarcodeDb}\".\"{ProcedureRoute._USP_GENERATE_Batch_SqlHana}\" ('{qu.ItemCode}','{qu.Qty.ToString()}')";
+                            login.AD = new OdbcDataAdapter(Query, login.CN);
+                            login.AD.Fill(dt);
+                            foreach (DataRow row in dt.Rows)
+                                getGenerateBatchSerials.Add(new GetGenerateBatchSerial
+                                {
+                                    ItemCode = qu.ItemCode,
+                                    Qty = qu.Qty,
+                                    SerialAndBatch = row["SerialOrBatchGen"].ToString(),
+                                    Script = row["SCRIPT_SERIAL"].ToString(),
+                                    MfrDate = qu.ManufactureDate.ToShortDateString(),
+                                    ExpirationDate = qu.ExpireDate.ToShortDateString(),
+                                    AdmissionDate = qu.AdmissionDate.ToShortDateString()
+                                });
+                        }
+
                     return Task.FromResult(new ResponseGetGenerateBatchSerial
                     {
                         ErrorCode = 0,
@@ -551,7 +663,7 @@ namespace BarCodeAPIService.Service
                         getWarehouses.Add(new GetWarehouse
                         {
                             Code = row["Code"].ToString(),
-                            Name = row["Name"].ToString(),
+                            Name = row["Name"].ToString()
                         });
                     return Task.FromResult(new ResponseGetWarehouse
                     {
@@ -572,6 +684,52 @@ namespace BarCodeAPIService.Service
             catch (Exception ex)
             {
                 return Task.FromResult(new ResponseGetWarehouse
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMessage = ex.Message,
+                    Data = null
+                });
+            }
+        }
+
+        public Task<ResponseGetUnitOfMeasure> responseGetUnitOfMeasure(string ItemCode)
+        {
+            var getUnitOfMeasure = new List<GetUnitOfMeasure>();
+            var dt = new DataTable();
+            try
+            {
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
+                if (login.lErrCode == 0)
+                {
+                    var Query =
+                        $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetUom}','{ItemCode}','','','','')";
+                    login.AD = new OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
+                        getUnitOfMeasure.Add(new GetUnitOfMeasure
+                        {
+                            Code = row["Code"].ToString(),
+                            Name = row["Name"].ToString()
+                        });
+                    return Task.FromResult(new ResponseGetUnitOfMeasure
+                    {
+                        ErrorCode = 0,
+                        ErrorMessage = "",
+                        Data = getUnitOfMeasure.ToList()
+                    });
+                }
+
+                return Task.FromResult(new ResponseGetUnitOfMeasure
+                {
+                    ErrorCode = login.lErrCode,
+                    ErrorMessage = login.sErrMsg,
+                    Data = null
+                });
+            }
+
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseGetUnitOfMeasure
                 {
                     ErrorCode = ex.HResult,
                     ErrorMessage = ex.Message,
@@ -626,7 +784,55 @@ namespace BarCodeAPIService.Service
             }
         }
 
-        #endregion
+        public Task<ResponseORPDGetGoodReturn> responseORPDGetGoodReturn(string cardName)
+        {
+            var listOrpds = new List<ORPD>();
+            var dt = new DataTable();
+            try
+            {
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
+                if (login.lErrCode == 0)
+                {
+                    var Query =
+                        $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetGoodReturn}','{cardName}','','','','')";
+                    login.AD = new OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
+                        listOrpds.Add(new ORPD
+                        {
+                            DocNum = Convert.ToInt32(row["DocNum"].ToString()),
+                            DocTotal = Convert.ToDouble(row["DocTotal"].ToString()),
+                            CardCode = row["CardCode"].ToString(),
+                            DocDate = row["DocDate"].ToString(),
+                            DocStatus = row["DocStatus"].ToString()
+                        });
+                    return Task.FromResult(new ResponseORPDGetGoodReturn
+                    {
+                        ErrorCode = 0,
+                        ErrorMessage = "",
+                        Data = listOrpds.ToList()
+                    });
+                }
 
+                return Task.FromResult(new ResponseORPDGetGoodReturn
+                {
+                    ErrorCode = login.lErrCode,
+                    ErrorMessage = login.sErrMsg,
+                    Data = null
+                });
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseORPDGetGoodReturn
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMessage = ex.Message,
+                    Data = null
+                });
+            }
+        }
+
+
+        #endregion
     }
 }

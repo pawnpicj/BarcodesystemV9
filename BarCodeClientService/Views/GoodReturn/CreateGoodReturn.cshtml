@@ -1,0 +1,479 @@
+﻿@using BarCodeClientService.Controllers
+@{
+    ViewData["Title"] = "O2O";
+    var dt = DateTime.Now;
+    ViewData["Date"] = dt.ToShortDateString();
+}
+
+<link href="~/css/DataTable/jquery.dataTables.min.css" rel="stylesheet"/>
+<link href="~/css/DataTable/rowReorder.dataTables.min.css" rel="stylesheet"/>
+<link href="~/tengkimleang/goodReceiptPO/Style.css" />
+@*<link href="~/css/DataTable/responsive.dataTables.min.css" rel="stylesheet" />*@
+<script src="~/css/DataTable/jquery-3.3.1.js"></script>
+<script src="~/css/DataTable/jquery.dataTables.min.js"></script>
+<script src="~/css/DataTable/dataTables.rowReorder.min.js"></script>
+@*<script src="~/css/DataTable/dataTables.responsive.min.js"></script>*@
+
+<style>
+    tr.selected {
+        background: red;
+        color: red;
+    }
+
+    #main { position: absolute; }
+
+    .color_tap {
+        background-color: #5f95c3;
+        color: #ffffff;
+        font-weight: 600;
+        margin-right: 1px;
+        min-width: 60px;
+    }
+
+    .nav-tabs .nav-link {
+        border: 1px solid rgb(193, 193, 193);
+        border-radius: 0px 12px 0px 0px;
+        height: 40px;
+        line-height: 20px;
+    }
+
+    .modal { z-index: 200000; }
+
+    .modal-header {
+        background: #5f95c3;
+        color: #ffffff;
+        height: 40px;
+    }
+
+    .modal-header b { margin-top: -10px; }
+
+    #TbAR table tr td {
+        height: 35px;
+        margin-left: 15px;
+        margin-top: 10px;
+        padding: 0px !important;
+        position: relative !important;
+        /*background-color: none;*/
+    }
+
+    table tbody tr td {
+        background-color: #ffffff;
+        color: black;
+    }
+
+    table tbody tr.selected td {
+        background: #94d8e1;
+        color: red;
+    }
+
+    table tbody tr.selected td .clsinput {
+        background: #94d8e1;
+        color: red;
+    }
+
+    .clsinput:focus { outline: none; }
+
+    /* =================================================== */
+    .cover-spin {
+        position: fixed;
+        width: 100%;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background-color: rgba(255,255,255,0.7);
+        z-index: 9999;
+        display: none;
+    }
+
+    @@-webkit-keyframes spin {
+        from {
+            -webkit-transform: rotate(0deg);
+        }
+
+        to {
+            -webkit-transform: rotate(360deg);
+        }
+    }
+
+    @@keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .cover-spin::after {
+        content: '';
+        display: block;
+        position: absolute;
+        left: 48%;
+        top: 40%;
+        width: 40px;
+        height: 40px;
+        border-style: solid;
+        border-color: black;
+        border-top-color: transparent;
+        border-width: 4px;
+        border-radius: 50%;
+        -webkit-animation: spin .8s linear infinite;
+        animation: spin .8s linear infinite;
+    }
+    /* =================================================== */
+
+</style>
+
+<div id="#main">
+
+    <div id="frmLoading" class="cover-spin" style="display:none"></div>
+
+    <div class="row" style="color: #696969; margin-left: 5px; margin-top: 5px;">
+        <h5 style="color: #696969; margin-top: 5px;">
+            <a onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fas fa-home"></i> Dashboard</a>
+            <span>
+                <a onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fa fa-caret-right align-right"></i>Good Return</a>
+                <i class="fa fa-caret-right align-right"></i> Create Good Return
+            </span>
+        </h5>
+    </div>
+    <hr />
+    <div style="color: #696969; padding: 10px;">
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="cus" role="tabpanel" aria-labelledby="cus-tab" style="margin-top: 10px">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div>
+                            <button class="btn btn-info" id="CopyFromPO" data-toggle="modal" data-target="#ModalCopyFromPO">
+                                Select GoodsReceiptPO
+                            </button><br>
+                            Vendor Code :
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <button class="input-group-text" id="CcusID">
+                                        <i class="fa fa-users"></i>
+                                    </button>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Vendor Code" id="CusID" value="" readonly>
+                            </div>
+                        </div>
+                        <div>
+                            Vender Name :
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="CusName" value="" disabled="disabled">
+                            </div>
+                        </div>
+                        Order Number :
+                        <div class="input-group">
+                            <input type="text" disabled="disabled" class="form-control" id="OrderNumberID">
+                        </div>
+                        Remarks :
+                        <div class="input-group">
+                            <textarea disabled="disabled" class="form-control" id="Remark" rows="4"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div>
+                            Series :
+                            <div class="input-group">
+                                <select id="SeriesID" class="form-control"></select>
+                            </div>
+                        </div>
+                        <div>
+                            Posting Date :
+                            <div class="input-group">
+                                <input disabled="disabled" type="date" class="form-control" id="DocDate">
+                            </div>
+                        </div>
+                        <div>
+                            Document Date :
+                            <div class="input-group">
+                                <input disabled="disabled" type="date" class="form-control" id="DocumentDate">
+                            </div>
+                        </div>
+                        <div>
+                            BP Currency :
+                            <div class="input-group">
+                                <input disabled="disabled" type="text" class="form-control" id="BPDocCurr" />
+                            </div>
+                        </div>
+                        Sales Employees :
+                        <div class="input-group">
+                            <input disabled="disabled" type="text" class="form-control" id="SaleEmp" />
+                        </div>
+                        <br />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="TbAR" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
+                                <thead>
+                                    <tr>
+                                        <th>ItemCode</th>
+                                        <th>Description</th>
+                                        <th>Quatity</th>
+                                        <th>Price</th>
+                                        <th>Discount Percentage</th>
+                                        <th>VatGroup</th>
+                                        <th>WhsCode</th>
+                                        <th>LineTotal</th>
+                                        <th>lineNum</th>
+                                        <th>DocENtry</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="row" style="margin-bottom: -20px; margin-top: -20px; padding: 15px;">
+            <div class="nav navbar-nav ml-auto">
+                <div class="btn-group">
+                    <button disabled="disabled" class="btn btn-info" id="Save" style="background: #f0eff1; color: #696969; margin-left: 5px;">Send SAP</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr />
+</div>
+
+@*Copy From PO*@
+<div class="modal fade" id="ModalCopyFromPO" data-backdrop="static">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background: #f0eff1; color: #696969;">
+            <div class="modal-header">
+                <b>Good Receipt PO</b>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="TbCopyFromPO" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
+                                <thead>
+                                <tr>
+                                    <th>Receipt No(SAP)</th>
+                                    <th>Vendor Name</th>
+                                    <th>Document Date</th>
+                                    <th>DocTotal</th>
+                                    <th>Document Status</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" @*data-dismiss="modal"*@ id="ChoosePO" style="background: #f0eff1; color: #696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background: #f0eff1; color: #696969;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/tengkimleang/Method/MethodDataTable.js"></script>
+
+<script type="text/javascript">
+    GetDocNum('@ViewBag.DocNum');
+    var dataTableMethod=new DataTableMethod(), 
+    LinesAR = [];
+    $('#TbAR').dataTable({
+        bLengthChange: false,
+        bFilter: false,
+        bInfo: false,
+        bPaginate: false,
+        data: LinesAR,
+        columns:
+        [
+            { data: "itemCode", autoWidth: true },
+            {
+                data: "description", autoWidth: true
+                //render: function (data, type, full, meta) { return '<input type="number" class="clsinput" style="padding:0px; position:absolute;width:100px;border:none;" onchange="PriceChange(' + meta.row + ')" id="tbPrice' + meta.row + '" value="' + full.UnitPrice + '">'; }, autoWidth: true
+            },
+            {
+                data: "quatity", autoWidth: true
+                //render: function (data, type, full, meta) { return '<input type="number" class="clsinput" style="padding:0px; position:absolute;width:100px;border:none;" onchange="DisChange('+meta.row+')" value="'+full.Discount+'" id="tbDis'+meta.row+'" >'; }, autoWidth: true
+            },
+            {
+                data: "price", autoWidth: true
+                //render: function (data, type, full, meta) { return '<input type="number" class="clsinput" style="padding:0px; position:absolute;width:40px;border:none;" onchange="QtyChange(' + meta.row + ')" id="tbQty' + meta.row + '" value="' + full.Quantity + '" readonly=true; >'; }, autoWidth: true
+            },
+            { data: "discPrcnt", autoWidth: true },
+            { data: "vatGroup", autoWidth: true },
+            { data: "whsCode", autoWidth: true },
+            { data: "lineTotal", autoWidth: true },
+            { data: "lineNum", autoWidth: true,visible: false },
+            { data: "baseEntry", autoWidth: true,visible: false }
+        ],
+        rowCallback: function (row, data, index) {
+            //$('td', row).css('background-color', '#ffffff');
+            //$('td', row).css('color', '#717171');
+        }
+    });
+    var TbLine = $('#TbAR').DataTable();
+
+    LCopyFromGoodReciptPO = [];
+    $('#TbCopyFromPO').DataTable({
+        responsive: true,
+        bLengthChange: false,
+        binfo: false,
+        data: LCopyFromGoodReciptPO,
+        columns: [
+            { data: "docNum", autoWidth: true },
+            { data: "cardName", autoWidth: true },
+            { data: "docDate", autoWidth: true },
+            { data: "docTotal", autoWidth: true },
+            { data: "docStatus", autoWidth: true }
+        ],
+        rowCallback: function (row, data, index) {
+        }
+    });
+    var TbCopyFromPO = $('#TbCopyFromPO').DataTable();
+    dataTableMethod.AddSelectClass("TbCopyFromPO",TbCopyFromPO)
+
+    getSeries("", '@ViewData["Date"]', '@Url.Action("GetSeries", "GoodsReceiptPO")', '21');
+
+    function getSeries(dateOfMonth, currentDate, url, objectCode) {
+        if (dateOfMonth == "") {
+            dateOfMonth = formatDate(currentDate);
+        }
+        $.ajax({
+            url: url,
+            type: "GET",
+            data: { objectCode: objectCode, dateOfMonth: dateOfMonth },
+            dataType: "JSON",
+            success: function(data) {
+                $("#SeriesID").empty();
+                for (var i = 0; i < data.length; i++) {
+                    $("#SeriesID").append('<option value="' + data[i].code + '">' + data[i].name + "</option>");
+                }
+            },
+            error: function(erro) {
+                console.log(erro.responseText);
+            }
+        });
+    }
+
+    function formatDate(date) {
+        const d = new Date(date);
+        var month = `${d.getMonth() + 1}`,
+            day = `${d.getDate()}`;
+        const year = d.getFullYear();
+        if (month.length < 2)
+            month = `0${month}`;
+        if (day.length < 2)
+            day = `0${day}`;
+
+        return [year, month, day].join('-');
+    }
+
+    $("#CopyFromPO").click(function() {
+        $.ajax({
+            url: '@Url.Action("GetGoodReturnByCardCodeAsResult", "GoodReturn")',
+            type: "GET",
+            //data: { docNum: "" },
+            dataType: "JSON",
+            success: function(data) {
+                console.log(data);
+                LCopyFromGoodReciptPO = data;
+                TbCopyFromPO.clear();
+                TbCopyFromPO.rows.add(LCopyFromGoodReciptPO);
+                TbCopyFromPO.search('').draw();
+            },
+            error: function(erro) {
+                console.log(erro.responseText);
+            }
+        });
+    });
+
+    function GetDocNum(docNum) {
+        if (docNum !== "") {
+            $.ajax({
+                url: '@Url.Action("GetGoodReciptPoByDocNumResult","GoodReturn")',
+                type: "GET",
+                data: { DocNum: docNum },
+                dataType: "JSON",
+                success: function(data) {
+                    //console.log(new Date(data[0].docDate));
+                    console.log(data);
+                    if (data !== null) {
+                        $("#CusID").val(data[0].cardCode);
+                        $("#CusName").val(data[0].cardName);
+                        $("#OrderNumberID").val(data[0].numAtCard);
+                        $("#Remark").val(data[0].remark);
+                        $("#DocDate").val(formatDate(new Date()));
+                        $("#DocumentDate").val(formatDate(new Date()));
+                        $("#BPDocCurr").val(data[0].bpCurrency);
+                        $("#SaleEmp").val(data[0].slpCode+" - "+data[0].slpName);
+                        TbLine.clear();
+                        TbLine.rows.add(data[0].line);
+                        TbLine.search('').draw();
+                        $("#Save").removeAttr("disabled");
+                        $("#CopyFromPO").attr("disabled","disabled");
+                    }
+                },
+                error: function(erro) {
+                    console.log(erro.responseText);
+                }
+            });
+        }
+    }
+
+    $("#Save").click(function () {
+        document.getElementById("frmLoading").style.display = "block";
+
+        var object = {};
+        object.CardCode = $("#CusID").val();
+        object.NumAtCard = $("#OrderNumberID").val();
+        object.Remark = $("#Remark").val();
+        object.Series = $("#SeriesID").val();
+        object.DocDate = $("#DocDate").val();
+        object.DocDueDate = $("#DocumentDate").val();
+        object.BPCurrency = $("#BPDocCurr").val();
+        var line = [];
+        var data = TbLine.rows().data();
+        console.log(data);
+        data.each(function (value, index) {
+            var objectLine = {};
+            objectLine.ItemCode = value.itemCode;
+            objectLine.Quantity = value.quatity;
+            objectLine.UnitPrice = value.price;
+            objectLine.Discount = value.discPrcnt;
+            objectLine.TaxCode = value.vatGroup;
+            objectLine.WarehouseCode = value.whsCode;
+            objectLine.UomCode = value.whsCode;
+            objectLine.LineNum = value.lineNum;
+            objectLine.BaseEntry = value.baseEntry;
+            objectLine.ManageItem = value.manageItem;
+            line.push(objectLine);
+        });
+        object.Lines = line;
+        $.ajax({
+            url: '@Url.Action("CreateGoodReturn","GoodReturn")',
+            type: "POST",
+            data: { sendGoodsReturn: object },
+            dataType: "JSON",
+            success: function(data) {
+                alert("Success");
+                document.getElementById("frmLoading").style.display = "none";
+                location.reload();
+            },
+            error: function(erro) {
+                alert(erro.responseText);
+                document.getElementById("frmLoading").style.display = "none";
+            }
+        });
+    });
+    $("#ChoosePO").click(function() {
+        //alert("Hello");
+        const index = TbCopyFromPO.row('.selected').index();
+        const data = TbCopyFromPO.row(index).data();
+        GetDocNum(data.docNum);
+        $("#ModalCopyFromPO").modal("hide");
+    });
+</script>

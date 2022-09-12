@@ -51,7 +51,7 @@ namespace BarCodeAPIService.Connection
 
         private void LogIn1()
         {
-            Company oCompany /* TODO Change to default(_) if this is not a reference type */;
+            Company oCompany;
             //string Server = "";
             //string DbServerType = "";
             //string LicenseServer = "";

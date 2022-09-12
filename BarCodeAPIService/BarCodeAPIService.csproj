@@ -42,7 +42,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Reference Include="..\Barcodesystem\SAPBusinessOneSDK.dll" />
+	  <Reference Include="SAPBusinessOneSDK">
+	    <HintPath>..\..\plugin\v3\SAPBusinessOneSDK.dll</HintPath>
+	  </Reference>
 	</ItemGroup>
 
 </Project>

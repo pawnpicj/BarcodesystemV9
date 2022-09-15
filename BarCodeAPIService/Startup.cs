@@ -5,6 +5,7 @@ using BarCodeAPIService.Service;
 using BarCodeAPIService.Service.Bank;
 using BarCodeAPIService.Service.Pannreaksmey;
 using BarCodeAPIService.Service.Tengkimleang;
+using BarCodeAPIService.Service.Vichika;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -64,6 +65,7 @@ namespace BarCodeAPIService
             services.AddScoped<IGetBinLocationService, GetBinLocationService>();
             services.AddScoped<IDeliveryService, DeliveryService>();
             services.AddScoped<IGenerateBinCodeServices, GenerateBinCodeService>();
+            services.AddScoped<IReturnService, ReturnService>();
 
             #endregion
 

@@ -17,25 +17,32 @@ namespace BarCodeAPIService.Controllers
             this.Delivery = Delivery;
         }
 
-        [HttpGet("GetSO")]
-        public async Task<IActionResult> GetDeliveryAsyc()
+        [HttpGet(APIRoute.Delivery.GetSO+"{CardCode}")]
+        public async Task<IActionResult> GetDeliveryAsyc(string CardCode)
         {
-            var a = await Delivery.responseGetORDR();
+            var a = await Delivery.responseGetORDR(CardCode);
+            if (a.ErrorCode == 0)
+                return Ok(a);
+            return BadRequest(a);
+        }
+        [HttpGet(APIRoute.Delivery.GetBatch + "{itemCode}/{WhsCode}")]
+        public async Task<IActionResult> GetBatchAsync(string itemCode,string WhsCode)
+        {
+            var a = await Delivery.responseGetBatch(itemCode,WhsCode);
+            if (a.ErrorCode == 0)
+                return Ok(a);
+            return BadRequest(a);
+        }
+        [HttpGet(APIRoute.Delivery.GetSerial + "{itemCode}/{WhsCode}")]
+        public async Task<IActionResult> GetSerialAsyc(string itemCode, string WhsCode)
+        {
+            var a = await Delivery.responseGetSerial(itemCode, WhsCode);
             if (a.ErrorCode == 0)
                 return Ok(a);
             return BadRequest(a);
         }
 
-        [HttpGet("GetSOLine/{DocEntry}")]
-        public async Task<IActionResult> GetSOLineAsync(int DocEntry)
-        {
-            var a = await Delivery.responseGetORDRLine(DocEntry);
-            if (a.ErrorCode == 0)
-                return Ok(a);
-            return BadRequest(a);
-        }
-
-        [HttpPost("SendDelivery")]
+        [HttpPost(APIRoute.Delivery.POSTDelivery)]
         public async Task<IActionResult> PostDeliveryAsync(SendDelivery sendDelivery)
         {
             var a = await Delivery.PostDelivery(sendDelivery);

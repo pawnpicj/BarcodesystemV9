@@ -10,7 +10,9 @@
         {
             public const string CustomerGet = "OCRD";
             public const string GetPO = "OPOR";
+            public const string GetSO = "ORDR";
             public const string GetPOLine = "POR1";
+            public const string GetSOLine = "RDR1";
             public const string GetSeries = "NNM1";
             public const string GetSaleEmployee = "OSLP";
             public const string GetCurrency = "OCRN";
@@ -21,6 +23,10 @@
             public const string GetGoodRecieptPO = "OPDN";
             public const string GetGoodReturn = "ORPD";
             public const string GetBarCode = "OBCD";
+            public const string GetBatch = "Batch";
+            public const string GetSerial = "Serial";
+            public const string GetDelivery = "ODLN";
+            public const string GetDeliveryLine = "DLN1";
         }
     }
 }

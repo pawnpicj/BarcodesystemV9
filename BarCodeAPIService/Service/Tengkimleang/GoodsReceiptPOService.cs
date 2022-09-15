@@ -125,7 +125,7 @@ namespace BarCodeAPIService.Service
 
         #region Get
 
-        public Task<ResponseCustomerGet> responseCustomerGets()
+        public Task<ResponseCustomerGet> responseCustomerGets(string cusType)
         {
             var customerGets = new List<CustomerGet>();
             var dt = new DataTable();
@@ -135,7 +135,7 @@ namespace BarCodeAPIService.Service
                 if (login.lErrCode == 0)
                 {
                     var Query =
-                        $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.CustomerGet}','','','','','')";
+                        $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.CustomerGet}','{cusType}','','','','')";
                     login.AD = new OdbcDataAdapter(Query, login.CN);
                     login.AD.Fill(dt);
                     foreach (DataRow row in dt.Rows)
@@ -692,7 +692,7 @@ namespace BarCodeAPIService.Service
             }
         }
 
-        public Task<ResponseGetUnitOfMeasure> responseGetUnitOfMeasure(string ItemCode)
+        public Task<ResponseGetUnitOfMeasure> responseGetUnitOfMeasure(string ItemCode,string UOMType)
         {
             var getUnitOfMeasure = new List<GetUnitOfMeasure>();
             var dt = new DataTable();
@@ -702,7 +702,7 @@ namespace BarCodeAPIService.Service
                 if (login.lErrCode == 0)
                 {
                     var Query =
-                        $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetUom}','{ItemCode}','','','','')";
+                        $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetUom}','{ItemCode}','{UOMType}','','','')";
                     login.AD = new OdbcDataAdapter(Query, login.CN);
                     login.AD.Fill(dt);
                     foreach (DataRow row in dt.Rows)
@@ -710,52 +710,6 @@ namespace BarCodeAPIService.Service
                         {
                             Code = row["Code"].ToString(),
                             Name = row["Name"].ToString()
-                        });
-                    return Task.FromResult(new ResponseGetUnitOfMeasure
-                    {
-                        ErrorCode = 0,
-                        ErrorMessage = "",
-                        Data = getUnitOfMeasure.ToList()
-                    });
-                }
-
-                return Task.FromResult(new ResponseGetUnitOfMeasure
-                {
-                    ErrorCode = login.lErrCode,
-                    ErrorMessage = login.sErrMsg,
-                    Data = null
-                });
-            }
-
-            catch (Exception ex)
-            {
-                return Task.FromResult(new ResponseGetUnitOfMeasure
-                {
-                    ErrorCode = ex.HResult,
-                    ErrorMessage = ex.Message,
-                    Data = null
-                });
-            }
-        }
-
-        public Task<ResponseGetUnitOfMeasure> responseGetUnitOfMeasure()
-        {
-            var getUnitOfMeasure = new List<GetUnitOfMeasure>();
-            var dt = new DataTable();
-            try
-            {
-                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
-                if (login.lErrCode == 0)
-                {
-                    var Query =
-                        $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetWarehouse}','','','','','')";
-                    login.AD = new OdbcDataAdapter(Query, login.CN);
-                    login.AD.Fill(dt);
-                    foreach (DataRow row in dt.Rows)
-                        getUnitOfMeasure.Add(new GetUnitOfMeasure
-                        {
-                            Code = row["Code"].ToString(),
-                            Name = row["Name"].ToString(),
                         });
                     return Task.FromResult(new ResponseGetUnitOfMeasure
                     {

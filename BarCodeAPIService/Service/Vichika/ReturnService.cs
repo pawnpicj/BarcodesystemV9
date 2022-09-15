@@ -7,24 +7,22 @@ using System.Threading.Tasks;
 using BarCodeAPIService.Connection;
 using BarCodeAPIService.Models;
 using BarCodeLibrary.Contract.RouteProcedure;
-using BarCodeLibrary.Request.SAP;
+using BarCodeLibrary.Request.SAP.Vichika;
 using BarCodeLibrary.Respones.SAP;
+using BarCodeLibrary.Respones.SAP.Vichika;
 using SAPbobsCOM;
-using SAPbouiCOM;
-using Company = SAPbobsCOM.Company;
-using DataTable = System.Data.DataTable;
 
-namespace BarCodeAPIService.Service
+namespace BarCodeAPIService.Service.Vichika
 {
-    public class GoodReturnService : IGoodReturnService
+    public class ReturnService:IReturnService
     {
         private int ErrCode;
         private string ErrMsg;
-
-        public Task<ResponseOPDNGetGoodReceipt> responseOPDNGetGoodReceipt(string cardCode)
+        #region GET
+        public Task<ResponseODLNGetDelivery> responseODLNGetDelivery(string cardCode)
         {
-            var oPDNs = new List<OPDN>();
-            var pDN1s = new List<PDN1>();
+            var getDelivery = new List<GetDelivery>();
+            var getDeliveryLine = new List<GetDeliveryLine>();
             var dt = new DataTable();
             var dtLine = new DataTable();
             try
@@ -32,19 +30,19 @@ namespace BarCodeAPIService.Service
                 var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
                 if (login.lErrCode == 0)
                 {
-                    var query = $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetGoodRecieptPO}','{((cardCode == null) ? "" : cardCode)}','','','','')";
+                    var query = $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetDelivery}','{((cardCode == null) ? "" : cardCode)}','','','','')";
                     login.AD = new OdbcDataAdapter(query, login.CN);
                     login.AD.Fill(dt);
                     foreach (DataRow row in dt.Rows)
                     {
                         dtLine = new DataTable();
                         var query1 = "CALL \"" + ConnectionString.CompanyDB +
-                                     "\"._USP_CALLTRANS_TENGKIMLEANG('PDN1','" + row["DocEntry"] + "','','','','')";
+                                     "\"._USP_CALLTRANS_TENGKIMLEANG('"+ ProcedureRoute.Type.GetDeliveryLine + "','" + row["DocEntry"] + "','','','','')";
                         login.AD = new OdbcDataAdapter(query1, login.CN);
                         login.AD.Fill(dtLine);
-                        pDN1s = new List<PDN1>();
+                        getDeliveryLine = new List<GetDeliveryLine>();
                         foreach (DataRow rowLine in dtLine.Rows)
-                            pDN1s.Add(new PDN1
+                            getDeliveryLine.Add(new GetDeliveryLine
                             {
                                 Description = rowLine["Dscription"].ToString(),
                                 DiscPrcnt = Convert.ToDouble(rowLine["DiscPrcnt"].ToString()),
@@ -58,7 +56,7 @@ namespace BarCodeAPIService.Service
                                 BaseEntry = Convert.ToInt32(row["DocEntry"].ToString()),
                                 ManageItem = rowLine["ManageItem"].ToString(),
                             });
-                        oPDNs.Add(new OPDN
+                        getDelivery.Add(new GetDelivery
                         {
                             CardCode = row["CardCode"].ToString(),
                             CardName = row["CardName"].ToString(),
@@ -75,7 +73,7 @@ namespace BarCodeAPIService.Service
                             Remark = row["Remark"].ToString(),
                             DocEntry = Convert.ToInt32(row["DocEntry"].ToString()),
                             //TaxDate = Convert.ToDateTime("2022-01-01")
-                            Line = pDN1s.ToList(),
+                            Line = getDeliveryLine.ToList(),
                         });
                     }
 
@@ -90,7 +88,7 @@ namespace BarCodeAPIService.Service
             }
             catch (Exception ex)
             {
-                return Task.FromResult(new ResponseOPDNGetGoodReceipt
+                return Task.FromResult(new ResponseODLNGetDelivery
                 {
                     ErrorCode = ex.HResult,
                     ErrorMessage = ex.Message,
@@ -98,18 +96,18 @@ namespace BarCodeAPIService.Service
                 });
             }
 
-            return Task.FromResult(new ResponseOPDNGetGoodReceipt
+            return Task.FromResult(new ResponseODLNGetDelivery
             {
-                Data = oPDNs,
+                Data = getDelivery,
                 ErrorCode = 0,
                 ErrorMessage = ""
             });
         }
 
-        public Task<ResponseOPDNGetGoodReceipt> responseOPDNGetGoodReceiptByDocNum(string DocNum)
+        public Task<ResponseODLNGetDelivery> responseODLNGetDeliveryByDocNum(string DocNum)
         {
-            var oPDNs = new List<OPDN>();
-            var pDN1s = new List<PDN1>();
+            var getDelivery = new List<GetDelivery>();
+            var getDeliveryLine = new List<GetDeliveryLine>();
             var dt = new DataTable();
             var dtLine = new DataTable();
             try
@@ -117,19 +115,19 @@ namespace BarCodeAPIService.Service
                 var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
                 if (login.lErrCode == 0)
                 {
-                    var query = $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetGoodRecieptPO}','','{DocNum}','','','')";
+                    var query = $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetDelivery}','','{DocNum}','','','')";
                     login.AD = new OdbcDataAdapter(query, login.CN);
                     login.AD.Fill(dt);
                     foreach (DataRow row in dt.Rows)
                     {
                         dtLine = new DataTable();
                         var query1 = "CALL \"" + ConnectionString.CompanyDB +
-                                     "\"._USP_CALLTRANS_TENGKIMLEANG('PDN1','" + row["DocEntry"] + "','','','','')";
+                                     "\"._USP_CALLTRANS_TENGKIMLEANG('"+ ProcedureRoute.Type.GetDeliveryLine+ "','" + row["DocEntry"] + "','','','','')";
                         login.AD = new OdbcDataAdapter(query1, login.CN);
                         login.AD.Fill(dtLine);
-                        pDN1s = new List<PDN1>();
+                        getDeliveryLine = new List<GetDeliveryLine>();
                         foreach (DataRow rowLine in dtLine.Rows)
-                            pDN1s.Add(new PDN1
+                            getDeliveryLine.Add(new GetDeliveryLine
                             {
                                 Description = rowLine["Dscription"].ToString(),
                                 DiscPrcnt = Convert.ToDouble(rowLine["DiscPrcnt"].ToString()),
@@ -143,7 +141,7 @@ namespace BarCodeAPIService.Service
                                 BaseEntry = Convert.ToInt32(row["DocEntry"].ToString()),
                                 ManageItem = rowLine["ManageItem"].ToString(),
                             });
-                        oPDNs.Add(new OPDN
+                        getDelivery.Add(new GetDelivery
                         {
                             CardCode = row["CardCode"].ToString(),
                             CardName = row["CardName"].ToString(),
@@ -161,7 +159,7 @@ namespace BarCodeAPIService.Service
                             Remark = row["Remark"].ToString(),
                             DocEntry = Convert.ToInt32(row["DocEntry"].ToString()),
                             //TaxDate = Convert.ToDateTime("2022-01-01")
-                            Line = pDN1s.ToList(),
+                            Line = getDeliveryLine.ToList(),
                         });
                     }
 
@@ -176,7 +174,7 @@ namespace BarCodeAPIService.Service
             }
             catch (Exception ex)
             {
-                return Task.FromResult(new ResponseOPDNGetGoodReceipt
+                return Task.FromResult(new ResponseODLNGetDelivery
                 {
                     ErrorCode = ex.HResult,
                     ErrorMessage = ex.Message,
@@ -184,15 +182,16 @@ namespace BarCodeAPIService.Service
                 });
             }
 
-            return Task.FromResult(new ResponseOPDNGetGoodReceipt
+            return Task.FromResult(new ResponseODLNGetDelivery
             {
-                Data = oPDNs,
+                Data = getDelivery,
                 ErrorCode = 0,
                 ErrorMessage = ""
             });
         }
-
-        public Task<ResponseGoodReturn> sendGoodReturn(SendGoodsReturn sendGoodReturn)
+        #endregion
+        #region POST
+        public Task<ResponseReturn> sendGoodReturn(SendReturn sendGoodReturn)
         {
             try
             {
@@ -203,13 +202,13 @@ namespace BarCodeAPIService.Service
                 if (login.LErrCode == 0)
                 {
                     oCompany = login.Company;
-                    oGoodReturnPurchase = (Documents)oCompany.GetBusinessObject(BoObjectTypes.oPurchaseReturns);
+                    oGoodReturnPurchase = (Documents)oCompany.GetBusinessObject(BoObjectTypes.oReturns);
                     oGoodReturnPurchase.CardCode = sendGoodReturn.CardCode;
                     oGoodReturnPurchase.DocDate = sendGoodReturn.DocDate;
-                    oGoodReturnPurchase.DocDueDate=sendGoodReturn.DocDueDate;
-                    oGoodReturnPurchase.NumAtCard=sendGoodReturn.NumAtCard;
+                    oGoodReturnPurchase.DocDueDate = sendGoodReturn.DocDueDate;
+                    oGoodReturnPurchase.NumAtCard = sendGoodReturn.NumAtCard;
                     oGoodReturnPurchase.Comments = sendGoodReturn.Remark;
-                    oGoodReturnPurchase.Series=sendGoodReturn.Series;
+                    oGoodReturnPurchase.Series = sendGoodReturn.Series;
                     oGoodReturnPurchase.DocCurrency = sendGoodReturn.BPCurrency;
                     foreach (var l in sendGoodReturn.Lines)
                     {
@@ -217,13 +216,13 @@ namespace BarCodeAPIService.Service
                         oGoodReturnPurchase.Lines.Quantity = l.Quantity;
                         oGoodReturnPurchase.Lines.UnitPrice = l.UnitPrice;
                         oGoodReturnPurchase.Lines.WarehouseCode = l.WarehouseCode;
-                        oGoodReturnPurchase.Lines.TaxCode=l.TaxCode;
+                        oGoodReturnPurchase.Lines.TaxCode = l.TaxCode;
                         oGoodReturnPurchase.Lines.BaseEntry = l.BaseEntry;
                         oGoodReturnPurchase.Lines.BaseLine = l.LineNum;
-                        oGoodReturnPurchase.Lines.BaseType = 20;
+                        oGoodReturnPurchase.Lines.BaseType = 15;
                         if (l.ManageItem == "S")
                         {
-                            foreach (DataRow rowSerial in GetBatchSerialNumber("GetSerialNumber",l.BaseEntry.ToString(),l.LineNum.ToString(),l.ItemCode,"20").Rows)
+                            foreach (DataRow rowSerial in GetBatchSerialNumber("GetSerialNumber", l.BaseEntry.ToString(), l.LineNum.ToString(), l.ItemCode,"15").Rows)
                             {
                                 oGoodReturnPurchase.Lines.SerialNumbers.Quantity = Convert.ToDouble(rowSerial["Quantity"].ToString());
                                 oGoodReturnPurchase.Lines.SerialNumbers.InternalSerialNumber = rowSerial["DistNumber"].ToString();
@@ -231,7 +230,7 @@ namespace BarCodeAPIService.Service
                             }
                         }
                         else if (l.ManageItem == "B")
-                            foreach (DataRow rowBatch in GetBatchSerialNumber("GetBatchNumber", l.BaseEntry.ToString(), l.LineNum.ToString(), l.ItemCode,"20").Rows)
+                            foreach (DataRow rowBatch in GetBatchSerialNumber("GetBatchNumber", l.BaseEntry.ToString(), l.LineNum.ToString(), l.ItemCode,"15").Rows)
                             {
                                 oGoodReturnPurchase.Lines.BatchNumbers.Quantity = Convert.ToDouble(rowBatch["Quantity"].ToString());
                                 oGoodReturnPurchase.Lines.BatchNumbers.BatchNumber = rowBatch["BatchNum"].ToString();
@@ -243,7 +242,7 @@ namespace BarCodeAPIService.Service
                     if (Retval != 0)
                     {
                         oCompany.GetLastError(out ErrCode, out ErrMsg);
-                        return Task.FromResult(new ResponseGoodReturn
+                        return Task.FromResult(new ResponseReturn
                         {
                             ErrorCode = ErrCode,
                             ErrorMsg = ErrMsg,
@@ -251,7 +250,7 @@ namespace BarCodeAPIService.Service
                         });
                     }
 
-                    return Task.FromResult(new ResponseGoodReturn
+                    return Task.FromResult(new ResponseReturn
                     {
                         ErrorCode = 0,
                         ErrorMsg = "",
@@ -259,7 +258,7 @@ namespace BarCodeAPIService.Service
                     });
                 }
 
-                return Task.FromResult(new ResponseGoodReturn
+                return Task.FromResult(new ResponseReturn
                 {
                     ErrorCode = login.LErrCode,
                     ErrorMsg = login.SErrMsg
@@ -267,15 +266,16 @@ namespace BarCodeAPIService.Service
             }
             catch (Exception ex)
             {
-                return Task.FromResult(new ResponseGoodReturn
+                return Task.FromResult(new ResponseReturn
                 {
                     ErrorCode = ex.HResult,
                     ErrorMsg = ex.Message
                 });
             }
         }
-
-        DataTable GetBatchSerialNumber(string type,string BaseEntry,string LineNum,string ItemCode,string ObjType)
+        #endregion
+        #region Other Function
+        DataTable GetBatchSerialNumber(string type, string BaseEntry, string LineNum, string ItemCode,string ObjType)
         {
             var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
             if (login.lErrCode == 0)
@@ -292,5 +292,6 @@ namespace BarCodeAPIService.Service
 
 
         }
+        #endregion
     }
 }

@@ -269,12 +269,12 @@ BEGIN
 		B."DistNumber",1 AS "Quantity"
 		FROM "UDOM_BARCODEV2"."SRI1" AS A 
 		LEFT JOIN "UDOM_BARCODEV2"."OSRN" AS B ON A."SysSerial"=B."SysNumber" AND A."ItemCode"=B."ItemCode"
-		WHERE A."BaseType"='20' AND A."BaseEntry"=:par1 AND A."BaseLinNum"=:par2 AND A."ItemCode"=:par3;
+		WHERE A."BaseType"=:par4 AND A."BaseEntry"=:par1 AND A."BaseLinNum"=:par2 AND A."ItemCode"=:par3;
 	ELSE IF :DTYPE='GetBatchNumber' THEN
 		SELECT 
 			A."BatchNum",A."Quantity"
 		FROM "UDOM_BARCODEV2"."IBT1" AS A 
-		WHERE A."BaseType"='20' AND A."BaseEntry"=:par1 AND A."BaseLinNum"=:par2 AND A."ItemCode"=:par3;
+		WHERE A."BaseType"=:par4 AND A."BaseEntry"=:par1 AND A."BaseLinNum"=:par2 AND A."ItemCode"=:par3; --'20'
 	ELSE IF :DTYPE='OBCD' THEN
 		SELECT 
 			 A."BcdCode" AS "BarCode"

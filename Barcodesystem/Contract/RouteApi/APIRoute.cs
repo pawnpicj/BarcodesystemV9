@@ -44,5 +44,12 @@
             public const string GetSerial = "GetSerial/";
             public const string POSTDelivery = "POSTDelivery/";
         }
+        public static class Return
+        {
+            public const string Controller = "api/Return/";
+            public const string GetDelivery = "GetDelivery1/";
+            public const string GetDeliveryByDocNum = "GetDeliveryByDocNum/";
+            public const string SendReturn = "SendReturn";
+        }
     }
 }

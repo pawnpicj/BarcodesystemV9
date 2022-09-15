@@ -32,14 +32,14 @@ namespace BarCodeAPIService.Service
                 var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
                 if (login.lErrCode == 0)
                 {
-                    var query = $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetDelivery}','{((cardCode == null) ? "" : cardCode)}','','','','')";
+                    var query = $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetGoodRecieptPO}','{((cardCode == null) ? "" : cardCode)}','','','','')";
                     login.AD = new OdbcDataAdapter(query, login.CN);
                     login.AD.Fill(dt);
                     foreach (DataRow row in dt.Rows)
                     {
                         dtLine = new DataTable();
                         var query1 = "CALL \"" + ConnectionString.CompanyDB +
-                                     "\"._USP_CALLTRANS_TENGKIMLEANG('"+ ProcedureRoute.Type.GetDeliveryLine + "','" + row["DocEntry"] + "','','','','')";
+                                     "\"._USP_CALLTRANS_TENGKIMLEANG('PDN1','" + row["DocEntry"] + "','','','','')";
                         login.AD = new OdbcDataAdapter(query1, login.CN);
                         login.AD.Fill(dtLine);
                         pDN1s = new List<PDN1>();
@@ -117,14 +117,14 @@ namespace BarCodeAPIService.Service
                 var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
                 if (login.lErrCode == 0)
                 {
-                    var query = $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetDelivery}','','{DocNum}','','','')";
+                    var query = $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetGoodRecieptPO}','','{DocNum}','','','')";
                     login.AD = new OdbcDataAdapter(query, login.CN);
                     login.AD.Fill(dt);
                     foreach (DataRow row in dt.Rows)
                     {
                         dtLine = new DataTable();
                         var query1 = "CALL \"" + ConnectionString.CompanyDB +
-                                     "\"._USP_CALLTRANS_TENGKIMLEANG('"+ProcedureRoute.Type.GetDeliveryLine+"','" + row["DocEntry"] + "','','','','')";
+                                     "\"._USP_CALLTRANS_TENGKIMLEANG('PDN1','" + row["DocEntry"] + "','','','','')";
                         login.AD = new OdbcDataAdapter(query1, login.CN);
                         login.AD.Fill(dtLine);
                         pDN1s = new List<PDN1>();
@@ -223,7 +223,7 @@ namespace BarCodeAPIService.Service
                         oGoodReturnPurchase.Lines.BaseType = 20;
                         if (l.ManageItem == "S")
                         {
-                            foreach (DataRow rowSerial in GetBatchSerialNumber("GetSerialNumber",l.BaseEntry.ToString(),l.LineNum.ToString(),l.ItemCode).Rows)
+                            foreach (DataRow rowSerial in GetBatchSerialNumber("GetSerialNumber",l.BaseEntry.ToString(),l.LineNum.ToString(),l.ItemCode,"20").Rows)
                             {
                                 oGoodReturnPurchase.Lines.SerialNumbers.Quantity = Convert.ToDouble(rowSerial["Quantity"].ToString());
                                 oGoodReturnPurchase.Lines.SerialNumbers.InternalSerialNumber = rowSerial["DistNumber"].ToString();
@@ -231,7 +231,7 @@ namespace BarCodeAPIService.Service
                             }
                         }
                         else if (l.ManageItem == "B")
-                            foreach (DataRow rowBatch in GetBatchSerialNumber("GetBatchNumber", l.BaseEntry.ToString(), l.LineNum.ToString(), l.ItemCode).Rows)
+                            foreach (DataRow rowBatch in GetBatchSerialNumber("GetBatchNumber", l.BaseEntry.ToString(), l.LineNum.ToString(), l.ItemCode,"20").Rows)
                             {
                                 oGoodReturnPurchase.Lines.BatchNumbers.Quantity = Convert.ToDouble(rowBatch["Quantity"].ToString());
                                 oGoodReturnPurchase.Lines.BatchNumbers.BatchNumber = rowBatch["BatchNum"].ToString();
@@ -275,14 +275,14 @@ namespace BarCodeAPIService.Service
             }
         }
 
-        DataTable GetBatchSerialNumber(string type,string BaseEntry,string LineNum,string ItemCode)
+        DataTable GetBatchSerialNumber(string type,string BaseEntry,string LineNum,string ItemCode,string ObjType)
         {
             var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
             if (login.lErrCode == 0)
             {
                 DataTable dtBatchSerial = new DataTable();
                 var query1 = "CALL \"" + ConnectionString.CompanyDB +
-                             "\"._USP_CALLTRANS_TENGKIMLEANG('" + type + "','" + BaseEntry + "','" + LineNum + "','" + ItemCode + "','','')";
+                             "\"._USP_CALLTRANS_TENGKIMLEANG('" + type + "','" + BaseEntry + "','" + LineNum + "','" + ItemCode + "','"+ObjType+"','')";
                 login.AD = new OdbcDataAdapter(query1, login.CN);
                 login.AD.Fill(dtBatchSerial);
                 return dtBatchSerial;

@@ -314,30 +314,30 @@ BEGIN
 		Group by T0."ItemCode", T0."ItemName", T0."SuppSerial", T0."IntrSerial";
 	ELSE IF :DTYPE = 'ODLN' THEN 
 		SELECT TOP 50
-			"OPDN"."DocEntry",
-			"OPDN"."CardCode", 
-			"OPDN"."CardName", 
-			IFNULL("OPDN"."CntctCode",0) AS "CntctCode", 
-			IFNULL("OPDN"."NumAtCard",'') AS "NumAtCard",
-			IFNULL("OPDN"."DocNum",0) AS "DocNum",
-			IFNULL("OPDN"."DocStatus",'') AS "DocStatus",
-			IFNULL("OPDN"."DocDate",'') AS "DocDate",
-			IFNULL("OPDN"."DocDueDate",'') AS "DocDueDate",
-			IFNULL("OPDN"."TaxDate",'') AS "TaxDate",
-			IFNULL("OPDN"."DocTotal",0) AS "DocTotal",
-			IFNULL("OPDN"."DiscPrcnt",0) AS "DiscPrcnt",
-			IFNULL("OPDN"."Comments",'') AS "Remark",
-			IFNULL("OPDN"."SlpCode",0) AS "SlpCode",
+			"ODLN"."DocEntry",
+			"ODLN"."CardCode", 
+			"ODLN"."CardName", 
+			IFNULL("ODLN"."CntctCode",0) AS "CntctCode", 
+			IFNULL("ODLN"."NumAtCard",'') AS "NumAtCard",
+			IFNULL("ODLN"."DocNum",0) AS "DocNum",
+			IFNULL("ODLN"."DocStatus",'') AS "DocStatus",
+			IFNULL("ODLN"."DocDate",'') AS "DocDate",
+			IFNULL("ODLN"."DocDueDate",'') AS "DocDueDate",
+			IFNULL("ODLN"."TaxDate",'') AS "TaxDate",
+			IFNULL("ODLN"."DocTotal",0) AS "DocTotal",
+			IFNULL("ODLN"."DiscPrcnt",0) AS "DiscPrcnt",
+			IFNULL("ODLN"."Comments",'') AS "Remark",
+			IFNULL("ODLN"."SlpCode",0) AS "SlpCode",
 			IFNULL("OSLP"."SlpName",'') AS "SlpName",
-			IFNULL("OPDN"."DocCur",'') AS "BPCurrency"
-		FROM "UDOM_BARCODEV2"."OPDN" 
-		LEFT JOIN "UDOM_BARCODEV2"."OSLP" ON "OSLP"."SlpCode"="OPDN"."SlpCode"
+			IFNULL("ODLN"."DocCur",'') AS "BPCurrency"
+		FROM "UDOM_BARCODEV2"."ODLN" 
+		LEFT JOIN "UDOM_BARCODEV2"."OSLP" ON "OSLP"."SlpCode"="ODLN"."SlpCode"
 										WHERE "DocType"='I' 
-										AND "OPDN"."DocStatus"='O'
-										AND IFNULL("OPDN"."U_WebID",'')<>'' 
-										AND "OPDN"."CardCode"=CASE WHEN :par1='' THEN "OPDN"."CardCode" ELSE :par1 END 
-										AND CAST("OPDN"."DocNum" AS NVARCHAR(100))=CASE WHEN :par2='' THEN CAST("OPDN"."DocNum" AS NVARCHAR(100)) ELSE :par2 END;
-	ELSE IF :DTYPE = 'PDN1' THEN 
+										AND "ODLN"."DocStatus"='O'
+										AND IFNULL("ODLN"."U_WebID",'')<>'' 
+										AND "ODLN"."CardCode"=CASE WHEN :par1='' THEN "ODLN"."CardCode" ELSE :par1 END 
+										AND CAST("ODLN"."DocNum" AS NVARCHAR(100))=CASE WHEN :par2='' THEN CAST("ODLN"."DocNum" AS NVARCHAR(100)) ELSE :par2 END;
+	ELSE IF :DTYPE = 'DLN1' THEN 
 		SELECT 
 			A."ItemCode", 
 			A."Dscription", 
@@ -353,7 +353,7 @@ BEGIN
 				WHEN B."ManBtchNum"='Y' THEN 'B'
 				ELSE 'N' 
 			END AS ManageItem
-		FROM "UDOM_BARCODEV2"."PDN1" AS A 
+		FROM "UDOM_BARCODEV2"."DLN1" AS A 
 		LEFT JOIN UDOM_BARCODEV2."OITM" AS B ON A."ItemCode"=B."ItemCode"
 		WHERE A."DocEntry"=:par1;
 	END IF;

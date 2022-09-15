@@ -32,14 +32,14 @@ namespace BarCodeAPIService.Service
                 var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
                 if (login.lErrCode == 0)
                 {
-                    var query = $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetGoodRecieptPO}','{((cardCode == null) ? "" : cardCode)}','','','','')";
+                    var query = $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetDelivery}','{((cardCode == null) ? "" : cardCode)}','','','','')";
                     login.AD = new OdbcDataAdapter(query, login.CN);
                     login.AD.Fill(dt);
                     foreach (DataRow row in dt.Rows)
                     {
                         dtLine = new DataTable();
                         var query1 = "CALL \"" + ConnectionString.CompanyDB +
-                                     "\"._USP_CALLTRANS_TENGKIMLEANG('PDN1','" + row["DocEntry"] + "','','','','')";
+                                     "\"._USP_CALLTRANS_TENGKIMLEANG('"+ ProcedureRoute.Type.GetDeliveryLine + "','" + row["DocEntry"] + "','','','','')";
                         login.AD = new OdbcDataAdapter(query1, login.CN);
                         login.AD.Fill(dtLine);
                         pDN1s = new List<PDN1>();
@@ -117,14 +117,14 @@ namespace BarCodeAPIService.Service
                 var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
                 if (login.lErrCode == 0)
                 {
-                    var query = $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetGoodRecieptPO}','','{DocNum}','','','')";
+                    var query = $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetDelivery}','','{DocNum}','','','')";
                     login.AD = new OdbcDataAdapter(query, login.CN);
                     login.AD.Fill(dt);
                     foreach (DataRow row in dt.Rows)
                     {
                         dtLine = new DataTable();
                         var query1 = "CALL \"" + ConnectionString.CompanyDB +
-                                     "\"._USP_CALLTRANS_TENGKIMLEANG('PDN1','" + row["DocEntry"] + "','','','','')";
+                                     "\"._USP_CALLTRANS_TENGKIMLEANG('"+ProcedureRoute.Type.GetDeliveryLine+"','" + row["DocEntry"] + "','','','','')";
                         login.AD = new OdbcDataAdapter(query1, login.CN);
                         login.AD.Fill(dtLine);
                         pDN1s = new List<PDN1>();

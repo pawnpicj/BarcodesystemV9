@@ -202,7 +202,7 @@ namespace BarCodeAPIService.Service.Vichika
                 if (login.LErrCode == 0)
                 {
                     oCompany = login.Company;
-                    oGoodReturnPurchase = (Documents)oCompany.GetBusinessObject(BoObjectTypes.oPurchaseReturns);
+                    oGoodReturnPurchase = (Documents)oCompany.GetBusinessObject(BoObjectTypes.oReturns);
                     oGoodReturnPurchase.CardCode = sendGoodReturn.CardCode;
                     oGoodReturnPurchase.DocDate = sendGoodReturn.DocDate;
                     oGoodReturnPurchase.DocDueDate = sendGoodReturn.DocDueDate;
@@ -266,7 +266,7 @@ namespace BarCodeAPIService.Service.Vichika
             }
             catch (Exception ex)
             {
-                return Task.FromResult(new ResponseGoodReturn
+                return Task.FromResult(new ResponseReturn
                 {
                     ErrorCode = ex.HResult,
                     ErrorMsg = ex.Message

@@ -25,6 +25,8 @@
             public const string GetBarCode = "OBCD";
             public const string GetBatch = "Batch";
             public const string GetSerial = "Serial";
+            public const string GetDelivery = "ODLN";
+            public const string GetDeliveryLine = "DLN1";
         }
     }
 }

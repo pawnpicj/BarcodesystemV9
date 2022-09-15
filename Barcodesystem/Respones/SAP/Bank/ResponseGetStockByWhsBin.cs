@@ -16,11 +16,11 @@ namespace BarCodeLibrary.Respones.SAP.Bank
         public string WhsCode { get; set; }
         public string WhsName { get; set; }
         public string BinCode { get; set; }
-        public int BinEntry { get; set; }
-        public string BatchNo { get; set; }
+        public int BinEntry { get; set; }        
         public double Quantity { get; set; }
         public string UOMEntry { get; set; }
         public string UOMCode { get; set; }
+        public string BatchNo { get; set; }
         public string SerialNo { get; set; }
     }
 }

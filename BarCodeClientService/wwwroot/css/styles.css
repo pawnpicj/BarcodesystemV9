@@ -199,8 +199,8 @@ body { background: #dce7f1; }
 .wrapper.active .profile_info { display: none; }
 
 .wrapper.active .main_container .container1 {
-    margin-left: 7%;
-    width: calc(100% - 20px);
+    margin-left: 40px;
+    width: calc(100% - 50px);
 }
 
 .top_navbar .menu .right_menu ul li .profile_dd1 {
@@ -249,11 +249,11 @@ body { background: #dce7f1; }
 
 @media (min-width: 1200px) {
     .main_container .container1 {
-        margin-left: 225px;
+        margin-left: 30px;
         margin-top: 40px;
         padding: 30px;
         transition: all 0.3s ease;
-        width: calc(100% - 225 px);
+        width: calc(100% - 225px);
     }
 }
 

@@ -437,8 +437,8 @@
 
         //$('#txtFDA').val(data.fda);
         //FDA = "1234";
-        //batch = data.manBtchNum;
-        //serial = data.manSerNum;
+        batch = data.manBtchNum;
+        serial = data.manSerNum;
 
 
         document.getElementById("batchSN").focus();
@@ -484,6 +484,7 @@
     var itemLines = {};
     $('#Add').click(function () {
 
+        console.log(batch + "-" + serial);
         allitemLInes = [];
         //allitemLInes = [];
         //HeaderLs = [];
@@ -507,6 +508,7 @@
                     allitemLInes.push(itemLines);
                     HeaderLs.push(itemLines);
                     table.rows.add(allitemLInes).draw(false);
+                    console.log("Add Batch Number.");
                 }
 
             }
@@ -527,6 +529,7 @@
                         allitemLInes.push(itemLines);
                         HeaderLs.push(itemLines);
                         table.rows.add(allitemLInes).draw(false);
+                        console.log("Add Serial Number.");
                     }
                 }
                 if (batch == "N" && serial == "N") {
@@ -544,8 +547,9 @@
                         itemLines.concatText2 = $('#ItemCode').val() + ";;;" + $('#expireDate').val() + ";" + i.toString().padStart(4, '0') + "";
                         allitemLInes.push(itemLines);
                         HeaderLs.push(itemLines);
-                        itemLines = {};
+                        //itemLines = {};
                         table.rows.add(allitemLInes).draw(false);
+                        console.log("Add No Batch/Serial Number.");
                     }
                     //table.clear();
                     //table.rows.add(allitemLInes).draw(false);

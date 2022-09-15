@@ -150,8 +150,7 @@ namespace BarCodeClientService.Controllers
             var xBatchSerial = batchserial;
             var xScanBarcode = barcode;
 
-            var a = API.Read<ResponseGetStockBatchSerial>("GetStcokBatchSerial/" + xScanBarcode + "/" + xBatchSerial +
-                                                          "/" + xBatchSerial);
+            var a = API.Read<ResponseGetStockBatchSerial>("GetStcokBatchSerial/" + xScanBarcode + "/" + xBatchSerial + "/" + xBatchSerial);
             return Ok(a);
         }
 
@@ -168,8 +167,7 @@ namespace BarCodeClientService.Controllers
         {
             var xScanBarcode = barcode;
             var xBatchSerial = batchserial;
-            var a = API.Read<ResponseGetStockItemBatchSerial>("GetStockItemBatchSerial/" + xScanBarcode + "/" +
-                                                              xBatchSerial + "/" + xBatchSerial);
+            var a = API.Read<ResponseGetStockItemBatchSerial>("GetStockItemBatchSerial/" + xScanBarcode + "/" + xBatchSerial + "/" + xBatchSerial);
             return Ok(a);
         }
 
@@ -186,15 +184,13 @@ namespace BarCodeClientService.Controllers
             var xitemcode = itemcode;
             var xbatchnumber = batchnumber;
             var xbinentry = binentry;
-            var a = API.Read<ResponseGetStockItemBatchSerial>("GetStockItemBatchBin/" + xitemcode + "/" + xbatchnumber +
-                                                              "/" + xbinentry);
+            var a = API.Read<ResponseGetStockItemBatchSerial>("GetStockItemBatchBin/" + xitemcode + "/" + xbatchnumber + "/" + xbinentry);
             return Ok(a);
         }
 
         public IActionResult GetStockItemBatchW(string itemcode, string batchnumber, string whscode)
         {
-            var a = API.Read<ResponseGetStockItemBatchSerial>("GetStockItemBatchW/" + itemcode + "/" + batchnumber +
-                                                              "/" + whscode);
+            var a = API.Read<ResponseGetStockItemBatchSerial>("GetStockItemBatchW/" + itemcode + "/" + batchnumber + "/" + whscode);
             return Ok(a);
         }
 
@@ -211,15 +207,13 @@ namespace BarCodeClientService.Controllers
             var xitemcode = itemcode;
             var xserialnumber = serialnumber;
             var xbinentry = binentry;
-            var a = API.Read<ResponseGetStockItemBatchSerial>("GetStockItemSerialBin/" + xitemcode + "/" +
-                                                              xserialnumber + "/" + xbinentry);
+            var a = API.Read<ResponseGetStockItemBatchSerial>("GetStockItemSerialBin/" + xitemcode + "/" + xserialnumber + "/" + xbinentry);
             return Ok(a);
         }
 
         public IActionResult GetStockItemSerialW(string itemcode, string serialnumber, string whsCode)
         {
-            var a = API.Read<ResponseGetStockItemBatchSerial>("GetStockItemSerialW/" + itemcode + "/" + serialnumber +
-                                                              "/" + whsCode);
+            var a = API.Read<ResponseGetStockItemBatchSerial>("GetStockItemSerialW/" + itemcode + "/" + serialnumber + "/" + whsCode);
             return Ok(a);
         }
 
@@ -233,16 +227,14 @@ namespace BarCodeClientService.Controllers
         [HttpPost]
         public IActionResult PostInventoryTransfer(SendInventoryTransfer sendInventoryTransfer)
         {
-            var a = API.PostWithReturn<ResponseInventoryTransfer>("api/InventoryTransfer/SendInventoryTransfer",
-                sendInventoryTransfer);
+            var a = API.PostWithReturn<ResponseInventoryTransfer>("api/InventoryTransfer/SendInventoryTransfer", sendInventoryTransfer);
             return Ok(a);
         }
 
         [HttpPost]
         public IActionResult PostInventoryCounting(SendInventoryCounting sendInventoryCounting)
         {
-            var a = API.PostWithReturn<ResponseInventoryCounting>("api/InventoryCounting/SendInventoryCounting",
-                sendInventoryCounting);
+            var a = API.PostWithReturn<ResponseInventoryCounting>("api/InventoryCounting/SendInventoryCounting", sendInventoryCounting);
             return Ok(a);
         }
 

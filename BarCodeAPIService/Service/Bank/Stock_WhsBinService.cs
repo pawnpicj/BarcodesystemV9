@@ -33,12 +33,14 @@ namespace BarCodeAPIService.Service.Bank
                             WhsCode = oRS.Fields.Item(2).Value.ToString(),
                             WhsName = oRS.Fields.Item(3).Value.ToString(),
                             BinCode = oRS.Fields.Item(4).Value.ToString(),
-                            BinEntry = Convert.ToInt32(oRS.Fields.Item(5).Value.ToString()),
-                            BatchNo = oRS.Fields.Item(6).Value.ToString(),
-                            Quantity = Convert.ToDouble(oRS.Fields.Item(7).Value.ToString()),
-                            UOMEntry = oRS.Fields.Item(8).Value.ToString(),
-                            UOMCode = oRS.Fields.Item(9).Value.ToString(),
-                            SerialNo = oRS.Fields.Item(10).Value.ToString()
+                            BinEntry = Convert.ToInt32(oRS.Fields.Item(5).Value.ToString()),                            
+                            Quantity = Convert.ToDouble(oRS.Fields.Item(8).Value.ToString()),
+                            UOMEntry = oRS.Fields.Item(6).Value.ToString(),
+                            UOMCode = oRS.Fields.Item(7).Value.ToString(),
+
+                            //BatchNo = oRS.Fields.Item(6).Value.ToString(),
+                            //SerialNo = oRS.Fields.Item(10).Value.ToString()
+
 
                         });
                         oRS.MoveNext();

@@ -161,8 +161,8 @@
         document.getElementById("txtQuantity02").disabled = true;
         document.getElementById("txtScanBarCode02").disabled = true;
         document.getElementById("txtScanBatchSerial02").disabled = true;
-
     }
+
     function checkBarcodeProduct() {
         document.getElementById("divBarcodeUDOM").style.display = "none";
         document.getElementById("divBarcodeProduct").style.display = "block";
@@ -613,36 +613,7 @@
     });
 
     // Get SaleEmployee
-    var tableSlp = $('#TbSaleEmployee').DataTable({
-        @*"ajax": {
-            "url": '@Url.Action("GetSaleEmployee", "Inventory")',
-            "type": "GET",
-            "dataType": "JSON",
-            "dataSrc": 'data',
-            "complete": function (data) {
-                console.log("GET SaleEmployee Complete.");
-            }
-        },
-        "columns": [
-            { "data": "slpCode" },
-            { "data": "slpName" },
-        ],
-        "paging": false,
-        "ordering": false,
-        "info": false,
-        "select": true
-    });
-    tableSlp.on('select', function () {
-        var cellCode = tableSlp.rows({ selected: true }).data()[0]['slpCode'];
-        var cellName = tableSlp.rows({ selected: true }).data()[0]['slpName'];
-
-        $('#ChooseSlp').click(function () {
-            var xCode = document.getElementById("txtSlpCode");
-            var xName = document.getElementById("txtSlpName");
-            xCode.value = cellCode;
-            xName.value = cellName;
-        });*@
-    });
+    //var tableSlp = $('#TbSaleEmployee').DataTable({});
 
     //+++++ Get Warehouse +++++
     var tableWhs = $('#TbWhs').DataTable({
@@ -818,7 +789,7 @@
                     "info": false,
                     "searching": false
                 });
-                    tline.columns([2, 4, 7, 8]).visible(false, false);
+                    tline.columns([2, 4, 7, 8, 9, 10]).visible(false, false);
                     //document.getElementById("scanbarcode").focus();
                 //alert("Download Data Complete");
                     console.log("Download Data Complete");
@@ -1184,238 +1155,75 @@
 
     function POSTDataAPI() {
 
-        //document.getElementById("btnSave").style.display = 'none';
-        //List Data Line
-        //var tline = $('#TbLineStock').DataTable({
-        var arrDataLine = {};
-        var dLine = [];
-        var dataLineAll = {};
-
         var whsCode = document.getElementById("txtWhsCode");
         var binCode = document.getElementById("txtBinCode");
 
         let regex = /\,(?!\s*?[\{\[\"\'\w])/g;
         var str = '';
 
-        var currentDate = new Date();
-        var day = currentDate.getDate();
-        var month = currentDate.getMonth() + 1;
-        var year = currentDate.getFullYear();
-        var datax = day + "/" + month + "/" + year;
-        var txtCountingDate = document.getElementById("txtCountingDate").value;
-        var txtCountingTime = document.getElementById("txtCountingTime").value;
-        var txtcomments = document.getElementById("comments").value;
-
-        //var txtCountingDate = '2021-12-31';
-        //var txtCountingTime = '10:00';
-        //var txtcomments = 'ทดสอบ ' + datax;
 
         if (!t.data().count()) {
             alert('Empty table');
             document.getElementById("btnSave").style.display = 'block';
-        } else {
-
-            var sHead = {};
-            var sLine = [];
-            var arrayLine = {};
-            //Line
-            for (let rr = 0; rr < t.column(0).data().length; rr++) {
-
-                arrayLine = {};
-                var data = t.row(rr).data();
-                var productType = "";
-                if (data[8] != "") {
-                    productType = "b";
-                } else {
-                    if (data[9] != "") {
-                        productType = "s";
-                    }
-                }
-                arrayLine.itemCode = data[0];
-                arrayLine.quantity = parseInt(data[2]);
-                arrayLine.whsCode = data[3];
-                arrayLine.binEntry = data[4];
-                arrayLine.uomCode = data[6];
-                arrayLine.productType = productType;
-                arrayLine.batchNo = data[8];
-                arrayLine.serialNo = data[9];
-                sLine.push(arrayLine);
-            }
-            //console.log(sLine);
-
-            //For Batch Number
-            var dataLine = sLine;
-            var gBatchNo = [];
-            dataLine.reduce(function (res, value) {
-
-                if (!res[value.productType]) {
-                    if (!res[value.batchNo]) {
-                        res[value.batchNo] = {
-                            itemCode: value.itemCode
-                            , quantity: 0
-                            , whsCode: value.whsCode
-                            , binEntry: value.binEntry
-                            , uomCode: value.uomCode
-                            , batchNo: value.batchNo
-                            , serialNo: ''
-                            , productType: value.productType
-                        }
-                        gBatchNo.push(res[value.batchNo]);
-                    }
-                }
-
-                res[value.batchNo].quantity += value.quantity;
-                return res;
-            }, {});
-
-            //For Serial Number
-            var gSerialNo = [];
-            dataLine.reduce(function (res, value) {
-                if (!res[value.productType]) {
-                    if (!res[value.serialNo]) {
-                        res[value.serialNo] = {
-                            itemCode: value.itemCode
-                            , quantity: 0
-                            , whsCode: value.whsCode
-                            , binEntry: value.binEntry
-                            , uomCode: value.uomCode
-                            , batchNo: ''
-                            , serialNo: value.serialNo
-                            , productType: value.productType
-                        }
-                        gSerialNo.push(res[value.serialNo]);
-                    }
-                }
-
-                res[value.serialNo].quantity += value.quantity;
-                return res;
-            }, {});
-
-
-            //console.log('length : ' + tline.column(0).data().length);
-            for (let ctbline = 0; ctbline < tline.column(0).data().length; ctbline++) {
-                arrDataLine = {};
-                var ldata = tline.row(ctbline).data();
-
-                var productType = "";
-                if (ldata.batchNo != "") {
-                    productType = "b";
-                } else {
-                    if (ldata.serialNo != "") {
-                        productType = "s";
-                    }
-                }
-                arrDataLine.itemCode = ldata.itemCode;
-                arrDataLine.quantity = ldata.quantity;
-                arrDataLine.uomCode = ldata.uomCode;
-                arrDataLine.whsCode = whsCode.value;
-                arrDataLine.binEntry = parseInt(binCode.value);
-                arrDataLine.productType = productType;
-                arrDataLine.batchNo = ldata.batchNo;
-                arrDataLine.serialNo = ldata.serialNo;
-                dLine.push(arrDataLine);
-            }
-
-            //console.log(dLine);
-            var mergeData = [];
-            dLine.reduce(function (res, value) {
-                if (!res[value.itemCode]) {
-                    res[value.itemCode] = {
-                        itemCode: value.itemCode
-                        , quantity: 0
-                        , whsCode: value.whsCode
-                        , binEntry: value.binEntry
-                        , uomCode: value.uomCode
-                        , batchNo: value.batchNo
-                        , serialNo: value.serialNo
-                    }
-                    mergeData.push(res[value.itemCode]);
-                }
-
-                res[value.itemCode].quantity += value.quantity;
-                return res;
-            }, {});
-            //console.log(mergeData);
-            //====================
-
-            var newLine = [];
-            //newLine = $.merge($.merge($.merge([], gBatchNo), gSerialNo), dLine);
-            newLine = $.merge($.merge([], gBatchNo), gSerialNo);
-            newLine2 = $.merge([], dLine);
-            //console.log(newLine);
-            //dLine
-            //console.log("= Batch Number =");
-            //console.log(gBatchNo);
-            //console.log("= Serial Number =");
-            //console.log(gSerialNo);
-            //console.log("=================");
-
-            const arr = newLine;
-            jqueryXml = $(newLine);
-            console.log(jqueryXml);
-            console.log('=======================');
-            jqueryXml2 = $(mergeData);
-            console.log(jqueryXml2);
-
-            var jsonText = JSON.stringify(jqueryXml); //Table Data From Scan Barcode
-            const obj = JSON.parse(jsonText);
-
-            var jsonText2 = JSON.stringify(jqueryXml2); //Table Data From Get BinLocation
-            const obj2 = JSON.parse(jsonText2);
-
-            var arrSumLine = {};
-            var s1Line = [];
-            var iQty ;
-
-            for (var i = 0; i < obj2.length; i++) {
-                //iQty = 0;
-                for (var j = 0; j < obj.length; j++) {
-                    arrSumLine = {};
-                    
-                    console.log(obj2[i].itemCode + " == " + obj[j].itemCode);
-
-                    if (obj2[i].itemCode == obj[j].itemCode) {
-                        iQty += parseFloat(obj[j].quantity);
-                    } else {
-                        iQty = 0;
-                    }
-
-                    arrSumLine.itemCode = obj2[i].itemCode;
-                    arrSumLine.totalQTY = parseFloat(iQty);
-
-                }
-                s1Line.push(arrSumLine);
-            }
-            console.log(s1Line);
-
-            //Head
-            sHead.series = $('#txtSeries').val();
-            sHead.countingDate = $('#txtCountingDate').val();
-            sHead.countingTime = $('#txtCountingTime').val();
-            sHead.ref2 = $('#ref2').val();
-            sHead.comments = $('#comments').val();
-            sHead.line = newLine;
-            //console.log(sHead);
-
-            @*$.ajax({
-                type: "POST",
-                url: '@Url.Action("PostInventoryCounting", "Inventory")',
-                data: { sendInventoryCounting: sHead },
-                dataType: "JSON",
-                success: function (ex) {
-                    //console.log(ex);
-                    if (ex.errorCode == 0) {
-                        alert("Success");
-                        document.getElementById("btnSave").style.display = 'block';
-                        location.reload();
-                    } else {
-                        console.log(ex.errorMsg);
-                        alert(ex.errorMsg);
-                        document.getElementById("btnSave").style.display = 'block';
-                    }
-                }
-            });*@
         }
+        else {
+
+        }
+
+        var sHead = {};
+        var sLine = [];
+        var arrayLine = {};
+        //b = Data Line From Scan BarCode
+        for (let rr = 0; rr < t.column(0).data().length; rr++) {
+
+            arrayLine = {};
+            var data = t.row(rr).data();
+            var productType = "";
+            if (data[8] != "") {
+                productType = "b";
+            } else {
+                if (data[9] != "") {
+                    productType = "s";
+                }
+            }
+            arrayLine.itemCode = data[0];
+            arrayLine.quantity = parseInt(data[2]);
+            arrayLine.whsCode = data[3];
+            arrayLine.binEntry = data[4];
+            arrayLine.uomCode = data[6];
+            arrayLine.productType = productType;
+            arrayLine.batchNo = data[8];
+            arrayLine.serialNo = data[9];
+            sLine.push(arrayLine);
+        }
+        console.log(sLine);
+
+
+        //Tb = List Data Line
+        for (let ctbline = 0; ctbline < tline.column(0).data().length; ctbline++) {
+            arrDataLine = {};
+            var ldata = tline.row(ctbline).data();
+
+            var productType = "";
+            if (ldata.batchNo != "") {
+                productType = "b";
+            } else {
+                if (ldata.serialNo != "") {
+                    productType = "s";
+                }
+            }
+            arrDataLine.itemCode = ldata.itemCode;
+            arrDataLine.quantity = ldata.quantity;
+            arrDataLine.uomCode = ldata.uomCode;
+            arrDataLine.whsCode = whsCode.value;
+            arrDataLine.binEntry = parseInt(binCode.value);
+            arrDataLine.productType = productType;
+            arrDataLine.batchNo = ldata.batchNo;
+            arrDataLine.serialNo = ldata.serialNo;
+            dLine.push(arrDataLine);
+        }
+        console.log(dLine);
+
     }
 
 </script>

@@ -69,7 +69,7 @@ let DataTableInit = {
                             if (full.ManageItem === "N") {
                                 return "";
                             }
-                            return '<button class="btn-sm btn-info" style="margin-left: 40%;" onClick="EventItemAdd.Btn_ClickBatchSerail(\'' + meta.row + '\',tbItemLine)"><i class="fas fa-barcode"></i></button>';
+                            return '<button class="btn-sm btn-info" style="margin-left: 40%;" onClick="Btn_ClickBatchSerail(\'' + meta.row + '\',tbItemLine)"><i class="fas fa-barcode"></i></button>';
                         }
                     },
                     {
@@ -155,30 +155,34 @@ let DataTableInit = {
         });
     },
     TableSerialGen() {
+        $('#TbSerial').append('<caption style="caption-side: top">Select</caption>');
         $('#TbSerial').dataTable({
             bLengthChange: false,
-            bFilter: false,
+            bFilter: true,
             bInfo: false,
-            bPaginate: false,
+            bPaginate: true,
             data: lsSerial,
             columns:
                 [
-                    { data: "SerialNumber", autoWidth: true },
                     {
-                        data: "MfrSerialNo",
+                        render: function (data, type, full, meta) { return '<input type="checkbox" class="clsinput" style="padding:0px; position:absolute;width:100px;border:none;" onchange="AddRowSerial(' + meta.row + ')" id="chkSerialSelect' + meta.row + '">'; },
+                        autoWidth: true
+                    },
+                    {
+                        data: "serialNumber",
                         autoWidth: true
                         // render: function (data, type, full, meta) { return '<input type="number" class="clsinput" style="padding:0px; position:absolute;width:100px;border:none;" onchange="PriceChange(' + meta.row + ')" id="tbPrice' + meta.row + '" value="' + full.UnitPrice + '">'; }, autoWidth: true
                     },
                     {
-                        data: "ExpDate",
+                        data: "qty",
                         autoWidth: true
                         //render: function (data, type, full, meta) { return '<input type="number" class="clsinput" style="padding:0px; position:absolute;width:100px;border:none;" onchange="DisChange('+meta.row+')" value="'+full.Discount+'" id="tbDis'+meta.row+'" >'; }, autoWidth: true
-                    },
-                    {
-                        render: function (data, type, full, meta) {
-                            return '<button class="btn-sm btn-danger" style="margin-left: 40%;" onClick="EventItemAdd.DeleteArray(lsSerial,\'' + full.SerialNumber + '\')"><i class="fas fa-trash-alt"></i></button>';
-                        }
                     }
+                    //,{
+                    //    render: function (data, type, full, meta) {
+                    //        return '<button class="btn-sm btn-danger" style="margin-left: 40%;" onClick="EventItemAdd.DeleteArray(lsSerial,\'' + full.SerialNumber + '\')"><i class="fas fa-trash-alt"></i></button>';
+                    //    }
+                    //}
                 ],
             rowCallback: function (row, data, index) {
                 //$('td', row).css('background-color', '#ffffff');
@@ -187,22 +191,23 @@ let DataTableInit = {
         });
     },
     TableBatch() {
+        $('#TbBatch').append('<caption style="caption-side: top">Selected</caption>');
         $('#TbBatch').DataTable({
             responsive: true,
             bLengthChange: false,
             binfo: false,
             data: LBatch,
             columns: [
-                { data: "itemCode", autoWidth: true },
-                { data: "qty", autoWidth: true },
-                { data: "serialAndBatch", autoWidth: true },
-                { data: "mfrDate", autoWidth: true },
-                { data: "expirationDate", autoWidth: true },
-                { data: "admissionDate", autoWidth: true },
                 {
-                    render: function (data, type, full, meta) {
-                        return '<button class="btn-sm btn-danger" style="margin-left: 40%;" onClick="DeleteBatch(LBatch,\'' + full.serialAndBatch + '\')"><i class="fas fa-trash-alt"></i></button>';
-                    }
+                    render: function (data, type, full, meta) { return '<input type="checkbox" class="clsinput" style="padding:0px; position:absolute;width:100px;border:none;" onchange="AddRowBatch(' + meta.row + ')" id="chkBatchSelect' + meta.row + '">'; },
+                    autoWidth: true
+                },
+                { data: "batchNumber", autoWidth: true },
+                { data: "qty", autoWidth: true },
+                { data: "expDate", autoWidth: true },
+                {
+                    render: function (data, type, full, meta) { return '<input type="number" class="clsinput" style="padding:0px; position:absolute;width:100px;border:none;" onchange="OnInputBatchChange(' + meta.row + ')" id="txtInputBatch' + meta.row + '">'; },
+                    autoWidth: true
                 }
             ],
             rowCallback: function (row, data, index) {
@@ -212,22 +217,20 @@ let DataTableInit = {
         });
     },
     TabletmpBatchFromTo() {
+        $('#tmpBatchFromTo').append('<caption style="caption-side: top">Select</caption>');
         $('#tmpBatchFromTo').DataTable({
             responsive: true,
             bLengthChange: false,
             binfo: false,
             data: LtmpBatch,
             columns: [
-                { data: "BatchFrom", autoWidth: true },
-                { data: "BatchTo", autoWidth: true },
-                { data: "ExpirationDate", autoWidth: true },
-                { data: "MfrDate", autoWidth: true },
-                { data: "AdmissionDate", autoWidth: true },
                 {
-                    render: function (data, type, full, meta) {
-                        return '<button class="btn-sm btn-danger" style="margin-left: 40%;" onClick="DeleteTmpBatch(LtmpBatch,\'' + full.BatchFrom + '\',\'' + full.BatchTo + '\')"><i class="fas fa-trash-alt"></i></button>';
-                    }
-                }
+                    render: function (data, type, full, meta) { return '<input type="checkbox" class="clsinput" style="padding:0px; position:absolute;width:100px;border:none;" onchange="AddRowRemoveBatch(' + meta.row + ')" id="chkBatchUnSelect' + meta.row + '">'; },
+                    autoWidth: true
+                },
+                { data: "batchNumber", autoWidth: true },
+                { data: "qty", autoWidth: true },
+                { data: "expDate", autoWidth: true },
             ],
             rowCallback: function (row, data, index) {
                 //$('td', row).css('background-color', '#ffffff');
@@ -236,21 +239,19 @@ let DataTableInit = {
         });
     },
     TableSerialFromTo() {
+        $('#tmpSerial').append('<caption style="caption-side: top">Selected</caption>');
         $('#tmpSerial').DataTable({
             responsive: true,
             bLengthChange: false,
             binfo: false,
             data: LtmpSerial,
             columns: [
-                { data: "SerialFrom", autoWidth: true },
-                { data: "SerialTo", autoWidth: true },
-                { data: "MfrNo", autoWidth: true },
-                { data: "ExpireDate", autoWidth: true },
                 {
-                    render: function (data, type, full, meta) {
-                        return '<button class="btn-sm btn-danger" style="margin-left: 40%;" onClick="DeleteTmpSerial(LtmpSerial,\'' + full.SerialFrom + '\',\'' + full.SerialTo + '\')"><i class="fas fa-trash-alt"></i></button>';
-                    }
-                }
+                    render: function (data, type, full, meta) { return '<input type="checkbox" class="clsinput" style="padding:0px; position:absolute;width:100px;border:none;" onchange="AddRowRemoveSerial(' + meta.row + ')" id="chkRemoveSerial' + meta.row + '">'; },
+                    autoWidth: true
+                },
+                { data: "serialNumber", autoWidth: true },
+                { data: "qty", autoWidth: true }
             ],
             rowCallback: function (row, data, index) {
                 //$('td', row).css('background-color', '#ffffff');

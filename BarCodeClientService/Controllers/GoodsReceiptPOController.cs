@@ -25,9 +25,9 @@ namespace BarCodeClientService.Controllers
         #region Method
 
         [HttpGet]
-        public IActionResult GetCustomerClientResult()
+        public IActionResult GetCustomerClientResult(string cusType)
         {
-            var a = API.Read<ResponseCustomerGet>(APIRoute.GoodReceiptPO.Controller + APIRoute.GoodReceiptPO.GetCustomer);
+            var a = API.Read<ResponseCustomerGet>(APIRoute.GoodReceiptPO.Controller + APIRoute.GoodReceiptPO.GetCustomer+cusType);
             if (a.ErrorCode == 0)
             {
                 return Ok(a.Data);
@@ -166,9 +166,9 @@ namespace BarCodeClientService.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetUomCodeResult(string ItemCode)
+        public IActionResult GetUomCodeResult(string ItemCode,string UOMType)
         {
-            var a = API.Read<ResponseGetVatCode>(APIRoute.GoodReceiptPO.Controller + APIRoute.GoodReceiptPO.GetUnitOfMeasure + ItemCode);
+            var a = API.Read<ResponseGetVatCode>(APIRoute.GoodReceiptPO.Controller + APIRoute.GoodReceiptPO.GetUnitOfMeasure + ItemCode+"/"+ UOMType);
             if (a != null)
             {
                 return Ok(a.Data);

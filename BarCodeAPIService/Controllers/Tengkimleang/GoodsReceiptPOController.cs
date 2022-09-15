@@ -46,10 +46,10 @@ namespace BarCodeAPIService.Controllers
             return BadRequest(a);
         }
 
-        [HttpGet(APIRoute.GoodReceiptPO.GetCustomer)]
-        public async Task<IActionResult> GetCustomer()
+        [HttpGet(APIRoute.GoodReceiptPO.GetCustomer+ "{cusType}")]
+        public async Task<IActionResult> GetCustomer(string cusType)
         {
-            var a = await goodsReceiptPO.responseCustomerGets();
+            var a = await goodsReceiptPO.responseCustomerGets(cusType);
             return Ok(a);
         }
 
@@ -100,10 +100,10 @@ namespace BarCodeAPIService.Controllers
             var a = await goodsReceiptPO.responseGetWarehouses();
             return Ok(a);
         }
-        [HttpGet(APIRoute.GoodReceiptPO.GetUnitOfMeasure)]
-        public async Task<IActionResult> GetUnitOfMeasure()
+        [HttpGet(APIRoute.GoodReceiptPO.GetUnitOfMeasure+ "{ItemCode}/{UOMType}")]
+        public async Task<IActionResult> GetUnitOfMeasure(string ItemCode,string UOMType)
         {
-            var a = await goodsReceiptPO.responseGetWarehouses();
+            var a = await goodsReceiptPO.responseGetUnitOfMeasure(ItemCode,UOMType);
             return Ok(a);
         }
     }

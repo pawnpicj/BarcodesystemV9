@@ -1047,7 +1047,7 @@
     DataMethod.AddClassSelected('TbCusCode', tbCus);
     $(".btnModelsCus").click(function() {
         $("#ModalCusCode").modal({ backdrop: "static" });
-        GetMasterData.getCustomer('@Url.Action("GetCustomerClientResult", "GoodsReceiptPO")');
+        GetMasterData.getCustomer('@Url.Action("GetCustomerClientResult", "GoodsReceiptPO")','S');
     });
     $('#ChooseCus').click(function() {
         const index = tbCus.row('.selected').index();
@@ -2107,6 +2107,6 @@
         objectLine.ManageItem = data.manageItem;
         objectLine.UomName = data.UomName;
         objectLine.Serial = [];
-        GetMasterData.getUomCode('@Url.Action("GetUomCodeResult", "GoodsReceiptPO")',data.itemCode);
+        GetMasterData.getUomCode('@Url.Action("GetUomCodeResult", "GoodsReceiptPO")',data.itemCode,"P");
     }
 </script>

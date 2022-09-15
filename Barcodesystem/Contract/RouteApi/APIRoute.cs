@@ -13,7 +13,7 @@
         public static class GoodReceiptPO
         {
             public const string Controller = "api/GoodsReceiptPO/";
-            public const string GetCustomer = "GetCustomer";
+            public const string GetCustomer = "GetCustomer/";
             public const string GetPO = "GetPO/";
             public const string GetGoodReturn = "GoodReturn/";
             public const string SendGoodReceiptPO = "SendGoodReceiptPO";
@@ -35,6 +35,14 @@
             public const string GetGoodReceiptPOByDocNum = "GetGoodsReceiptPOByDocNum/";
             public const string SendGoodsReturn = "SendGoodsReturn";
             public const string GetUnitOfMeasure = "GetUOM";
+        }
+        public static class Delivery
+        {
+            public const string Controller = "api/Delivery/";
+            public const string GetSO = "GetSO/";
+            public const string GetBatch = "GetBatch/";
+            public const string GetSerial = "GetSerial/";
+            public const string POSTDelivery = "POSTDelivery/";
         }
     }
 }

@@ -11,7 +11,7 @@ namespace BarCodeAPIService.Service
         Task<ResponseOPORGetPO> responseOPORGetPO(string cardName);
         Task<ResponseORPDGetGoodReturn> responseORPDGetGoodReturn(string cardName);
         Task<ResponseGoodReceiptPO> PostGoodReceiptPO(SendGoodReceiptPO sendGoodReceiptPO);
-        Task<ResponseCustomerGet> responseCustomerGets();
+        Task<ResponseCustomerGet> responseCustomerGets(string cusType);
         Task<ResponseGetSeries> responseGetSeries(string objectCode, string dateOfMonth);
         Task<ResponseGetSaleEmployee> responseGetSaleEmployees();
         Task<ResponseGetCurrency> responseGetCurrency(string cardCode);
@@ -20,6 +20,6 @@ namespace BarCodeAPIService.Service
         Task<ResponseGetItemCode> responseGetItemCodes();
         Task<ResponseGetVatCode> responseGetVatCodes();
         Task<ResponseGetWarehouse> responseGetWarehouses();
-        Task<ResponseGetUnitOfMeasure> responseGetUnitOfMeasure();
+        Task<ResponseGetUnitOfMeasure> responseGetUnitOfMeasure(string itemCode,string UOMType);
     }
 }

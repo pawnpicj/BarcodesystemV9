@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "O2O";
+    ViewData["Title"] = "Create Delivery";
     var dt = DateTime.Now;
     ViewData["Date"] = dt.ToShortDateString();
 }
@@ -571,7 +571,7 @@
                                 <thead>
                                     <tr>
                                         <th>Receipt No(SAP)</th>
-                                        <th>Vendor Name</th>
+                                        <th>Customer Name</th>
                                         <th>Document Date</th>
                                         <th>DocTotal</th>
                                         <th>Document Status</th>
@@ -590,7 +590,7 @@
     </div>
 </div>
 
-@*Generate Serial*@
+@*Selecct Serial*@
 <div class="modal fade " id="ModalBarCodeSerail" data-backdrop="static">
     <div class="modal-dialog modal-xl">
         <div class="modal-content" style="background: #f0eff1; color: #696969;">
@@ -650,7 +650,7 @@
         </div>
     </div>
 </div>
-@*Generate Batch*@
+@*Select Batch*@
 <div class="modal fade " id="ModalBarCodeBatch" data-backdrop="static">
     <div class="modal-dialog modal-xl">
         <div class="modal-content" style="background: #f0eff1; color: #696969;">

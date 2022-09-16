@@ -356,6 +356,33 @@ BEGIN
 		FROM "UDOM_BARCODEV2"."DLN1" AS A 
 		LEFT JOIN UDOM_BARCODEV2."OITM" AS B ON A."ItemCode"=B."ItemCode"
 		WHERE A."DocEntry"=:par1;
+	ELSE IF :DTYPE = 'GETSALEORDER' THEN 
+		SELECT
+			A."DocEntry" AS DocEntry,
+			A."DocNum" AS DocNum,
+			A."CardCode" AS CardCode,
+			B."CardName" AS CardName,
+			'บริษัท อุดมเมดิคอล อิควิปเม้นท์ จำกัด<br>
+			เลขที่ 80 ซอยพัฒนาการ69 แขวงประเวศ<br>
+			เขตประเวศ กรุงเทพฯ 10250<br>
+			โทร.02-320-1234 , 085-344-3444<br>' AS AddressFrom,
+			CASE WHEN IFNULL(AA."Address2",'')!=''THEN IFNULL(AA."Address2",'')||', ' ELSE '' END
+			||CASE WHEN IFNULL(AA."Address3",'')!=''THEN IFNULL(AA."Address3",'')||', ' ELSE '' END
+			||CASE WHEN IFNULL(AA."City",'')!=''THEN IFNULL(AA."City",'')||', 'ELSE '' END
+			||CASE WHEN IFNULL(AA."State",'')!=''THEN IFNULL(AA."State",'')||', 'ELSE '' END
+			||CASE WHEN IFNULL(AA."County",'')!=''THEN IFNULL(AA."County",'')||', 'ELSE '' END
+			||CASE WHEN IFNULL(AA."ZipCode",'')!=''THEN IFNULL(AA."ZipCode",'')||', 'ELSE '' END AS AddressTo,
+			A."DocDueDate" AS DeliveryDate
+		FROM "UDOM_BARCODEV2"."ORDR" AS A
+		LEFT JOIN "UDOM_BARCODEV2"."OCRD" AS B ON A."CardCode"=B."CardCode"
+		LEFT JOIN "UDOM_BARCODEV2"."CRD1" AS AA ON AA."Address"=A."ShipToCode"
+		WHERE A."DocEntry" IN (
+			SELECT DISTINCT
+				A."DocEntry" 
+			FROM "UDOM_BARCODEV2"."ODLN" AS A 
+			LEFT JOIN "UDOM_BARCODEV2"."DLN1" AS B ON A."DocEntry"=B."DocEntry" 
+			WHERE IFNULL(A."U_WebID",'')<>'' );
+	END IF;
 	END IF;
 	END IF;
 	END IF;	 

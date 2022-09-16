@@ -11,5 +11,6 @@ namespace BarCodeAPIService.Service
         Task<ResponseGetBatch> responseGetBatch(string ItemCode,string WhsCode);
         Task<ResponseGetSerial> responseGetSerial(string ItemCode,string WhsCode);
         Task<ResponseDelivery> PostDelivery(SendDelivery sendDelivery);
+        Task<ResponseGetSaleOrder> responseGetSaleOrder();
     }
 }

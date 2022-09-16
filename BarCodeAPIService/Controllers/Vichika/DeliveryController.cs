@@ -50,5 +50,13 @@ namespace BarCodeAPIService.Controllers
                 return Ok(a);
             return BadRequest(a);
         }
+        [HttpGet(APIRoute.Delivery.GetSaleOrderList)]
+        public async Task<IActionResult> GetSaleOrderListAsync()
+        {
+            var a = await Delivery.responseGetSaleOrder();
+            if (a.ErrorCode == 0)
+                return Ok(a);
+            return BadRequest(a);
+        }
     }
 }

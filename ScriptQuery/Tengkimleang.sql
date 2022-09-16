@@ -366,12 +366,12 @@ BEGIN
 			เลขที่ 80 ซอยพัฒนาการ69 แขวงประเวศ<br>
 			เขตประเวศ กรุงเทพฯ 10250<br>
 			โทร.02-320-1234 , 085-344-3444<br>' AS AddressFrom,
-			CASE WHEN IFNULL(AA."Address2",'')!=''THEN IFNULL(AA."Address2",'')||', ' END
-			+CASE WHEN IFNULL(AA."Address3",'')!=''THEN IFNULL(AA."Address3",'')||', ' END
-			+CASE WHEN IFNULL(AA."City",'')!=''THEN IFNULL(AA."City",'')||', ' END
-			+CASE WHEN IFNULL(AA."State",'')!=''THEN IFNULL(AA."State",'')||', ' END
-			+CASE WHEN IFNULL(AA."County",'')!=''THEN IFNULL(AA."County",'')||', ' END
-			+CASE WHEN IFNULL(AA."ZipCode",'')!=''THEN IFNULL(AA."ZipCode",'')||', ' END AS AddressTo,
+			CASE WHEN IFNULL(AA."Address2",'')!=''THEN IFNULL(AA."Address2",'')||', ' ELSE '' END
+			||CASE WHEN IFNULL(AA."Address3",'')!=''THEN IFNULL(AA."Address3",'')||', ' ELSE '' END
+			||CASE WHEN IFNULL(AA."City",'')!=''THEN IFNULL(AA."City",'')||', 'ELSE '' END
+			||CASE WHEN IFNULL(AA."State",'')!=''THEN IFNULL(AA."State",'')||', 'ELSE '' END
+			||CASE WHEN IFNULL(AA."County",'')!=''THEN IFNULL(AA."County",'')||', 'ELSE '' END
+			||CASE WHEN IFNULL(AA."ZipCode",'')!=''THEN IFNULL(AA."ZipCode",'')||', 'ELSE '' END AS AddressTo,
 			A."DocDueDate" AS DeliveryDate
 		FROM "UDOM_BARCODEV2"."ORDR" AS A
 		LEFT JOIN "UDOM_BARCODEV2"."OCRD" AS B ON A."CardCode"=B."CardCode"

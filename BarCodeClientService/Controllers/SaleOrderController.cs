@@ -11,11 +11,18 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using BarCodeLibrary.Request.SAP.Vichika;
+using BarCodeLibrary.Respones.SAP.Pannreaksmey;
 using BarCodeLibrary.Respones.SAP.Vichika;
+using QRCoder;
+using Rotativa.AspNetCore;
 
 namespace BarCodeClientService.Controllers
 {
@@ -35,6 +42,10 @@ namespace BarCodeClientService.Controllers
         }
 
         public IActionResult CreateDelivery()
+        {
+            return View();
+        }
+        public IActionResult CreateBarCodeSaleOrder()
         {
             return View();
         }
@@ -77,7 +88,61 @@ namespace BarCodeClientService.Controllers
                 return Ok(a.Data);
             }
         }
-
+        [HttpGet]
+        public IActionResult GetSaleOrderListActionResult()
+        {
+            var a = API.Read<ResponseGetSaleOrder>(APIRoute.Delivery.Controller + APIRoute.Delivery.GetSaleOrderList);
+            if (a.ErrorCode != 0)
+            {
+                return BadRequest(a);
+            }
+            else
+            {
+                return Ok(a.Data);
+            }
+        }
+        [HttpGet]
+        public IActionResult GenerateQRCodeSaleOrder(string DocNum)
+        {
+            var qRCodeGenerator = new QRCodeGenerator();
+            var qRCodeData = qRCodeGenerator.CreateQrCode(DocNum, QRCodeGenerator.ECCLevel.Q);
+            var qRCode = new QRCode(qRCodeData);
+            var bitmap = qRCode.GetGraphic(15);
+            var bitmapBytes = ConvertBitmapToBytes(bitmap);
+            return File(bitmapBytes, "image/jpeg");
+        }
+        private byte[] ConvertBitmapToBytes(Bitmap bitmap)
+        {
+            using (var ms = new MemoryStream())
+            {
+                bitmap.Save(ms, ImageFormat.Png);
+                return ms.ToArray();
+            }
+        }
+        [HttpPost]
+        public IActionResult PrintBarCodeSaleOrderAction(CreateBarCodeSaleOrder print)
+        {
+            BarCodeSaleOrderStatic.Data = print.Data;
+            return Ok(1);
+        }
+        public IActionResult PrintLableBarCodeSaleOrder()
+        {
+            CreateBarCodeSaleOrder responseBarCodeSaleOrder = new CreateBarCodeSaleOrder();
+            responseBarCodeSaleOrder.Data = BarCodeSaleOrderStatic.Data;
+            BarCodeSaleOrderStatic.Data = null;
+            //4.5cm=170.0787401575px
+            //7cm=264.5669291339px
+            //6cm=226.7716535433px
+            return new ViewAsPdf(responseBarCodeSaleOrder)
+            {
+                PageSize = Rotativa.AspNetCore.Options.Size.Letter,
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
+                PageMargins = new Rotativa.AspNetCore.Options.Margins(0, 0, 1, 0),
+                PageWidth = 120,
+                PageHeight = 90
+                //CustomSwitches = "--page-offset 0 --footer-center [page] --footer-font-size 12"
+            };
+        }
         [HttpPost]
         public IActionResult PostDeliveryActionResult(SendDelivery sendDelivery)
         {

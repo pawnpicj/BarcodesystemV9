@@ -27,6 +27,7 @@
             public const string GetSerial = "Serial";
             public const string GetDelivery = "ODLN";
             public const string GetDeliveryLine = "DLN1";
+            public const string GetSaleOrder = "GETSALEORDER";
         }
     }
 }

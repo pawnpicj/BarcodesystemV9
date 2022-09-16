@@ -118,6 +118,57 @@ namespace BarCodeAPIService.Service
                 });
             }
         }
+
+        public Task<ResponseGetSaleOrder> responseGetSaleOrder()
+        {
+            var getSaleOrder = new List<GetSaleOrder>();
+            var dt = new DataTable();
+            try
+            {
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
+                if (login.lErrCode == 0)
+                {
+                    var Query =
+                        $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetSaleOrder}','','','','','')";
+                    login.AD = new OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
+                        getSaleOrder.Add(new GetSaleOrder
+                        {
+                            DocNum = row["DocNum"].ToString(),
+                            CardCode = row["CardCode"].ToString(),
+                            CardName = row["CardName"].ToString(),
+                            AddressFrom = row["AddressFrom"].ToString(),
+                            AddressTo = row["AddressTo"].ToString(),
+                            DeliveryDate = Convert.ToDateTime(row["DeliveryDate"]).ToShortDateString()
+                        });
+                    return Task.FromResult(new ResponseGetSaleOrder
+                    {
+                        ErrorCode = 0,
+                        ErrorMessage = "",
+                        Data = getSaleOrder.ToList()
+                    });
+                }
+
+                return Task.FromResult(new ResponseGetSaleOrder
+                {
+                    ErrorCode = login.lErrCode,
+                    ErrorMessage = login.sErrMsg,
+                    Data = null
+                });
+            }
+
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseGetSaleOrder
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMessage = ex.Message,
+                    Data = null
+                });
+            }
+        }
+
         public Task<ResponseGetORDR> responseGetORDR(string cardName)
         {
             var oPORs = new List<ORDR>();

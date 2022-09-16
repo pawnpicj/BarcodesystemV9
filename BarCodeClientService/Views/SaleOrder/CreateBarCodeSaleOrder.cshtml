@@ -1,0 +1,343 @@
+﻿@using BarCodeClientService.Controllers
+@{
+    ViewData["Title"] = "Create Return";
+    var dt = DateTime.Now;
+    ViewData["Date"] = dt.ToShortDateString();
+}
+
+<link href="~/css/DataTable/jquery.dataTables.min.css" rel="stylesheet"/>
+<link href="~/css/DataTable/rowReorder.dataTables.min.css" rel="stylesheet"/>
+<link href="~/tengkimleang/goodReceiptPO/Style.css" />
+@*<link href="~/css/DataTable/responsive.dataTables.min.css" rel="stylesheet" />*@
+<script src="~/css/DataTable/jquery-3.3.1.js"></script>
+<script src="~/css/DataTable/jquery.dataTables.min.js"></script>
+<script src="~/css/DataTable/dataTables.rowReorder.min.js"></script>
+@*<script src="~/css/DataTable/dataTables.responsive.min.js"></script>*@
+
+<style>
+    tr.selected {
+        background: red;
+        color: red;
+    }
+
+    #main { position: absolute; }
+
+    .color_tap {
+        background-color: #5f95c3;
+        color: #ffffff;
+        font-weight: 600;
+        margin-right: 1px;
+        min-width: 60px;
+    }
+
+    .nav-tabs .nav-link {
+        border: 1px solid rgb(193, 193, 193);
+        border-radius: 0px 12px 0px 0px;
+        height: 40px;
+        line-height: 20px;
+    }
+
+    .modal { z-index: 200000; }
+
+    .modal-header {
+        background: #5f95c3;
+        color: #ffffff;
+        height: 40px;
+    }
+
+    .modal-header b { margin-top: -10px; }
+
+    #TbAR table tr td {
+        height: 35px;
+        margin-left: 15px;
+        margin-top: 10px;
+        padding: 0px !important;
+        position: relative !important;
+        /*background-color: none;*/
+    }
+
+    table tbody tr td {
+        background-color: #ffffff;
+        color: black;
+    }
+
+    table tbody tr.selected td {
+        background: #94d8e1;
+        color: red;
+    }
+
+    table tbody tr.selected td .clsinput {
+        background: #94d8e1;
+        color: red;
+    }
+
+    .clsinput:focus { outline: none; }
+
+    /* =================================================== */
+    .cover-spin {
+        position: fixed;
+        width: 100%;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background-color: rgba(255,255,255,0.7);
+        z-index: 9999;
+        display: none;
+    }
+
+    @@-webkit-keyframes spin {
+        from {
+            -webkit-transform: rotate(0deg);
+        }
+
+        to {
+            -webkit-transform: rotate(360deg);
+        }
+    }
+
+    @@keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .cover-spin::after {
+        content: '';
+        display: block;
+        position: absolute;
+        left: 48%;
+        top: 40%;
+        width: 40px;
+        height: 40px;
+        border-style: solid;
+        border-color: black;
+        border-top-color: transparent;
+        border-width: 4px;
+        border-radius: 50%;
+        -webkit-animation: spin .8s linear infinite;
+        animation: spin .8s linear infinite;
+    }
+    /* =================================================== */
+
+</style>
+
+<div id="#main">
+
+    <div id="frmLoading" class="cover-spin" style="display:none"></div>
+
+    <div class="row" style="color: #696969; margin-left: 5px; margin-top: 5px;">
+        <h5 style="color: #696969; margin-top: 5px;">
+            <a><i class="fas fa-home"></i> Dashboard</a>
+            <span>
+                <a><i class="fa fa-caret-right align-right"></i>Sale Order</a>
+                <i class="fa fa-caret-right align-right"></i> Create BarCode SaleOrder
+            </span>
+        </h5>
+    </div>
+    <hr />
+    <div style="color: #696969; padding: 10px;">
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="cus" role="tabpanel" aria-labelledby="cus-tab" style="margin-top: 10px">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <button class="btn btn-info mb-5" id="btnSelectSaleOrder" data-toggle="modal" data-target="#ModalListSaleOrder">
+                            Select SaleOrder
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="TbSaleOrder" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
+                                <thead>
+                                <tr>
+                                    <th>Document Number</th>
+                                    <th>Customer Code</th>
+                                    <th>Customer Name</th>
+                                    <th>Address From</th>
+                                    <th>Address To</th>
+                                    <th>Delivery Date</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="row" style="margin-bottom: -20px; margin-top: -20px; padding: 15px;">
+            <div class="nav navbar-nav ml-auto">
+                <div class="btn-group">
+                    <button class="btn btn-info" id="Save" style="background: #f0eff1; color: #696969; margin-left: 5px;">Print Sticker</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr />
+</div>
+<!--Modal Start-->
+<div class="modal fade" id="ModalListSaleOrder" data-backdrop="static">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background: #f0eff1; color: #696969;">
+            <div class="modal-header">
+                <b>List Of Sale Order</b>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="TbSaleOrderList" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
+                                <thead>
+                                <tr>
+                                    <th>Document Number</th>
+                                    <th>Customer Code</th>
+                                    <th>Customer Name</th>
+                                    <th>Address From</th>
+                                    <th>Address To</th>
+                                    <th>Delivery Date</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" @*data-dismiss="modal"*@ id="ChooseSaleOrderList" style="background: #f0eff1; color: #696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" id="btnCloseModalListSaleOrder" style="background: #f0eff1; color: #696969;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Modal-->
+
+<script src="~/js/tengkimleang/Method/MethodDataTable.js"></script>
+
+<script type="text/javascript">
+    var dataTableMethod = new DataTableMethod();
+    //DataTable SaleOrder Line
+    LSaleOrderBarCode = [];
+    $('#TbSaleOrder').append('<caption style="caption-side: top">List BarCode Sticker</caption>');
+    $('#TbSaleOrder').DataTable({
+        responsive: true,
+        bLengthChange: false,
+        binfo: false,
+        data: LSaleOrderBarCode,
+        columns: [
+            { data: "docNum", autoWidth: true },
+            { data: "cardCode", autoWidth: true },
+            { data: "cardName", autoWidth: true },
+            { data: "addressFrom", autoWidth: true },
+            { data: "addressTo", autoWidth: true },
+            { data: "deliveryDate", autoWidth: true },
+            {
+                render: function (data, type, full, meta) { return '<button class="btn-sm btn-danger" style="margin-left: 40%;" onClick="Remove(' + meta.row + ')"><i class="fas fa-trash-alt"></i></button>'; }
+            }
+        ],
+        rowCallback: function (row, data, index) {
+        }
+    });
+    var TbSaleOrder = $('#TbSaleOrder').DataTable();
+    //End DataTable SaleOrder Line
+    //DataTable ListSaleOrder
+    ListSaleOrder = [];
+    $('#TbSaleOrderList').DataTable({
+        responsive: true,
+        bLengthChange: false,
+        binfo: false,
+        data: ListSaleOrder,
+        columns: [
+            { data: "docNum", autoWidth: true },
+            { data: "cardCode", autoWidth: true },
+            { data: "cardName", autoWidth: true },
+            { data: "addressFrom", autoWidth: true },
+            { data: "addressTo", autoWidth: true },
+            { data: "deliveryDate", autoWidth: true }
+    ],
+        rowCallback: function (row, data, index) {
+        }
+    });
+    var TbSaleOrderList = $('#TbSaleOrderList').DataTable();
+    AddMultipleSelectClass("TbSaleOrderList", TbSaleOrderList);
+    let selectedIndexSaleOrderList = [];
+    function AddMultipleSelectClass(id, table) {
+        $("#" + id + " tbody").on("click",
+            "tr",
+            function () {
+                if ($(this).hasClass("selected")) {
+                    var row=$(this).index();
+                    var index = selectedIndexSaleOrderList.indexOf(row);
+                    selectedIndexSaleOrderList.splice(index,1);
+                    $(this).removeClass("selected");
+                }
+                else {
+                    // tbCus.$('tr.selected').removeClass('selected');
+                    //table.$("tr.selected").removeClass("selected");
+                    selectedIndexSaleOrderList.push($(this).index());
+                    $(this).addClass("selected");
+                }
+            });
+    }
+    //End DataTable ListSaleOrder
+    $("#btnSelectSaleOrder").click(function() {
+        $.ajax({
+            url: '@Url.Action("GetSaleOrderListActionResult","SaleOrder")',
+            type: "GET",
+            dataType: "JSON",
+            success: function(data) {
+                ListSaleOrder = data;
+                TbSaleOrderList.clear();
+                TbSaleOrderList.rows.add(ListSaleOrder);
+                TbSaleOrderList.search('').draw();
+            },
+            error: function(erro) {
+                console.log(erro.responseText);
+            }
+        });
+    });
+    $("#ChooseSaleOrderList").click(function() {
+        for (var i = 0; i < selectedIndexSaleOrderList.length; i++) {
+            let data = TbSaleOrderList.row(selectedIndexSaleOrderList[i]).data();
+            LSaleOrderBarCode.push(data);
+        }
+        TbSaleOrder.clear();
+        TbSaleOrder.rows.add(LSaleOrderBarCode);
+        TbSaleOrder.search('').draw();
+        selectedIndexSaleOrderList = [];
+        $("#ModalListSaleOrder").modal("hide");
+    });
+    $("#btnCloseModalListSaleOrder").click(function() {
+        selectedIndexSaleOrderList = [];
+    });
+    function Remove(row) {
+        const data = TbSaleOrder.row(row).data();
+        var index = LSaleOrderBarCode.indexOf(data);
+        LSaleOrderBarCode.splice(index,1);
+        TbSaleOrder.clear();
+        TbSaleOrder.rows.add(LSaleOrderBarCode);
+        TbSaleOrder.search('').draw();
+    }
+
+    $("#Save").click(function() {
+        var tmp = {};
+        tmp.data=LSaleOrderBarCode;
+        $.ajax({
+            url: '@Url.Action("PrintBarCodeSaleOrderAction", "SaleOrder")',
+            type: "POST",
+            data: { print: tmp},
+            dataType: "JSON",
+            success: function (data) {
+                if (data == 1) {
+                    window.location.href = "@Url.Action("PrintLableBarCodeSaleOrder", "SaleOrder")";//170x264
+                }
+            }
+        });
+    });
+</script>

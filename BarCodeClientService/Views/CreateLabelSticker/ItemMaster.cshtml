@@ -216,6 +216,16 @@
                         <input type="date" class="form-control" placeholder="" id="expireDate" required>
 
                     </div>
+
+                    Unit:
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button class="input-group-text" id="GexpireDate"><i class="fa fa-check"></i></button>
+                        </div>
+                        <select name="cbUnit" id="Unit">
+                        </select>
+                    </div>
+
                     Quantity :
                     <div class="input-group" style="margin-bottom:20px">
                         <div class="input-group-prepend">
@@ -491,7 +501,14 @@
         itemLines = {};
         Qty = $('#Qty').val();
         //console.log(Qty);
-        if ($('#ItemCode').val() != "" && $('#ItemName').val() != "" && $('#Qty').val() != "" && $('#ProductGroup').val() != "" && $('#batchSN').val() != "" && $('#expireDate').val() != "") {
+        // && $('#expireDate').val() != ""
+        if ($('#expireDate').val() == "") {
+            txtExpireDate = "1899-12-30";
+        } else {
+            txtExpireDate = $('#expireDate').val();
+        }
+        console.log($('#expireDate').val());
+        if ($('#ItemCode').val() != "" && $('#ItemName').val() != "" && $('#Qty').val() != "" && $('#ProductGroup').val() != "" && $('#batchSN').val() != "") {
             if (batch == "Y") {
                 for (var i = 0; i < Qty; i++) {
                     allitemLInes = [];
@@ -501,7 +518,7 @@
                     itemLines.quantity = 1;
                     itemLines.productCode = $('#ProductGroup').val() + " ";
                     itemLines.batchSN = $('#batchSN').val() + "";
-                    itemLines.expDate = $('#expireDate').val() + "";
+                    itemLines.expDate = txtExpireDate + "";
                     itemLines.fda = $('#txtFDA').val();
                     itemLines.concatText = "- " + $('#ItemCode').val() + "\n- " + $('#ItemName').val() + "\n- " + $('#ProductGroup').val();
                     itemLines.concatText2 = $('#ItemCode').val() + ";" + $('#batchSN').val() + ";;" + $('#expireDate').val() + ";" + i.toString().padStart(4, '0') + "";
@@ -522,7 +539,7 @@
                         itemLines.quantity = 1;
                         itemLines.productCode = $('#ProductGroup').val() + "";
                         itemLines.batchSN = $('#batchSN').val() + "";
-                        itemLines.expDate = $('#expireDate').val() + "";
+                        itemLines.expDate = txtExpireDate + "";
                         itemLines.fda = $('#txtFDA').val();
                         itemLines.concatText = "- " + $('#ItemCode').val() + "\n- " + $('#ItemName').val() + "\n- " + $('#ProductGroup').val();
                         itemLines.concatText2 = $('#ItemCode').val() + ";;" + $('#batchSN').val() + i.toString().padStart(2, '0') + ";" + $('#expireDate').val() + ";" + i.toString().padStart(4, '0') + "";
@@ -541,7 +558,7 @@
                         itemLines.quantity = 1;
                         itemLines.productCode = $('#ProductGroup').val() + " ";
                         itemLines.batchSN = $('#batchSN').val() + "";
-                        itemLines.expDate = $('#expireDate').val() + "";
+                        itemLines.expDate = txtExpireDate + "";
                         itemLines.fda = $('#txtFDA').val();
                         itemLines.concatText = "- " + $('#ItemCode').val() + "\n\n-" + $('#ItemName').val() + "\n\n-" + $('#ProductGroup').val();
                         itemLines.concatText2 = $('#ItemCode').val() + ";;;" + $('#expireDate').val() + ";" + i.toString().padStart(4, '0') + "";
@@ -553,14 +570,16 @@
                     }
                     //table.clear();
                     //table.rows.add(allitemLInes).draw(false);
-                }
-                //$('#ItemCode').val("");
-                //$('#ItemName').val("");
-                $('#Qty').val("1");
-                //$('#ProductGroup').val("");
-                $('#batchSN').val("");
-                $('#expireDate').val("");
-                $('#txtFDA').val("");
+            }
+
+            //$('#ItemCode').val("");
+            //$('#ItemName').val("");
+            $('#Qty').val("1");
+            //$('#ProductGroup').val("");
+            $('#batchSN').val("");
+            $('#expireDate').val("");
+            $('#txtFDA').val("");
+
             document.getElementById("batchSN").focus();
             }
 
@@ -643,7 +662,7 @@
                 document.getElementById("frmLoading").style.display = "none";
                 document.getElementById("batchSN").disabled = false;
             }
-            
+
         }
     });
 
@@ -720,6 +739,26 @@
         }
 
     });
+
+    //ComboBox Unit
+    $('#Unit').on('change', function () {
+        $.ajax({
+            url: '@Url.Action("GetUOMList", "CreateLabelSticker")',
+            type: "GET",
+            dataType: "JSON",
+            success: function (data) {
+                $("#Unit").empty();
+                for (var i = 0; i < data.length; i++) {
+                    $("#Unit").append('<option value="' + data[i].uomCode + '">' + data[i].uomCode + "</option>");
+                }
+            },
+            error: function (erro) {
+                console.log(erro.responseText);
+            }
+        });
+    });
+
+
 
     //Button for Generate Batch/Serial
     $('#btnAuto').click(function () {

@@ -144,5 +144,19 @@ namespace BarCodeAPIService.Controllers.Bank
             }
         }
 
+        [HttpGet("GetUOMList")]
+        public async Task<IActionResult> GetUOMListAsync()
+        {
+            var a = await stockWhsBinService.responseGetOUOM();
+            if (a.ErrorCode == 0)
+            {
+                return Ok(a);
+            }
+            else
+            {
+                return BadRequest(a);
+            }
+        }
+
     }
 }

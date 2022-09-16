@@ -36,7 +36,7 @@
 
   <ItemGroup>
     <Reference Include="SAPBusinessOneSDK">
-      <HintPath>..\..\plugin\v3\SAPBusinessOneSDK.dll</HintPath>
+      <HintPath>..\..\VB\plugin\v3\SAPBusinessOneSDK.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>

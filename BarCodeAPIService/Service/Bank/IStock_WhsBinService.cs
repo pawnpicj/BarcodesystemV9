@@ -22,5 +22,7 @@ namespace BarCodeAPIService.Service.Bank
         Task<ResponseScanItemsInIM> responseScanItemsInIM(string docEntry, string itemCode, string batchSerialNo);
 
         Task<ResponseGetStockItemBatchAndSerial> responseGetItemByBarcode(string barCode, string itemCode);
+
+        Task<ResponseGetOUOM> responseGetOUOM();
     }
 }

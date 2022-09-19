@@ -69,6 +69,7 @@ namespace BarCodeAPIService.Service
                                 oGoodReceiptPO.Lines.SerialNumbers.Quantity = 1;
                                 oGoodReceiptPO.Lines.SerialNumbers.ManufacturerSerialNumber = serial.MfrSerialNo;
                                 oGoodReceiptPO.Lines.SerialNumbers.InternalSerialNumber = serial.SerialNumber;
+                                oGoodReceiptPO.Lines.SerialNumbers.ExpiryDate = serial.ExpDate;
                                 oGoodReceiptPO.Lines.SerialNumbers.Add();
                             }
                         else if (l.ManageItem == "B")

@@ -64,6 +64,13 @@ namespace BarCodeClientService.Controllers
             return Ok(a);
         }
 
+        [HttpGet]
+        public IActionResult GetUOMList()
+        {
+            var a = API.Read<ResponseGetOUOM>("GetUOMList");
+            return Ok(a);
+        }
+
         // Method for Pint Item Label's size 6x7
         public IActionResult PrintItemLablePDF()
         {

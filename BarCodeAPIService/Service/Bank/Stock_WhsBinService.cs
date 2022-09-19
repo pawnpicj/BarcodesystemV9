@@ -33,12 +33,14 @@ namespace BarCodeAPIService.Service.Bank
                             WhsCode = oRS.Fields.Item(2).Value.ToString(),
                             WhsName = oRS.Fields.Item(3).Value.ToString(),
                             BinCode = oRS.Fields.Item(4).Value.ToString(),
-                            BinEntry = Convert.ToInt32(oRS.Fields.Item(5).Value.ToString()),
-                            BatchNo = oRS.Fields.Item(6).Value.ToString(),
-                            Quantity = Convert.ToDouble(oRS.Fields.Item(7).Value.ToString()),
-                            UOMEntry = oRS.Fields.Item(8).Value.ToString(),
-                            UOMCode = oRS.Fields.Item(9).Value.ToString(),
-                            SerialNo = oRS.Fields.Item(10).Value.ToString()
+                            BinEntry = Convert.ToInt32(oRS.Fields.Item(5).Value.ToString()),                            
+                            Quantity = Convert.ToDouble(oRS.Fields.Item(8).Value.ToString()),
+                            UOMEntry = oRS.Fields.Item(6).Value.ToString(),
+                            UOMCode = oRS.Fields.Item(7).Value.ToString(),
+
+                            //BatchNo = oRS.Fields.Item(6).Value.ToString(),
+                            //SerialNo = oRS.Fields.Item(10).Value.ToString()
+
 
                         });
                         oRS.MoveNext();
@@ -580,6 +582,57 @@ namespace BarCodeAPIService.Service.Bank
             }
         }
 
+        public Task<ResponseGetOUOM> responseGetOUOM()
+        {
+            var getUOMList = new List<OUOMList>();
+            SAPbobsCOM.Company oCompany;
+            try
+            {
+                Login login = new();
+                if (login.LErrCode == 0)
+                {
+                    oCompany = login.Company;
+                    SAPbobsCOM.Recordset? oRS = null;
+                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('GetPriceUnit','','','','','')"; ;
+                    oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+                    oRS.DoQuery(sqlStr);
+
+                    while (!oRS.EoF)
+                    {
+                        getUOMList.Add(new OUOMList
+                        {
+                            UomCode = oRS.Fields.Item(0).Value.ToString()
+                        });
+                        oRS.MoveNext();
+                    }
+
+                    return Task.FromResult(new ResponseGetOUOM
+                    {
+                        ErrorCode = 0,
+                        ErrorMsg = "",
+                        Data = getUOMList
+                    });
+                }
+                else
+                {
+                    return Task.FromResult(new ResponseGetOUOM
+                    {
+                        ErrorCode = login.LErrCode,
+                        ErrorMsg = login.SErrMsg,
+                        Data = null
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseGetOUOM
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMsg = ex.Message,
+                    Data = null
+                });
+            }
+        }
 
     }
 }

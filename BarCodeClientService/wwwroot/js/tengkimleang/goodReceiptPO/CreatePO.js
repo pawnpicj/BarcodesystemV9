@@ -42,6 +42,14 @@ let DataTableInit = {
             data: LinesAR,
             columns:
                 [
+                    {
+                        render: function (data, type, full, meta) {
+                            if (full.ManageItem === "N") {
+                                return "";
+                            }
+                            return '<button class="btn-sm btn-info" style="margin-left: 40%;" onClick="EventItemAdd.Btn_ClickBatchSerail(\'' + meta.row + '\',tbItemLine)"><i class="fas fa-barcode"></i></button>';
+                        }
+                    },
                     { data: "ItemCode", autoWidth: true },
                     {
                         data: "UnitPrice", autoWidth: true
@@ -64,14 +72,7 @@ let DataTableInit = {
                     { data: "UomName", autoWidth: true },
                     { data: "TaxCode", autoWidth: true },
                     { data: "Whs", autoWidth: true },
-                    {
-                        render: function (data, type, full, meta) {
-                            if (full.ManageItem === "N") {
-                                return "";
-                            }
-                            return '<button class="btn-sm btn-info" style="margin-left: 40%;" onClick="EventItemAdd.Btn_ClickBatchSerail(\'' + meta.row + '\',tbItemLine)"><i class="fas fa-barcode"></i></button>';
-                        }
-                    },
+                    
                     {
                         render: function (data, type, full, meta) { return '<button class="btn-sm btn-danger" style="margin-left: 40%;" onClick="Remove(' + meta.row + ')"><i class="fas fa-trash-alt"></i></button>'; }
                     }

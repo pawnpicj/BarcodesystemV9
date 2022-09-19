@@ -216,6 +216,12 @@
                         <input type="date" class="form-control" placeholder="" id="expireDate" required>
 
                     </div>
+
+                    UOM:
+                    <div class="input-group">
+                        <select class="form-control" id="cbUnit"></select>
+                    </div>
+
                     Quantity :
                     <div class="input-group" style="margin-bottom:20px">
                         <div class="input-group-prepend">
@@ -297,6 +303,7 @@
                                     <th>Product Group</th>
                                     <th>Batch/SN</th>
                                     <th>Exp.Date</th>
+                                    <th>UOM</th>
                                     <th>FDA</th>
                                 </tr>
                             </thead>
@@ -372,11 +379,35 @@
             { data: "itemGroup", autoWidth: true },
             { data: "manBtchNum", autoWidth: true },
             { data: "manSerNum", autoWidth: true },
-            //{ data: "uoM", autoWidth: true }
+            //{ data: "UOM", autoWidth: true },
             {data:"fda",autoWidth:true}
 
         ]
     });
+
+
+    //ComboBox UOM
+    //$('#cbUnit').on('change', function () { });
+        $.ajax({
+            url: '@Url.Action("GetUOMList", "CreateLabelSticker")',
+            type: "GET",
+            dataType: "JSON",
+            success: function (valx) {
+                $("#cbUnit").empty();
+                var text = "";
+                var jqueryXml = $(valx);
+                text += "<option value=''> — Select a UOM — </option>";
+                for (var i = 0; i < jqueryXml[0].data.length; i++) {
+                    text += "<option values=" + jqueryXml[0].data[i].uomCode + ">" + jqueryXml[0].data[i].uomCode + "</option >";
+                    //$("#cbUnit").append('<option value="' + jqueryXml[0].data[i].uomCode + '">' + jqueryXml[0].data[i].uomCode + "</option>");
+                    //console.log(jqueryXml[0].data[i].uomCode);
+                }
+                $("#cbUnit").html(text);
+            },
+            error: function (erro) {
+                console.log(erro.responseText);
+            }
+        });
 
     var tbWhs = $('#tbItem').DataTable();
     var LWhs = [];
@@ -437,8 +468,8 @@
 
         //$('#txtFDA').val(data.fda);
         //FDA = "1234";
-        //batch = data.manBtchNum;
-        //serial = data.manSerNum;
+        batch = data.manBtchNum;
+        serial = data.manSerNum;
 
 
         document.getElementById("batchSN").focus();
@@ -455,6 +486,7 @@
             { data: "productCode", autoWidth: true },
             { data: "batchSN", autoWidth: true },
             { data: "expDate", autoWidth: true },
+            { data: "UOM", autoWidth: true },
             { data: "fda",autoWidth:true}
         ]
     });
@@ -484,13 +516,21 @@
     var itemLines = {};
     $('#Add').click(function () {
 
+        console.log(batch + "-" + serial);
         allitemLInes = [];
         //allitemLInes = [];
         //HeaderLs = [];
         itemLines = {};
         Qty = $('#Qty').val();
         //console.log(Qty);
-        if ($('#ItemCode').val() != "" && $('#ItemName').val() != "" && $('#Qty').val() != "" && $('#ProductGroup').val() != "" && $('#batchSN').val() != "" && $('#expireDate').val() != "") {
+        // && $('#expireDate').val() != ""
+        if ($('#expireDate').val() == "") {
+            txtExpireDate = "1899-12-30";
+        } else {
+            txtExpireDate = $('#expireDate').val();
+        }
+        console.log($('#expireDate').val());
+        if ($('#ItemCode').val() != "" && $('#ItemName').val() != "" && $('#Qty').val() != "" && $('#ProductGroup').val() != "" && $('#batchSN').val() != "") {
             if (batch == "Y") {
                 for (var i = 0; i < Qty; i++) {
                     allitemLInes = [];
@@ -500,13 +540,15 @@
                     itemLines.quantity = 1;
                     itemLines.productCode = $('#ProductGroup').val() + " ";
                     itemLines.batchSN = $('#batchSN').val() + "";
-                    itemLines.expDate = $('#expireDate').val() + "";
+                    itemLines.expDate = txtExpireDate + "";
+                    itemLines.UOM = $('#cbUnit').val() + "";
                     itemLines.fda = $('#txtFDA').val();
                     itemLines.concatText = "- " + $('#ItemCode').val() + "\n- " + $('#ItemName').val() + "\n- " + $('#ProductGroup').val();
                     itemLines.concatText2 = $('#ItemCode').val() + ";" + $('#batchSN').val() + ";;" + $('#expireDate').val() + ";" + i.toString().padStart(4, '0') + "";
                     allitemLInes.push(itemLines);
                     HeaderLs.push(itemLines);
                     table.rows.add(allitemLInes).draw(false);
+                    console.log("Add Batch Number.");
                 }
 
             }
@@ -520,13 +562,15 @@
                         itemLines.quantity = 1;
                         itemLines.productCode = $('#ProductGroup').val() + "";
                         itemLines.batchSN = $('#batchSN').val() + "";
-                        itemLines.expDate = $('#expireDate').val() + "";
+                        itemLines.expDate = txtExpireDate + "";
+                        itemLines.UOM = $('#cbUnit').val() + "";
                         itemLines.fda = $('#txtFDA').val();
                         itemLines.concatText = "- " + $('#ItemCode').val() + "\n- " + $('#ItemName').val() + "\n- " + $('#ProductGroup').val();
                         itemLines.concatText2 = $('#ItemCode').val() + ";;" + $('#batchSN').val() + i.toString().padStart(2, '0') + ";" + $('#expireDate').val() + ";" + i.toString().padStart(4, '0') + "";
                         allitemLInes.push(itemLines);
                         HeaderLs.push(itemLines);
                         table.rows.add(allitemLInes).draw(false);
+                        console.log("Add Serial Number.");
                     }
                 }
                 if (batch == "N" && serial == "N") {
@@ -538,25 +582,30 @@
                         itemLines.quantity = 1;
                         itemLines.productCode = $('#ProductGroup').val() + " ";
                         itemLines.batchSN = $('#batchSN').val() + "";
-                        itemLines.expDate = $('#expireDate').val() + "";
+                        itemLines.expDate = txtExpireDate + "";
+                        itemLines.UOM = $('#cbUnit').val() + "";
                         itemLines.fda = $('#txtFDA').val();
                         itemLines.concatText = "- " + $('#ItemCode').val() + "\n\n-" + $('#ItemName').val() + "\n\n-" + $('#ProductGroup').val();
                         itemLines.concatText2 = $('#ItemCode').val() + ";;;" + $('#expireDate').val() + ";" + i.toString().padStart(4, '0') + "";
                         allitemLInes.push(itemLines);
                         HeaderLs.push(itemLines);
-                        itemLines = {};
+                        //itemLines = {};
                         table.rows.add(allitemLInes).draw(false);
+                        console.log("Add No Batch/Serial Number.");
                     }
                     //table.clear();
                     //table.rows.add(allitemLInes).draw(false);
-                }
-                //$('#ItemCode').val("");
-                //$('#ItemName').val("");
-                $('#Qty').val("1");
-                //$('#ProductGroup').val("");
-                $('#batchSN').val("");
-                $('#expireDate').val("");
-                $('#txtFDA').val("");
+            }
+
+            //$('#ItemCode').val("");
+            //$('#ItemName').val("");
+            $('#Qty').val("1");
+            //$('#ProductGroup').val("");
+            $('#batchSN').val("");
+            $('#expireDate').val("");
+            $('#txtFDA').val("");
+            $('#cbUnit').val("");
+
             document.getElementById("batchSN").focus();
             }
 
@@ -588,6 +637,7 @@
             arrayLine.expDate = data.expDate;
             arrayLine.batchSN = data.batchSN;
             arrayLine.fda = data.fda;
+            arrayLine.UOM = data.UOM;
             sLine.push(arrayLine);
         }
         console.log(sLine);
@@ -639,7 +689,7 @@
                 document.getElementById("frmLoading").style.display = "none";
                 document.getElementById("batchSN").disabled = false;
             }
-            
+
         }
     });
 
@@ -716,6 +766,8 @@
         }
 
     });
+
+
 
     //Button for Generate Batch/Serial
     $('#btnAuto').click(function () {

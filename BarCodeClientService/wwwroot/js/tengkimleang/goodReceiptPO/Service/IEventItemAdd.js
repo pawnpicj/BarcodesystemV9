@@ -16,10 +16,14 @@
             tbSerial1.clear();
             tbSerial1.rows.add(data.Serial);
             tbSerial1.search("").draw();
-            $("#SerialNumber").val("");
+            $('#SerialNumber').val("");
             $("#txtManfrSerial").val("");
             $("#txtExpireDate").val("");
             $("#ModalBarCodeSerail").modal("show");
+            //alert("Openning Form S");
+            console.log("Openned Form Serial");
+
+
         } else if (data.ManageItem == "B") {
             let k = 0;
             console.log(data);
@@ -34,11 +38,14 @@
             $("#ItemCodeBatch").val(data.ItemCode);
             $("#ItemCodeBatchQty").val(data.Quantity - k);
             $("#txtIDRowB").val(index);
+            $('#BatchNumber').val("");
             LBatch = data.Batches;
             tbBatch.clear();
             tbBatch.rows.add(LBatch);
             tbBatch.search("").draw();
             $("#ModalBarCodeBatch").modal("show");
+            //alert("Openning Form B");
+            console.log("Openned Form Batch");
         }
     }
 

@@ -217,14 +217,10 @@
 
                     </div>
 
-                    @*Unit:
+                    UOM:
                     <div class="input-group">
-                        <div class="input-group-prepend">
-                            <button class="input-group-text" id="GexpireDate"><i class="fa fa-check"></i></button>
-                        </div>
-                        <select name="cbUnit" id="Unit">
-                        </select>
-                    </div>*@
+                        <select class="form-control" id="cbUnit"></select>
+                    </div>
 
                     Quantity :
                     <div class="input-group" style="margin-bottom:20px">
@@ -307,6 +303,7 @@
                                     <th>Product Group</th>
                                     <th>Batch/SN</th>
                                     <th>Exp.Date</th>
+                                    <th>UOM</th>
                                     <th>FDA</th>
                                 </tr>
                             </thead>
@@ -382,11 +379,35 @@
             { data: "itemGroup", autoWidth: true },
             { data: "manBtchNum", autoWidth: true },
             { data: "manSerNum", autoWidth: true },
-            //{ data: "uoM", autoWidth: true }
+            //{ data: "UOM", autoWidth: true },
             {data:"fda",autoWidth:true}
 
         ]
     });
+
+
+    //ComboBox UOM
+    //$('#cbUnit').on('change', function () { });
+        $.ajax({
+            url: '@Url.Action("GetUOMList", "CreateLabelSticker")',
+            type: "GET",
+            dataType: "JSON",
+            success: function (valx) {
+                $("#cbUnit").empty();
+                var text = "";
+                var jqueryXml = $(valx);
+                text += "<option value=''> — Select a UOM — </option>";
+                for (var i = 0; i < jqueryXml[0].data.length; i++) {
+                    text += "<option values=" + jqueryXml[0].data[i].uomCode + ">" + jqueryXml[0].data[i].uomCode + "</option >";
+                    //$("#cbUnit").append('<option value="' + jqueryXml[0].data[i].uomCode + '">' + jqueryXml[0].data[i].uomCode + "</option>");
+                    //console.log(jqueryXml[0].data[i].uomCode);
+                }
+                $("#cbUnit").html(text);
+            },
+            error: function (erro) {
+                console.log(erro.responseText);
+            }
+        });
 
     var tbWhs = $('#tbItem').DataTable();
     var LWhs = [];
@@ -465,6 +486,7 @@
             { data: "productCode", autoWidth: true },
             { data: "batchSN", autoWidth: true },
             { data: "expDate", autoWidth: true },
+            { data: "UOM", autoWidth: true },
             { data: "fda",autoWidth:true}
         ]
     });
@@ -519,6 +541,7 @@
                     itemLines.productCode = $('#ProductGroup').val() + " ";
                     itemLines.batchSN = $('#batchSN').val() + "";
                     itemLines.expDate = txtExpireDate + "";
+                    itemLines.UOM = $('#cbUnit').val() + "";
                     itemLines.fda = $('#txtFDA').val();
                     itemLines.concatText = "- " + $('#ItemCode').val() + "\n- " + $('#ItemName').val() + "\n- " + $('#ProductGroup').val();
                     itemLines.concatText2 = $('#ItemCode').val() + ";" + $('#batchSN').val() + ";;" + $('#expireDate').val() + ";" + i.toString().padStart(4, '0') + "";
@@ -540,6 +563,7 @@
                         itemLines.productCode = $('#ProductGroup').val() + "";
                         itemLines.batchSN = $('#batchSN').val() + "";
                         itemLines.expDate = txtExpireDate + "";
+                        itemLines.UOM = $('#cbUnit').val() + "";
                         itemLines.fda = $('#txtFDA').val();
                         itemLines.concatText = "- " + $('#ItemCode').val() + "\n- " + $('#ItemName').val() + "\n- " + $('#ProductGroup').val();
                         itemLines.concatText2 = $('#ItemCode').val() + ";;" + $('#batchSN').val() + i.toString().padStart(2, '0') + ";" + $('#expireDate').val() + ";" + i.toString().padStart(4, '0') + "";
@@ -559,6 +583,7 @@
                         itemLines.productCode = $('#ProductGroup').val() + " ";
                         itemLines.batchSN = $('#batchSN').val() + "";
                         itemLines.expDate = txtExpireDate + "";
+                        itemLines.UOM = $('#cbUnit').val() + "";
                         itemLines.fda = $('#txtFDA').val();
                         itemLines.concatText = "- " + $('#ItemCode').val() + "\n\n-" + $('#ItemName').val() + "\n\n-" + $('#ProductGroup').val();
                         itemLines.concatText2 = $('#ItemCode').val() + ";;;" + $('#expireDate').val() + ";" + i.toString().padStart(4, '0') + "";
@@ -579,6 +604,7 @@
             $('#batchSN').val("");
             $('#expireDate').val("");
             $('#txtFDA').val("");
+            $('#cbUnit').val("");
 
             document.getElementById("batchSN").focus();
             }
@@ -611,6 +637,7 @@
             arrayLine.expDate = data.expDate;
             arrayLine.batchSN = data.batchSN;
             arrayLine.fda = data.fda;
+            arrayLine.UOM = data.UOM;
             sLine.push(arrayLine);
         }
         console.log(sLine);
@@ -738,24 +765,6 @@
             //====================================================================================
         }
 
-    });
-
-    //ComboBox Unit
-    $('#Unit').on('change', function () {
-        $.ajax({
-            url: '@Url.Action("GetUOMList", "CreateLabelSticker")',
-            type: "GET",
-            dataType: "JSON",
-            success: function (data) {
-                $("#Unit").empty();
-                for (var i = 0; i < data.length; i++) {
-                    $("#Unit").append('<option value="' + data[i].uomCode + '">' + data[i].uomCode + "</option>");
-                }
-            },
-            error: function (erro) {
-                console.log(erro.responseText);
-            }
-        });
     });
 
 

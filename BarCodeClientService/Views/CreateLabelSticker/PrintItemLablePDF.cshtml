@@ -135,20 +135,24 @@
             </td>
             <td width="30%" align="center">
                 <img src="@Url.Action("GenerateQRCode","QRBarcode")?itemcode=@l.ItemCode&&itemname=@l.ItemName&&fda=@l.fda&&str=@string.Empty" id="img1" @*style="float:right;margin-right:-20px;margin-top:-6%"*@ />
+                <br /><font size="-1" style="font-weight:bold">@l.UOM</font>
             </td>
         </tr>
         <tr>
             <td colspan="2" align="center">
-                @if (l.fda != null){
-                <img src="@linkfda" id="ImgFDA">
-                <p style="margin-left:4%;margin-top:-40px;font-size:16px">
-                    <b>@l.fda</b>
-                </p>
-                <img src="@Url.Action("GenerateQRCode","QRBarcode")?itemcode=@string.Empty&&itemname=@string.Empty&&fda=@string.Empty&&str=@l.ConcatText2" id="imgQrFDA" @i />
-                }else{
-                <label>&nbsp;</label><br />
-                <label>&nbsp;</label><br />
-                <img src="@Url.Action("GenerateQRCode","QRBarcode")?itemcode=@string.Empty&&itemname=@string.Empty&&fda=@string.Empty&&str=@l.ConcatText2" id="imgQrNoFDA" @i />
+                @if (l.fda != null)
+                {
+                    <img src="@linkfda" id="ImgFDA">
+                    <p style="margin-left:4%;margin-top:-40px;font-size:16px">
+                        <b>@l.fda</b>
+                    </p>
+                    <img src="@Url.Action("GenerateQRCode","QRBarcode")?itemcode=@string.Empty&&itemname=@string.Empty&&fda=@string.Empty&&str=@l.ConcatText2" id="imgQrFDA" @i />
+                }
+                else
+                {
+                    <label>&nbsp;</label><br />
+                    <label>&nbsp;</label><br />
+                    <img src="@Url.Action("GenerateQRCode","QRBarcode")?itemcode=@string.Empty&&itemname=@string.Empty&&fda=@string.Empty&&str=@l.ConcatText2" id="imgQrNoFDA" @i />
                 }
                 <br><font size="+1">@l.BatchSN</font>
             </td>

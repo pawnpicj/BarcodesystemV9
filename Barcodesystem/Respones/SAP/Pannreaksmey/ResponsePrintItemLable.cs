@@ -24,5 +24,6 @@ namespace BarCodeLibrary.Respones.SAP.Pannreaksmey
         public string fda { get; set; }
         public string ConcatText { get; set; }
         public string ConcatText2 { get; set; }
+        public string UOM { get; set; }
     }
 }

@@ -4,11 +4,13 @@
         var i = EventSaveGoodReceiptPO.iEventSaveGoodReceipt.validForm(array, condition);
         return i;
     },
+
     valiDateLine(array) {
         console.log(array);
         var i = EventSaveGoodReceiptPO.iEventSaveGoodReceipt.validLine(array);
         return i;
     },
+
     sendDelivery(url) {
         var validate = 1;
         validate = EventSaveGoodReceiptPO.validDateForm([

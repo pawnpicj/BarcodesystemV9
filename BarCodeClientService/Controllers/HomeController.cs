@@ -2,6 +2,7 @@
 using BarCodeClientService.Models;
 using BarCodeLibrary.APICall;
 using BarCodeLibrary.Respones.SAP;
+using BarCodeLibrary.Respones.SAP.Bank;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -74,6 +75,12 @@ namespace BarCodeClientService.Controllers
         public IActionResult hGetOWTQ()
         {
             var a = API.Read<ResponseGetOWTQ>("api/InventoryTransferRequest/GetIFR");
+            return Ok(a);
+        }
+
+        public IActionResult GetDataConfig()
+        {
+            var a = API.Read<ResponseGetDataConfig>("GetDataConfig");
             return Ok(a);
         }
 

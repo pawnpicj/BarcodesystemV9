@@ -1,0 +1,168 @@
+﻿@model BarCodeLibrary.Respones.SAP.Pannreaksmey.ResponsePrintItemLable;
+@{
+    ViewData["Title"] = "ViewItemLabel3x";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/bootstrap-grid.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <!-- Font Awesome JS -->
+    <link href="~/css/styles.css" rel="stylesheet" />
+    <script src="~/font icon/fontaws.js"></script>
+    <script src="~/font icon/fonticons.js"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+</head>
+<style>
+    body {
+        /*margin: 0;
+        margin: 0px 0px -20px 5px;
+        background-color: #FFFFFF;
+        padding: 0px 0px 0px 0px;*/
+        margin: 0px 0px -20px 5px;
+        background-color: #FFFFFF;
+    }
+    .container-fluid {
+        font-family: arial;
+        font-size: 6px;
+        /*margin: 0 auto auto auto;*/
+        width: 99%;
+        height: 420px;
+        outline: solid 1px #FFFFFF;
+    }
+    #ImgFDA {
+        max-width: 250px;
+        max-height: 50px;
+    }
+    #img1 {
+        width: 115px;
+        height: 115px;
+    }
+    #imgQrFDA {
+        max-width: 250px;
+        max-height: 250px;
+    }
+    #imgQrNoFDA {
+        width: 225px;
+        height: 225px;
+    }
+
+    div.logo {
+        background-image: url("/Icon/FDA Number.jpg");
+      /*  -moz-transform:scale(0.75);
+        -webkit-transform:scale(0.75);
+        transform:scale(0.75);*/
+    }
+    .portrait {
+        height: 40px;
+        width: 700px;
+
+    }
+    .br1 {
+        height: 30px;
+    }
+</style>
+<body>
+
+    @{
+        string linkfda = "";
+    }
+
+    @{ string strPathAndQuery = Convert.ToString(Context.Request.Protocol) + "" + Convert.ToString(Context.Request.PathBase); }
+
+    @if (Context.Request.PathBase == "/")
+        {
+            linkfda = Context.Request.Scheme + "://" + Convert.ToString(Context.Request.Host) + "/Icon/FDA_Number1-removebg.png";
+        }
+        else
+        {
+            linkfda = Context.Request.Scheme + "://" + Convert.ToString(Context.Request.Host) + ""+ Convert.ToString(Context.Request.PathBase) + "/Icon/FDA_Number1-removebg.png";
+        }
+
+
+    @{
+        int total = 0;
+    }
+    <table width="100%" class="container-fluid" border="0">
+        <tbody>
+            @foreach (var l in Model.Data)
+            {
+
+
+                if (total % 3 == 0)
+                {
+                    @:<tr><td colspan="3">&nbsp;</td></tr><tr>
+                    }
+                    <td align="center">
+
+                        @if (l.fda != null)
+                        {
+                            <div>
+                                &nbsp;
+                            </div>
+                            <img src="@linkfda" id="ImgFDA">
+                            <p style="margin-left:4%;margin-top:-38px;">
+                                <font size="+0" style="font-weight:bold">@l.fda</font>
+                            </p>
+                            <img src="@Url.Action("GenerateQRCode","QRBarcode")?itemcode=@string.Empty&&itemname=@string.Empty&&fda=@string.Empty&&str=@l.ConcatText2" id="imgQrFDA" />
+                            <label>&nbsp;<br></label>
+                        }
+                        else
+                        {
+                            <div>
+                                &nbsp;<br>&nbsp;<br>&nbsp;<br>
+                                &nbsp;<br>&nbsp;<br>&nbsp;<br>
+                                &nbsp;<br>&nbsp;<br>&nbsp;<br>
+                            </div>
+                            <img src="@Url.Action("GenerateQRCode","QRBarcode")?itemcode=@string.Empty&&itemname=@string.Empty&&fda=@string.Empty&&str=@l.ConcatText2" id="imgQrNoFDA" />
+                            <label>&nbsp;<br></label>
+                        }
+
+
+                        <br><font size="+2" style="font-weight:bold;">@l.BatchSN</font>
+                        &nbsp;<br>&nbsp;<br>&nbsp;<br>&nbsp;<br>
+                        &nbsp;<br>&nbsp;<br>&nbsp;<br>&nbsp;<br>
+                    </td>
+
+                    if (total + 1 % 3 == 0)
+                    {
+                    @:</tr>
+                }
+                total++;
+            }
+
+        </tbody>
+    </table>
+
+    <script>
+        //window.print();
+        //onafterprint = function () {
+        //    this.window.history.back();
+        //}
+        oncancel = function () {
+            this.window.history.back();
+        }
+        genQR();
+        function genQR() {
+            var gapi = "https://chart.googleapis.com/chart?chf=bg,s,65432100&cht=qr&chs=";
+            var myimg = document.getElementById("img");
+            var myimg1 = document.getElementById("img1");
+            var myimg2 = document.getElementById("img2");
+            var mytext = "Hello";
+            var mytext1 = "welcom";
+            var mytext2 = "Hi";
+            //myimg.src = gapi + "90x90&chl=" + mytext;
+            //myimg1.src = gapi + "60x60&chl=" + mytext1;
+            // myimg2.src = gapi + "60x60" + "&chl=" + mytext2;
+
+        }
+    </script>
+</body>
+</html>

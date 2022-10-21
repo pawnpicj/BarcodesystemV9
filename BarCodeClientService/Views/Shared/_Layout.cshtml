@@ -3,17 +3,20 @@
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor*@
 <html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
 
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="~/css/site.css"/>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
     <!-- Font Awesome JS -->
-    <link href="~/css/styles.css" rel="stylesheet"/>
+    <link href="~/css/styles.css" rel="stylesheet" />
     <script src="~/font icon/fontaws.js"></script>
     <script src="~/font icon/fonticons.js"></script>
     <script src="~/lib/jquery/dist/jquery.js"></script>
+
+    @*<link href="~/font-awesome-4.7.0/css/font-awesome.css" rel="stylesheet" type='text/css'>
+    <link href="~/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type='text/css'>*@
 
     <script>
 
@@ -49,9 +52,13 @@
             transition: all 0.3s;
         }
 
-        .wrapper.active .sidebar .sidebar__inner .profile { width: 80px; }
+        .wrapper.active .sidebar .sidebar__inner .profile {
+            width: 80px;
+        }
 
-        .wrapper .sidebar .sidebar__inner .profile { width: 225px; }
+        .wrapper .sidebar .sidebar__inner .profile {
+            width: 225px;
+        }
     </style>
 </head>
 <body style="background: #dce7f1">
@@ -76,32 +83,17 @@
 
             <div class="menu">
                 <div class="logo" style="color:#f0eff1">
-                    Barcode System <font style="font-size:6px;"><b>V.010922.2</b></font>
+                    Barcode System <font style="font-size:6px;"><b>V.191022.1</b></font>
                 </div>
                 <div class="right_menu">
-                    <ul>
-                        @*<li style="margin-top:10px;margin-right:10px;">
-                        <a id="user" href="#"><i class="fas fa-user"></i></a>
-                        <div class="profile_dd">
-
-                            <div class="dd_item" id="changepass">Change Password</div>
-                            <div class="dd_item" id="logout">Logout</div>
-                        </div>
-                    </li>
-                    <li style="margin-top:10px">
-                            <a id="setting" href="#"><i class="fas fa-cog"></i></a>
-                            <div class="profile_dd1">
-                                <div class="dd_item1" id="CreateUser">Create User</div>
-                                <div class="dd_item1" id="Quit">Quit</div>
-                            </div>
-                        </li>
-
-                        *@
-
-                    </ul>
                     <div class="row">
-                        <div class="co-2">
+                        @*<div class="co-2">
                             <button id="sign_out" style="background-color:transparent;margin-top:-10px;cursor:pointer;border:0px" title="sing out"><span class="icon"><i class="fa fa-user-circle" style="margin-top:-5px;width:25px;height:25px ;color: rgba(0, 51, 102,0.8);background-color:transparent"></i></span></button>
+                        </div>*@
+                        <div class="co-2">
+                            <a href="~/ManuaL/Manual_Barcode_System_v1.pdf" target="_blank" style="color: white;">
+                            <i class="fa fa-file" aria-hidden="true" style="width:18px; height:auto"></i>
+                            </a>                            
                         </div>
                     </div>
                 </div>

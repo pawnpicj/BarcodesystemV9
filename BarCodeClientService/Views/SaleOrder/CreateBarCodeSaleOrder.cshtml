@@ -175,7 +175,7 @@
         <div class="row" style="margin-bottom: -20px; margin-top: -20px; padding: 15px;">
             <div class="nav navbar-nav ml-auto">
                 <div class="btn-group">
-                    <button class="btn btn-info" id="Save" style="background: #f0eff1; color: #696969; margin-left: 5px;">Print Sticker</button>
+                    <button class="btn btn-info" id="Save" style="width: 45px; height: 32px;"><i class="fa fa-print" aria-hidden="true"></i></button>
                 </div>
             </div>
         </div>
@@ -325,19 +325,28 @@
         TbSaleOrder.search('').draw();
     }
 
-    $("#Save").click(function() {
-        var tmp = {};
-        tmp.data=LSaleOrderBarCode;
-        $.ajax({
-            url: '@Url.Action("PrintBarCodeSaleOrderAction", "SaleOrder")',
-            type: "POST",
-            data: { print: tmp},
-            dataType: "JSON",
-            success: function (data) {
-                if (data == 1) {
-                    window.location.href = "@Url.Action("PrintLableBarCodeSaleOrder", "SaleOrder")";//170x264
+    $("#Save").click(function () {
+        var ll = TbSaleOrder.column(0).data().length;
+        //const data = TbSaleOrder.length;
+        if (ll != 0) {
+            var tmp = {};
+            tmp.data = LSaleOrderBarCode;
+            $.ajax({
+                url: '@Url.Action("PrintBarCodeSaleOrderAction", "SaleOrder")',
+                type: "POST",
+                data: { print: tmp },
+                dataType: "JSON",
+                success: function (data) {
+                    if (data == 1) {
+                        window.location.href = "@Url.Action("PrintLableBarCodeSaleOrder", "SaleOrder")";//170x264
+                    }
                 }
-            }
-        });
+            });
+        }
+        else {
+            alert('Please Select SO');
+        }
+
+        
     });
 </script>

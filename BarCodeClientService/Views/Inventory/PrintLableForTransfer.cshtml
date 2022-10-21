@@ -1,0 +1,155 @@
+﻿@model BarCodeLibrary.Respones.SAP.Bank.ResponsePrintLableINF;
+
+@{
+    ViewData["Title"] = "Print Lable Transfer";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Print Lable Transfer</title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/bootstrap-grid.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <!-- Font Awesome JS -->
+    <link href="~/css/styles.css" rel="stylesheet" />
+    <script src="~/font icon/fontaws.js"></script>
+    <script src="~/font icon/fonticons.js"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+</head>
+<style>
+    body {
+        /*margin: 0;*/
+        margin: auto 0px -20px 50px;
+        background-color: #FFFFFF;
+        padding: 0px 0px 0px 0px;
+        font-family: arial;
+    }
+
+    .container-fluid {
+        font-family: arial;
+        font-size: 6px;
+        /*margin: 0 auto auto auto;*/
+        width: 99%;
+        height: 200px;
+        outline: solid 1px #FFFFFF;
+    }
+
+    #ImgFDA {
+        max-width: 250px;
+        max-height: 80px;
+    }
+
+    #img1 {
+        width: 115px;
+        height: 115px;
+    }
+
+    #imgQrFDA {
+        width: 210px;
+        height: 210px;
+    }
+
+    #imgQrNoFDA {
+        width: 225px;
+        height: 225px;
+    }
+
+    #imgDocNum {
+        width: 90px;
+        height: 90px;
+    }
+
+    div.logo {
+        background-image: url("/Icon/FDA Number.jpg");
+        /*  -moz-transform:scale(0.75);
+        -webkit-transform:scale(0.75);
+        transform:scale(0.75);*/
+    }
+
+    .portrait {
+        height: 40px;
+        width: 700px;
+    }
+
+    .br1 {
+        height: 30px;
+    }
+
+    .lb1 {
+        font-size: 18px;
+        font-weight: bold;
+    }
+</style>
+
+@*<script></script>*@
+
+@{
+    string strLine = "";
+    string QR_Data;
+    string docnum = "";
+}
+
+<body><br>
+
+      <table width="90%" border="0" align="center">
+          <tbody>
+              @foreach (var l in Model.Data)
+              {
+                  <tr>
+                      <td>
+                          <label class="lb1">รายการยืม</label>
+                      </td>
+                      <td rowspan="3" align="right">
+                          @{
+                              docnum = l.DocNum;
+                              docnum = docnum.Replace("IM-", "");
+
+                          }
+                          <img src="@Url.Action("GenerateQRCode","QRBarcode")?str=@docnum" id="imgDocNum" />
+                      </td>
+                  </tr>
+                  <tr>
+                      <td>
+                          <label class="lb1">เลขที่ </label>
+                          <label>@l.DocNum</label>
+                      </td>
+                  </tr>
+                  <tr>
+                      <td>
+                          <label class="lb1">ลูกค้า </label>
+                          <label>@l.BPCode</label>
+                          @*<label>@l.BPName</label>*@
+                      </td>
+                  </tr>
+                  <tr>
+                      <td>
+                          <label class="lb1">วันที่ </label>
+                          <label>@l.PostingDate</label>
+                      </td>
+                      <td>&nbsp;</td>
+                  </tr>
+                  <tr>
+                      <td align="center" colspan="2">
+                          @foreach (var line in l.Line)
+                          {
+                              strLine = strLine + line.ItemCode + "[" + line.Quantity + "]" + "; \r\n";
+                          }
+                          @*<label>@string.Format("{0}<br />", strLine);</label>
+            <label>@strLine</label>*@
+
+                          <img src="@Url.Action("GenerateQRCode","QRBarcode")?str=@strLine" id="imgQrNoFDA" />
+
+                      </td>
+                  </tr>
+              }
+          </tbody>
+      </table>
+</body>
+
+
+</html>

@@ -1,4 +1,5 @@
-﻿using BarCodeLibrary.Respones.SAP.Bank;
+﻿using BarCodeLibrary.Respones.SAP;
+using BarCodeLibrary.Respones.SAP.Bank;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,12 @@ namespace BarCodeAPIService.Service.Bank
 
         Task<ResponseGetStockItemBatchAndSerial> responseGetItemByBarcode(string barCode, string itemCode);
 
+        Task<ResponseGetStockItemBatchAndSerial> responseGetItemByBinCode(string itemCode, string binCode);
+
         Task<ResponseGetOUOM> responseGetOUOM();
+
+        Task<ResponseGetDataConfig> responseGetDataConfig();
+
+        Task<ResponseGetListItemMaster> responseGetListItemMaster();
     }
 }

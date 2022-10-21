@@ -199,16 +199,16 @@ let DataTableInit = {
             data: LBatch,
             columns: [
                 {
-                    render: function (data, type, full, meta) { return '<input type="checkbox" class="clsinput" style="padding:0px; position:absolute;width:100px;border:none;" onchange="AddRowBatch(' + meta.row + ')" id="chkBatchSelect' + meta.row + '">'; },
+                    render: function (data, type, full, meta) { return '<input type="checkbox" class="clsinput" style="margin:auto; width:100%;" onchange="AddRowBatch(' + meta.row + ')" id="chkBatchSelect' + meta.row + '">'; },
                     autoWidth: true
                 },
                 { data: "batchNumber", autoWidth: true },
-                { data: "qty", autoWidth: true },
-                { data: "expDate", autoWidth: true },
                 {
-                    render: function (data, type, full, meta) { return '<input type="number" class="clsinput" style="padding:0px; position:absolute;width:100px;border:none;" onchange="OnInputBatchChange(' + meta.row + ')" id="txtInputBatch' + meta.row + '">'; },
+                    render: function (data, type, full, meta) { return '<input type="number" class="clsinput" style="padding:0px; position:absolute;width:75px;border-color: black;" onchange="OnInputBatchChange(' + meta.row + ')" id="txtInputBatch' + meta.row + '">'; },
                     autoWidth: true
-                }
+                },
+                { data: "qty", autoWidth: true },
+                { data: "expDate", autoWidth: true }
             ],
             rowCallback: function (row, data, index) {
                 //$('td', row).css('background-color', '#ffffff');
@@ -225,7 +225,7 @@ let DataTableInit = {
             data: LtmpBatch,
             columns: [
                 {
-                    render: function (data, type, full, meta) { return '<input type="checkbox" class="clsinput" style="padding:0px; position:absolute;width:100px;border:none;" onchange="AddRowRemoveBatch(' + meta.row + ')" id="chkBatchUnSelect' + meta.row + '">'; },
+                    render: function (data, type, full, meta) { return '<input type="checkbox" class="clsinput" style="margin:auto; width:100%;" onchange="AddRowRemoveBatch(' + meta.row + ')" id="chkBatchUnSelect' + meta.row + '">'; },
                     autoWidth: true
                 },
                 { data: "batchNumber", autoWidth: true },
@@ -247,7 +247,7 @@ let DataTableInit = {
             data: LtmpSerial,
             columns: [
                 {
-                    render: function (data, type, full, meta) { return '<input type="checkbox" class="clsinput" style="padding:0px; position:absolute;width:100px;border:none;" onchange="AddRowRemoveSerial(' + meta.row + ')" id="chkRemoveSerial' + meta.row + '">'; },
+                    render: function (data, type, full, meta) { return '<input type="checkbox" class="clsinput" style="margin:auto; width:100%;" onchange="AddRowRemoveSerial(' + meta.row + ')" id="chkRemoveSerial' + meta.row + '">'; },
                     autoWidth: true
                 },
                 { data: "serialNumber", autoWidth: true },

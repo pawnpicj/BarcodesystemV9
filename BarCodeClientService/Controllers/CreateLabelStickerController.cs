@@ -90,6 +90,25 @@ namespace BarCodeClientService.Controllers
                 //CustomSwitches = "--page-offset 0 --footer-center [page] --footer-font-size 12"
             };
         }
+        //PrintItem3LablePDF
+        public IActionResult PrintItem3LablePDF()
+        {
+            ResponsePrintItemLable responsePrintItemLable = new ResponsePrintItemLable();
+            responsePrintItemLable.Data = PrintItemLableStatic.Data;
+            PrintItemLableStatic.Data = null;
+            //4.5cm=170.0787401575px
+            //7cm=264.5669291339px
+            //6cm=226.7716535433px
+            return new ViewAsPdf(responsePrintItemLable)
+            {
+                PageSize = Rotativa.AspNetCore.Options.Size.Letter,
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
+                PageMargins = new Rotativa.AspNetCore.Options.Margins(0, 0, 1, 0),
+                PageWidth = 240,
+                PageHeight = 90
+                //CustomSwitches = "--page-offset 0 --footer-center [page] --footer-font-size 12"
+            };
+        }
         // Method for Pint Item Label's size 4.5x7
         public IActionResult PrintItemLablePDFSecon()
         {
@@ -134,6 +153,7 @@ namespace BarCodeClientService.Controllers
             };
             // return View(responsePrintBinLabel);
         }
+
         [HttpPost]
         public IActionResult PrintBinLabelPDFAction(ResponsePrintBinLabel print)
         {

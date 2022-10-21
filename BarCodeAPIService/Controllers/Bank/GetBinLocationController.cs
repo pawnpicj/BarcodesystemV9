@@ -3,26 +3,26 @@ using BarCodeAPIService.Service.Bank;
 using Barcodesystem.Contract.RouteApi;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BarCodeAPIService.Controllers
+namespace BarCodeAPIService.Controllers.Bank
 {
+
     [ApiController]
     [Route(APIRoute.Root)]
     public class GetBinLocationController : ControllerBase
     {
-        private readonly IGetBinLocationService binCode;
+        private readonly IGetBinLocationService getBinLocation;
 
-        public GetBinLocationController(IGetBinLocationService binCode)
+        public GetBinLocationController(IGetBinLocationService getBinLocation)
         {
-            this.binCode = binCode;
+            this.getBinLocation = getBinLocation;
         }
 
         [HttpGet("GetBinLocationWhs/{whscode}")]
-        public async Task<IActionResult> GetBinLocationAnsync(string whscode)
+        public async Task<IActionResult> GetBinLocationAsync(string whscode)
         {
-            var a = await binCode.responseGetBinLocation(whscode);
-            if (a.ErrorCode == 0)
-                return Ok(a);
-            return BadRequest(a);
+            var a = await getBinLocation.responseGetBinLocation(whscode);
+            return Ok(a);
         }
+
     }
 }

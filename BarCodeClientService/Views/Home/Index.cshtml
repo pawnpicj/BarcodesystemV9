@@ -17,7 +17,7 @@
 <div class="container">
     @*<div align="center" style="font-size:55px; font-weight:bolder; text-shadow: #808080 1px 1px">Barcode System</div>*@
     <div class="row">
-
+        <div id="getStatus"></div>
         @*<div class="col-lg-3" style="width: 250px;height: 250px;margin-top:30px;">
                 <a asp-controller="Dashboard" asp-action="DashboardSaleAR">
                     <div style="width:100%;height:100%;background:#f0eff1">
@@ -79,27 +79,40 @@
     });
     }
 
-    function test2() {
+    //function GetDataConfig() { }
         $.ajax({
-        url: '@Url.Action("GetSaleEmployee", "Home")',
+        url: '@Url.Action("GetDataConfig", "Home")',
         type: "GET",
-        //data: { ItemCode: Items },
         dataType: "JSON",
-        beforeSend: function () {
-                    //$('#Modalloder').modal('show');
-        },
-        success: function (data) {
-            console.log(data);
-            if (data.errorCode == 0) {
-                alert("I can get Data from Restful Service [GetContactPerson]");
-            } else {
-                alert("Oppp Maybe Internal Error Look Like this:" + data.errorMessage);
+            success: function (data) {
+                var jqueryXml = $(data);
+                //console.log(jqueryXml);
+                
+                //console.log(jqueryXml[0].errorMessage); 
+                //console.log(jqueryXml[0].errorCode);
+                if (jqueryXml[0].errorCode != 0) {
+                    console.log("DbName -> " + jqueryXml[0].data[0].companyDB);
+                    console.log("User -> " + jqueryXml[0].data[0].userNameSAP);
+                    console.log("Error");
+                    document.getElementById("getStatus").innerHTML = "Status : Offline <br> Msg : " + jqueryXml[0].errorMessage;
+                    document.getElementById("getStatus").style.color = "Red";
+                    document.getElementById("getStatus").style.fontWeight = "Bold";
+                } else {
+                    console.log("DbName -> " + jqueryXml[0].data[0].companyDB);
+                    console.log("User -> " + jqueryXml[0].data[0].userNameSAP);
+                    console.log("Connected");
+                    document.getElementById("getStatus").innerHTML = "Status : Online";
+                    document.getElementById("getStatus").style.color = "Green";
+                    document.getElementById("getStatus").style.fontWeight = "Bold";
+                }
+            },
+            error: function (erro) {
+                console.log(erro.responseText);
             }
-        }
     });
-    }
+    
 
-    function POSTDataAPI() {
+    @*function POSTDataAPI() {
         obj = {};
         arrayLine = {};
         line = [];
@@ -131,5 +144,5 @@
 
             }
         });
-    }
+    }*@
 </script>

@@ -18,6 +18,7 @@ namespace BarCodeAPIService.Controllers.Bank
         {
             this.stockWhsBinService = stockWhsBinService;
         }
+
         [HttpGet("GetStockWhsBin/{whsCode}/{binCode}")]
         public async Task<IActionResult> GetStockWhsBinAsync(string whsCode, string binCode)
         {
@@ -158,5 +159,46 @@ namespace BarCodeAPIService.Controllers.Bank
             }
         }
 
+        [HttpGet("GetDataConfig")]
+        public async Task<IActionResult> GetDataConfigAsync()
+        {
+            var a = await stockWhsBinService.responseGetDataConfig();
+            if (a.ErrorCode == 0)
+            {
+                return Ok(a);
+            }
+            else
+            {
+                return BadRequest(a);
+            }
+        }
+
+        [HttpGet("GetItemByBinCode/{itemCode}/{binCode}")]
+        public async Task<IActionResult> GetItemByBinCodeAsync(string itemCode, string binCode)
+        {
+            var a = await stockWhsBinService.responseGetItemByBinCode(itemCode, binCode);
+            if (a.ErrorCode == 0)
+            {
+                return Ok(a);
+            }
+            else
+            {
+                return BadRequest(a);
+            }
+        }
+
+        [HttpGet("GetListItemMaster")]
+        public async Task<IActionResult> GetListItemMasterAsync()
+        {
+            var a = await stockWhsBinService.responseGetListItemMaster();
+            if (a.ErrorCode == 0)
+            {
+                return Ok(a);
+            }
+            else
+            {
+                return BadRequest(a);
+            }
+        }
     }
 }

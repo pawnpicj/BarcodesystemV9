@@ -18,7 +18,8 @@
             return 1;
         }
         for (var i = 0; i < array.length; i++) {
-            console.log(array[i].ManageItem);
+            //console.log(array[i].ManageItem);
+            console.log(array[i].ItemCode);
             if (array[i].ManageItem === "S") {
                 var qty = 0;
                 for (var arr in array[i].Serial) {
@@ -26,7 +27,7 @@
                 }
                 if (parseInt(array[i].Quantity) !== qty) {
                     EventSaveGoodReceiptPO.iEventSaveGoodReceipt.messageBox(
-                        "Please Input Serial number in ItemCode line" + (i + 1));
+                        "Please Input Quantity in ItemCode " + array[i].ItemCode + " Line " + (i + 1));
                     return 1;
                 }
             } else if (array[i].ManageItem === "B") {
@@ -39,7 +40,7 @@
                 console.log(qty);
                 if (parseInt(array[i].Quantity) !== qty) {
                     EventSaveGoodReceiptPO.iEventSaveGoodReceipt.messageBox(
-                        "Please Input Batch number in ItemCode line" + (i + 1));
+                        "Please Input Quantity in ItemCode " + array[i].ItemCode + " Line " + (i + 1));
                     return 1;
                 }
             }

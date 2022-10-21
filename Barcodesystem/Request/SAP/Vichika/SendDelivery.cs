@@ -41,6 +41,8 @@ namespace BarCodeLibrary.Request.SAP
         public string ItemCode { get; set; }
         public string BatchNumber { get; set; }
         public string ExpDate { get; set; }
-        public double InputQty { get; set; }
+        //public double InputQty { get; set; }
+        public double Qty { get; set; }
+        //Quantity
     }
 }

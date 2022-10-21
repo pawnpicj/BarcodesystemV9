@@ -15,10 +15,12 @@ namespace BarCodeAPIService.Controllers.Home
     public class HomeController : Controller
     {
         private readonly IHomeService homeService;
+
         public HomeController(IHomeService homeService)
         {
             this.homeService = homeService;
         }
+
         [HttpGet("GetLogin")]
         public async Task<IActionResult> GetLoginAsync(string user,string password)
         {
@@ -29,6 +31,6 @@ namespace BarCodeAPIService.Controllers.Home
             {
                 return Ok(a);
             }
-        } 
+        }
     }
 }

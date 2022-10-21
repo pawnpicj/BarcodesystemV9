@@ -23,7 +23,7 @@
 <style>
     body {
         /*margin: 0;*/
-        margin: 0px 0px -20px 5px;
+        margin: 0px 0px -20px 35px;
         background-color: #FFFFFF;
         padding: 0px 0px 0px 0px;
     }
@@ -48,8 +48,8 @@
         height: 210px;
     }
     #imgQrNoFDA {
-        width: 225px;
-        height: 225px;
+        width: 195px;
+        height: 195px;
     }
 
     div.logo {
@@ -107,11 +107,12 @@
     @{ string strPathAndQuery = Convert.ToString(Context.Request.Protocol) + "" + Convert.ToString(Context.Request.PathBase); }
     @foreach (var l in Model.Data)
     {
-        <table width="100%" class="container-fluid">
+        <table width="100%" class="container-fluid" border="0">
+            <tr><td colspan="2">&nbsp;</td></tr>
             <tr>
-                <td width="70%" style="border: 0.5px solid black;">
+                <td width="60%" style="">
                     <strong>
-                        <font size="3" face="Tahoma">
+                        <font size="2" face="Tahoma">
                             Address To: &nbsp;<br>
                             &nbsp;นำเข้าและจัดจำหน่ายโดย<br>
                             &nbsp;บริษัท อุดมเมดิคอล อิควิปเม้นท์ จำกัด<br>
@@ -119,41 +120,34 @@
                             &nbsp;เขตประเวศ กรุงเทพฯ 10250<br>
                             &nbsp;โทร.02-320-1234 , 085-344-3444<br>
                         </font>
-                    </strong>
+                    </strong><hr style="background-color: #000000">
                 </td>
-                <td width="30%" style="border: 0.5px solid black;vertical-align: baseline;">
-                    <font size="3" face="Tahoma">
-                        Delivery Date: <br>
-                        @l.DeliveryDate
+                <td width="40%" style="vertical-align: baseline;">
+                    <font size="3" face="Tahoma" style="font-weight:bold">
+                        Delivery Date
+                        @Convert.ToDateTime(l.DeliveryDate).ToString("dd/MM/yyyy")
                     </font>
                 </td>
             </tr>
             <tr>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td colspan="2">
+                <td valign="top">
                     <strong>
-                        <font size="3" face="Tahoma">
-                            Address To: <br>
+                        <font size="2" face="Tahoma">
+                            Address To: <br> &nbsp;
                             @if (@l.AddressTo == "" || @l.AddressTo == null)
                             {
-                                <div>Empty AddressTo</div>
+                            <div>Empty AddressTo</div>
                             }
                             else
                             {
-                                @l.AddressTo
+                            @l.AddressTo
                             }
                         </font>
                     </strong>
                 </td>
-            </tr>
-        </table>
-        <table width="100%" class="container-fluid" border="0">
-            <tr>
-                <td colspan="2" align="center">
-                    <img src="@Url.Action("GenerateQRCodeSaleOrder","SaleOrder")?DocNum=@l.DocNum" @i />
+                <td align="center">
+                    <img src="@Url.Action("GenerateQRCodeSaleOrder","SaleOrder")?DocNum=@l.DocNum" id="imgQrNoFDA" /><br>
+                    <font size="+0">@l.DocNum</font>
                 </td>
             </tr>
         </table>

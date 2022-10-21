@@ -75,7 +75,7 @@ namespace BarCodeAPIService.Service
                                 //oGoodReceiptPO.Lines.BatchNumbers.AddmisionDate = batch.AdmissionDate;
                                 oDeliveryDocuments.Lines.BatchNumbers.ExpiryDate = Convert.ToDateTime(batch.ExpDate);
                                 //oGoodReceiptPO.Lines.BatchNumbers.ManufacturingDate = batch.MfrDate;
-                                oDeliveryDocuments.Lines.BatchNumbers.Quantity = batch.InputQty;
+                                oDeliveryDocuments.Lines.BatchNumbers.Quantity = batch.Qty;
                                 oDeliveryDocuments.Lines.BatchNumbers.BatchNumber = batch.BatchNumber;
                                 oDeliveryDocuments.Lines.BatchNumbers.Add();
                             }

@@ -22,5 +22,7 @@ namespace BarCodeLibrary.Respones.SAP.Bank
         public string UOMCode { get; set; }
         public string BatchNo { get; set; }
         public string SerialNo { get; set; }
+        public string BatchYN { get; set; }
+        public string SerialYN { get; set; }
     }
 }

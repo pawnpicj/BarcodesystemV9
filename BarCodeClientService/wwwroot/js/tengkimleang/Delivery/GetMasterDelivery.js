@@ -64,6 +64,7 @@
                 tbCus.clear();
                 tbCus.rows.add(LCus);
                 tbCus.search("").columns().search("").draw();
+                $("input[aria-controls='TbCusCode']").focus();
             },
             error: function(erro) {
                 console.log(erro.responseText);

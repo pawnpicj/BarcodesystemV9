@@ -130,9 +130,61 @@
     .ctd {
         text-align: center;
     }
+
+    /* =================================================== */
+    .cover-spin {
+        position: fixed;
+        width: 100%;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background-color: rgba(255,255,255,0.7);
+        z-index: 9999;
+        display: none;
+    }
+
+    @@-webkit-keyframes spin {
+        from {
+            -webkit-transform: rotate(0deg);
+        }
+
+        to {
+            -webkit-transform: rotate(360deg);
+        }
+    }
+
+    @@keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .cover-spin::after {
+        content: '';
+        display: block;
+        position: absolute;
+        left: 48%;
+        top: 40%;
+        width: 40px;
+        height: 40px;
+        border-style: solid;
+        border-color: black;
+        border-top-color: transparent;
+        border-width: 4px;
+        border-radius: 50%;
+        -webkit-animation: spin .8s linear infinite;
+        animation: spin .8s linear infinite;
+    }
+    /* =================================================== */
 </style>
 
 <div id="#main">
+    <div id="frmLoading" class="cover-spin" style="display:none"></div>
     @* TimeLine *@
     <div class="row" style="margin-left:5px;margin-top:5px;color:#696969;">
         <h5 style="margin-top:5px;color:#696969;">
@@ -681,7 +733,7 @@
 
 <script src="~/js/Array.js"></script>
 <script type="text/javascript">
-
+    document.getElementById("frmLoading").style.display = "block";
     //+++++ GetInventoryTransferIMLine +++++
     var table0 = $('#TbInf').DataTable({
         "ajax": {
@@ -705,12 +757,13 @@
             { "data": "docEntry" },
             { "data": "seriesName" }
         ],
+        "pageLength": 7,
         "order": [[0, 'desc']],
         "select": true,
-        "paging": false,
+        "paging": true,
         "ordering": false,
         "info": false,
-        "searching": false
+        "searching": true
     });
 
     table0.columns([4, 5, 6, 7]).visible(false, false);
@@ -766,6 +819,10 @@
             "dataSrc": 'data',
             "complete": function (data) {
                 console.log("GetSeriesCV Complete.");
+                jqueryXml = $(data);
+                $('#txtSeries').val(jqueryXml[0].responseJSON.data[0].series);
+                $('#txtSeriesName').val(jqueryXml[0].responseJSON.data[0].seriesName);
+                document.getElementById("frmLoading").style.display = "none";
             }
         },
         "columns": [
@@ -871,6 +928,7 @@
                 });
                 /*<input type="checkbox" !checked="checked" id = "chk' + full.itemCode + '" value = "'+ full.itemCode +'" onchange = "chkso(this)" >*/
                 console.log("Download Data Complete");
+                document.getElementById("frmLoading").style.display = "none";
                 document.getElementById("dataDocnum").style.display = "block";
                 document.getElementById("txtScanBarCode01").value = '';
                 document.getElementById("txtScanBarCode01").focus();
@@ -903,6 +961,7 @@
     function fncLoadData() {
         var docentry = $("#txtDocEntry").val();
         if (docentry != '') {
+            document.getElementById("frmLoading").style.display = "block";
             ApplyDataTable(docentry);
         } else {
             alert("Please Select DocNum");

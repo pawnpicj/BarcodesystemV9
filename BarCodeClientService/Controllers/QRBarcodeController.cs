@@ -3,11 +3,20 @@ using System.Drawing.Imaging;
 using System.IO;
 using Microsoft.AspNetCore.Mvc;
 using QRCoder;
+using IronBarCode;
+using Microsoft.AspNetCore.Hosting;
+using System;
 
 namespace BarCodeClientService.Controllers
 {
     public class QRBarcodeController : Controller
     {
+        private readonly IWebHostEnvironment _environment;
+        public QRBarcodeController(IWebHostEnvironment environment)
+        {
+            _environment = environment;
+        }
+
         public IActionResult CreateBinLocation()
         {
             return View();

@@ -5,9 +5,11 @@ using BarCodeLibrary.APICall;
 using BarCodeLibrary.Request.SAP;
 using BarCodeLibrary.Respones.SAP;
 using BarCodeLibrary.Respones.SAP.Bank;
+using BarCodeLibrary.Respones.SAP.Pannreaksmey;
 using BarCodeLibrary.Respones.SAP.Tengkimleang;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Rotativa.AspNetCore;
 
 namespace BarCodeClientService.Controllers
 {
@@ -41,6 +43,11 @@ namespace BarCodeClientService.Controllers
         }
 
         public IActionResult CreateInventoryCounting()
+        {
+            return View();
+        }
+
+        public IActionResult FrmPrintForTransfer()
         {
             return View();
         }
@@ -223,6 +230,43 @@ namespace BarCodeClientService.Controllers
             //var a = API.Read<ResponseScanItemsInIM>("GetStockItemx/19414/KS-10/Ma21071660004");
             return Ok(a);
         }
+
+        public IActionResult GetItemByBinCode(string itemCode, string binCode)
+        {
+            var a = API.Read<ResponseGetStockItemBatchSerial>("GetItemByBinCode/" + itemCode + "/" + binCode);
+            return Ok(a);
+        }
+
+        //GetListItemMaster
+        public IActionResult GetListItemMaster()
+        {
+            var a = API.Read<ResponseGetListItemMaster>("GetListItemMaster");
+            return Ok(a);
+        }
+
+        [HttpPost]
+        public IActionResult PrintItemLablePDFAction(ResponsePrintLableINF print)
+        {
+            PrintLableINFStatic.Data = print.Data;
+            return Ok(1);
+        }
+
+        public IActionResult PrintLableForTransfer()
+        {
+            ResponsePrintLableINF responsePrintLableINF = new ResponsePrintLableINF();
+            responsePrintLableINF.Data = PrintLableINFStatic.Data;
+            PrintItemLableStatic.Data = null;
+
+            return new ViewAsPdf(responsePrintLableINF)
+            {
+                PageSize = Rotativa.AspNetCore.Options.Size.Letter,
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
+                PageMargins = new Rotativa.AspNetCore.Options.Margins(0, 0, 1, 0),
+                PageWidth = 120,
+                PageHeight = 90
+            };
+        }
+
 
         [HttpPost]
         public IActionResult PostInventoryTransfer(SendInventoryTransfer sendInventoryTransfer)

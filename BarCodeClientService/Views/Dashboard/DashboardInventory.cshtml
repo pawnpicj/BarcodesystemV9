@@ -45,6 +45,21 @@
             </a>
         </div>
 
+
+        @* PrintLableForTransfer *@
+        <div class="alink col-lg-3">
+            <a asp-controller="Inventory" asp-action="FrmPrintForTransfer">
+                <div style="width:100%;height:100%;background:#f0eff1">
+                    <div style="text-align:center">
+                        <p style="text-align:center;padding-top:15px;">
+                            <b>Print Lable Transfer</b><br>
+                            <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
+                        </p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
         <div class="alink col-lg-3">
             <a asp-controller="Inventory" asp-action="CreateInventoryCounting">
                 <div style="width:100%;height:100%;background:#f0eff1">
@@ -57,6 +72,7 @@
                 </div>
             </a>
         </div>
+
     </div>
     
     @*<div class="row">

@@ -19,7 +19,7 @@
                 { id: "BPDocCurr", value: "Please Select BP Currency!" }
             ],
             "");
-        if (validate===0) {
+        if (validate === 0) {
             validate = EventSaveGoodReceiptPO.valiDateLine(LinesAR);
             if (validate === 0) {
                 var sendGoodReceiptPO = {};
@@ -52,7 +52,9 @@
                         document.getElementById("frmLoading").style.display = "none";
                     }
                 });
-            }   
+            }
+        } else {
+            document.getElementById("frmLoading").style.display = "none";
         }
     },
     LineDiscountPer() {

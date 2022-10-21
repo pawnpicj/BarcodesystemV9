@@ -21,7 +21,7 @@ namespace BarCodeAPIService.Service.Bank
                 {
                     oCompany = login.Company;
                     SAPbobsCOM.Recordset? oRS = null;
-                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('GETSTOCKWB','{whsCode}','{binCode}','','','')"; ;
+                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('GETSTOCKWB','{whsCode}','{binCode}','','','')";
                     oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRS.DoQuery(sqlStr);
                     while (!oRS.EoF)
@@ -34,10 +34,10 @@ namespace BarCodeAPIService.Service.Bank
                             WhsName = oRS.Fields.Item(3).Value.ToString(),
                             BinCode = oRS.Fields.Item(4).Value.ToString(),
                             BinEntry = Convert.ToInt32(oRS.Fields.Item(5).Value.ToString()),                            
-                            Quantity = Convert.ToDouble(oRS.Fields.Item(8).Value.ToString()),
-                            UOMEntry = oRS.Fields.Item(6).Value.ToString(),
-                            UOMCode = oRS.Fields.Item(7).Value.ToString(),
-
+                            Quantity = Convert.ToDouble(oRS.Fields.Item(7).Value.ToString()),                            
+                            UOMCode = oRS.Fields.Item(6).Value.ToString(),
+                            BatchYN = oRS.Fields.Item(8).Value.ToString(),
+                            SerialYN = oRS.Fields.Item(9).Value.ToString()
                             //BatchNo = oRS.Fields.Item(6).Value.ToString(),
                             //SerialNo = oRS.Fields.Item(10).Value.ToString()
 
@@ -84,7 +84,7 @@ namespace BarCodeAPIService.Service.Bank
                 {
                     oCompany = login.Company;
                     SAPbobsCOM.Recordset? oRS = null;
-                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('GetStock_Batch_Bin','{itemCode}','{batchNumber}','{binEntry}','','')"; ;
+                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('GetStock_Batch_Bin','{itemCode}','{batchNumber}','{binEntry}','','')";
                     oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRS.DoQuery(sqlStr);
                     while (!oRS.EoF)
@@ -143,7 +143,7 @@ namespace BarCodeAPIService.Service.Bank
                 {
                     oCompany = login.Company;
                     SAPbobsCOM.Recordset? oRS = null;
-                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('GetStock_Serial_Bin','{itemCode}','{serialNumber}','{binEntry}','','')"; ;
+                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('GetStock_Serial_Bin','{itemCode}','{serialNumber}','{binEntry}','','')";
                     oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRS.DoQuery(sqlStr);
                     while (!oRS.EoF)
@@ -202,7 +202,7 @@ namespace BarCodeAPIService.Service.Bank
                 {
                     oCompany = login.Company;
                     SAPbobsCOM.Recordset? oRS = null;
-                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('GetStock_Batch','{itemCode}','{batchNumber}','','','')"; ;
+                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('GetStock_Batch','{itemCode}','{batchNumber}','','','')";
                     oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRS.DoQuery(sqlStr);
                     while (!oRS.EoF)
@@ -261,7 +261,7 @@ namespace BarCodeAPIService.Service.Bank
                 {
                     oCompany = login.Company;
                     SAPbobsCOM.Recordset? oRS = null;
-                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('GetStock_Serial','{itemCode}','{serialNumber}','','','')"; ;
+                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('GetStock_Serial','{itemCode}','{serialNumber}','','','')";
                     oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRS.DoQuery(sqlStr);
                     while (!oRS.EoF)
@@ -320,7 +320,7 @@ namespace BarCodeAPIService.Service.Bank
                 {
                     oCompany = login.Company;
                     SAPbobsCOM.Recordset? oRS = null;
-                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('GetStock_Batch_Whs','{itemCode}','{batchNumber}','{whsCode}','','')"; ;
+                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('GetStock_Batch_Whs','{itemCode}','{batchNumber}','{whsCode}','','')";
                     oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRS.DoQuery(sqlStr);
                     while (!oRS.EoF)
@@ -379,7 +379,7 @@ namespace BarCodeAPIService.Service.Bank
                 {
                     oCompany = login.Company;
                     SAPbobsCOM.Recordset? oRS = null;
-                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('GetStock_Serial_Whs','{itemCode}','{serialNumber}','{whsCode}','','')"; ;
+                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('GetStock_Serial_Whs','{itemCode}','{serialNumber}','{whsCode}','','')";
                     oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRS.DoQuery(sqlStr);
                     while (!oRS.EoF)
@@ -438,7 +438,7 @@ namespace BarCodeAPIService.Service.Bank
                 {
                     oCompany = login.Company;
                     SAPbobsCOM.Recordset? oRS = null;
-                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('GetItemInIM','{docEntry}','{itemCode}','{batchSerialNo}','','')"; ;
+                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('GetItemInIM','{docEntry}','{itemCode}','{batchSerialNo}','','')";
                     oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRS.DoQuery(sqlStr);
                     while (!oRS.EoF)
@@ -504,13 +504,13 @@ namespace BarCodeAPIService.Service.Bank
                 {
                     oCompany = login.Company;
                     SAPbobsCOM.Recordset? oRS = null;
-                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('GetBatchNumber','{barCode}','{itemCode}','','','')"; ;
+                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('GetBatchNumber','{barCode}','{itemCode}','','','')";
                     oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRS.DoQuery(sqlStr);
 
                     if (oRS.BoF && oRS.EoF)
                     {
-                        string sqlStr2 = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('GetSerialNumber','{barCode}','{itemCode}','','','')"; ;
+                        string sqlStr2 = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('GetSerialNumber','{barCode}','{itemCode}','','','')";
                         oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                         oRS.DoQuery(sqlStr2);
                         while (!oRS.EoF)
@@ -593,7 +593,7 @@ namespace BarCodeAPIService.Service.Bank
                 {
                     oCompany = login.Company;
                     SAPbobsCOM.Recordset? oRS = null;
-                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('GetPriceUnit','','','','','')"; ;
+                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('GetPriceUnit','','','','','')";
                     oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                     oRS.DoQuery(sqlStr);
 
@@ -634,5 +634,176 @@ namespace BarCodeAPIService.Service.Bank
             }
         }
 
+        public Task<ResponseGetDataConfig> responseGetDataConfig()
+        {
+            var ListData = new List<ListData>();
+            SAPbobsCOM.Company oCompany;
+            try
+            {
+                //GetData
+
+                Login login = new();
+                if (login.LErrCode == 0)
+                {
+                    ListData.Add(new ListData
+                    {
+                        CompanyDB = ConnectionString.CompanyDB,
+                        UserNameSAP = ConnectionString.UserName
+                    });
+
+                    return Task.FromResult(new ResponseGetDataConfig
+                    {
+                        ErrorCode = 0,
+                        ErrorMessage = "",
+                        Data = ListData
+                    });
+
+                }
+                else
+                {
+                    return Task.FromResult(new ResponseGetDataConfig
+                    {
+                        ErrorCode = login.LErrCode,
+                        ErrorMessage = login.SErrMsg,
+                        Data = null
+                    });
+                }
+
+                //End
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseGetDataConfig
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMessage = ex.Message,
+                    Data = null
+                });
+            }
+
+            
+
+        }
+
+        public Task<ResponseGetStockItemBatchAndSerial> responseGetItemByBinCode(string itemCode, string binCode)
+        {
+            var getItemList = new List<GetStockItemBatchAndSerial>();
+            SAPbobsCOM.Company oCompany;
+            try
+            {
+                Login login = new();
+                if (login.LErrCode == 0)
+                {
+                    oCompany = login.Company;
+                    SAPbobsCOM.Recordset? oRS = null;
+                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('GetItemByBinCode','{itemCode}','{binCode}','','','')";
+                    oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+                    oRS.DoQuery(sqlStr);
+                    
+                        while (!oRS.EoF)
+                        {
+                            getItemList.Add(new GetStockItemBatchAndSerial
+                            {
+                                ItemCode = oRS.Fields.Item(0).Value.ToString(),
+                                ItemName = oRS.Fields.Item(1).Value.ToString(),
+                                Quantity = Convert.ToDouble(oRS.Fields.Item(2).Value.ToString()),
+                                WhsEntry = Convert.ToInt32(oRS.Fields.Item(3).Value.ToString()),
+                                WhsCode = oRS.Fields.Item(4).Value.ToString(),
+                                BinEntry = Convert.ToInt32(oRS.Fields.Item(5).Value.ToString()),
+                                BinCode = oRS.Fields.Item(6).Value.ToString(),
+                                UOMCode = oRS.Fields.Item(7).Value.ToString(),
+                                ExpDate = Convert.ToDateTime(oRS.Fields.Item(8).Value.ToString()),
+                                FDA = oRS.Fields.Item(9).Value.ToString()
+                            });
+                            oRS.MoveNext();
+                        }
+                    
+
+                    return Task.FromResult(new ResponseGetStockItemBatchAndSerial
+                    {
+                        ErrorCode = 0,
+                        ErrorMessage = "",
+                        Data = getItemList
+                    });
+                }
+                else
+                {
+                    return Task.FromResult(new ResponseGetStockItemBatchAndSerial
+                    {
+                        ErrorCode = login.LErrCode,
+                        ErrorMessage = login.SErrMsg,
+                        Data = null
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseGetStockItemBatchAndSerial
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMessage = ex.Message,
+                    Data = null
+                });
+            }
+        }
+
+        public Task<ResponseGetListItemMaster> responseGetListItemMaster()
+        {
+            var getItemList = new List<lMaster>();
+            SAPbobsCOM.Company oCompany;
+            try
+            {
+                Login login = new();
+                if (login.LErrCode == 0)
+                {
+                    oCompany = login.Company;
+                    SAPbobsCOM.Recordset? oRS = null;
+                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('GetListItemMaster','','','','','')";
+                    oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+                    oRS.DoQuery(sqlStr);
+
+                    while (!oRS.EoF)
+                    {
+                        getItemList.Add(new lMaster
+                        {
+                            ItemCode = oRS.Fields.Item(0).Value.ToString(),
+                            ItemName = oRS.Fields.Item(1).Value.ToString(),
+                            UOM = oRS.Fields.Item(2).Value.ToString(),
+                            Quantity = Convert.ToDouble(oRS.Fields.Item(3).Value.ToString()),
+                            BatchYN = oRS.Fields.Item(4).Value.ToString(),
+                            SerialYN = oRS.Fields.Item(5).Value.ToString(),
+                            Status = oRS.Fields.Item(6).Value.ToString(),                            
+                        });
+                        oRS.MoveNext();
+                    }
+
+
+                    return Task.FromResult(new ResponseGetListItemMaster
+                    {
+                        ErrorCode = 0,
+                        ErrorMessage = "",
+                        Data = getItemList
+                    });
+                }
+                else
+                {
+                    return Task.FromResult(new ResponseGetListItemMaster
+                    {
+                        ErrorCode = login.LErrCode,
+                        ErrorMessage = login.SErrMsg,
+                        Data = null
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseGetListItemMaster
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMessage = ex.Message,
+                    Data = null
+                });
+            }
+        }
     }
 }

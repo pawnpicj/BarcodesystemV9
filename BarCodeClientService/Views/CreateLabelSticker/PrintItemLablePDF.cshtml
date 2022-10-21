@@ -37,15 +37,15 @@
     }
     #ImgFDA {
         max-width: 250px;
-        max-height: 80px;
+        max-height: 50px;
     }
     #img1 {
         width: 115px;
         height: 115px;
     }
     #imgQrFDA {
-        width: 210px;
-        height: 210px;
+        width: 180px;
+        height: 180px;
     }
     #imgQrNoFDA {
         width: 225px;
@@ -135,7 +135,7 @@
             </td>
             <td width="30%" align="center">
                 <img src="@Url.Action("GenerateQRCode","QRBarcode")?itemcode=@l.ItemCode&&itemname=@l.ItemName&&fda=@l.fda&&str=@string.Empty" id="img1" @*style="float:right;margin-right:-20px;margin-top:-6%"*@ />
-                <br /><font size="-1" style="font-weight:bold">@l.UOM</font>
+                <br /><font size="0" style="font-weight:bold">@l.UOM</font>
             </td>
         </tr>
         <tr>
@@ -143,8 +143,8 @@
                 @if (l.fda != null)
                 {
                     <img src="@linkfda" id="ImgFDA">
-                    <p style="margin-left:4%;margin-top:-40px;font-size:16px">
-                        <b>@l.fda</b>
+                    <p style="margin-left:4%;margin-top:-38px;">
+                        <font size="+0" style="font-weight:bold">@l.fda</font>
                     </p>
                     <img src="@Url.Action("GenerateQRCode","QRBarcode")?itemcode=@string.Empty&&itemname=@string.Empty&&fda=@string.Empty&&str=@l.ConcatText2" id="imgQrFDA" @i />
                 }

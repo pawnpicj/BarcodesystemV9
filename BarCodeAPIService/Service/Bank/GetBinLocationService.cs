@@ -21,8 +21,7 @@ namespace BarCodeAPIService.Service.Bank
                 {
                     oCompany = login.Company;
                     Recordset? oRS = null;
-                    var Query =
-                        $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_Bank('GetBinLocationWhs','{whscode}','','','','')";
+                    var Query = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_Bank('GetBinLocationWhs','{whscode}','','','','')";
                     oRS = (Recordset)oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
                     oRS.DoQuery(Query);
                     while (!oRS.EoF)

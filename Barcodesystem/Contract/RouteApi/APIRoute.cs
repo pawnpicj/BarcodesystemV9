@@ -42,7 +42,7 @@
             public const string GetSO = "GetSO/";
             public const string GetBatch = "GetBatch/";
             public const string GetSerial = "GetSerial/";
-            public const string POSTDelivery = "POSTDelivery/";
+            public const string POSTDelivery = "POSTDelivery";
             public const string GetSaleOrderList = "GetSaleOrderList/";
         }
         public static class Return

@@ -312,6 +312,8 @@
                 </div>
                 <br />
                 <button class="btn btn-success" id="Print" style="margin-left:5px;">Print</button>
+                &nbsp;&nbsp;&nbsp;
+                <button class="btn btn-success" id="Print3x" style="margin-left:5px;">Print 3x</button>
             </div>
         </div>
     </div>
@@ -466,7 +468,7 @@
             mixfda = "";
         }
 
-        //$('#txtFDA').val(data.fda);
+        $('#txtFDA').val(data.fda);
         //FDA = "1234";
         batch = data.manBtchNum;
         serial = data.manSerNum;
@@ -611,7 +613,7 @@
 
         });
     //Table waitig for Print
-
+    //Print3x
 
     $('#Print').click(function () {
 
@@ -674,6 +676,58 @@
 
 
     });
+
+    $('#Print3x').click(function () {
+
+        //var headstr = "<html><head><style>table.table-bordered{border:1px solid black;margin-top:20px;}table.table-bordered > thead > tr > th{border:1px solid black;}table.table-bordered > tbody > tr > td{border:1px solid black;}</style></head><body>";
+        //var footstr = "</body>";
+        //var item = document.getElementById("body1").innerHTML;
+        //document.body.innerHTML = headstr + item + footstr;dfdsd
+
+        //print.Data = allitemLInes;
+        /*if (allitemLInes.length > 0) { }*/
+        var sLine = [];
+        var arrayLine = {};
+        var print = {};
+        for (let rr = 0; rr < table.column(0).data().length; rr++) {
+            arrayLine = {};
+            var data = table.row(rr).data();
+            arrayLine.itemCode = data.itemCode;
+            arrayLine.itemName = data.itemName;
+            arrayLine.productCode = data.productCode;
+            arrayLine.quantity = data.quantity;
+            arrayLine.concatText = data.concatText;
+            arrayLine.concatText2 = data.concatText2;
+            arrayLine.expDate = data.expDate;
+            arrayLine.batchSN = data.batchSN;
+            arrayLine.fda = data.fda;
+            arrayLine.UOM = data.UOM;
+            sLine.push(arrayLine);
+        }
+        console.log(sLine);
+
+        print.Data = sLine;
+        if (sLine.length > 0) {
+            if ($('#labelSize').val() == '0') {
+                console.log("3x");
+                $.ajax({
+                    url: '@Url.Action("PrintItemLablePDFAction", "CreateLabelSticker")',
+                    type: "POST",
+                    data: { print: print},
+                    dataType: "JSON",
+                    success: function (data) {
+                        if (data == 1) {
+                            window.location.href = "@Url.Action("PrintItem3LablePDF", "CreateLabelSticker")";
+                    }
+                    }
+                });
+            }
+        }
+
+
+    });
+
+
 
     var input01 = document.getElementById("batchSN");
     input01.addEventListener("keyup", function (event) {

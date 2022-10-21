@@ -136,9 +136,62 @@
         border-radius: 6px;
         text-align: center;
     }
+
+    /* =================================================== */
+    .cover-spin {
+        position: fixed;
+        width: 100%;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background-color: rgba(255,255,255,0.7);
+        z-index: 9999;
+        display: none;
+    }
+
+    @@-webkit-keyframes spin {
+        from {
+            -webkit-transform: rotate(0deg);
+        }
+
+        to {
+            -webkit-transform: rotate(360deg);
+        }
+    }
+
+    @@keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .cover-spin::after {
+        content: '';
+        display: block;
+        position: absolute;
+        left: 48%;
+        top: 40%;
+        width: 40px;
+        height: 40px;
+        border-style: solid;
+        border-color: black;
+        border-top-color: transparent;
+        border-width: 4px;
+        border-radius: 50%;
+        -webkit-animation: spin .8s linear infinite;
+        animation: spin .8s linear infinite;
+    }
+    /* =================================================== */
+
 </style>
 
 <div id="#main">
+    <div id="frmLoading" class="cover-spin" style="display:none"></div>
     @* TimeLine *@
     <div class="row" style="margin-left:5px;margin-top:5px;color:#696969;">
         <h5 style="margin-top:5px;color:#696969;">
@@ -154,14 +207,17 @@
     <div style="padding: 10px; color: #696969;">
         <ul class="nav nav-tabs Tap-PA" id="mytab" role="tablist">
             @*<li class="nav-item">
-                    <a class="nav-link active color_tap" id="cus-tab" data-toggle="tab" href="#cus" role="tab" aria-controls="Customer" aria-selected="true">Customer</a>
-                </li>*@
+            <a class="nav-link active color_tap" id="cus-tab" data-toggle="tab" href="#cus" role="tab" aria-controls="Customer" aria-selected="true">Customer</a>
+        </li>*@
             <li class="nav-item">
                 <a class="nav-link color_tap" id="item-tab" data-toggle="tab" href="#item" role="tab" aria-controls="Items" aria-selected="false">Add Data</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link color_tap" id="PrintLabel" style="cursor: pointer; color:#ffffff">Print</a>
+            </li>
         </ul>
+        @* <button class="btn btn-info" id="PrintLabel">Print</button>&nbsp;&nbsp;&nbsp; *@
         <div class="tab-content" id="myTabContent">
-
             <div class="tab-pane fade show active" id="item" role="tabpanel" aria-labelledby="item-tab" style="margin-top: 10px">
                 <div class="row">
                     <div class="col-sm-6">
@@ -177,16 +233,16 @@
                             </div>
                         </div>
                         Series : <input type="text" id="txtSeriesTFR" readonly Class="hiddenAdmin" />
-                                 <div class="input-group">
-                                     <div class="input-group-prepend">
-                                         <button class="input-group-text" id="Cifr"><i class="fa fa-check"></i></button>
-                                     </div>
-                                     <input type="text" size="5" disabled placeholder="" id="txtSeries" value="" readonly>
-                                     <input type="text" class="form-control" placeholder="" id="txtSeriesName" value="" readonly>
-                                     <div class="input-group-append">
-                                         <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalSeries"><i class="fa fa-search"></i></button>
-                                     </div>
-                                 </div>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <button class="input-group-text" id="Cifr"><i class="fa fa-check"></i></button>
+                            </div>
+                            <input type="text" size="5" disabled placeholder="" id="txtSeries" value="" readonly>
+                            <input type="text" class="form-control" placeholder="" id="txtSeriesName" value="" readonly>
+                            <div class="input-group-append">
+                                @*<button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalSeries"><i class="fa fa-search"></i></button>*@
+                            </div>
+                        </div>
                         Customer Code :
                         <div class="input-group">
                             <div class="input-group-prepend">
@@ -194,8 +250,8 @@
                             </div>
                             <input type="text" class="form-control" placeholder="" id="CardCode" disabled>
                             @*<div class="input-group-append">
-                                    <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalCusCode"><i class="fa fa-search"></i></button>
-                                </div>*@
+                                <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalCusCode"><i class="fa fa-search"></i></button>
+                            </div>*@
                         </div>
                         Customer Name :
                         <div class="input-group">
@@ -225,24 +281,24 @@
                                 </div>
                                 <input type="text" class="form-control" placeholder="" value="" id="FromWhsCode" disabled>
                                 <!--<div class="input-group-append">
-                                <button class="input-group-text btnModelsOcrCode" data-toggle="modal" data-target="#ModalWarehouse"><i class="fa fa-search"></i></button>-->
+                            <button class="input-group-text btnModelsOcrCode" data-toggle="modal" data-target="#ModalWarehouse"><i class="fa fa-search"></i></button>-->
                                 @*ModalFromWhsCode*@
                                 <!--</div>-->
                             </div>
                         </div>
                         @*<div>
-                                From Bin Location :
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <button class="input-group-text" id="COcrCode2"><i class="fa fa-check"></i></button>
-                                    </div>
-                                    <input type="text" class="form-control" placeholder="" value="" id="FromBinCode" disabled>
-                                    <input type="text" class="form-control" placeholder="Search Code" value="C62" id="OcrCode2">
-                                    <div class="input-group-append">
-                                        <button class="input-group-text btnModelsOcrCode2" data-toggle="modal" data-target="#ModalBinLocation"><i class="fa fa-search"></i></button>ModalFromBinCode
-                                    </div>
+                            From Bin Location :
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <button class="input-group-text" id="COcrCode2"><i class="fa fa-check"></i></button>
                                 </div>
-                            </div>*@
+                                <input type="text" class="form-control" placeholder="" value="" id="FromBinCode" disabled>
+                                <input type="text" class="form-control" placeholder="Search Code" value="C62" id="OcrCode2">
+                                <div class="input-group-append">
+                                    <button class="input-group-text btnModelsOcrCode2" data-toggle="modal" data-target="#ModalBinLocation"><i class="fa fa-search"></i></button>ModalFromBinCode
+                                </div>
+                            </div>
+                        </div>*@
                         <div>
                             To Warehouse :
                             <div class="input-group">
@@ -251,7 +307,7 @@
                                 </div>
                                 <input type="text" class="form-control" placeholder="" id="ToWhsCode" value="" disabled>
                                 <!--<div class="input-group-append">
-                                <button class="input-group-text btnModelsOcrCode3" data-toggle="modal" data-target="#ModalToWarehouse"><i class="fa fa-search"></i></button>-->
+                            <button class="input-group-text btnModelsOcrCode3" data-toggle="modal" data-target="#ModalToWarehouse"><i class="fa fa-search"></i></button>-->
                                 @*ModalToWhsCode*@
                                 <!--</div>-->
                             </div>
@@ -266,7 +322,8 @@
                                 <input type="text" class="form-control" placeholder="" id="ToBinCode" value="" readonly>
                                 <div class="input-group-append">
                                     <button class="input-group-text btnModelsToBin" data-toggle="modal" data-target="#ModalToBinLocation">
-                                    <i class="fa fa-search"></i></button>
+                                        <i class="fa fa-search"></i>
+                                    </button>
                                     @*ModalToBinCode*@
                                 </div>
                             </div>
@@ -280,10 +337,10 @@
                             <input type="text" size="7" placeholder="" id="SlpCode0" value="" disabled>
                             <input type="text" class="form-control" placeholder="" id="SlpCode" value="" disabled>
                             @*<div class="input-group-append">
-                                    <button class="input-group-text btnModelsOcrCode4" data-toggle="modal" data-target="#ModalSaleEmployee"><i class="fa fa-search"></i></button>
-                                </div>*@
+                                <button class="input-group-text btnModelsOcrCode4" data-toggle="modal" data-target="#ModalSaleEmployee"><i class="fa fa-search"></i></button>
+                            </div>*@
                         </div>
-                        <div>
+                        <div style="display: none;">
                             Journal Remark :
                             <div class="input-group">
                                 <input type="text" class="form-control" value="" id="jrnlMemo">
@@ -341,100 +398,100 @@
                                 </div>
 
                                 @*<div style="display:none;">
+                                    <label>
+                                        Input Quantity :
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" placeholder="" id="Quantity" value="1" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
+                                    </div>
+
+                                    <label>
+                                        Scan Barcode :
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" value="" id="txtScanBarCode" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
+                                    </div>
+
+                                    <label>
+                                        Scan Batch/Serial :
+                                    </label><div class="input-group">
+                                        <input type="text" class="form-control" value="" id="txtScanBatchSerial" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
+                                    </div>
+                                    <button class="input-group-text" id="addRow" style="display:none;"><i class="fa fa-plus"></i></button>
+                                </div>*@
+
+                                @* =================== TabScanBarCode =================== *@
+                                <div id="TabScanBarCode" class="BoxScan">
+                                    @* ================= ปิด ================= *@
+                                    <div id="tabTypeBarcode" style="display:none;">
+                                        <center>
+                                            <label>
+                                                <input type="radio" id="rdoTypeScan" name="typeScan" value="01" style="height: 15px; width: 15px; vertical-align: middle;" onclick="checkBarcodeUDOM()" />
+                                                <font size="3" style="font-weight:bold">Barcode UDOM</font>
+                                            </label>
+                                            &nbsp;&nbsp;&nbsp;
+                                            <label>
+                                                <input type="radio" id="rdoTypeScan" name="typeScan" value="02" style="height: 15px; width: 15px; vertical-align: middle; " onclick="checkBarcodeProduct()" />
+                                                <font size="3" style="font-weight:bold">Barcode Product</font>
+                                            </label>
+                                        </center>
+                                    </div>
+                                    @* ================= ปิด ================= *@
+
+                                    <div id="divBarcodeUDOM" style="display:block; ">
+                                        <div id="TabQty" style="display:block;">
+                                            Input Quantity :
+                                            <div class="input-group">
+                                                <input type="number" class="form-control" placeholder="" id="txtQuantity01" value="1" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
+                                                <button class="btn btn-warning" id="btnUpdateQty" style="margin-left:5px; display:none" onclick="fncUpdateQty();">Update Qty</button>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            Scan Barcode :
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" value="" id="txtScanBarCode01" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center;" autocomplete="off">
+                                            </div>
+                                            <button class="input-group-text" id="addRow01" style="display: none;" autocomplete="off"><i class="fa fa-plus"></i></button>
+                                        </div>
+                                    </div>
+
+                                    @* ไม่ใช้ *@
+                                    <div id="divBarcodeProduct" style="display: none; ">
+
+                                        <center>
+                                            <label>
+                                                <input type="radio" id="rdoTypeItem1" name="typeItem" value="Batch" style="height: 12px; width: 12px; vertical-align: middle;" onclick="chTypeItem()" />
+                                                <font size="3" style="font-weight:bold">Batch</font>
+                                            </label>
+                                            &nbsp;&nbsp;&nbsp;
+                                            <label>
+                                                <input type="radio" id="rdoTypeItem2" name="typeItem" value="Serial" style="height: 12px; width: 12px; vertical-align: middle; " onclick="chTypeItem()" />
+                                                <font size="3" style="font-weight:bold">Serial</font>
+                                            </label><br>
+                                        </center>
                                         <label>
                                             Input Quantity :
                                         </label>
                                         <div class="input-group">
-                                            <input type="number" class="form-control" placeholder="" id="Quantity" value="1" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
+                                            <input type="number" class="form-control" placeholder="" id="txtQuantity02" value="1" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center;" autocomplete="off" disabled>
                                         </div>
 
                                         <label>
                                             Scan Barcode :
                                         </label>
                                         <div class="input-group">
-                                            <input type="text" class="form-control" value="" id="txtScanBarCode" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
+                                            <input type="text" class="form-control" value="" id="txtScanBarCode02" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center;" autocomplete="off" disabled>
                                         </div>
 
                                         <label>
                                             Scan Batch/Serial :
                                         </label><div class="input-group">
-                                            <input type="text" class="form-control" value="" id="txtScanBatchSerial" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
+                                            <input type="text" class="form-control" value="" id="txtScanBatchSerial02" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center;" autocomplete="off" disabled>
                                         </div>
-                                        <button class="input-group-text" id="addRow" style="display:none;"><i class="fa fa-plus"></i></button>
-                                    </div>*@
+                                        <button class="input-group-text" id="addRow02" style="display:none;"><i class="fa fa-plus"></i></button>
+                                    </div>
 
-                                @* =================== TabScanBarCode =================== *@
-                            <div id="TabScanBarCode" class="BoxScan">
-                                @* ================= ปิด ================= *@
-                                <div id="tabTypeBarcode" style="display:none;">
-                                    <center>
-                                        <label>
-                                            <input type="radio" id="rdoTypeScan" name="typeScan" value="01" style="height: 15px; width: 15px; vertical-align: middle;" onclick="checkBarcodeUDOM()" />
-                                            <font size="3" style="font-weight:bold">Barcode UDOM</font>
-                                        </label>
-                                        &nbsp;&nbsp;&nbsp;
-                                        <label>
-                                            <input type="radio" id="rdoTypeScan" name="typeScan" value="02" style="height: 15px; width: 15px; vertical-align: middle; " onclick="checkBarcodeProduct()" />
-                                            <font size="3" style="font-weight:bold">Barcode Product</font>
-                                        </label>
-                                    </center>
                                 </div>
-                                @* ================= ปิด ================= *@
-
-                                <div id="divBarcodeUDOM" style="display:block; ">
-                                    <div id="TabQty" style="display:block;">
-                                        Input Quantity :
-                                        <div class="input-group">
-                                            <input type="number" class="form-control" placeholder="" id="txtQuantity01" value="1" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
-                                            <button class="btn btn-warning" id="btnUpdateQty" style="margin-left:5px; display:none" onclick="fncUpdateQty();">Update Qty</button>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        Scan Barcode :
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" value="" id="txtScanBarCode01" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center;" autocomplete="off">
-                                        </div>
-                                        <button class="input-group-text" id="addRow01" style="display: none;" autocomplete="off"><i class="fa fa-plus"></i></button>
-                                    </div>
-                                </div>
-
-                                @* ไม่ใช้ *@
-                                <div id="divBarcodeProduct" style="display: none; ">
-
-                                    <center>
-                                        <label>
-                                            <input type="radio" id="rdoTypeItem1" name="typeItem" value="Batch" style="height: 12px; width: 12px; vertical-align: middle;" onclick="chTypeItem()" />
-                                            <font size="3" style="font-weight:bold">Batch</font>
-                                        </label>
-                                        &nbsp;&nbsp;&nbsp;
-                                        <label>
-                                            <input type="radio" id="rdoTypeItem2" name="typeItem" value="Serial" style="height: 12px; width: 12px; vertical-align: middle; " onclick="chTypeItem()" />
-                                            <font size="3" style="font-weight:bold">Serial</font>
-                                        </label><br>
-                                    </center>
-                                    <label>
-                                        Input Quantity :
-                                    </label>
-                                    <div class="input-group">
-                                        <input type="number" class="form-control" placeholder="" id="txtQuantity02" value="1" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center;" autocomplete="off" disabled>
-                                    </div>
-
-                                    <label>
-                                        Scan Barcode :
-                                    </label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" value="" id="txtScanBarCode02" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center;" autocomplete="off" disabled>
-                                    </div>
-
-                                    <label>
-                                        Scan Batch/Serial :
-                                    </label><div class="input-group">
-                                        <input type="text" class="form-control" value="" id="txtScanBatchSerial02" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center;" autocomplete="off" disabled>
-                                    </div>
-                                    <button class="input-group-text" id="addRow02" style="display:none;"><i class="fa fa-plus"></i></button>
-                                </div>
-
-                            </div>
                                 @* ====================================================== *@
 
 
@@ -752,7 +809,7 @@
 
     <script src="~/js/Array.js"></script>
     <script type="text/javascript">
-
+        document.getElementById("frmLoading").style.display = "block";
     //+++++ GetInventoryTransferRequestLine +++++
     var table0 = $('#TbInf').DataTable({
         "ajax": {
@@ -776,12 +833,13 @@
             { "data": "docEntry" },
             { "data": "seriesName"}
         ],
+        "pageLength": 7,
         "order": [[0, 'desc']],
         "select": true,
-        "paging": false,
+        "paging": true,
         "ordering": false,
         "info": false,
-        "searching": false
+        "searching": true
     });
 
     table0.columns([4, 5, 6, 7]).visible(false, false);
@@ -1286,6 +1344,7 @@
             dataType: "JSON",
             "dataSrc": 'data',
             success: function (data) {
+                document.getElementById("frmLoading").style.display = "none";
                 var tline = $('#TbDataLine').DataTable({
                     "bDestroy": true,
                     "aaData": data.data,
@@ -1346,6 +1405,7 @@
             var docentry = $("#txtDocEntry").val();
             var tbincode = $('#ToBinCode').val();
             if (docentry != '' && tbincode != '') {
+                document.getElementById("frmLoading").style.display = "block";
                 ApplyDataTable(docentry);
             } else if (docentry == '') {
                 alert("Please Select DocNum");
@@ -1368,6 +1428,11 @@
             "dataSrc": 'data',
             "complete": function (data) {
                 console.log("Get SeriesIM Complete.");
+                jqueryXml = $(data);
+                //console.log(jqueryXml[0].responseJSON.data[0].series);
+                $('#txtSeries').val(jqueryXml[0].responseJSON.data[0].series);
+                $('#txtSeriesName').val(jqueryXml[0].responseJSON.data[0].seriesName);
+                document.getElementById("frmLoading").style.display = "none";
             }
         },
         "columns": [
@@ -1524,5 +1589,8 @@
         });
     }
 
+        $('#PrintLabel').click(function () {
+            window.location.href = "@Url.Action("FrmPrintForTransfer", "Inventory")";
+        });
     </script>
 

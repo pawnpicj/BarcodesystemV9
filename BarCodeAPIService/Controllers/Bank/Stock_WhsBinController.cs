@@ -131,6 +131,20 @@ namespace BarCodeAPIService.Controllers.Bank
             }
         }
 
+        [HttpGet("GetListItemInIM/{docEntry}")]
+        public async Task<IActionResult> GetListItemInIMAsync(string docEntry)
+        {
+            var a = await stockWhsBinService.responseGetListItemInIM(docEntry);
+            if (a.ErrorCode == 0)
+            {
+                return Ok(a);
+            }
+            else
+            {
+                return BadRequest(a);
+            }
+        }
+
         [HttpGet("GetItemByBarcode/{barCode}/{itemCode}")]
         public async Task<IActionResult> GetItemByBarcodeAsync(string barCode, string itemCode)
         {
@@ -145,10 +159,39 @@ namespace BarCodeAPIService.Controllers.Bank
             }
         }
 
+        //responseGetItemNoBatchSerial
+        [HttpGet("GetItemNoBatchSerial/{itemCode}")]
+        public async Task<IActionResult> GetItemNoBatchSerialAsync(string itemCode)
+        {
+            var a = await stockWhsBinService.responseGetItemNoBatchSerial(itemCode);
+            if (a.ErrorCode == 0)
+            {
+                return Ok(a);
+            }
+            else
+            {
+                return BadRequest(a);
+            }
+        }
+
         [HttpGet("GetUOMList")]
         public async Task<IActionResult> GetUOMListAsync()
         {
             var a = await stockWhsBinService.responseGetOUOM();
+            if (a.ErrorCode == 0)
+            {
+                return Ok(a);
+            }
+            else
+            {
+                return BadRequest(a);
+            }
+        }
+
+        [HttpGet("GetUOMList2")]
+        public async Task<IActionResult> GetUOMList2Async()
+        {
+            var a = await stockWhsBinService.responseGetOUOM2();
             if (a.ErrorCode == 0)
             {
                 return Ok(a);
@@ -177,6 +220,20 @@ namespace BarCodeAPIService.Controllers.Bank
         public async Task<IActionResult> GetItemByBinCodeAsync(string itemCode, string binCode)
         {
             var a = await stockWhsBinService.responseGetItemByBinCode(itemCode, binCode);
+            if (a.ErrorCode == 0)
+            {
+                return Ok(a);
+            }
+            else
+            {
+                return BadRequest(a);
+            }
+        }
+
+        [HttpGet("GetItemByWhs/{itemCode}/{whsCode}")]
+        public async Task<IActionResult> GetItemByGetItemByWhsAsync(string itemCode, string whsCode)
+        {
+            var a = await stockWhsBinService.responseGetItemByWhs(itemCode, whsCode);
             if (a.ErrorCode == 0)
             {
                 return Ok(a);

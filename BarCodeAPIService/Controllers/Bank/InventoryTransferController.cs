@@ -25,5 +25,14 @@ namespace BarCodeAPIService.Controllers
                 return Ok(a);
             return BadRequest(a);
         }
+
+        [HttpPost("SendInventoryTransferCV")]
+        public async Task<IActionResult> PostInventoryTransferCVAsync(SendInventoryTransfer sendinventoryTransfer)
+        {
+            var a = await inventoryTransfer.responseInventoryTransferCV(sendinventoryTransfer);
+            if (a.ErrorCode == 0)
+                return Ok(a);
+            return BadRequest(a);
+        }
     }
 }

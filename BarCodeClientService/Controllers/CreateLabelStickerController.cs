@@ -71,6 +71,13 @@ namespace BarCodeClientService.Controllers
             return Ok(a);
         }
 
+        [HttpGet]
+        public IActionResult GetUOMList2()
+        {
+            var a = API.Read<ResponseGetOUOM>("GetUOMList2");
+            return Ok(a);
+        }
+
         // Method for Pint Item Label's size 6x7
         public IActionResult PrintItemLablePDF()
         {
@@ -91,11 +98,22 @@ namespace BarCodeClientService.Controllers
             };
         }
         //PrintItem3LablePDF
-        public IActionResult PrintItem3LablePDF()
+        public IActionResult PrintItem3LablePDF(int sizeSticker)
         {
             ResponsePrintItemLable responsePrintItemLable = new ResponsePrintItemLable();
             responsePrintItemLable.Data = PrintItemLableStatic.Data;
             PrintItemLableStatic.Data = null;
+            int page_Height;
+            if (sizeSticker % 3 != 0)
+            {
+                page_Height = ((sizeSticker / 3) + 1) * 90;
+            }
+            else
+            {
+                page_Height = (sizeSticker / 3) * 90;
+            }
+
+            
             //4.5cm=170.0787401575px
             //7cm=264.5669291339px
             //6cm=226.7716535433px

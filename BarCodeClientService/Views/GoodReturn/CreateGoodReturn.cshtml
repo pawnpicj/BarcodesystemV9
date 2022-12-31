@@ -8,10 +8,12 @@
 <link href="~/css/DataTable/jquery.dataTables.min.css" rel="stylesheet"/>
 <link href="~/css/DataTable/rowReorder.dataTables.min.css" rel="stylesheet"/>
 <link href="~/tengkimleang/goodReceiptPO/Style.css" />
+<link href="~/css/DataTable/dataTables.checkboxes.css" />
 @*<link href="~/css/DataTable/responsive.dataTables.min.css" rel="stylesheet" />*@
 <script src="~/css/DataTable/jquery-3.3.1.js"></script>
 <script src="~/css/DataTable/jquery.dataTables.min.js"></script>
 <script src="~/css/DataTable/dataTables.rowReorder.min.js"></script>
+<script src="~/css/DataTable/dataTables.checkboxes.min.js"></script>
 @*<script src="~/css/DataTable/dataTables.responsive.min.js"></script>*@
 
 <style>
@@ -212,8 +214,10 @@
                             <table id="TbAR" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
                                 <thead>
                                     <tr>
+                                        <th>Select</th>
                                         <th>ItemCode</th>
                                         <th>Description</th>
+                                        @*<th>InputQTY</th>*@
                                         <th>Quatity</th>
                                         <th>Price</th>
                                         <th>Discount Percentage</th>
@@ -234,7 +238,8 @@
         <div class="row" style="margin-bottom: -20px; margin-top: -20px; padding: 15px;">
             <div class="nav navbar-nav ml-auto">
                 <div class="btn-group">
-                    <button disabled="disabled" class="btn btn-info" id="Save" style="background: #f0eff1; color: #696969; margin-left: 5px;">Send SAP</button>
+                    @*<button class="btn btn-primary" id="btnSubmit">Submit</button>&nbsp;&nbsp;&nbsp;*@
+                    <button disabled="disabled" class="btn btn-success" id="Save">Send SAP</button>
                 </div>
             </div>
         </div>
@@ -280,7 +285,7 @@
 
 <script type="text/javascript">
     GetDocNum('@ViewBag.DocNum');
-    var dataTableMethod=new DataTableMethod(), 
+    var dataTableMethod=new DataTableMethod(),
     LinesAR = [];
     $('#TbAR').dataTable({
         bLengthChange: false,
@@ -289,12 +294,24 @@
         bPaginate: false,
         data: LinesAR,
         columns:
-        [
+            [{
+                render: function (data, type, full, meta) {
+                    return '<input type="checkbox" class="clsinput" style="width:22px; height:22px; border:none;" onchange="AddRowItems(' + meta.row + ')" id="chkItemsSelect' + meta.row + '">'; },
+                autoWidth: true
+            },
             { data: "itemCode", autoWidth: true },
             {
                 data: "description", autoWidth: true
                 //render: function (data, type, full, meta) { return '<input type="number" class="clsinput" style="padding:0px; position:absolute;width:100px;border:none;" onchange="PriceChange(' + meta.row + ')" id="tbPrice' + meta.row + '" value="' + full.UnitPrice + '">'; }, autoWidth: true
-            },
+                },
+                //{
+                //    data: "inputqty",
+                //    autoWidth: true,
+                //    render: function (data, type, full, meta) {
+                //        return '<input class="form-control" id="inputqty' + meta.row + '" type="number"  value ="' + full.quatity + '">';
+                //    }
+                    //render: function (data, type, full, meta) { return '<input type="number" class="clsinput" style="padding:0px; position:absolute;width:100px;border:none;" onchange="DisChange('+meta.row+')" value="'+full.Discount+'" id="tbDis'+meta.row+'" >'; }, autoWidth: true
+                //},
             {
                 data: "quatity", autoWidth: true
                 //render: function (data, type, full, meta) { return '<input type="number" class="clsinput" style="padding:0px; position:absolute;width:100px;border:none;" onchange="DisChange('+meta.row+')" value="'+full.Discount+'" id="tbDis'+meta.row+'" >'; }, autoWidth: true
@@ -320,6 +337,7 @@
     LCopyFromGoodReciptPO = [];
     $('#TbCopyFromPO').DataTable({
         responsive: true,
+        order: [[0, 'desc']],
         bLengthChange: false,
         binfo: false,
         data: LCopyFromGoodReciptPO,
@@ -333,7 +351,13 @@
         rowCallback: function (row, data, index) {
         }
     });
+
+
+
     var TbCopyFromPO = $('#TbCopyFromPO').DataTable();
+
+    TbCopyFromPO.columns([3, 4]).visible(false, false);
+
     dataTableMethod.AddSelectClass("TbCopyFromPO",TbCopyFromPO)
 
     getSeries("", '@ViewData["Date"]', '@Url.Action("GetSeries", "GoodsReceiptPO")', '21');
@@ -379,7 +403,7 @@
             //data: { docNum: "" },
             dataType: "JSON",
             success: function(data) {
-                console.log(data);
+                //console.log(data);
                 LCopyFromGoodReciptPO = data;
                 TbCopyFromPO.clear();
                 TbCopyFromPO.rows.add(LCopyFromGoodReciptPO);
@@ -400,7 +424,7 @@
                 dataType: "JSON",
                 success: function(data) {
                     //console.log(new Date(data[0].docDate));
-                    console.log(data);
+                    //console.log(data);
                     if (data !== null) {
                         $("#CusID").val(data[0].cardCode);
                         $("#CusName").val(data[0].cardName);
@@ -424,10 +448,35 @@
         }
     }
 
-    $("#Save").click(function () {
-        document.getElementById("frmLoading").style.display = "block";
+    $("#ChoosePO").click(function() {
+        //alert("Hello");
+        const index = TbCopyFromPO.row('.selected').index();
+        const data = TbCopyFromPO.row(index).data();
+        GetDocNum(data.docNum);
+        $("#ModalCopyFromPO").modal("hide");
+    });
 
+    let lsItemRowNumber = [];
+    function AddRowItems(row) {
+        if ($("#chkItemsSelect" + row).prop("checked") == true) {
+            console.log('Row No : ' + row);
+            let data = TbLine.row(row).data();
+            //console.log(data);
+        }
+        else {
+            var index = lsItemRowNumber.indexOf(row);
+            lsItemRowNumber.splice(index, 1);
+        }
+    }
+
+    $("#Save").click(function () {
+        console.log('Sending To SAP');
+        document.getElementById("frmLoading").style.display = "block";
+        //Header
         var object = {};
+        var objectLine = {};
+        var line = [];
+
         object.CardCode = $("#CusID").val();
         object.NumAtCard = $("#OrderNumberID").val();
         object.Remark = $("#Remark").val();
@@ -435,24 +484,34 @@
         object.DocDate = $("#DocDate").val();
         object.DocDueDate = $("#DocumentDate").val();
         object.BPCurrency = $("#BPDocCurr").val();
-        var line = [];
-        var data = TbLine.rows().data();
-        console.log(data);
-        data.each(function (value, index) {
-            var objectLine = {};
-            objectLine.ItemCode = value.itemCode;
-            objectLine.Quantity = value.quatity;
-            objectLine.UnitPrice = value.price;
-            objectLine.Discount = value.discPrcnt;
-            objectLine.TaxCode = value.vatGroup;
-            objectLine.WarehouseCode = value.whsCode;
-            objectLine.UomCode = value.whsCode;
-            objectLine.LineNum = value.lineNum;
-            objectLine.BaseEntry = value.baseEntry;
-            objectLine.ManageItem = value.manageItem;
-            line.push(objectLine);
-        });
+
+        for (let rows = 0; rows < TbLine.data().count(); rows++) {
+
+            if ($("#chkItemsSelect" + rows).prop("checked") == true) {
+                //let data = TbLine.row(rows).data();
+                //console.log(data);
+                objectLine = {};
+                var data = TbLine.row(rows).data();
+                //console.log(data);
+
+                objectLine.ItemCode = data.itemCode;
+                //objectLine.Quantity = parseInt($("#inputqty" + rows).val());
+                objectLine.Quantity = data.quatity;
+                objectLine.UnitPrice = data.price;
+                objectLine.Discount = data.discPrcnt;
+                objectLine.TaxCode = data.vatGroup;
+                objectLine.WarehouseCode = data.whsCode;
+                objectLine.UomCode = data.whsCode;
+                objectLine.LineNum = data.lineNum;
+                objectLine.BaseEntry = data.baseEntry;
+                objectLine.ManageItem = data.manageItem;
+                line.push(objectLine);
+            }
+        }
         object.Lines = line;
+        console.log(object);
+
+        //Send To SAP
         $.ajax({
             url: '@Url.Action("CreateGoodReturn","GoodReturn")',
             type: "POST",
@@ -468,12 +527,7 @@
                 document.getElementById("frmLoading").style.display = "none";
             }
         });
+
     });
-    $("#ChoosePO").click(function() {
-        //alert("Hello");
-        const index = TbCopyFromPO.row('.selected').index();
-        const data = TbCopyFromPO.row(index).data();
-        GetDocNum(data.docNum);
-        $("#ModalCopyFromPO").modal("hide");
-    });
+
 </script>

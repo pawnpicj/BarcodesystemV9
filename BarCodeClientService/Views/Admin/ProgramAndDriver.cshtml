@@ -58,20 +58,20 @@
     }
     @if (Context.Request.PathBase == "/")
     {
-        linkB1 = Context.Request.Scheme + "://" + Convert.ToString(Context.Request.Host) + "/ProgramAndDriver/Android/GoogleChrome.zip";
+        linkB1 = Context.Request.Scheme + "://" + Convert.ToString(Context.Request.Host) + "/ProgramAndDriver/Android/Web_Browser_App.zip";
         linkB2 = Context.Request.Scheme + "://" + Convert.ToString(Context.Request.Host) + "/ProgramAndDriver/Android/WLAN_KeyboardWedge.zip";
         linkB3 = Context.Request.Scheme + "://" + Convert.ToString(Context.Request.Host) + "/ProgramAndDriver/Android/HIDKeyboardWedge.zip";
     }
     else
     {
-        linkB1 = Context.Request.Scheme + "://" + Convert.ToString(Context.Request.Host) + "" + Convert.ToString(Context.Request.PathBase) + "/ProgramAndDriver/Android/GoogleChrome.zip";
+        linkB1 = Context.Request.Scheme + "://" + Convert.ToString(Context.Request.Host) + "" + Convert.ToString(Context.Request.PathBase) + "/ProgramAndDriver/Android/Web_Browser_App.zip";
         linkB2 = Context.Request.Scheme + "://" + Convert.ToString(Context.Request.Host) + "" + Convert.ToString(Context.Request.PathBase) + "/ProgramAndDriver/Android/WLAN_KeyboardWedge.zip";
         linkB3 = Context.Request.Scheme + "://" + Convert.ToString(Context.Request.Host) + "" + Convert.ToString(Context.Request.PathBase) + "/ProgramAndDriver/Android/HIDKeyboardWedge.zip";
     }
     <div class="row">
         <div class="col"><font size="+2" style="font-weight:bold">Keyence BT-A500 (Application)</font></div>
         <div class="w-100"></div>
-        <div class="col-6"><font style="font-weight:bold">Google Chrome for Android</font></div>
+        <div class="col-6"><font style="font-weight:bold">Web Browser App</font></div>
         <div class="col-6"><a href="@linkB1" download rel="noopener noreferrer" target="_blank" class="slink">Download</a></div>
     </div>
     <div class="row">

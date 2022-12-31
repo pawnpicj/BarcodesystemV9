@@ -33,5 +33,14 @@ namespace BarCodeAPIService.Controllers
                 return Ok(a);
             return BadRequest(a);
         }
+
+        [HttpGet("GetIMByCus/{cusCode}")]
+        public async Task<IActionResult> GetIMByCusAsync(string cusCode)
+        {
+            var a = await inventoryTransferIMService.responseGetIMByCus(cusCode);
+            if (a.ErrorCode == 0)
+                return Ok(a);
+            return BadRequest(a);
+        }
     }
 }

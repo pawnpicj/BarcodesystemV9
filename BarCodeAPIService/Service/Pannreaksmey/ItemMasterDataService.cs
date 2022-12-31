@@ -6,6 +6,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Data;
 using BarCodeAPIService.Models;
+using System.Globalization;
+using System.Data.Odbc;
+using SAPbobsCOM;
 
 namespace BarCodeAPIService.Service
 {
@@ -14,34 +17,30 @@ namespace BarCodeAPIService.Service
         public Task<ResponseOITMGetItemMaster> ResponseOITMGetItemMaster()
         {
             var oITM = new List<OITM>();
-            SAPbobsCOM.Company oCompany;
-            DataTable dt = new DataTable();
+            var dt = new DataTable();
             try
             {
-                Login login = new();
-                if (login.LErrCode == 0)
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
+                if (login.lErrCode == 0)
                 {
-                    oCompany = login.Company;
-                    SAPbobsCOM.Recordset? oRS = null;
-                    string Query = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_Smey('OITM','','','','','')";
-                    oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-                    oRS.DoQuery(Query);
-                    while (!oRS.EoF)
+
+                    var Query = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_Smey('OITM','','','','','')";
+                    login.AD = new OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
                     {
                         oITM.Add(new OITM
                         {
-                            ItemCode = oRS.Fields.Item(0).Value.ToString(),
-                            ItemName = oRS.Fields.Item(1).Value.ToString(),
-                            ItemFName = oRS.Fields.Item(2).Value.ToString(),
-                            ItemGroup = oRS.Fields.Item(3).Value.ToString(),
-                            ManBtchNum = oRS.Fields.Item(4).Value.ToString(),
-                            ManSerNum = oRS.Fields.Item(5).Value.ToString(),
-                            UoM = oRS.Fields.Item(6).Value.ToString(),
-                            FDA = oRS.Fields.Item(7).Value.ToString()
+                            ItemCode = row["ItemCode"].ToString(),
+                            ItemName = row["ItemName"].ToString(),
+                            ItemFName = row["FrgnName"].ToString(),
+                            ItemGroup = row["ItmsGrpNam"].ToString(),
+                            ManBtchNum = row["ManBtchNum"].ToString(),
+                            ManSerNum = row["ManSerNum"].ToString(),
+                            UoM = row["UomCode"].ToString(),
+                            FDA = row["U_FDA"].ToString()
                         });
-                        oRS.MoveNext();
                     }
-
                     return Task.FromResult(new ResponseOITMGetItemMaster
                     {
                         ErrorCode = 0,
@@ -49,16 +48,13 @@ namespace BarCodeAPIService.Service
                         Data = oITM.ToList()
                     });
                 }
-                else
-                {
-                    return Task.FromResult(new ResponseOITMGetItemMaster
-                    {
-                        ErrorCode = login.LErrCode,
-                        ErrorMessage = login.SErrMsg,
-                        Data = null
-                    });
-                }
 
+                return Task.FromResult(new ResponseOITMGetItemMaster
+                {
+                    ErrorCode = login.lErrCode,
+                    ErrorMessage = login.sErrMsg,
+                    Data = null
+                });
             }
             catch (Exception ex)
             {
@@ -69,6 +65,7 @@ namespace BarCodeAPIService.Service
                     Data = null
                 });
             }
+
         }
     }
 }

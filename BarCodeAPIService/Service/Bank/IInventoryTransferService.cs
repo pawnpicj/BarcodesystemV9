@@ -7,5 +7,7 @@ namespace BarCodeAPIService.Service
     public interface IInventoryTransferService
     {
         Task<ResponseInventoryTransfer> responseInventoryTransfer(SendInventoryTransfer SendInventoryTransfer);
+
+        Task<ResponseInventoryTransfer> responseInventoryTransferCV(SendInventoryTransfer SendInventoryTransfer);
     }
 }

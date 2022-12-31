@@ -101,6 +101,21 @@
         background: rgba(20,20,20,0.4);
     }
 
+    .txtb {
+        display: block;
+        height: calc(1.5em + .75rem + 2px);
+        padding: .375rem .75rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: .25rem;
+        transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    }
+
     /* =================================================== */
         .cover-spin {
             position:fixed;
@@ -208,18 +223,25 @@
                         <input type="text" class="form-control" placeholder="" id="ProductGroup" readonly>
                     </div>
 
-                    Expired Date:
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <button class="input-group-text" id="GexpireDate"><i class="fa fa-check"></i></button>
-                        </div>
-                        <input type="date" class="form-control" placeholder="" id="expireDate" required>
+                    <div style="display:none">
+                        Expired Date:
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <button class="input-group-text" id="GexpireDate"><i class="fa fa-check"></i></button>
+                            </div>
+                            <input type="date" class="form-control" placeholder="" id="expireDate" required>
 
+                        </div>
                     </div>
 
                     UOM:
                     <div class="input-group">
-                        <select class="form-control" id="cbUnit"></select>
+                        <input type="number" id="txtNumber1" style="width: 80px" placeholder="" class="txtb"/>
+                        <select id="cbUnitSmall" style="width: 100px" class="txtb"></select>
+                        <font style="font-weight:bold" size="3">&nbsp;:&nbsp;</font>
+                        <input type="number" id="txtNumber2" style="width: 80px" placeholder="" class="txtb"/>
+                        <select id="cbUnitBig" style="width: 100px" class="txtb"></select>
+                        @*<button type="button" id="btnCheckUOM" onclick="mixUom();">==C==</button>*@
                     </div>
 
                     Quantity :
@@ -293,16 +315,18 @@
             </div>
             <div class="row">
                 <div class="col-sm-12" style="padding-left: 5px;padding-top:20px;">
+
+                    <button type="button" class="btn btn-danger" id="delete">Delete</button>
                     <div class="table-responsive">
                         <table id="TbListItem" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;margin-bottom:10px;">
                             <thead>
                                 <tr>
+                                    <th>&nbsp;</th>
                                     <th>ItemCode </th>
                                     <th>Item Name </th>
                                     <th>Quantity</th>
                                     <th>Product Group</th>
                                     <th>Batch/SN</th>
-                                    <th>Exp.Date</th>
                                     <th>UOM</th>
                                     <th>FDA</th>
                                 </tr>
@@ -395,21 +419,47 @@
             type: "GET",
             dataType: "JSON",
             success: function (valx) {
-                $("#cbUnit").empty();
+                $("#cbUnitSmall").empty();
                 var text = "";
                 var jqueryXml = $(valx);
-                text += "<option value=''> — Select a UOM — </option>";
+                text += "<option value=''>Select</option>";
                 for (var i = 0; i < jqueryXml[0].data.length; i++) {
                     text += "<option values=" + jqueryXml[0].data[i].uomCode + ">" + jqueryXml[0].data[i].uomCode + "</option >";
                     //$("#cbUnit").append('<option value="' + jqueryXml[0].data[i].uomCode + '">' + jqueryXml[0].data[i].uomCode + "</option>");
                     //console.log(jqueryXml[0].data[i].uomCode);
                 }
-                $("#cbUnit").html(text);
+                $("#cbUnitSmall").html(text);
             },
             error: function (erro) {
                 console.log(erro.responseText);
             }
         });
+
+        $.ajax({
+            url: '@Url.Action("GetUOMList2", "CreateLabelSticker")',
+            type: "GET",
+            dataType: "JSON",
+            success: function (valx) {
+                $("#cbUnitBig").empty();
+                var text = "";
+                var jqueryXml = $(valx);
+                text += "<option value=''>Select</option>";
+                for (var i = 0; i < jqueryXml[0].data.length; i++) {
+                    text += "<option values=" + jqueryXml[0].data[i].uomCode + ">" + jqueryXml[0].data[i].uomCode + "</option >";
+                    //$("#cbUnit").append('<option value="' + jqueryXml[0].data[i].uomCode + '">' + jqueryXml[0].data[i].uomCode + "</option>");
+                    //console.log(jqueryXml[0].data[i].uomCode);
+                }
+                $("#cbUnitBig").html(text);
+            },
+            error: function (erro) {
+                console.log(erro.responseText);
+            }
+        });
+
+    //Mix UOM
+    function mixUom() {
+
+    }
 
     var tbWhs = $('#tbItem').DataTable();
     var LWhs = [];
@@ -481,13 +531,20 @@
         bLengthChange: false,
         binfo: false,
         data: allbinLInes,
+        columnDefs: [{
+            "defaultContent": "-",
+            "targets": "_all"
+        }],
         columns: [
+            {
+                render: function (data, type, full, meta) { return '<input type="checkbox" class="clsinput" style="margin:auto; width:100%;" id="chkLineNumSelect' + meta.row + '">'; },
+                autoWidth: true
+            },
             { data: "itemCode", autoWidth: true },
             { data: "itemName", autoWidth: true },
             { data: "quantity", autoWidth: true},
             { data: "productCode", autoWidth: true },
             { data: "batchSN", autoWidth: true },
-            { data: "expDate", autoWidth: true },
             { data: "UOM", autoWidth: true },
             { data: "fda",autoWidth:true}
         ]
@@ -517,6 +574,25 @@
     var check = 0;
     var itemLines = {};
     $('#Add').click(function () {
+        //=== Start Mix UOM ===
+        var number1 = document.getElementById("txtNumber1").value;
+        var number2 = document.getElementById("txtNumber2").value;
+        var unitSmall = document.getElementById("cbUnitSmall").value;
+        var unitBig = document.getElementById("cbUnitBig").value;
+
+        var uomsmall = '';
+        var uombig = '';
+
+        uomsmall = number1 + '' + unitSmall;
+
+
+        if (number2 != '') {
+            uombig = '/' + number2 + '' + unitBig;
+        }
+
+        var valMixUom = '' + uomsmall + uombig;
+        //=== End Mix UOM ===
+
 
         console.log(batch + "-" + serial);
         allitemLInes = [];
@@ -543,10 +619,10 @@
                     itemLines.productCode = $('#ProductGroup').val() + " ";
                     itemLines.batchSN = $('#batchSN').val() + "";
                     itemLines.expDate = txtExpireDate + "";
-                    itemLines.UOM = $('#cbUnit').val() + "";
+                    itemLines.UOM = valMixUom + "";
                     itemLines.fda = $('#txtFDA').val();
                     itemLines.concatText = "- " + $('#ItemCode').val() + "\n- " + $('#ItemName').val() + "\n- " + $('#ProductGroup').val();
-                    itemLines.concatText2 = $('#ItemCode').val() + ";" + $('#batchSN').val() + ";;" + $('#expireDate').val() + ";" + i.toString().padStart(4, '0') + "";
+                    itemLines.concatText2 = $('#ItemCode').val() + ";" + $('#batchSN').val() + ";;" + ";" + i.toString().padStart(4, '0') + "";
                     allitemLInes.push(itemLines);
                     HeaderLs.push(itemLines);
                     table.rows.add(allitemLInes).draw(false);
@@ -565,10 +641,10 @@
                         itemLines.productCode = $('#ProductGroup').val() + "";
                         itemLines.batchSN = $('#batchSN').val() + "";
                         itemLines.expDate = txtExpireDate + "";
-                        itemLines.UOM = $('#cbUnit').val() + "";
+                        itemLines.UOM = valMixUom + "";
                         itemLines.fda = $('#txtFDA').val();
                         itemLines.concatText = "- " + $('#ItemCode').val() + "\n- " + $('#ItemName').val() + "\n- " + $('#ProductGroup').val();
-                        itemLines.concatText2 = $('#ItemCode').val() + ";;" + $('#batchSN').val() + i.toString().padStart(2, '0') + ";" + $('#expireDate').val() + ";" + i.toString().padStart(4, '0') + "";
+                        itemLines.concatText2 = $('#ItemCode').val() + ";;" + $('#batchSN').val() + i.toString().padStart(2, '0') + ";" + ";" + i.toString().padStart(4, '0') + "";
                         allitemLInes.push(itemLines);
                         HeaderLs.push(itemLines);
                         table.rows.add(allitemLInes).draw(false);
@@ -585,10 +661,10 @@
                         itemLines.productCode = $('#ProductGroup').val() + " ";
                         itemLines.batchSN = $('#batchSN').val() + "";
                         itemLines.expDate = txtExpireDate + "";
-                        itemLines.UOM = $('#cbUnit').val() + "";
+                        itemLines.UOM = valMixUom + "";
                         itemLines.fda = $('#txtFDA').val();
                         itemLines.concatText = "- " + $('#ItemCode').val() + "\n\n-" + $('#ItemName').val() + "\n\n-" + $('#ProductGroup').val();
-                        itemLines.concatText2 = $('#ItemCode').val() + ";;;" + $('#expireDate').val() + ";" + i.toString().padStart(4, '0') + "";
+                        itemLines.concatText2 = $('#ItemCode').val() + ";;;" + ";" + i.toString().padStart(4, '0') + "";
                         allitemLInes.push(itemLines);
                         HeaderLs.push(itemLines);
                         //itemLines = {};
@@ -606,7 +682,11 @@
             $('#batchSN').val("");
             $('#expireDate').val("");
             $('#txtFDA').val("");
-            $('#cbUnit').val("");
+
+            $('#txtNumber1').val("");
+            $('#cbUnitSmall').val("");
+            $('#txtNumber2').val("");
+            $('#cbUnitBig').val("");
 
             document.getElementById("batchSN").focus();
             }
@@ -636,7 +716,7 @@
             arrayLine.quantity = data.quantity;
             arrayLine.concatText = data.concatText;
             arrayLine.concatText2 = data.concatText2;
-            arrayLine.expDate = data.expDate;
+            //arrayLine.expDate = data.expDate;
             arrayLine.batchSN = data.batchSN;
             arrayLine.fda = data.fda;
             arrayLine.UOM = data.UOM;
@@ -689,6 +769,7 @@
         var sLine = [];
         var arrayLine = {};
         var print = {};
+        var countRow = 0;
         for (let rr = 0; rr < table.column(0).data().length; rr++) {
             arrayLine = {};
             var data = table.row(rr).data();
@@ -698,15 +779,17 @@
             arrayLine.quantity = data.quantity;
             arrayLine.concatText = data.concatText;
             arrayLine.concatText2 = data.concatText2;
-            arrayLine.expDate = data.expDate;
+            //arrayLine.expDate = data.expDate;
             arrayLine.batchSN = data.batchSN;
             arrayLine.fda = data.fda;
             arrayLine.UOM = data.UOM;
             sLine.push(arrayLine);
+            countRow = countRow + 1;
         }
         console.log(sLine);
 
         print.Data = sLine;
+        countRow = countRow;
         if (sLine.length > 0) {
             if ($('#labelSize').val() == '0') {
                 console.log("3x");
@@ -717,7 +800,7 @@
                     dataType: "JSON",
                     success: function (data) {
                         if (data == 1) {
-                            window.location.href = "@Url.Action("PrintItem3LablePDF", "CreateLabelSticker")";
+                            window.location.href = '@Url.Action("PrintItem3LablePDF", "CreateLabelSticker")?sizeSticker=' + countRow;
                     }
                     }
                 });
@@ -727,7 +810,28 @@
 
     });
 
+    $("#delete").on("click", function () {
+        table.rows($('table tr').has('input:checked')).remove().draw();
+    })
 
+    function removeRowTo(rowno) {
+
+        //console.log($(this).parent());
+        //tbInfImData2.row($(this).parents('tr')).remove().draw(false);
+
+        //alert('rowNo : ' + row);
+        var data = table.row(rowno).data();
+        //console.log(data);
+        var itemCode = data.itemCode;
+        let msg = "คุณต้องการลบ Item " + itemCode + " นี้ใช่ไหม";
+        if (confirm(msg) == true) {
+            console.log('OK -> Remove Row' + rowno);
+            table.rows(rowno).remove().draw(false);
+        }
+        else {
+            console.log('Cancel -> Remove Row' + rowno);
+        }
+    }
 
     var input01 = document.getElementById("batchSN");
     input01.addEventListener("keyup", function (event) {

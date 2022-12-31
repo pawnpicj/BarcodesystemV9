@@ -22,7 +22,7 @@ namespace BarCodeLibrary.Respones.SAP.Bank
         public string BinCode { get; set; }
         public string BatchNumber { get; set; }
         public string SerialNumber { get; set; }
-        public DateTime ExpDate { get; set; }
+        public string ExpDate { get; set; }
         public string FDA { get; set; }
     }
 }

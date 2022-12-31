@@ -1,0 +1,493 @@
+﻿@using BarCodeClientService.Controllers
+@{
+    ViewData["Title"] = "Product Detail";
+    var dt = DateTime.Now;
+    ViewData["Date"] = dt.ToShortDateString();
+}
+
+<link href="~/css/styles.css" rel="stylesheet" />
+<link href="~/css/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/css/DataTable/rowReorder.dataTables.min.css" rel="stylesheet" />
+@*<link href="~/css/DataTable/responsive.dataTables.min.css" rel="stylesheet" />*@
+
+<script src="~/css/DataTable/jquery-3.3.1.js"></script>
+@*<script src="~/css/DataTable/jquery-3.5.1.js"></script>*@
+<script src="~/css/DataTable/jquery.dataTables.min.js"></script>
+<script src="~/css/DataTable/dataTables.rowReorder.min.js"></script>
+<script src="~/css/DataTable/moment.min.js"></script>
+<script src="~/css/DataTable/datetime-moment.js"></script>
+<script src="~/css/DataTable/dataTables.buttons.min.js"></script>
+<script src="~/css/DataTable/dataTables.select.min.js"></script>
+<script src="~/css/DataTable/dataTables.dateTime.min.js"></script>
+<script src="~/css/DataTable/dataTables.editor.min.js"></script>
+
+<style>
+    tr.selected {
+        background: red;
+        color: red;
+    }
+
+    #main {
+        position: absolute;
+    }
+
+    .color_tap {
+        background-color: #5f95c3;
+        color: #ffffff;
+        font-weight: 600;
+        margin-right: 1px;
+        min-width: 60px;
+    }
+
+    .nav-tabs .nav-link {
+        border: 1px solid rgb(193, 193, 193);
+        border-radius: 0px 12px 0px 0px;
+        height: 40px;
+        line-height: 20px;
+    }
+
+    .modal {
+        z-index: 200000;
+    }
+
+    .modal-header {
+        background: #5f95c3;
+        color: #ffffff;
+        height: 40px;
+    }
+
+        .modal-header b {
+            margin-top: -10px;
+        }
+
+    #TbAR table tr td {
+        height: 35px;
+        margin-left: 15px;
+        margin-top: 10px;
+        padding: 0px !important;
+        position: relative !important;
+        /*background-color: none;*/
+    }
+
+    table tbody tr td {
+        background-color: #ffffff;
+        color: black;
+    }
+
+    table tbody tr.selected td {
+        background: #94d8e1;
+        color: red;
+    }
+
+        table tbody tr.selected td .clsinput {
+            background: #94d8e1;
+            color: red;
+        }
+
+    input[type="radio"] {
+        margin-top: -1px;
+        vertical-align: middle;
+        height: 28px;
+        width: 28px;
+    }
+
+    .lbl_rdo {
+        font-size: 18px;
+        /*font-weight: bold;*/
+    }
+
+    .clsinput:focus {
+        outline: none;
+    }
+
+    .textbox-01 {
+        display: block;
+        height: calc(1.5em + .75rem + 2px);
+        padding: .375rem .75rem;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: .25rem;
+    }
+
+    /* =================================================== */
+    .cover-spin {
+        position: fixed;
+        width: 100%;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background-color: rgba(255,255,255,0.7);
+        z-index: 9999;
+        display: none;
+    }
+
+    @@-webkit-keyframes spin {
+        from {
+            -webkit-transform: rotate(0deg);
+        }
+
+        to {
+            -webkit-transform: rotate(360deg);
+        }
+    }
+
+    @@keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .cover-spin::after {
+        content: '';
+        display: block;
+        position: absolute;
+        left: 48%;
+        top: 40%;
+        width: 40px;
+        height: 40px;
+        border-style: solid;
+        border-color: black;
+        border-top-color: transparent;
+        border-width: 4px;
+        border-radius: 50%;
+        -webkit-animation: spin .8s linear infinite;
+        animation: spin .8s linear infinite;
+    }
+    /* =================================================== */
+    table thead{
+        background-color:antiquewhite;
+        font-weight:bold;
+        color:black;
+        text-align:center;
+    }
+    #TbDataItem {
+        font-size: 14px;
+        color: black;
+    }
+</style>
+
+<div id="#main">
+
+    <div id="frmLoading" class="cover-spin" style="display:none"></div>
+
+    <div class="row" style="color: #696969; margin-left: 5px; margin-top: 5px;">
+        <h5 style="color: #696969; margin-top: 5px;">
+            <a><i class="fas fa-home"></i> Dashboard</a>
+            <span>
+                <a><i class="fa fa-caret-right align-right"></i>Check Item</a>
+            </span>
+        </h5>
+    </div>
+    <hr />
+
+    <div style="color: #696969; padding: 10px;">
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="cus" role="tabpanel" aria-labelledby="cus-tab" style="margin-top: 10px">
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <b>Scan QRCode</b><br>
+                        <div class="input-group">
+                            <input type="text" id="txtSearchItem" autocomplete="off" class="textbox-01" size="25" value="" />
+                            <button class="btn btn-info" id="btnSearchItem">
+                                Search
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12"><br>
+                        <div class="table-responsive">
+                            <table id="TbDataItem" border="1" class="table table-hover" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <tr>
+                                    <td width="25%" style="border-right: 1px solid black"><b>ItemCode</b></td>
+                                    <td><div id="lbItemCode"></div></td>
+                                </tr>
+                                <tr>
+                                    <td style="border-right: 1px solid black"><b>ItemName</b></td>
+                                    <td><div id="lbItemName"></div></td>
+                                </tr>
+                                <tr style="display:none;">
+                                    <td style="border-right: 1px solid black"><b>Warehouse</b></td>
+                                    <td><div id="lbWarehouse"></div></td>
+                                </tr>
+                                <tr style="display:none;">
+                                    <td style="border-right: 1px solid black"><b>Bin Location</b></td>
+                                    <td><div id="lbBinLocation"></div></td>
+                                </tr>
+                                <tr>
+                                    <td style="border-right: 1px solid black"><b>Batch Number</b></td>
+                                    <td><div id="lbBatchNumber"></div></td>
+                                </tr>
+                                <tr>
+                                    <td style="border-right: 1px solid black"><b>Serial Number</b></td>
+                                    <td><div id="lbSerialNumber"></div></td>
+                                </tr>
+                                <tr>
+                                    <td style="border-right: 1px solid black"><b>FDA Number (อย.)</b></td>
+                                    <td><div id="lbFDA"></div></td>
+                                </tr>
+                                <tr>
+                                    <td style="border-right: 1px solid black"><b>Exp Date</b></td>
+                                    <td><div id="lbExpDate"></div></td>
+                                </tr>
+                            </table>
+
+                            
+                            <div id="divBinLocationList" style="display:block;">
+                                <b>Bin Location List</b>
+                                <table id="TbBinLocationList" border="1" class="table table-hover" width="99%" cellspacing="0" style="background:#fff;color:#696969; font-size: 12px;">
+                                    <thead>
+                                        <tr>
+                                            <th>Item Code</th>
+                                            <th>Warehouse</th>
+                                            <th>Bin Location</th>
+                                            <th>QTY</th>
+                                            <th>BarCode</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    //console.cler();
+    $('#txtSearchItem').focus();
+
+    $("#txtSearchItem").on("keypress", function (event) {
+        var englishAlphabetAndWhiteSpace = /[A-Za-z ;&-_#]/g;
+        var key = String.fromCharCode(event.which);
+
+        if (event.keyCode == 8 || event.keyCode == 37 || event.keyCode == 39 || englishAlphabetAndWhiteSpace.test(key)) {
+            return true;
+        }
+        return false;
+    });
+
+    //$('#txtSearchItem').on("paste", function (e) {
+    //    e.preventDefault();
+    //});
+
+    var input01 = document.getElementById("txtSearchItem");
+    input01.addEventListener("keyup", function (event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            if (input01.value != '') {
+                document.getElementById("btnSearchItem").click();
+            }
+            else {
+                alert('สแกน บาร์โค๊ด หรือ คิวอาร์โค๊ด อีกครั้ง!');
+            }
+        }
+    });
+
+    $('#btnSearchItem').on('click', function () {
+        document.getElementById("frmLoading").style.display = "block";
+        console.log("BarCode is " + $('#txtSearchItem').val());
+
+        var txtScanBarCode = $('#txtSearchItem').val();
+        const strArr = txtScanBarCode.split(";");
+        var sItemCode = strArr[0];
+        var sBatch = strArr[1];
+        var sSerial = strArr[2];
+
+        //=============================
+        var sBatchSerial;
+        if (sBatch != '') {
+            sBatchSerial = sBatch;
+        }
+        else if (sSerial != '') {
+            sBatchSerial = sSerial;
+        }
+        else {
+            sBatchSerial = "empty";
+        }
+        //=============================
+
+        //console.log(sItemCode + ';' + sBatch + ';' + sSerial);
+        console.log(sBatchSerial);
+        //Have Batch And Serial
+        if (sBatchSerial != "empty") {
+            $.ajax({
+                url: '@Url.Action("GetItemByBarcode", "Inventory")',
+                data: { barCode: sBatchSerial, itemcode: sItemCode},
+                type: "GET",
+                dataType: "JSON",
+                "dataSrc": 'data',
+                success: function (data) {
+                    if (data !== undefined) {
+                        //console.warn(data[0].length);                        
+                        var jqueryXml = $(data);
+                        if (jqueryXml[0].data.length > 0) {
+                            //
+                            console.log('Success..');
+                            //console.log(data);
+                            
+                            document.getElementById("lbItemCode").innerHTML = jqueryXml[0].data[0].itemCode;
+                            document.getElementById("lbItemName").innerHTML = jqueryXml[0].data[0].itemName;
+                            document.getElementById("lbWarehouse").innerHTML = jqueryXml[0].data[0].whsCode;
+                            document.getElementById("lbBinLocation").innerHTML = jqueryXml[0].data[0].binCode;
+                            document.getElementById("lbBatchNumber").innerHTML = jqueryXml[0].data[0].batchNumber;
+                            document.getElementById("lbSerialNumber").innerHTML = jqueryXml[0].data[0].serialNumber;
+                            document.getElementById("lbFDA").innerHTML = jqueryXml[0].data[0].fda;
+                            document.getElementById("lbExpDate").innerHTML = jqueryXml[0].data[0].expDate;
+                            tbBinLocationList.clear().draw();
+                            fncGetBinLocationList(sBatchSerial, sItemCode);
+
+
+                        } else {
+                            alert("ไม่มี Item ของ Barcode นี้");
+                            fncExit();                            
+                        }
+
+                        
+                    }
+                    else {
+                        fncErr();
+                    }
+                    
+
+                },
+                error: function (err) {
+                    console.log(err.responseText);
+                    document.getElementById("frmLoading").style.display = "none";
+                }
+            });
+        }
+        //No Batch And Serial
+        else {
+            $.ajax({
+                url: '@Url.Action("GetItemNoBatchSerial", "Inventory")',
+                data: { itemcode: sItemCode },
+                type: "GET",
+                dataType: "JSON",
+                "dataSrc": 'data',
+                success: function (data2) {
+                    if (data2 !== undefined) {
+                        console.log('GetItemNoBatchSerial Success..');
+                        //console.log(data2);
+                        var jqueryXml = $(data2);
+                        document.getElementById("lbItemCode").innerHTML = jqueryXml[0].data[0].itemCode;
+                        document.getElementById("lbItemName").innerHTML = jqueryXml[0].data[0].itemName;
+                        document.getElementById("lbWarehouse").innerHTML = '';
+                        document.getElementById("lbBinLocation").innerHTML = '';
+                        document.getElementById("lbBatchNumber").innerHTML = '';
+                        document.getElementById("lbSerialNumber").innerHTML = '';
+                        document.getElementById("lbFDA").innerHTML = jqueryXml[0].data[0].fda;
+                        var vExpDate = jqueryXml[0].data[0].expDate;
+                        var cExpDate = vExpDate.toString();
+                        console.log("ExpDate : " + cExpDate);
+                        if (cExpDate == "1899-12-31T00:00:00") {
+                            cExpDate = "";
+                        }
+                        document.getElementById("lbExpDate").innerHTML = cExpDate;
+                        tbBinLocationList.clear().draw();
+                        fncGetBinLocationList(sBatchSerial, sItemCode);
+                    } else {
+                        fncErr();
+                    }
+
+                },
+                error: function (err) {
+                    console.log(err.responseText);
+                    document.getElementById("frmLoading").style.display = "none";
+                    $('#txtSearchItem').val('');
+                }
+            });
+        }
+
+    });
+
+    var LItems = [];
+    var tbBinLocationList = $('#TbBinLocationList').DataTable({
+        bLengthChange: false,
+        binfo: false,
+        data: LItems,
+        language: {
+            emptyTable: "Empty"
+        },
+        columns: [
+            { data: "itemCode", autoWidth: true },
+            { data: "whsCode", autoWidth: true },
+            { data: "binCode", autoWidth: true },
+            { data: "qty", autoWidth: true },
+            { data: "barCode", autoWidth: true }
+        ],
+        select: true,
+        paging: true,
+        ordering: false,
+        info: false,
+        searching: false
+    });
+    tbBinLocationList.columns([0, 1, 4]).visible(false, false);
+
+    function fncGetBinLocationList(barcode, itemcode) {
+        console.log('Bin-Location List Loading...');
+        $.ajax({
+            url: '@Url.Action("GetBinLocationList", "Inventory")',
+            data: { barcode: barcode, itemcode: itemcode},
+            type: "GET",
+            dataType: "JSON",
+            "dataSrc": 'data',
+            success: function (value) {
+                //START -> Check Error [Cannot read properties of undefined]
+                if (value !== undefined) {
+                    console.log('Get Bin-Location List Success..');
+                    console.log(value);
+                    LItems = [];
+                    LItems = value.data;
+                    tbBinLocationList.rows.add(LItems);
+                    tbBinLocationList.search("").draw();
+                    document.getElementById("frmLoading").style.display = "none";
+                    $('#txtSearchItem').val('');
+                }
+                else {
+                    fncErr();
+                }
+                //END -> Check Error [Cannot read properties of undefined]
+                
+            },
+            error: function (err) {
+                console.log(err.responseText);
+                document.getElementById("frmLoading").style.display = "none";
+                $('#txtSearchItem').val('');
+                $('#txtSearchItem').focus();
+            }
+        });
+    }
+
+    function fncErr() {
+        alert("Server error responses\r\nเกิดข้อผิดพลาดของเซิร์ฟเวอร์");
+        document.getElementById("frmLoading").style.display = "none";
+        $('#txtSearchItem').val('');
+        $('#txtSearchItem').focus();
+    }
+
+    function fncExit() {
+        document.getElementById("frmLoading").style.display = "none";
+        $('#txtSearchItem').val('');
+        $('#txtSearchItem').focus();
+    }
+
+
+</script>

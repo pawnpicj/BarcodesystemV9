@@ -92,6 +92,7 @@
     string strLine = "";
     string QR_Data;
     string docnum = "";
+    double BatchSerialQty = 0;
 }
 
 <body><br>
@@ -137,7 +138,25 @@
                       <td align="center" colspan="2">
                           @foreach (var line in l.Line)
                           {
-                              strLine = strLine + line.ItemCode + "[" + line.Quantity + "]" + "; \r\n";
+
+                              if (line.batchNumber != "" && line.batchNumber != null)
+                              {
+                                  BatchSerialQty = line.qtyByBatch;
+                              }
+                              else
+                              {
+                                  if (line.serialNumber != "" && line.serialNumber != null)
+                                  {
+                                      BatchSerialQty = line.qtyBySerial;
+                                  }
+                                  else
+                                  {
+                                      BatchSerialQty = line.Quantity;
+                                  }
+                              }
+
+
+                              strLine = strLine + line.ItemCode + ";" + line.batchNumber + ";" + line.serialNumber + ";" + "[QTY=" + BatchSerialQty + "]" + "; \r\n";
                           }
                           @*<label>@string.Format("{0}<br />", strLine);</label>
             <label>@strLine</label>*@

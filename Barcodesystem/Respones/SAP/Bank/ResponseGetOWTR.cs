@@ -11,8 +11,8 @@ namespace BarCodeLibrary.Respones.SAP
 
     public class OWTR
     {
-        public int DocNum { get; set; }
-        public int DocEntry { get; set; }
+        public string DocNum { get; set; }
+        public string DocEntry { get; set; }
         public string DocDate { get; set; }
         public string CardCode { get; set; }
         public string CardName { get; set; }
@@ -21,7 +21,7 @@ namespace BarCodeLibrary.Respones.SAP
         public string FromWhs { get; set; }
         public string ToWhs { get; set; }
         public string SeriesName { get; set; }
-        public int ToBinEntry { get; set; }
+        public string ToBinEntry { get; set; }
         public string ToBinCode { get; set; }
         public string LoanNum { get; set; }
         public List<WTR1> Line { get; set; }

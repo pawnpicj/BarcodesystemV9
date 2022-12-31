@@ -11,7 +11,7 @@ namespace BarCodeLibrary.Respones.SAP
 
     public class OWTQ
     {
-        public int DocNum { get; set; }
+        public string DocNum { get; set; }
         public int DocEntry { get; set; }
         public string DocDate { get; set; }
         public string CardCode { get; set; }

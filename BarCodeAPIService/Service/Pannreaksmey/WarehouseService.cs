@@ -6,51 +6,56 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Data;
 using BarCodeAPIService.Models;
+using SAPbobsCOM;
+using System.Globalization;
+using System.Data.Odbc;
+
+
 namespace BarCodeAPIService.Service
 {
     public class WarehouseService : IWarehouseService
     {
+
         public Task<ResponseOWHSGetWarehouse> responseWHSGetWarehouse()
         {
-            var oWHS = new List<OWHS>();
-            //DataTable dt = new DataTable();
-            SAPbobsCOM.Company oCompany;
+
+
+            var dataLine = new List<OWHS>();
+            var dt = new DataTable();
+
             try
             {
-
-                Login login = new();
-                if (login.LErrCode == 0)
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
+                if (login.lErrCode == 0)
                 {
-                    oCompany = login.Company;
-                    SAPbobsCOM.Recordset? oRS = null;
-                    string sqlStr = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_Smey ('OWHS','','','','','')";
-                    oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-                    oRS.DoQuery(sqlStr);
-                    while (!oRS.EoF)
+
+                    var Query = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_Smey ('OWHS','','','','','')";
+                    login.AD = new OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
                     {
-                        oWHS.Add(new OWHS
+                        dataLine.Add(new OWHS
                         {
-                            WhsCode = oRS.Fields.Item(0).Value.ToString(),
-                            WhsName = oRS.Fields.Item(1).Value.ToString(),
+
+                            WhsCode = row["WhsCode"].ToString(),
+                            WhsName = row["WhsName"].ToString(),
+
                         });
-                        oRS.MoveNext();
                     }
                     return Task.FromResult(new ResponseOWHSGetWarehouse
                     {
                         ErrorCode = 0,
                         ErrorMessage = "",
-                        Data = oWHS.ToList()
-                    }); ;
-                }
-                else
-                {
-                    return Task.FromResult(new ResponseOWHSGetWarehouse
-                    {
-                        ErrorCode = login.LErrCode,
-                        ErrorMessage = login.SErrMsg,
-                        Data = null
+                        Data = dataLine.ToList()
                     });
                 }
+
+                return Task.FromResult(new ResponseOWHSGetWarehouse
+                {
+                    ErrorCode = login.lErrCode,
+                    ErrorMessage = login.sErrMsg,
+                    Data = null
+                });
             }
             catch (Exception ex)
             {
@@ -61,6 +66,9 @@ namespace BarCodeAPIService.Service
                     Data = null
                 });
             }
+
         }
+
+
     }
 }

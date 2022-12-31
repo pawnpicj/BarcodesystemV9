@@ -521,7 +521,6 @@
     </div>
 </div>
 
-
 @*Copy From PO*@
 <div class="modal fade" id="ModalCopyFromPO" data-backdrop="static">
     <div class="modal-dialog modal-xl">
@@ -751,6 +750,7 @@
         </div>
     </div>
 </div>
+
 @*Generate Batch*@
 <div class="modal fade " id="ModalBarCodeBatch" data-backdrop="static">
     <div class="modal-dialog modal-xl">
@@ -946,6 +946,7 @@
         </div>
     </div>
 </div>
+
 <script src="~/js/tengkimleang/goodReceiptPO/GetMasterGoodReceiptPO.js"></script>
 <script src="~/js/tengkimleang/Method/MethodDataTable.js"></script>
 <script src="~/js/Array.js"></script>
@@ -1828,6 +1829,7 @@
             }
         }
     });
+
     $("#txtTotalGenSerial").change(function() {
         if ($("#txtPerSerial").val() !== 0 && $("#txtPerSerial").val() !=="") {
             var totalGenBatch = $("#txtTotalGenSerial").val();
@@ -1850,6 +1852,7 @@
             }
         }
     });
+
     $("#BtnSaveBatch").click(function() {
         if ($("#BtnSaveBatch").text()==="Save") {
             //alert("Save Btn");

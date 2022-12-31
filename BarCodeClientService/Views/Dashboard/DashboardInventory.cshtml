@@ -2,17 +2,79 @@
     ViewData["Title"] = "Dashboard-Inventory";
 }
 <style type="text/css">
-    #Icon {
-        color: #5f95c3;
-        font-size: 45px;
-        margin-top: 60px;
-        text-align: center;
+
+    /*Scanner*/
+    @@media screen and (max-width: 320px) {
+        #Icon {
+            color: #5f95c3;
+            font-size: 45px;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .tabIcon {
+            width: 100px;
+            height: 115px;
+            background: #f0eff1;
+        }
+
+        .p1 {
+            text-align: center;
+            padding-top: 15px;
+        }
     }
 
-        #Icon:hover {
-            margin-top: 55px;
-            font-size: 60px;
+    /*Moblie*/
+    @@media screen and (max-width: 500px) {
+        #Icon {
+            color: #5f95c3;
+            font-size: 45px;
+            margin-top: 60px;
+            text-align: center;
         }
+
+            #Icon:hover {
+                margin-top: 55px;
+                font-size: 60px;
+            }
+
+        .tabIcon {
+            width: 100%;
+            height: 100%;
+            background: #f0eff1;
+        }
+
+        .p1 {
+            text-align: center;
+            padding-top: 15px;
+        }
+    }
+
+    /*Laptop*/
+    @@media (min-width:900px) and (max-width:1536px) {
+        #Icon {
+            color: #5f95c3;
+            font-size: 45px;
+            margin-top: 60px;
+            text-align: center;
+        }
+
+            #Icon:hover {
+                margin-top: 55px;
+                font-size: 60px;
+            }
+
+        .tabIcon {
+            width: 100%;
+            height: 100%;
+            background: #f0eff1;
+        }
+
+        .p1 {
+            text-align: center;
+            padding-top: 15px;
+        }
+    }
 </style>
 
 <div class="container">
@@ -20,9 +82,9 @@
         @* InventoryTransfer (Borrow Bills) *@
         <div class="alink col-lg-3">
             <a asp-controller="Inventory" asp-action="CreateInventoryTransferBB">
-                <div style="width:100%;height:100%;background:#f0eff1">
+                <div class="tabIcon">
                     <div style="text-align:center">
-                        <p style="text-align:center;padding-top:15px;">
+                        <p class="p1">
                             <b>Inventory Tranfer<br>(Borrow Bills)</b><br>
                             <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
                         </p>
@@ -34,9 +96,9 @@
         @* InventoryTransfer (Return Borrow Bills) *@
         <div class="alink col-lg-3">
             <a asp-controller="Inventory" asp-action="CreateInventoryTransferRBB">
-                <div style="width:100%;height:100%;background:#f0eff1">
+                <div class="tabIcon">
                     <div style="text-align:center">
-                        <p style="text-align:center;padding-top:15px;">
+                        <p class="p1">
                             <b>Inventory Tranfer<br>(Return Borrow Bills)</b><br>
                             <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
                         </p>
@@ -49,9 +111,9 @@
         @* PrintLableForTransfer *@
         <div class="alink col-lg-3">
             <a asp-controller="Inventory" asp-action="FrmPrintForTransfer">
-                <div style="width:100%;height:100%;background:#f0eff1">
+                <div class="tabIcon">
                     <div style="text-align:center">
-                        <p style="text-align:center;padding-top:15px;">
+                        <p class="p1">
                             <b>Print Lable Transfer</b><br>
                             <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
                         </p>
@@ -62,9 +124,9 @@
 
         <div class="alink col-lg-3">
             <a asp-controller="Inventory" asp-action="CreateInventoryCounting">
-                <div style="width:100%;height:100%;background:#f0eff1">
+                <div class="tabIcon">
                     <div style="text-align:center">
-                        <p style="text-align:center;padding-top:15px;">
+                        <p class="p1">
                             <b>Inventory Counting</b><br>
                             <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
                         </p>
@@ -73,20 +135,19 @@
             </a>
         </div>
 
-    </div>
-    
-    @*<div class="row">
-            <div class="col-lg-3" style="width: 250px;height: 250px;margin-top:30px;">
-                <a asp-controller="Inventory" asp-action="CreateInventoryCounting">
-                    <div style="width:100%;height:100%;background:#f0eff1">
-                        <div style="text-align:center">
-                            <p style="text-align:center;padding-top:15px;"><b>Inventory Counting</b></p>
-                        </div>
-                        <div style="width:100%;height:100%;text-align:center">
+        <div class="alink col-lg-3">
+            <a asp-controller="Inventory" asp-action="CreateSONotify">
+                <div class="tabIcon">
+                    <div style="text-align:center">
+                        <p class="p1">
+                            <b>SO for Notify</b><br>
                             <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
-                        </div>
+                        </p>
                     </div>
-                </a>
-            </div>
-        </div>*@
+                </div>
+            </a>
+        </div>
+
+    </div>
+
 </div>

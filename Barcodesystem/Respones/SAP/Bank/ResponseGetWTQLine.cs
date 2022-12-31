@@ -12,6 +12,7 @@ namespace BarCodeLibrary.Respones.SAP
     public class WTQLine
     {
         public int DocEntry { get; set; }
+        public int BaseLine { get; set; }
         public string ItemCode { get; set; }
         public string Dscription { get; set; }
         public double Quantity { get; set; }
@@ -22,5 +23,7 @@ namespace BarCodeLibrary.Respones.SAP
         public double U_unitprice { get; set; }
         public string BinCode { get; set; }
         public int FromBinEntry { get; set; }
+        public string BatchYN { get; set; }
+        public string SerialYN { get; set; }
     }
 }

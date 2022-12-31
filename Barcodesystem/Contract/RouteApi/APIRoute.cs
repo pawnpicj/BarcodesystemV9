@@ -52,5 +52,13 @@
             public const string GetDeliveryByDocNum = "GetDeliveryByDocNum/";
             public const string SendReturn = "SendReturn";
         }
+
+        public static class InventoryCounting
+        {
+            //public const string Controller = "api/Return/";
+            //public const string GetDelivery = "GetDelivery1/";
+            //public const string GetDeliveryByDocNum = "GetDeliveryByDocNum/";
+            //public const string SendReturn = "SendReturn";
+        }
     }
 }

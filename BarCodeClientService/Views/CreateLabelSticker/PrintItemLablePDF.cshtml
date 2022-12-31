@@ -154,7 +154,7 @@
                     <label>&nbsp;</label><br />
                     <img src="@Url.Action("GenerateQRCode","QRBarcode")?itemcode=@string.Empty&&itemname=@string.Empty&&fda=@string.Empty&&str=@l.ConcatText2" id="imgQrNoFDA" @i />
                 }
-                <br><font size="+1">@l.BatchSN</font>
+                <br><font size="+1">Itemcode:@l.ItemCode&nbsp;,&nbsp;B/SN/L:@l.BatchSN</font>
             </td>
         </tr>
     </table>

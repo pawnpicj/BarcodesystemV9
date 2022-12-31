@@ -12,6 +12,7 @@ namespace BarCodeLibrary.Respones.SAP
     public class OSLP
     {
         public int SlpCode { get; set; }
+        public string SlpId { get; set; }
         public string SlpName { get; set; }
     }
 }

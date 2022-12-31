@@ -47,6 +47,12 @@ namespace BarCodeClientService.Controllers
             return View();
         }
 
+        public IActionResult CreateSONotify()
+        {
+            return View();
+        }
+        
+
         public IActionResult FrmPrintForTransfer()
         {
             return View();
@@ -130,6 +136,23 @@ namespace BarCodeClientService.Controllers
             return Ok(a);
         }
 
+        public IActionResult GetSeriesSO(string yymm, string typeSeries)
+        {
+            var yyyy = DateTime.Now.Year.ToString();
+            string cmm;
+            var mm = Convert.ToInt32(DateTime.Now.Month.ToString());
+
+            if (mm < 10)
+                cmm = "0" + mm;
+            else
+                cmm = "" + mm;
+
+            var xyymm = yyyy + "-" + cmm;
+            var a = API.Read<ResponseGetSeriesCode>("api/SeriesCV/GetSeriesCode/" + xyymm + "/SO");
+
+            return Ok(a);
+        }
+
         public IActionResult GetWTQLine(string docentry)
         {
             var xDocEntry = docentry;
@@ -147,8 +170,7 @@ namespace BarCodeClientService.Controllers
         //GetWTRLine
         public IActionResult GetWTRLine(string docentry)
         {
-            var xDocEntry = docentry;
-            var a = API.Read<ResponseGetWTRLine>("api/InventoryTransferIM/GetWTRLine/" + xDocEntry);
+            var a = API.Read<ResponseGetWTRLine>("api/InventoryTransferIM/GetWTRLine/" + docentry);
             return Ok(a);
         }
 
@@ -188,16 +210,13 @@ namespace BarCodeClientService.Controllers
 
         public IActionResult GetStockItemBatchBin(string itemcode, string batchnumber, string binentry)
         {
-            var xitemcode = itemcode;
-            var xbatchnumber = batchnumber;
-            var xbinentry = binentry;
-            var a = API.Read<ResponseGetStockItemBatchSerial>("GetStockItemBatchBin/" + xitemcode + "/" + xbatchnumber + "/" + xbinentry);
+            var a = API.Read<ResponseGetStockItemBatchAndSerial>("GetStockItemBatchBin/" + itemcode + "/" + batchnumber + "/" + binentry);
             return Ok(a);
         }
 
         public IActionResult GetStockItemBatchW(string itemcode, string batchnumber, string whscode)
         {
-            var a = API.Read<ResponseGetStockItemBatchSerial>("GetStockItemBatchW/" + itemcode + "/" + batchnumber + "/" + whscode);
+            var a = API.Read<ResponseGetStockItemBatchAndSerial>("GetStockItemBatchW/" + itemcode + "/" + batchnumber + "/" + whscode);
             return Ok(a);
         }
 
@@ -211,16 +230,13 @@ namespace BarCodeClientService.Controllers
 
         public IActionResult GetStockItemSerialBin(string itemcode, string serialnumber, string binentry)
         {
-            var xitemcode = itemcode;
-            var xserialnumber = serialnumber;
-            var xbinentry = binentry;
-            var a = API.Read<ResponseGetStockItemBatchSerial>("GetStockItemSerialBin/" + xitemcode + "/" + xserialnumber + "/" + xbinentry);
+            var a = API.Read<ResponseGetStockItemBatchAndSerial>("GetStockItemSerialBin/" + itemcode + "/" + serialnumber + "/" + binentry);
             return Ok(a);
         }
 
-        public IActionResult GetStockItemSerialW(string itemcode, string serialnumber, string whsCode)
+        public IActionResult GetStockItemSerialW(string itemcode, string serialnumber, string whscode)
         {
-            var a = API.Read<ResponseGetStockItemBatchSerial>("GetStockItemSerialW/" + itemcode + "/" + serialnumber + "/" + whsCode);
+            var a = API.Read<ResponseGetStockItemBatchAndSerial>("GetStockItemSerialW/" + itemcode + "/" + serialnumber + "/" + whscode);
             return Ok(a);
         }
 
@@ -231,9 +247,33 @@ namespace BarCodeClientService.Controllers
             return Ok(a);
         }
 
+        public IActionResult GetListItemInIM(string docentry)
+        {
+            var a = API.Read<ResponseGetListItemInIM>("GetListItemInIM/" + docentry );
+            return Ok(a);
+        }
+
         public IActionResult GetItemByBinCode(string itemCode, string binCode)
         {
             var a = API.Read<ResponseGetStockItemBatchSerial>("GetItemByBinCode/" + itemCode + "/" + binCode);
+            return Ok(a);
+        }
+
+        public IActionResult GetItemByWhs(string itemcode, string whscode)
+        {
+            var a = API.Read<ResponseGetStockItemBatchSerial>("GetItemByWhs/" + itemcode + "/" + whscode);
+            return Ok(a);
+        }
+
+        public IActionResult GetItemByBarcode(string barCode, string itemCode)
+        {
+            var a = API.Read<ResponseGetStockItemBatchAndSerial>("GetItemByBarcode/" + barCode + "/" + itemCode);
+            return Ok(a);
+        }
+
+        public IActionResult GetItemNoBatchSerial(string itemCode)
+        {
+            var a = API.Read<ResponseGetStockItemBatchAndSerial>("GetItemNoBatchSerial/" + itemCode);
             return Ok(a);
         }
 
@@ -243,6 +283,29 @@ namespace BarCodeClientService.Controllers
             var a = API.Read<ResponseGetListItemMaster>("GetListItemMaster");
             return Ok(a);
         }
+
+        //GetBinLocationList
+        public IActionResult GetBinLocationList(string barcode, string itemcode)
+        {
+            var a = API.Read<ResponseGetBinLocationList>("api/GetBinLocationList/GetBinLocationList/" + barcode + "/" + itemcode);
+            return Ok(a);
+        }
+
+        //Open Sales Order for Use Notify
+        [HttpGet]
+        public IActionResult GetIMByCus(string cusCode)
+        {
+            var a = API.Read<ResponseGetIMHeadLine>("api/InventoryTransferIM/GetIMByCus/" + cusCode);
+            if (a.ErrorCode == 0)
+            {
+                return Ok(a.Data);
+            }
+            else
+            {
+                return BadRequest(a.ErrorMessage);
+            }
+        }
+
 
         [HttpPost]
         public IActionResult PrintItemLablePDFAction(ResponsePrintLableINF print)
@@ -267,6 +330,20 @@ namespace BarCodeClientService.Controllers
             };
         }
 
+        public IActionResult PrintListForTransfer()
+        {
+            ResponsePrintLableINF responsePrintLableINF = new ResponsePrintLableINF();
+            responsePrintLableINF.Data = PrintLableINFStatic.Data;
+            PrintItemLableStatic.Data = null;
+
+            return new ViewAsPdf(responsePrintLableINF)
+            {
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
+                PageMargins = new Rotativa.AspNetCore.Options.Margins(0, 0, 1, 0)
+            };
+        }
+
 
         [HttpPost]
         public IActionResult PostInventoryTransfer(SendInventoryTransfer sendInventoryTransfer)
@@ -274,11 +351,25 @@ namespace BarCodeClientService.Controllers
             var a = API.PostWithReturn<ResponseInventoryTransfer>("api/InventoryTransfer/SendInventoryTransfer", sendInventoryTransfer);
             return Ok(a);
         }
+        
+        [HttpPost]
+        public IActionResult PostInventoryTransferCV(SendInventoryTransfer sendInventoryTransfer)
+        {
+            var a = API.PostWithReturn<ResponseInventoryTransfer>("api/InventoryTransfer/SendInventoryTransferCV", sendInventoryTransfer);
+            return Ok(a);
+        }
 
         [HttpPost]
         public IActionResult PostInventoryCounting(SendInventoryCounting sendInventoryCounting)
         {
             var a = API.PostWithReturn<ResponseInventoryCounting>("api/InventoryCounting/SendInventoryCounting", sendInventoryCounting);
+            return Ok(a);
+        }
+
+        [HttpPost]
+        public IActionResult PostSalesOrderIM(SendSalesOrderForIM sendSalesOrderForIM)
+        {
+            var a = API.PostWithReturn<ResponseSalesOrder>("api/SalesOrderForIM/SendSalesOrderForIM", sendSalesOrderForIM);
             return Ok(a);
         }
 

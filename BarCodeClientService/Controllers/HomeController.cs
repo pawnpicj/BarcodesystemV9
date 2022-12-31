@@ -42,6 +42,12 @@ namespace BarCodeClientService.Controllers
             return View();
         }
 
+        public IActionResult FrmCheckItem()
+        {
+            return View();
+        }
+        
+
         public IActionResult GetAPITesting()
         {
             var a = API.Read<ResponseOPDNGetGoodReceipt>("api/GoodsReturn/GetGoodsReceiptPO");

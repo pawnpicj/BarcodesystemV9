@@ -5,6 +5,11 @@ using System.Threading.Tasks;
 using BarCodeAPIService.Connection;
 using BarCodeLibrary.Respones.SAP.Bank;
 using SAPbobsCOM;
+using BarCodeLibrary.Respones.SAP;
+using BarCodeAPIService.Models;
+using System.Globalization;
+using System.Data;
+using System.Data.Odbc;
 
 namespace BarCodeAPIService.Service.Bank
 {
@@ -64,52 +69,50 @@ namespace BarCodeAPIService.Service.Bank
                 });
             }
         }
-
+        
         public Task<ResponseGetSeriesCode> responseGetSeriesCode(string yymm, string typeSeries)
         {
-            var oLine = new List<GetSeriesCode>();
-            Company oCompany;
+            var oLineSeries = new List<GetSeriesCode>();
+            var dt = new DataTable();
+            var dtLine = new DataTable();
             try
             {
-                Login login = new();
-                if (login.LErrCode == 0)
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
+                if(login.lErrCode == 0)
                 {
-                    oCompany = login.Company;
-                    Recordset? oRS = null;
-                    var sqlStr =
-                        $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK('StrSeries','{yymm}','{typeSeries}','','','')";
-                    oRS = (Recordset)oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
-                    oRS.DoQuery(sqlStr);
-                    while (!oRS.EoF)
+                    var Query =
+                        $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK ('StrSeries','{yymm}','{typeSeries}','','','')";
+                    login.AD = new OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
                     {
-                        oLine.Add(new GetSeriesCode
+                        oLineSeries.Add(new GetSeriesCode
                         {
-                            ObjectCode = oRS.Fields.Item(0).Value.ToString(),
-                            Series = Convert.ToInt32(oRS.Fields.Item(1).Value.ToString()),
-                            SeriesName = oRS.Fields.Item(2).Value.ToString(),
-                            Indicator = oRS.Fields.Item(3).Value.ToString(),
-                            BeginStr = oRS.Fields.Item(4).Value.ToString()
+                            ObjectCode = row["ObjectCode"].ToString(),
+                            Series = Convert.ToInt32(row["Series"].ToString()),
+                            SeriesName = row["SeriesName"].ToString(),
+                            Indicator = row["Indicator"].ToString(),
+                            BeginStr = row["BeginStr"].ToString()
                         });
-                        oRS.MoveNext();
                     }
-
                     return Task.FromResult(new ResponseGetSeriesCode
                     {
                         ErrorCode = 0,
                         ErrorMessage = "",
-                        Data = oLine
+                        Data = oLineSeries.ToList()
                     });
                 }
-
                 return Task.FromResult(new ResponseGetSeriesCode
                 {
-                    ErrorCode = login.LErrCode,
-                    ErrorMessage = login.SErrMsg,
+                    ErrorCode = login.lErrCode,
+                    ErrorMessage = login.sErrMsg,
                     Data = null
                 });
+
             }
             catch (Exception ex)
             {
+
                 return Task.FromResult(new ResponseGetSeriesCode
                 {
                     ErrorCode = ex.HResult,
@@ -117,6 +120,9 @@ namespace BarCodeAPIService.Service.Bank
                     Data = null
                 });
             }
+            
+            
         }
+
     }
 }

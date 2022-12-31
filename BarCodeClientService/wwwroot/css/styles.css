@@ -26,12 +26,13 @@ body { background: #dce7f1; }
     z-index: 100000;
 }
 
-.top_navbar .hamburger {
-    background: #f0eff1;
-    font-size: 28px;
-    position: relative;
-    width: 40px;
-}
+    .top_navbar .hamburger {
+        background: #f0eff1;
+        font-size: 28px;
+        position: relative;
+        width: 40px;
+        margin: -7px 1px 1px 1px;
+    }
 
 .top_navbar .hamburger .hamburger__inner {
     cursor: pointer;
@@ -240,7 +241,7 @@ body { background: #dce7f1; }
 .hiddenAdmin { display: none; }
 
 .alink {
-    height: 200px;
+    height: 180px;
     width: 50%;
     margin-top: 5px;
 }

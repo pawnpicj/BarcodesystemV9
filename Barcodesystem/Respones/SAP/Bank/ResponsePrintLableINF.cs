@@ -27,5 +27,9 @@ namespace BarCodeLibrary.Respones.SAP.Bank
         public string ItemCode { get; set; }
         public string ItemName { get; set; }
         public double Quantity { get; set; }
+        public string batchNumber { get; set; }
+        public string serialNumber { get; set; }
+        public double qtyByBatch { get; set; }
+        public double qtyBySerial { get; set; }
     }
 }

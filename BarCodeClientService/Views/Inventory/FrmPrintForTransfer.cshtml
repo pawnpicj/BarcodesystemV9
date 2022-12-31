@@ -152,7 +152,6 @@
     /* =================================================== */
 
 </style>
-
 <div id="#main">
 
     <div id="frmLoading" class="cover-spin" style="display:none"></div>
@@ -187,7 +186,7 @@
                             <input type="text" id="txtCardName1" disabled size="32" /><br>
                             Date : <input type="text" id="txtPostingDate1" disabled />
                         </div>
-                        
+
                     </div>
                 </div>
 
@@ -199,13 +198,14 @@
                                     <tr>
                                         <th>ItemCode</th>
                                         <th>ItemName</th>
-                                        <th>Quantity</th>
+                                        <th>TotalQuantity</th>
                                         <th>FromWarehouse</th>
                                         <th>ToWarehouse</th>
                                         <th>UomCode</th>
-                                        <th>Unit Price</th>
-                                        <th>FromBinCode</th>
-                                        <th>FromBinEntry</th>
+                                        <th>BatchNumber</th>
+                                        <th>SerialNumber</th>
+                                        <th>QtyBatch</th>
+                                        <th>QtySerial</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -218,7 +218,8 @@
         <div class="row" style="margin-bottom: -20px; margin-top: -20px; padding: 15px;">
             <div class="nav navbar-nav ml-auto">
                 <div class="btn-group">
-                    <button class="btn btn-info" id="PrintLabel" style="width:45px; height:32px;"><i class="fa fa-print" aria-hidden="true"></i></button>&nbsp;&nbsp;&nbsp;
+                    <button class="btn btn-danger" id="PrintList">Print Report</button>
+                    <button class="btn btn-info" id="PrintLabel">Print Label</button>&nbsp;&nbsp;&nbsp;
                 </div>
             </div>
         </div>
@@ -279,6 +280,7 @@
 <script src="~/js/tengkimleang/Method/MethodDataTable.js"></script>
 
 <script type="text/javascript">
+
     var rdovalue = '';
 
 
@@ -367,14 +369,15 @@
         },
         columns: [
             { data: "itemCode" },
-            { data: "dscription"},
+            { data: "itemName"},
             { data: "quantity"},
-            { data: "fromWhsCod"},
-            { data: "whsCode"},
-            { data: "uomCode"},
-            { data: "unitMsr"},
-            { data: "binCode"},
-            { data: "fromBinEntry"}
+            { data: "fWhsCode"},
+            { data: "tWhsCode"},
+            { data: "uomCode" },
+            { data: "batchNumber" },
+            { data: "serialNumber" },
+            { data: "qtyByBatch" },
+            { data: "qtyBySerial" }
         ],
         autoWidth: true,
         pageLength: 20,
@@ -387,7 +390,7 @@
 
     var tbDataLine = $('#TbDataLine').DataTable();
 
-    tbDataLine.columns([3, 4, 5, 6, 7, 8]).visible(false, false);
+    //tbDataLine.columns([3, 4, 5, 6, 7, 8]).visible(false, false);
     //End Table [TbDataLine]
 
     $("#ChooseInf").click(function () {
@@ -398,17 +401,17 @@
         $('#txtPostingDate1').val($('#txtPostingDate_').val());
 
         docentry = $('#txtDocEntry_').val();
-        console.log(docentry);
+        console.log('DocEntry ->' + docentry);
         document.getElementById("frmLoading").style.display = "block";
         if (docentry != '') {
 
             $.ajax({
-                url: '@Url.Action("GetWTRLine", "Inventory")',
+                url: '@Url.Action("GetListItemInIM", "Inventory")',
                 data: { docentry: docentry },
                 type: "GET",
                 dataType: "JSON",
                 success: function (data) {
-                    //console.log(data);
+                    console.log(data);
                     LData = [];
                     LData = data.data;
                     tbDataLine.clear();
@@ -424,7 +427,6 @@
     //End #ChooseInf
 
     //Start #PrintLabel
-
     $("#PrintLabel").click(function () {
         console.log('Print');
         //PrintLableForTransfer
@@ -444,8 +446,12 @@
                 //console.log(data);
                 arrayLine.rowNo = rr + 1;
                 arrayLine.itemCode = data.itemCode;
-                arrayLine.itemName = data.dscription;
+                arrayLine.itemName = data.itemName;
                 arrayLine.quantity = data.quantity;
+                arrayLine.batchNumber = data.batchNumber;
+                arrayLine.serialNumber = data.serialNumber;
+                arrayLine.qtyByBatch = data.qtyByBatch;
+                arrayLine.qtyBySerial = data.qtyBySerial;
                 sLine.push(arrayLine);
 
             }
@@ -464,7 +470,7 @@
             console.log(sData);
             print.Data = sData;
             if (sLine.length > 0) {
-                
+
                     $.ajax({
                         url: '@Url.Action("PrintItemLablePDFAction", "Inventory")',
                         type: "POST",
@@ -484,5 +490,68 @@
     });
     //End #PrintLabel
 
+    //Start #PrintList
+    $("#PrintList").click(function () {
+        console.log('PrintList');
+        //PrintLableForTransfer
+
+        if ($('#txtDocNum1').val() != "") {
+            var sLine = [];
+            var sData = [];
+            var arrayLine = {};
+            var strDetail = '';
+            var sHead = {};
+            var print = {};
+
+            for (let rr = 0; rr < tbDataLine.column(0).data().length; rr++) {
+
+                arrayLine = {};
+                var data = tbDataLine.row(rr).data();
+                //console.log(data);
+                arrayLine.rowNo = rr + 1;
+                arrayLine.itemCode = data.itemCode;
+                arrayLine.itemName = data.itemName;
+                arrayLine.quantity = data.quantity;
+                arrayLine.batchNumber = data.batchNumber;
+                arrayLine.serialNumber = data.serialNumber;
+                arrayLine.qtyByBatch = data.qtyByBatch;
+                arrayLine.qtyBySerial = data.qtyBySerial;
+                sLine.push(arrayLine);
+
+            }
+
+            //Data Head
+            sHead.docNum = $('#txtDocNum1').val();
+            //sHead.docEntry = '';
+            sHead.bpCode = $('#txtCardCode1').val();
+            sHead.bpName = $('#txtCardName1').val();
+            sHead.postingDate = $('#txtPostingDate1').val();
+            sHead.line = sLine;
+            //console.log(sHead);
+
+            //Send To Print
+            sData.push(sHead);
+            console.log(sData);
+            print.Data = sData;
+            if (sLine.length > 0) {
+
+                    $.ajax({
+                        url: '@Url.Action("PrintItemLablePDFAction", "Inventory")',
+                        type: "POST",
+                        data: { print: print},
+                        dataType: "JSON",
+                        success: function (data) {
+                            //console.log(data);
+                            if (data == 1) {
+                                window.location.href = "@Url.Action("PrintListForTransfer", "Inventory")";
+                            }
+                        }
+                    });
+            }
+
+        }
+
+    });
+    //End #PrintList
 
 </script>

@@ -29,7 +29,8 @@ namespace BarCodeAPIService.Service
                         oSLP.Add(new OSLP
                         {
                             SlpCode = Convert.ToInt32(row[0].ToString()),
-                            SlpName = row[1].ToString()
+                            SlpName = row[1].ToString(),
+                            SlpId = row[2].ToString()                            
                         });
                     return Task.FromResult(new ResponseOSLPGetSalesEmployee
                     {

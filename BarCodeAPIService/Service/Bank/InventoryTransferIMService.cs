@@ -6,6 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Globalization;
+using System.Data;
+using System.Data.Odbc;
+using SAPbobsCOM;
+
 
 namespace BarCodeAPIService.Service
 {
@@ -13,79 +17,54 @@ namespace BarCodeAPIService.Service
     {
         public Task<ResponseGetOWTR> responseGetOWTR()
         {
-            var oWTR = new List<OWTR>();
-            var lWTR1 = new List<WTR1>();
-            SAPbobsCOM.Company oCompany;
+
+            var dataLine = new List<OWTR>();
+            var dt = new DataTable();
 
             try
             {
-                Login login = new();
-                if (login.LErrCode == 0)
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
+                if (login.lErrCode == 0)
                 {
-                    oCompany = login.Company;
-                    SAPbobsCOM.Recordset oRS = null;
-                    SAPbobsCOM.Recordset? oRSLine = null;
-                    oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-                    oRSLine = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-                    string Query = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_BANK ('OWTR-IM','','','','','')";
-                    oRS.DoQuery(Query);
-                    while (!oRS.EoF)
-                    {
-                        //Line
-                        //string QueryLine = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK ('WTR1-IM','{oRS.Fields.Item(1).Value}','','','','')";
-                        //oRSLine.DoQuery(QueryLine);
-                        //lWTR1 = new List<WTR1>();
-                        //while (!oRSLine.EoF)
-                        //{
-                        //    lWTR1.Add(new WTR1
-                        //    {
-                        //        ItemCode = oRSLine.Fields.Item(1).Value.ToString(),
-                        //        Dscription = oRSLine.Fields.Item(2).Value.ToString(),
-                        //        Quantity = Convert.ToInt32(oRSLine.Fields.Item(3).Value),
-                        //        UomCode = oRSLine.Fields.Item(6).Value.ToString(),
-                        //        unitMsr = oRSLine.Fields.Item(7).Value.ToString(),
-                        //        U_unitprice = Convert.ToDouble(oRSLine.Fields.Item(8).Value)
-                        //    });
-                        //    oRSLine.MoveNext();
-                        //}
-                        //End Line
 
-                        // Head
-                        oWTR.Add(new OWTR
+                    var Query = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK ('OWTR-IM','','','','','')";
+                    login.AD = new OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        dataLine.Add(new OWTR
                         {
-                            DocNum = Convert.ToInt32(oRS.Fields.Item(0).Value.ToString()),
-                            DocEntry = Convert.ToInt32(oRS.Fields.Item(1).Value.ToString()),
-                            DocDate = oRS.Fields.Item(2).Value.ToString(),
-                            CardCode = oRS.Fields.Item(3).Value.ToString(),
-                            CardName = oRS.Fields.Item(4).Value.ToString(),
-                            SlpCode = oRS.Fields.Item(5).Value.ToString(),
-                            SlpName = oRS.Fields.Item(6).Value.ToString(),
-                            FromWhs = oRS.Fields.Item(7).Value.ToString(),
-                            ToWhs = oRS.Fields.Item(8).Value.ToString(),
-                            SeriesName = oRS.Fields.Item(9).Value.ToString(),
-                            ToBinEntry = Convert.ToInt32(oRS.Fields.Item(11).Value.ToString()),
-                            ToBinCode = oRS.Fields.Item(12).Value.ToString(),
-                            LoanNum = oRS.Fields.Item(13).Value.ToString()
+
+                            DocNum = row["DocNum"].ToString(),
+                            DocEntry = row["DocEntry"].ToString(),
+                            DocDate = row["DocDate"].ToString(),
+                            CardCode = row["CardCode"].ToString(),
+                            CardName = row["CardName"].ToString(),
+                            SlpCode = row["SlpCode"].ToString(),
+                            SlpName = row["SlpName"].ToString(),
+                            FromWhs = row["FromWhs"].ToString(),
+                            ToWhs = row["ToWhs"].ToString(),
+                            SeriesName = row["SeriesName"].ToString(),                            
+                            ToBinEntry = row["ToBinEntry"].ToString(),
+                            ToBinCode = row["ToBinCode"].ToString(),
+                            LoanNum = row["LoanNum"].ToString()
+
                         });
-                        oRS.MoveNext();
-                        //DocDate = Convert.ToDateTime(oRS.Fields.Item(2).Value.ToString()),
                     }
                     return Task.FromResult(new ResponseGetOWTR
                     {
                         ErrorCode = 0,
                         ErrorMsg = "",
-                        Data = oWTR.ToList()
+                        Data = dataLine.ToList()
                     });
                 }
-                else
+
+                return Task.FromResult(new ResponseGetOWTR
                 {
-                    return Task.FromResult(new ResponseGetOWTR
-                    {
-                        ErrorCode = login.LErrCode,
-                        ErrorMsg = login.SErrMsg,
-                        Data = null
-                    });
-                }
+                    ErrorCode = login.lErrCode,
+                    ErrorMsg = login.sErrMsg,
+                    Data = null
+                });
             }
             catch (Exception ex)
             {
@@ -100,55 +79,56 @@ namespace BarCodeAPIService.Service
 
         public Task<ResponseGetWTRLine> responseGetWTRLine(int DocEntry)
         {
-            var getWTRLine = new List<WTRLine>();
-            SAPbobsCOM.Company oCompany;
+            var dataLine = new List<WTRLine>();
+            var dt = new DataTable();
+
             try
             {
-                Login login = new();
-                if (login.LErrCode == 0)
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
+                if (login.lErrCode == 0)
                 {
-                    oCompany = login.Company;
-                    SAPbobsCOM.Recordset? oRS = null;
-                    SAPbobsCOM.Recordset? oRSLine = null;
-                    string sqlStr = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK ('WTR1-IM','{DocEntry}','','','','')";
-                    oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-                    oRSLine = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-                    oRS.DoQuery(sqlStr);
-                    while (!oRS.EoF)
+                    var Query = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK ('WTR1-IM','{DocEntry}','','','','')";
+                    login.AD = new OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
                     {
-                        getWTRLine.Add(new WTRLine
+                        dataLine.Add(new WTRLine
                         {
-                            DocEntry = Convert.ToInt32(oRS.Fields.Item(0).Value.ToString()),
-                            ItemCode = oRS.Fields.Item(1).Value.ToString(),
-                            Dscription = oRS.Fields.Item(2).Value.ToString(),
-                            Quantity = Convert.ToDouble(oRS.Fields.Item(3).Value.ToString()),
-                            FromWhsCod = oRS.Fields.Item(4).Value.ToString(),
-                            WhsCode = oRS.Fields.Item(5).Value.ToString(),
-                            UomCode = oRS.Fields.Item(6).Value.ToString(),
-                            unitMsr = oRS.Fields.Item(7).Value.ToString(),
-                            BinCode = oRS.Fields.Item(8).Value.ToString(),
-                            FromBinEntry = Convert.ToInt32(oRS.Fields.Item(9).Value.ToString()),
-                            ToBinCode = oRS.Fields.Item(10).Value.ToString(),
-                            ToBinEntry = Convert.ToInt32(oRS.Fields.Item(11).Value.ToString())
-                            //OnHand = Convert.ToInt32(oRS.Fields.Item(1).Value.ToString()),
-                            //SerailNumber = oRS.Fields.Item(2).Value.ToString(),
-                            //BatchNumber = oRS.Fields.Item(3).Value.ToString()
+                            DocEntry = Convert.ToInt32(row["DocEntry"].ToString()),
+                            LineNum = Convert.ToInt32(row["BaseLine"].ToString()),
+                            ItemCode = row["ItemCode"].ToString(),
+                            Dscription = row["Dscription"].ToString(),
+                            Quantity = Convert.ToDouble(row["Quantity"].ToString()),
+                            U_unitprice = Convert.ToDouble(row["U_unitprice"].ToString()),
+                            UomCode = row["UomCode"].ToString(),
+                            unitMsr = row["unitMsr"].ToString(),
+
+
+                            FromWhsCode = row["FromWhs"].ToString(),
+                            FromBinCode = row["FromBinCode"].ToString(),
+                            FromBinEntry = Convert.ToInt32(row["FromBinEntry"].ToString()),
+
+                            ToWhsCode = row["ToWhs"].ToString(),
+                            ToBinCode = row["ToBinCode"].ToString(),
+                            ToBinEntry = Convert.ToInt32(row["ToBinEntry"].ToString()),
+
+                            BatchYN = row["BatchYN"].ToString(),
+                            SerialYN = row["SerialYN"].ToString()
                         });
-                        oRS.MoveNext();
                     }
                     return Task.FromResult(new ResponseGetWTRLine
                     {
                         ErrorCode = 0,
                         ErrorMsg = "",
-                        Data = getWTRLine
+                        Data = dataLine
                     });
                 }
                 else
                 {
                     return Task.FromResult(new ResponseGetWTRLine
                     {
-                        ErrorCode = login.LErrCode,
-                        ErrorMsg = login.SErrMsg,
+                        ErrorCode = login.lErrCode,
+                        ErrorMsg = login.sErrMsg,
                         Data = null
                     });
                 }
@@ -164,5 +144,98 @@ namespace BarCodeAPIService.Service
             }
 
         }
+
+        public Task<ResponseGetIMHeadLine> responseGetIMByCus(string cusCode)
+        {
+            var oWTRIM = new List<OWTRIM>();
+            var wTR1IM = new List<WTR1IM>();
+            var dt = new DataTable();
+            var dtLine = new DataTable();
+            try
+            {
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
+                if (login.lErrCode == 0)
+                {
+                    var Query =
+                        $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK ('GetIMByCus','{cusCode}','','','','')";
+                    login.AD = new OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        dtLine = new DataTable();
+                        Query =
+                            $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK ('GetIMLineDocEntry','{row["DocEntry"]}','','','','')";
+                        login.AD = new OdbcDataAdapter(Query, login.CN);
+                        login.AD.Fill(dtLine);
+                        wTR1IM = new List<WTR1IM>();
+                        foreach (DataRow drLine in dtLine.Rows)
+                            wTR1IM.Add(new WTR1IM
+                            {
+                                //Line
+                                DocEntry = Convert.ToInt32(drLine["DocEntry"].ToString()),
+                                LineNum = Convert.ToInt32(drLine["LineNum"].ToString()),
+                                ItemCode = drLine["ItemCode"].ToString(),
+                                Dscription = drLine["Dscription"].ToString(),
+                                Quantity = Convert.ToDouble(drLine["Quantity"].ToString()),
+                                Price = Convert.ToDouble(drLine["Price"].ToString()),
+                                PriceBefDi = Convert.ToDouble(drLine["PriceBefDi"].ToString()),
+                                WhsCode = drLine["WhsCode"].ToString(),
+                                LineTotal = Convert.ToDouble(drLine["LineTotal"].ToString()),
+                                UomEntry = Convert.ToInt32(drLine["UomEntry"].ToString()),
+                                UomCode = drLine["UomCode"].ToString(),
+                                FisrtBin = drLine["FisrtBin"].ToString(),
+                                IsBtchSerNum = drLine["IsBtchSerNum"].ToString(),
+                                BatchSerialNumber = drLine["BatchSerialNumber"].ToString(),
+                                BatchSerialQty = Convert.ToDouble(drLine["BatchSerialQty"].ToString()),
+                                Patient = drLine["Patient"].ToString()
+
+                            });
+                        oWTRIM.Add(new OWTRIM
+                        {
+                            //Head
+                            DocNum = row["DocNum"].ToString(),
+                            DocEntry = Convert.ToInt32(row["DocEntry"].ToString()),
+                            DocDate = row["DocDate"].ToString(),
+                            CardCode = row["CardCode"].ToString(),
+                            CardName = row["CardName"].ToString(),
+                            SlpCode = row["SlpCode"].ToString(),
+                            SlpName = row["SlpName"].ToString(),
+                            FromWhs = row["FromWhs"].ToString(),
+                            ToWhs = row["ToWhs"].ToString(),
+                            SeriesName = row["SeriesName"].ToString(),
+                            ToBinEntry = Convert.ToInt32(row["ToBinEntry"].ToString()),
+                            ToBinCode = row["ToBinCode"].ToString(),
+                            LoanNum = row["LoanNum"].ToString(),
+                            Line = wTR1IM.ToList()
+                        });
+                    }
+
+                    return Task.FromResult(new ResponseGetIMHeadLine
+                    {
+                        ErrorCode = 0,
+                        ErrorMessage = "",
+                        Data = oWTRIM.ToList()
+                    });
+                }
+
+                return Task.FromResult(new ResponseGetIMHeadLine
+                {
+                    ErrorCode = login.lErrCode,
+                    ErrorMessage = login.sErrMsg,
+                    Data = null
+                });
+            }
+
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseGetIMHeadLine
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMessage = ex.Message,
+                    Data = null
+                });
+            }
+        }
+
     }
 }

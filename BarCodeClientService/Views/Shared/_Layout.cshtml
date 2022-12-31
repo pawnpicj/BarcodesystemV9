@@ -59,10 +59,65 @@
         .wrapper .sidebar .sidebar__inner .profile {
             width: 225px;
         }
+
+        .modal-2 {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            padding-top: 60px;
+        }
+
+        /* Modal Content/Box */
+        .modal-content-2 {
+            background-color: #fefefe;
+            margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+            border: 1px solid #888;
+            /* width: 30%; Could be more or less, depending on screen size */
+            min-width: 50%;
+            max-width: 60%;
+        }
+        /* Add Zoom Animation */
+.animate {
+  -webkit-animation: animatezoom 0.6s;
+  animation: animatezoom 0.6s
+}
+
+@@-webkit-keyframes animatezoom {
+  from {-webkit-transform: scale(0)}
+  to {-webkit-transform: scale(1)}
+}
+
+@@keyframes animatezoom {
+  from {transform: scale(0)}
+  to {transform: scale(1)}
+}
+
+/* Change styles for span and cancel button on extra small screens */
+@@media screen and (max-width: 300px) {
+  span.psw {
+     display: block;
+     float: none;
+  }
+  .cancelbtn {
+     width: 100%;
+  }
+}
+
+        .tabLogOut {
+            display: inline-block;
+            white-space: nowrap;
+        }
     </style>
 </head>
 <body style="background: #dce7f1">
-@*@if (@ViewBag.UserCode == "1")
+    @*@if (@ViewBag.UserCode == "1")
         {*@
     @*@HttpContextAccessor.HttpContext.Session.GetString("Layout")*@
     <div class="wrapper active">
@@ -76,97 +131,286 @@
                         @*<img src="~/Icon/sap.png" alt="profile_pic" style="width: 200%;">*@
                     </a>
                     @*<div class="one" style="background:#000000"></div>
-        <div class="two" style="background:#000000"></div>
-        <div class="three" style="background:#000000"></div>*@
+                        <div class="two" style="background:#000000"></div>
+                        <div class="three" style="background:#000000"></div>*@
                 </div>
             </div>
 
             <div class="menu">
                 <div class="logo" style="color:#f0eff1">
-                    Barcode System <font style="font-size:6px;"><b>V.191022.1</b></font>
+                    Barcode System <font style="font-size:6px;"><b>V.28.11.22</b></font>
                 </div>
                 <div class="right_menu">
                     <div class="row">
-                        @*<div class="co-2">
-                            <button id="sign_out" style="background-color:transparent;margin-top:-10px;cursor:pointer;border:0px" title="sing out"><span class="icon"><i class="fa fa-user-circle" style="margin-top:-5px;width:25px;height:25px ;color: rgba(0, 51, 102,0.8);background-color:transparent"></i></span></button>
-                        </div>*@
-                        <div class="co-2">
-                            <a href="~/ManuaL/Manual_Barcode_System_v1.pdf" target="_blank" style="color: white;">
-                            <i class="fa fa-file" aria-hidden="true" style="width:18px; height:auto"></i>
-                            </a>                            
+                            @*<div class="co-2">
+                <button id="sign_out" style="background-color:transparent;margin-top:-10px;cursor:pointer;border:0px" title="sing out"><span class="icon"><i class="fa fa-user-circle" style="margin-top:-5px;width:25px;height:25px ;color: rgba(0, 51, 102,0.8);background-color:transparent"></i></span></button>
+            </div>*@
+                            <div class="tabLogOut">
+                                <a href="~/ManuaL/Manual_Barcode_System_v1.pdf" target="_blank" style="color: white;">
+                                    <i class="fa fa-file" aria-hidden="true" style="width:18px; height:auto"></i>
+                                </a>
+                                &nbsp;&nbsp;
+                                <a id="alogout" style="color: crimson; text-shadow: 2px 2px #fff; cursor: pointer;" title="Log Out">
+                                    <i class="fa fa-times" aria-hidden="true" style="width:18px; height:auto"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
+            </div>
+        </div>
+
+        <div class="main_container">
+            <div class="sidebar" style="background: #f0eff1">
+                <div class="">
+
+                    <ul>
+                        <li>
+                            <a asp-controller="Dashboard" asp-action="DashboardSaleAR" id="AR" class="active" style="color: #696969">
+                                @*href="@Url.Action("SaleARCreation","Home")"*@
+                                <span class="icon">
+                                    <i class="fas fa-truck" style="margin-left: -20px; color:rgba(0, 51, 102,0.8)"></i>
+                                </span>
+                                <span class="title"><label style="font-size:18px;font-weight:500">Sale A/R</label></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="Dashboard" asp-action="DashboardPurchasingAP" id="AP" class="active" style="color: #696969">
+                                @*href="@Url.Action("Purchasing","Home")"*@
+                                <span class="icon">
+                                    <i class="fas fa-cart-arrow-down" style="margin-left: -20px; color: rgba(0, 51, 102,0.8)"></i>
+                                </span>
+                                <span class="title"><label style="font-size:18px;font-weight:500">Purchasing - A/P</label></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="Dashboard" asp-action="DashboardInventory" id="INT" class="active" style="color: #696969">
+                                @*href="@Url.Action("InventoryCreation","Home")"*@
+                                <span class="icon">
+                                    <i class="fas fa-warehouse" style="margin-left: -20px; color: rgba(0, 51, 102,0.8)"></i>
+                                </span>
+                                <span class="title"><label style="font-size:18px;font-weight:500">Inventory</label></span>
+
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="QRBarcode" asp-action="CreateBinLocation" id="INT" class="active" style="color: #696969">
+                                @*href="@Url.Action("InventoryCreation","Home")"*@
+                                <span class="icon">
+                                    <i class="fas fa-barcode" style="margin-left: -20px; color: rgba(0, 51, 102,0.8)"></i>
+                                </span>
+                                <span class="title"><label style="font-size:18px;font-weight:500">BarCode/QR Code</label></span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a asp-controller="Admin" asp-action="Index" id="AR" class="active" style="color: #696969;">
+                                @*href="@Url.Action("SaleARCreation","Home")"*@
+                                <span class="icon">
+                                    <i class="fa fa-users" style="margin-left: -20px; color: rgba(0, 51, 102,0.8)"></i>
+                                </span>
+                                <span class="title"><label style="font-size:18px;font-weight:500">Administration</label></span>
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </div>
-        </div>
-
-    <div class="main_container">
-        <div class="sidebar" style="background: #f0eff1">
-            <div class="">
-                
-                <ul>
-                    <li>
-                        <a asp-controller="Dashboard" asp-action="DashboardSaleAR" id="AR" class="active" style="color: #696969">
-                            @*href="@Url.Action("SaleARCreation","Home")"*@
-                            <span class="icon">
-                                <i class="fas fa-truck" style="margin-left: -20px; color:rgba(0, 51, 102,0.8)"></i>
-                            </span>
-                            <span class="title"><label style="font-size:18px;font-weight:500">Sale A/R</label></span>
-                        </a>
-                    </li>
-                    <li>
-                        <a asp-controller="Dashboard" asp-action="DashboardPurchasingAP" id="AP" class="active" style="color: #696969">
-                            @*href="@Url.Action("Purchasing","Home")"*@
-                            <span class="icon">
-                                <i class="fas fa-cart-arrow-down" style="margin-left: -20px; color: rgba(0, 51, 102,0.8)"></i>
-                            </span>
-                            <span class="title"><label style="font-size:18px;font-weight:500">Purchasing - A/P</label></span>
-                        </a>
-                    </li>
-                    <li>
-                        <a asp-controller="Dashboard" asp-action="DashboardInventory" id="INT" class="active" style="color: #696969">
-                            @*href="@Url.Action("InventoryCreation","Home")"*@
-                            <span class="icon">
-                                <i class="fas fa-warehouse" style="margin-left: -20px; color: rgba(0, 51, 102,0.8)"></i>
-                            </span>
-                            <span class="title"><label style="font-size:18px;font-weight:500">Inventory</label></span>
-
-                        </a>
-                    </li>
-                    <li>
-                        <a asp-controller="QRBarcode" asp-action="CreateBinLocation" id="INT" class="active" style="color: #696969">
-                            @*href="@Url.Action("InventoryCreation","Home")"*@
-                            <span class="icon">
-                                <i class="fas fa-barcode" style="margin-left: -20px; color: rgba(0, 51, 102,0.8)"></i>
-                            </span>
-                            <span class="title"><label style="font-size:18px;font-weight:500">BarCode/QR Code</label></span>
-                        </a>
-                    </li>
-
-                    <li>
-                        <a asp-controller="Admin" asp-action="Index" id="AR" class="active" style="color: #696969;">
-                            @*href="@Url.Action("SaleARCreation","Home")"*@
-                            <span class="icon">
-                                <i class="fa fa-users" style="margin-left: -20px; color: rgba(0, 51, 102,0.8)"></i>
-                            </span>
-                            <span class="title"><label style="font-size:18px;font-weight:500">Administration</label></span>
-                        </a>
-                    </li>
-                </ul>
+            <div class="container1">
+                @RenderBody()
             </div>
         </div>
-        <div class="container1">
-            @RenderBody()
-        </div>
+
     </div>
 
-</div>
+    @* Login Form *@
+    <div id="id01" class="modal-2">
+        <form class="modal-content-2 animate" method="post">
+            <table id="tbLogin" border="0" class="table table-striped table-bordered dt-responsive nowrap" width="80%" cellspacing="0">
+                <tr>
+                    <td>
+                        <font size="+1" style="font-weight:bold; text-shadow: 1px 1px #ffffff">[Login]</font>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="uname"><b>Username -: </b></label>
+                        <input type="text" placeholder="Enter Username" id="uname" name="uname" required class="form-control" autocomplete="off">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="psw"><b>Password -: </b></label>
+                        <input type="password" placeholder="Enter Password" id="psw" name="psw" required class="form-control" autocomplete="off">
+                    </td>
+                </tr>
+                <tr align="right">
+                    <td>
+                        <button type="submit" id="btnLogin" class="btn btn-info">Login</button>
+                        @*<button type="submit" id="btnCheck" class="btn btn-info" onclick="checkCookie();">CheckCookie</button>
+                            <button id="btnGetJson" class="btn btn-info">GetJSON</button>*@
 
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
+                    </td>
+                </tr>
+            </table>
+            @*<div align="right"><a id="resetpsw" style="cursor:pointer; font-weight:bold;">forgot password</a></div>*@
+        </form>
+        
+    </div>
 
-<script type="text/javascript">
+    <div id="frmResetPSW" class="modal-2">
+        <div class="modal-content-2 animate">
+            <font size="+1" style="font-weight:bold; text-shadow: 1px 1px #ffffff">[Reset Password]</font>
+            Username : <input type="text" id="uname_f" class="form-control" autocomplete="off">
+            Old Password : <input type="text" id="psw_o_f" class="form-control" autocomplete="off">
+            New Password : <input type="text" id="psw_n_f" class="form-control" autocomplete="off">
+            <div align="right">
+                <button type="submit" id="btnResetPSW" class="btn btn-danger">Reset</button>
+            </div>
+        </div>
+        
+    </div>
+
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+
+
+        <script type="text/javascript">
+        if (getCookie("username") != '') {
+            document.getElementById("id01").style.display = "none";
+        } else {
+            document.getElementById("id01").style.display = "block";
+        }
+
+        //Read JSON
+        function readTextFile(file, callback) {
+            var rawFile = new XMLHttpRequest();
+            rawFile.overrideMimeType("application/json");
+            rawFile.open("GET", file, true);
+            rawFile.onreadystatechange = function () {
+                if (rawFile.readyState === 4 && rawFile.status == "200") {
+                    callback(rawFile.responseText);
+                }
+            }
+            rawFile.send(null);
+            }
+
+            Load();
+
+
+        var arrUser = [];
+        function Load() {
+            $.ajax({
+                url: '@Url.Action("GetUserLogin", "Admin")',
+                type: 'GET',
+                dataType: 'JSON',
+                success: function(data) {
+                    //console.log(data);
+                    arrUser = data.data;
+                }
+            });
+            }
+
+        $("#btnLogin").click(function () {
+            //Check Username Password
+            console.log(arrUser);
+            var sstatus = 0 ;
+            if ($('#uname').val() != '') {
+                var lusername = $('#uname').val();
+                var lpassword = $('#psw').val();
+
+                for (var i = 0; i < arrUser.length; i++) {
+
+                    if (arrUser[i].userName == lusername && arrUser[i].password == lpassword) {
+                        console.log("Login Success");
+                        console.log(arrUser[i].userName + "----" + lusername);
+                        setCookie("username", lusername, 1);
+                        document.getElementById("id01").style.display = "none";
+                        sstatus = sstatus + 1;
+                    }
+                }
+
+                if (sstatus == 0) {
+                    alert("Username or Password -> incorrect.");
+                    $('#psw').val('').focus();
+                    return false;
+                }
+            }
+
+        });
+
+        $('#alogout').click(function () {
+            console.log('Logout');
+            document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            //location.reload();
+            window.location.href = "@Url.Action("Index", "Home")";
+        });
+
+        function setCookie(cname, cvalue, exdays) {
+            const d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            let expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+
+        function getCookie(cname) {
+            let name = cname + "=";
+            let ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+        function checkCookie() {
+            let user = getCookie("username");
+            if (user != "") {
+                alert("Welcome again " + user);
+            } else {
+                alert("Empty");
+            }
+        }
+
+        $('#resetpsw').click(function () {
+            document.getElementById("id01").style.display = "none";
+            document.getElementById("frmResetPSW").style.display = "block";
+        });
+
+        $('#btnResetPSW').click(function () {
+            myObject = [];
+            newData = {};
+            var r_username = $('#uname_f').val();
+            var r_password_o = $('#psw_o_f').val();
+            var r_password_n = $('#psw_n_f').val();
+
+            readTextFile("./js/login.json", function (text) {
+                var data = JSON.parse(text);
+                //console.log(data);
+                for (var i = 0; i < data.length; i++) {
+
+                    if (data[i].username == r_username && data[i].password == r_password_o) {
+                        console.log('Reset Password Success.');
+                        //setCookie("username", lusername, 1);
+                        //document.getElementById("id01").style.display = "none";
+                        return true;
+
+                    }
+                    else {
+                        alert("Username or Password -> incorrect.");
+                        return false;
+                    }
+                }
+            });
+
+
+        });
+
+
     @*$('#CreateUser').click(function () {
             window.location.replace('@Url.Action("ViewUser", "Setting")');
         });
@@ -252,9 +496,9 @@
             }
         })*@
 
-</script>
+        </script>
 
-@RenderSection("Scripts", false)
+        @RenderSection("Scripts", false)
 
 </body>
 </html>

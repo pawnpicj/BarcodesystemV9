@@ -48,7 +48,11 @@
                         //$("#txtScriptID").val(data[0].script);
                     },
                     error: function (erro) {
+
                         alert(erro.errorMsg);
+
+                        alert(erro.responseText);
+                        
                         document.getElementById("frmLoading").style.display = "none";
                     }
                 });

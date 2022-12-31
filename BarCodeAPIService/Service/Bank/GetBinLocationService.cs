@@ -5,6 +5,10 @@ using System.Threading.Tasks;
 using BarCodeAPIService.Connection;
 using BarCodeLibrary.Respones.SAP;
 using SAPbobsCOM;
+using BarCodeAPIService.Models;
+using System.Globalization;
+using System.Data;
+using System.Data.Odbc;
 
 namespace BarCodeAPIService.Service.Bank
 {
@@ -13,30 +17,28 @@ namespace BarCodeAPIService.Service.Bank
         public Task<ResponseGetBinLocation> responseGetBinLocation(string whscode)
         {
             var oBIN = new List<lBIN>();
-            Company oCompany;
+            var dt = new DataTable();
+
             try
             {
-                Login login = new();
-                if (login.LErrCode == 0)
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
+                if (login.lErrCode == 0)
                 {
-                    oCompany = login.Company;
-                    Recordset? oRS = null;
-                    var Query = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_Bank('GetBinLocationWhs','{whscode}','','','','')";
-                    oRS = (Recordset)oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
-                    oRS.DoQuery(Query);
-                    while (!oRS.EoF)
+
+                    var Query = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK ('GetBinLocationWhs','{whscode}','','','','')";
+                    login.AD = new OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
                     {
                         oBIN.Add(new lBIN
                         {
-                            BinCode = oRS.Fields.Item(0).Value.ToString(),
-                            Descr = oRS.Fields.Item(1).Value.ToString(),
-                            WhsCode = oRS.Fields.Item(2).Value.ToString(),
-                            WhsName = oRS.Fields.Item(3).Value.ToString(),
-                            AbsEntry = Convert.ToInt32(oRS.Fields.Item(4).Value.ToString())
+                            BinCode = row["binCode"].ToString(),
+                            Descr = row["descr"].ToString(),
+                            WhsCode = row["whsCode"].ToString(),
+                            WhsName = row["whsName"].ToString(),
+                            AbsEntry = Convert.ToInt32(row["absEntry"].ToString())
                         });
-                        oRS.MoveNext();
                     }
-
                     return Task.FromResult(new ResponseGetBinLocation
                     {
                         ErrorCode = 0,
@@ -47,8 +49,8 @@ namespace BarCodeAPIService.Service.Bank
 
                 return Task.FromResult(new ResponseGetBinLocation
                 {
-                    ErrorCode = login.LErrCode,
-                    ErrorMessage = login.SErrMsg,
+                    ErrorCode = login.lErrCode,
+                    ErrorMessage = login.sErrMsg,
                     Data = null
                 });
             }

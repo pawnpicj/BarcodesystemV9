@@ -1,0 +1,240 @@
+﻿@using BarCodeClientService.Models
+@model BarCodeLibrary.Respones.SAP.Bank.ResponsePrintLableINF;
+@*@model BarCodeClientService.Models.Barcode;*@
+
+    @{
+        ViewData["Title"] = "Print List Transfer";
+        Layout = null;
+    }
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Print List Transfer</title>
+        <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+        <link href="~/lib/bootstrap/dist/css/bootstrap-grid.css" rel="stylesheet" />
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+        <!-- Font Awesome JS -->
+        <link href="~/css/styles.css" rel="stylesheet" />
+        <script src="~/font icon/fontaws.js"></script>
+        <script src="~/font icon/fonticons.js"></script>
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+    </head>
+    <style>
+        body {
+            /*margin: 0;*/
+            margin: auto 0px -20px 50px;
+            background-color: #FFFFFF;
+            padding: 0px 0px 0px 0px;
+            font-family: arial;
+        }
+
+        .container-fluid {
+            font-family: arial;
+            font-size: 6px;
+            /*margin: 0 auto auto auto;*/
+            width: 99%;
+            height: 200px;
+            outline: solid 1px #FFFFFF;
+        }
+
+        #ImgFDA {
+            max-width: 250px;
+            max-height: 80px;
+        }
+
+        #img1 {
+            width: 115px;
+            height: 115px;
+        }
+
+        #imgQrFDA {
+            width: 210px;
+            height: 210px;
+        }
+
+        #imgQrNoFDA {
+            width: 48px;
+            height: 48px;
+        }
+
+        #imgDocNum {
+            width: 90px;
+            height: 90px;
+        }
+
+        div.logo {
+            background-image: url("/Icon/FDA Number.jpg");
+            /*  -moz-transform:scale(0.75);
+        -webkit-transform:scale(0.75);
+        transform:scale(0.75);*/
+        }
+
+        .portrait {
+            height: 40px;
+            width: 700px;
+        }
+
+        .br1 {
+            height: 30px;
+        }
+
+        .lb1 {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .thb, .tdb{
+            border:1px solid #000000;
+        }
+    </style>
+
+    @{
+        string strLine = "";
+        string QR_Data;
+        string docnum = "";
+        int rowno = 0;
+        int rrowno = 0;
+        double BatchSerialQty = 0;
+        string batchSerialNo = "";
+    }
+
+    <body>
+        <br>
+
+        <table width="90%" border="0" align="center">
+            <tbody>
+                @foreach (var l in Model.Data)
+                {
+                    <tr>
+                        <td colspan="2">
+                            <center><h1>รายการยืม</h1></center>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            <label class="lb1">เลขที่ </label>
+                            <label>@l.DocNum</label>
+                        </td>
+                        <td rowspan="3" align="center">
+                            @{
+                                docnum = l.DocNum;
+                                docnum = docnum.Replace("IM-", "");
+
+                            }
+                            <img src="@Url.Action("GenerateQRCode","QRBarcode")?str=@docnum" id="imgDocNum" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label class="lb1">ลูกค้า </label>
+                            <label>@l.BPCode&nbsp;@l.BPName</label>
+                            @*<label>@l.BPName</label>*@
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label class="lb1">วันที่ </label>
+                            <label>@l.PostingDate</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="2">
+                            @*Table Data Line*@
+                            <table width="99%" border="0" align="center" cellpadding="5" cellspacing="0">
+                                <tr>
+                                    <th width="3%" class="thb">ลำดับ</th>
+                                    <th width="20%" class="thb">รหัสสินค้า</th>
+                                    <th width="40%" class="thb">สินค้า</th>
+                                    <th width="10%" class="thb">BN/SN</th>
+                                    <th width="10%" class="thb">จำนวน</th>
+                                    <th width="22%" class="thb">&nbsp;</th>
+                                </tr>
+                                @foreach (var line in l.Line)
+                                {
+                                    strLine = "";
+                                    //BatchSerialQty = 0;
+                                    rowno = rowno + 1;
+
+                                    if(line.batchNumber != "" && line.batchNumber != null)
+                                    {
+                                        BatchSerialQty = line.qtyByBatch;
+                                        batchSerialNo = line.batchNumber;
+                                    }
+                                    else
+                                    {
+                                        if (line.serialNumber != "" && line.serialNumber != null)
+                                        {
+                                            BatchSerialQty = line.qtyBySerial;
+                                            batchSerialNo = line.serialNumber;
+                                        }
+                                        else
+                                        {
+                                            BatchSerialQty = line.Quantity;
+                                            batchSerialNo = "";
+                                        }
+                                    }
+
+                                    strLine = strLine + line.ItemCode + ";" + line.batchNumber + ";" + line.serialNumber + ";" + rowno + ";";
+
+
+                                    if (rowno == 21 || rowno == 41 || rowno == 61 || rowno == 81 || rowno == 101)
+                                    {
+                                        <tr><td>&nbsp;</td></tr>
+                                        <tr><td>&nbsp;</td></tr>
+                                        <tr><td>&nbsp;</td></tr>
+                                    }
+
+
+                            <tr>
+                                <td align="center" class="tdb">@rowno</td>
+                                <td class="tdb">@line.ItemCode</td>
+                                <td class="tdb">@line.ItemName</td>
+                                <td align="center" class="tdb">@batchSerialNo</td>
+                                <td align="center" class="tdb">@BatchSerialQty</td>
+                                <td align="center" style="height:55px" class="tdb">
+                                    <img src="@Url.Action("GenerateQRCode","QRBarcode")?str=@strLine" id="imgQrNoFDA" />
+                                </td>
+                            </tr>
+                                    if (rowno == 20)
+                                    {
+                                        <tr><td>&nbsp;</td></tr>
+                                        <tr><td>&nbsp;</td></tr>
+                                        <tr><td>&nbsp;</td></tr>
+                                        <tr><td>&nbsp;</td></tr>
+                                        <tr><td>&nbsp;</td></tr>
+                                        <tr><td>&nbsp;</td></tr>
+                                    }
+
+
+
+                                    if (rowno > 20 && (rowno % 20 == 0))
+                                    {
+                                        <tr><td>&nbsp;</td></tr>
+                                        <tr><td>&nbsp;</td></tr>
+                                        <tr><td>&nbsp;</td></tr>
+                                        <tr><td>&nbsp;</td></tr>
+                                        <tr><td>&nbsp;</td></tr>
+                                        <tr><td>&nbsp;</td></tr>
+                                        <tr><td>&nbsp;</td></tr>
+                                        <tr><td>&nbsp;</td></tr>
+                                        <tr><td>&nbsp;</td></tr>
+                                        <tr><td>&nbsp;</td></tr>
+                                        <tr><td>&nbsp;</td></tr>
+                                    }
+                                }
+                            </table>                            
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        </body>
+
+
+</html>

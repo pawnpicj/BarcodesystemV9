@@ -1,0 +1,1171 @@
+﻿@{
+    ViewData["Title"] = "Create SO for Notify";
+}
+
+<link href="~/css/styles.css" rel="stylesheet" />
+<link href="~/css/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/css/DataTable/rowReorder.dataTables.min.css" rel="stylesheet" />
+
+<script src="~/css/DataTable/jquery-3.3.1.js"></script>
+<script src="~/css/DataTable/jquery.dataTables.min.js"></script>
+<script src="~/css/DataTable/dataTables.rowReorder.min.js"></script>
+<script src="~/css/DataTable/moment.min.js"></script>
+<script src="~/css/DataTable/datetime-moment.js"></script>
+
+<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
+<script src="https://editor.datatables.net/extensions/Editor/js/dataTables.editor.min.js"></script>
+
+<style>
+    tr.selected {
+        background: red;
+        color: red;
+    }
+
+    #main {
+        position: absolute;
+    }
+
+    .color_tap {
+        min-width: 60px;
+        background-color: #5f95c3;
+        color: #ffffff;
+        font-weight: 600;
+        margin-right: 1px;
+    }
+
+    .nav-tabs .nav-link {
+        border-radius: 0px 12px 0px 0px;
+        border: 1px solid rgb(193, 193, 193);
+        height: 40px;
+        line-height: 20px;
+    }
+
+    .modal {
+        z-index: 200000;
+    }
+
+    .modal-header {
+        background: #5f95c3;
+        height: 40px;
+        color: #ffffff;
+    }
+
+        .modal-header b {
+            margin-top: -10px;
+        }
+
+    #TbAR table tr td {
+        position: relative !important;
+        padding: 0px !important;
+        height: 35px;
+        margin-left: 15px;
+        margin-top: 10px;
+        background-color: none;
+    }
+
+    table tbody tr td {
+        background-color: #ffffff;
+        color: black;
+    }
+
+    table tbody tr.selected td {
+        background: #94d8e1;
+        color: red;
+    }
+
+        table tbody tr.selected td .clsinput {
+            background: #94d8e1;
+            color: red;
+        }
+
+    .clsinput:focus {
+        outline: none;
+    }
+
+    .ctd {
+        text-align: center;
+    }
+
+    .sNum {
+        text-align: center;
+        background-color: #FFF168;
+        width: 60px;
+    }
+
+    #TbInfImDataSelect, #TbInfImData, TbInfImDataLine {
+        /*table-layout: fixed;*/
+        width: 99% !important;
+    }
+
+    /* =================================================== */
+    .cover-spin {
+        position: fixed;
+        width: 100%;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background-color: rgba(255,255,255,0.7);
+        z-index: 9999;
+        display: none;
+    }
+
+    @@-webkit-keyframes spin {
+        from {
+            -webkit-transform: rotate(0deg);
+        }
+
+        to {
+            -webkit-transform: rotate(360deg);
+        }
+    }
+
+    @@keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .cover-spin::after {
+        content: '';
+        display: block;
+        position: absolute;
+        left: 48%;
+        top: 40%;
+        width: 40px;
+        height: 40px;
+        border-style: solid;
+        border-color: black;
+        border-top-color: transparent;
+        border-width: 4px;
+        border-radius: 50%;
+        -webkit-animation: spin .8s linear infinite;
+        animation: spin .8s linear infinite;
+    }
+    /* =================================================== */
+</style>
+
+<script type="text/javascript">
+    /*DocDate*/
+    $(document).ready(function () {
+        var now = new Date();
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+        var today = now.getFullYear() + "-" + (month) + "-" + (day);
+        $('#txt_H_PostingDate').val(today);
+        $('#txt_H_DeliveryDate').val(today);
+        $('#txt_H_DocumentDate').val(today);
+    });
+</script>
+
+
+
+<div id="#main">
+    <div id="frmLoading" class="cover-spin" style="display:none"></div>
+    <h3>Create SO for Notify (INF-IM)</h3>
+
+    <div style="padding: 10px; color: #696969;">
+        <ul class="nav nav-tabs Tap-PA" id="mytab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link color_tap" id="item-tab" data-toggle="tab" href="#item" role="tab" aria-controls="Items" aria-selected="false">Add Data</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link color_tap" id="head-tab" data-toggle="tab" href="#head" role="tab" aria-controls="Head" aria-selected="false">Add Head</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+
+            @* Tab for Select Data To SO Create *@
+            <div class="tab-pane fade show active" id="item" role="tabpanel" aria-labelledby="item-tab" style="margin-top: 10px">
+                <div class="row">
+                    <div class="col-sm-6">
+
+                        <div>
+                            <label style="font-size:18px;font-weight:500">Customer Code :</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <button class="input-group-text" id="CcusID">
+                                        <i class="fa fa-check"></i>
+                                    </button>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Search Customer Code" id="CusID" value="" readonly>
+                                <div class="input-group-append">
+                                    <button class="input-group-text btnModelsCus" data-toggle="modal" data-target="#ModalCusCode">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label style="font-size:18px;font-weight:500">Customer Name :</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="CusName" value="" readonly>
+                            </div>
+                        </div>
+
+                        Search INF-IM No. :
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <button class="input-group-text" id="Cifr"><i class="fa fa-check"></i></button>
+                            </div>
+                            <input type="text" id="txtDocEntry" disabled size="5" autocomplete="off" value="" />
+                            <input type="text" class="form-control" placeholder="" id="txtDocNum" value="" disabled>
+                            <div class="input-group-append">
+                                <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalInfIM" onclick="getIMByCus()"><i class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+                @* Load Data from Docnum *@
+                <font>From Table</font>
+                <div class="row" id="dataDocnum" style="display:block">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="TbInfImData" class="table table-striped table-bordered table-condensed dt-responsive nowrap text-xsmall" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <thead>
+                                    <tr>
+                                        <th>&nbsp;</th>
+                                        <th>DocEntry</th>
+                                        <th>RowNo</th>
+                                        <th>ItemCode</th>
+                                        <th>ItemName</th>
+                                        <th>InputQty</th>
+                                        <th>Quantity</th>
+                                        <th>UOM</th>
+                                        <th>Warehoues</th>
+                                        <th>Price</th>
+                                        <th>Total</th>
+                                        <th>IsBatchSerial</th>
+                                        <th>B\S Number</th>
+                                        <th>TotalQuantity</th>
+                                        <th>Patient</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <center>
+                        @*onclick="fncSelectRow();"*@
+                        <button class="btn btn-warning" id="btnSelectData" style="font-size: 20px;">
+                            <i class="fa fa-arrow-down" aria-hidden="true"></i>
+                        </button>
+                        @*<button class="btn btn-success" id="btnGetRow" style="margin-left: 5px;">Get</button>*@
+                    </center>
+                    <hr>
+                    <font>To Table</font>
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="TbInfImDataSelect" class="table table-striped table-bordered table-condensed dt-responsive nowrap text-xsmall" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <thead>
+                                    <tr>
+                                        <th>&nbsp;</th>
+                                        <th>DocEntry</th>
+                                        <th>IM-No.</th>
+                                        <th>RowNo</th>
+                                        <th>ItemCode</th>
+                                        <th>ItemName</th>
+                                        <th>Quantity</th>
+                                        <th>UOM</th>
+                                        <th>Warehouse</th>
+                                        <th>Price</th>
+                                        <th>Total</th>
+                                        <th>IsBatchSerial</th>
+                                        <th>B\S Number</th>
+                                        <th>TotalQuantity</th>
+                                        <th>Patient</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+
+                    @*<div class="row" style="padding: 15px;margin-top:-20px;margin-bottom:-20px;">
+                            <div class="nav navbar-nav ml-auto">
+                                <div class="btn-group">
+                                    <button class="btn btn-success" id="Save" style="margin-left:5px;" onclick="POSTDataAPI()">Send To SAP</button>
+                                </div>
+                            </div>
+                        </div>*@
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div style="text-align:right">
+                            <br>
+                            <button class="btn btn-success modal-toggle" id="btnNext" style="margin-left: 5px;" data-href="#head">Next</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @* Tab for Add Head Data And Send to SAP *@
+            <div class="tab-pane fade" id="head" role="tabpanel" aria-labelledby="head-tab" style="margin-top: 10px;">
+                <div class="row">
+
+
+
+                    <div class="col-sm-6">
+                        Series :
+                        <div class="input-group">
+                            <input type="text" placeholder="" id="txt_H_SeriesCode" value="" autocomplete="off" disabled size="8">
+                            <input type="text" class="form-control" placeholder="" id="txt_H_SeriesName" value="" autocomplete="off" disabled>
+                        </div>
+
+                        Customer Name :
+                        <div class="input-group">
+                            <input type="text" id="txt_H_CusID" disabled size="8" value="" />
+                            <input type="text" class="form-control" placeholder="" id="txt_H_CusName" value="" disabled>
+                        </div>
+
+                        Sale Employee :
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <button class="input-group-text" id="Cifr"><i class="fa fa-check"></i></button>
+                            </div>
+                            <input type="text" placeholder="" id="txt_H_SlpCode" value="" autocomplete="off" disabled size="7" style="display:none">
+                            <input type="text" placeholder="" id="txt_H_SlpId" value="" autocomplete="off" disabled size="7">
+                            <input type="text" class="form-control" placeholder="" id="txt_H_SlpName" value="" autocomplete="off" disabled>
+                            <div class="input-group-append">
+                                <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalSaleEmployee"><i class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+
+                        Remarks :
+                        <textarea class="form-control" id="comments" rows="3" style="width:100%"></textarea>
+                    </div>
+
+                    <div class="col-sm-6">
+                        Posting Date :
+                        <div class="input-group">
+                            <input type="date" class="form-control" id="txt_H_PostingDate">
+                        </div>
+
+                        Delivery Date :
+                        <div class="input-group">
+                            <input type="date" class="form-control" id="txt_H_DeliveryDate">
+                        </div>
+
+                        Document Date :
+                        <div class="input-group">
+                            <input type="date" class="form-control" id="txt_H_DocumentDate">
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-sm-12">
+                        <hr>
+                        <div class="table-responsive">
+                            <table id="TbInfImDataLine" class="table table-striped table-bordered table-condensed dt-responsive nowrap text-xsmall" width="99%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <thead>
+                                    <tr>
+                                        <th>RowNo</th>
+                                        <th>IM-No.</th>
+                                        <th>ItemCode</th>
+                                        <th>ItemName</th>
+                                        <th>Quantity</th>
+                                        <th>UOM</th>
+                                        <th>Warehouse</th>
+                                        <th>Price</th>
+                                        <th>IsBatchSerial</th>
+                                        <th>B\S Number</th>
+                                        <th>Patient</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+
+                        <div style="text-align:right">
+                            <br>
+                            <button class="btn btn-success" id="Save" style="margin-left:5px;" onclick="POSTDataAPI()">Send To SAP</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+@*Create Models*@
+@*0. Search Inventory Transfer IM *@
+<div class="modal fade" id="ModalInfIM" data-backdrop="static">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+            <div class="modal-header">
+                <b>List of Inventory Transfer IM</b>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="TbInf" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <thead>
+                                    <tr>
+                                        <th>DocNum</th>
+                                        <th>Posting Date</th>
+                                        <th>CardCode</th>
+                                        <th>CardName</th>
+                                        <th>slpCode</th>
+                                        <th>slpName</th>
+                                        <th>fromWhs</th>
+                                        <th>toWhs</th>
+                                        <th>DocEntry</th>
+                                        <th>SeriesName</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseInf" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" id="CloseInf" style="background:#f0eff1;color:#696969;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*1. Search Customer Code*@
+<div class="modal fade" id="ModalCusCode">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background: #f0eff1; color: #696969;">
+            <div class="modal-header">
+                <b>List of Customer</b>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="TbCusCode" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background: #f0eff1; color: #696969;">
+                                <thead>
+                                    <tr>
+                                        <th>Customer Code</th>
+                                        <th>Cusetomer Name</th>
+                                        <th>Phone</th>
+                                        <th>Address</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseCus" style="background: #f0eff1; color: #696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background: #f0eff1; color: #696969;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*2. Search SaleEmployee*@
+<div class="modal fade" id="ModalSaleEmployee">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background:#f0eff1;color:#696969;">
+            <div class="modal-header">
+                <b>List of Employee</b>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="TbSaleEmployee" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0" style="background:#f0eff1;color:#696969;">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Code</th>
+                                        <th>Name</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseSlp" style="background:#f0eff1;color:#696969;">Choose</button>
+                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/tengkimleang/goodReceiptPO/GetMasterGoodReceiptPO.js"></script>
+<script src="~/js/tengkimleang/Method/MethodDataTable.js"></script>
+<script src="~/js/Array.js"></script>
+<script src="~/js/tengkimleang/goodReceiptPO/CreatePO.js"></script>
+
+<script type="text/javascript">
+    /*document.getElementById("frmLoading").style.display = "block";*/
+    var LData = [];
+    var lsRowNumber = [];
+    var Ltmp = [];
+    var LDataTb1 = [];
+    var tbline1 = [];
+    var itemcode_pk;
+    var allDataLine = [];
+    var sLineIm = [];
+    //Start Table [TbDataLine]
+    $('#TbInf').DataTable({
+        bLengthChange: false,
+        binfo: false,
+        data: LData,
+        language: {
+            emptyTable: "<b>Table INF-IM is Empty</b>"
+        },
+        columns: [
+            { data: "docNum", autoWidth: true },
+            { data: "docDate", autoWidth: true },
+            { data: "cardCode", autoWidth: true },
+            { data: "cardName", autoWidth: true },
+            { data: "slpCode", autoWidth: true },
+            { data: "slpName", autoWidth: true },
+            { data: "fromWhs", autoWidth: true },
+            { data: "toWhs", autoWidth: true },
+            { data: "docEntry", autoWidth: true },
+            { data: "seriesName", autoWidth: true }
+        ],
+        autoWidth: true,
+        pageLength: 10,
+        select: true,
+        paging: true,
+        ordering: false,
+        info: false,
+        searching: true
+    });
+
+    var tbInf = $('#TbInf').DataTable();
+
+    //+++++ SaleEmployee +++++ START
+    var tbSaleEmployee = $('#TbSaleEmployee').DataTable({
+            "ajax": {
+            "url": '@Url.Action("GetSaleEmployee", "Inventory")',
+            "type": "GET",
+            "dataType": "JSON",
+            "dataSrc": 'data',
+            "complete": function (data) {
+                console.log("Get Sale-Employee Complete.");
+                jqueryXml = $(data);
+                //$('#txt_H_SlpCode').val(jqueryXml[0].responseJSON.data[0].series);
+                //$('#txt_H_SlpName').val(jqueryXml[0].responseJSON.data[0].seriesName);
+                //document.getElementById("frmLoading").style.display = "none";
+            }
+        },
+        "columns": [
+            { "data": "slpCode" },
+            { "data": "slpId" },
+            { "data": "slpName" }
+        ],
+        "select": true,
+        "paging": true,
+        "ordering": false,
+        "info": false,
+        "searching": true
+    });
+
+    $('#ChooseSlp').click(function () {
+        const index = tbSaleEmployee.row('.selected').index();
+        const data = tbSaleEmployee.row(index).data();
+        //console.log(data);
+        $('#txt_H_SlpCode').val(data.slpCode);
+        $('#txt_H_SlpId').val(data.slpId);
+        $('#txt_H_SlpName').val(data.slpName);
+    });
+    //+++++ SaleEmployee +++++ END
+
+    //+++++ Series Code +++++ START
+    $.ajax({
+        type: "GET",
+        url: "@Url.Action("GetSeriesSO", "Inventory")",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        dataSrc: 'data',
+        success: function (sdata) {
+            jqueryXml = $(sdata);
+            //console.log(jqueryXml);
+            console.log("GET Series Complete.");
+            $('#txt_H_SeriesCode').val(jqueryXml[0].data[0].series);
+            $('#txt_H_SeriesName').val(jqueryXml[0].data[0].seriesName);
+            //style = "color:green",btnCheckSeries,style="background-color:red
+            //document.getElementById("Cifr").style.backgroundColor = "green";
+            //document.getElementById("btnCheckSeries").style.color = "#FFFFFF";
+            //document.getElementById("frmLoading").style.display = "none";
+        },
+        error: function (err) {
+            //document.getElementById("frmLoading").style.display = "none";
+        }
+    });
+    //+++++ Series Code +++++ END
+
+    /* DataTable List Of Customer */
+    var LCus = [];
+    DataTableInit.TableCustomer();
+    var tbCus = $('#TbCusCode').DataTable();
+    DataMethod.AddClassSelected('TbCusCode', tbCus);
+    $(".btnModelsCus").click(function() {
+        $("#ModalCusCode").modal({ backdrop: "static" });
+        GetMasterData.getCustomer('@Url.Action("GetCustomerClientResult", "GoodsReceiptPO")','C');
+    });
+
+    $('#ChooseCus').click(function() {
+        const index = tbCus.row('.selected').index();
+        const data = tbCus.row(index).data();
+        $('#CusID').val(data.cardCode);
+        $('#CusName').val(data.cardName);
+
+        $('#txt_H_CusID').val(data.cardCode);
+        $('#txt_H_CusName').val(data.cardName);
+    });
+    /* End DataTable List Of Customer */
+
+    //Search Inventory Tranfer IM
+    function getIMByCus() {
+        var sLine = [];
+        var dataLineIm = [];
+        $.ajax({
+            url: '@Url.Action("GetIMByCus", "Inventory")',
+            data: { cusCode: $('#CusID').val() },
+            type: "GET",
+            dataType: "JSON",
+            "dataSrc": 'data',
+            success: function (data) {
+                //console.log(data);
+                //console.log(data.length);
+
+                for (let dRow = 0; dRow < data.length; dRow++) {
+                    arrayLine = {};
+                    //var data = tbInf.row(dRow).data();
+                    //console.log(data);
+                    arrayLine.docNum = data[dRow].docNum;
+                    arrayLine.docDate = data[dRow].docDate;
+                    arrayLine.cardCode = data[dRow].cardCode;
+                    arrayLine.cardName = data[dRow].cardName;
+                    arrayLine.slpCode = data[dRow].slpCode;
+                    arrayLine.slpName = data[dRow].slpName;
+                    arrayLine.fromWhs = data[dRow].fromWhs;
+                    arrayLine.toWhs = data[dRow].toWhs;
+                    arrayLine.docEntry = data[dRow].docEntry;
+                    arrayLine.seriesName = data[dRow].seriesName;
+                    arrayLine.line = data[dRow].line;
+                    sLine.push(arrayLine);
+                }
+                //console.log('Show Data');
+                //console.log(dataLineIm);
+                //LData = [];
+                //LData = data.data;
+                tbInf.clear();
+                tbInf.rows.add(sLine);
+                tbInf.draw();
+
+            }
+        });
+    }
+
+    var tbInfImData = $('#TbInfImData').DataTable({
+        bLengthChange: false,
+        binfo: false,
+        data: LData,
+        columnDefs: [{
+            "defaultContent": "-",
+            "targets": "_all"
+        }],
+        language: {
+            emptyTable: "<b>From Table is Empty</b>"
+        },
+        columns: [
+            {
+                render: function (data, type, full, meta) { return '<input type="checkbox" class="clsinput" style="margin:auto; width:100%;" onchange="AddRow(' + meta.row + ')" id="chkLineNumSelect' + meta.row + '">'; },
+                autoWidth: true
+            },
+            { data: "docEntry", autoWidth: true },
+            { data: "lineNum", autoWidth: true },
+            { data: "itemCode", autoWidth: true },
+            { data: "dscription", autoWidth: true },
+            {
+                data: "batchSerialQty",
+                render: function (data, type, full, meta) {
+                    return '<input type="number" value="' + data + '" id="inputQty' + meta.row + '" class="sNum">';
+                },
+                autoWidth: true
+            },
+            { data: "batchSerialQty", autoWidth: true },
+            { data: "uomCode", autoWidth: true },
+            { data: "whsCode", autoWidth: true },
+            { data: "price", autoWidth: true },
+            { data: "lineTotal", autoWidth: true },
+            { data: "isBtchSerNum", autoWidth: true },
+            { data: "batchSerialNumber", autoWidth: true },
+            { data: "quantity", autoWidth: true },
+            { data: "patient", autoWidth: true }
+        ],
+        autoWidth: true,
+        pageLength: 10,
+        select: true,
+        paging: true,
+        ordering: false,
+        info: false,
+        searching: false
+    });
+
+    tbInfImData.columns([1, 2 , 6, 10, 13, 14]).visible(false, false);
+    //onClick="removeRowTo(' + meta.row + ')"
+
+    var LtmpDataSelected = [];
+    var tbInfImData2 = $('#TbInfImDataSelect').DataTable({
+        responsive: true,
+        bLengthChange: false,
+        binfo: false,
+        language: {
+            emptyTable: "<b>To Table is Empty</b>"
+        },
+        data: LtmpDataSelected,
+        columnDefs: [{
+            "defaultContent": "-",
+            "targets": "_all"
+        }],
+        columns: [
+            {
+                render: function (data, type, full, meta) { return '<button class="btn-sm btn-danger" onClick="removeRowTo(' + meta.row + ')"><i class="fas fa-trash-alt"></i></button>'; }
+            },
+            { data: "docEntry", autoWidth: true },
+            { data: "docNum", autoWidth: true },
+            { data: "lineNum", autoWidth: true },
+            { data: "itemCode", autoWidth: true },
+            { data: "dscription", autoWidth: true },
+            { data: "batchSerialQty", autoWidth: true },
+            { data: "uomCode", autoWidth: true },
+            { data: "whsCode", autoWidth: true },
+            { data: "price", autoWidth: true },
+            { data: "lineTotal", autoWidth: true },
+            { data: "isBtchSerNum", autoWidth: true },
+            { data: "batchSerialNumber", autoWidth: true },
+            { data: "quantity", autoWidth: true },
+            { data: "patient", autoWidth: true }
+        ],
+        rowCallback: function (row, data, index) {
+        },
+        autoWidth: true,
+        pageLength: 10,
+        select: true,
+        paging: true,
+        ordering: false,
+        info: false,
+        searching: false
+    });
+
+    tbInfImData2.columns([1, 2, 3, 10, 13, 14]).visible(false, false);
+
+    $('#ChooseInf').click(function () {
+        const index = tbInf.row('.selected').index();
+        const data = tbInf.row(index).data();
+        $('#txtDocEntry').val(data.docEntry);
+        $('#txtDocNum').val(data.docNum);
+        console.log(data);
+        sLineIm = []
+        if (data.line.length > 0) {
+            for (let dRow = 0; dRow < data.line.length; dRow++) {
+                arrayLine = {};
+                arrayLine.docEntry = data.line[dRow].docEntry;
+                arrayLine.lineNum = data.line[dRow].lineNum;
+                arrayLine.itemCode = data.line[dRow].itemCode;
+                arrayLine.dscription = data.line[dRow].dscription;
+                arrayLine.quantity = data.line[dRow].quantity;
+                arrayLine.price = data.line[dRow].price;
+                arrayLine.priceBefDi = data.line[dRow].priceBefDi;
+                arrayLine.whsCode = data.line[dRow].whsCode;
+                arrayLine.lineTotal = data.line[dRow].lineTotal;
+                arrayLine.uomEntry = data.line[dRow].uomEntry;
+                arrayLine.uomCode = data.line[dRow].uomCode;
+                arrayLine.fisrtBin = data.line[dRow].fisrtBin;
+                arrayLine.isBtchSerNum = data.line[dRow].isBtchSerNum;
+                arrayLine.batchSerialNumber = data.line[dRow].batchSerialNumber;
+                arrayLine.batchSerialQty = data.line[dRow].batchSerialQty;
+                arrayLine.patient = data.line[dRow].patient;
+                sLineIm.push(arrayLine);
+            }
+            //console.log(sLineIm);
+            tbInfImData.clear();
+            tbInfImData.rows.add(sLineIm);
+            tbInfImData.draw();
+            Ltmp = [];
+        }
+        else {
+            alert('No Data.');
+        }
+
+    });
+
+    //Function load data
+    function fncLoadData() {
+        var docentry = $("#txtDocEntry").val();
+        if (docentry != '') {
+            //document.getElementById("frmLoading").style.display = "block";
+            ApplyDataTable(docentry);
+        } else {
+            alert("Please Select DocNum");
+        }
+    }
+
+    //Apple Data Table From DocEntry
+    function ApplyDataTable(id) {
+
+        $.noConflict();
+        $.ajax({
+            url: '@Url.Action("GetListItemInIM", "Inventory")',
+            data: { docentry: id },
+            type: "GET",
+            dataType: "JSON",
+            "dataSrc": 'data',
+            success: function (data) {
+                var rows_selected = [];
+                var tline = $('#TbDataLine').DataTable({
+                    "bDestroy": true,
+                    "aaData": data.data,
+                    "autoWidth": true,
+                    "responsive": true,
+                    "lengthChange": true,
+                    "ordering": true,
+                    "columns": [
+                        { "data": "itemCode", "autoWidth": true },
+                        { "data": "itemName", "autoWidth": true },
+                        { "data": "quantity", "autoWidth": true },
+                        { "data": "fWhsCode", "autoWidth": true },
+                        { "data": "tWhsCode", "autoWidth": true },
+                        { "data": "uomCode", "autoWidth": true },
+                        { "data": "binCode", "autoWidth": true },
+                        { "data": "fromBinEntry", "autoWidth": true },
+                        { "data": "toBinCode", "autoWidth": true },
+                        { "data": "toBinEntry", "autoWidth": true }
+                    ],
+                    "language": { "emptyTable": "No Events Found Related To This User" },
+                    "order": [[0, 'desc']],
+                    "select": true,
+                    "paging": false,
+                    "ordering": false,
+                    "info": false,
+                    "searching": false
+                });
+
+                console.log("Download Data Complete");
+                document.getElementById("frmLoading").style.display = "none";
+                document.getElementById("dataDocnum").style.display = "block";
+                document.getElementById("txtScanBarCode01").value = '';
+                document.getElementById("txtScanBarCode01").focus();
+
+                tline.on('select', function () {
+                    var cellitemcode = tline.rows({ selected: true }).data()[0]['itemCode'];
+                    var celldscription = tline.rows({ selected: true }).data()[0]['dscription'];
+                    var cellquantity = tline.rows({ selected: true }).data()[0]['quantity'];
+                    var cellfromBinEntry = tline.rows({ selected: true }).data()[0]['fromBinEntry'];
+
+                    var txtItemCode = document.getElementById("txtItemCode");
+                    var txtItemName = document.getElementById("txtItemName");
+                    var txtQuantity = document.getElementById("txtQuantity");
+                    var txtfBinEntry = document.getElementById("txtfBinEntry");
+
+                    txtItemCode.value = cellitemcode;
+                    txtItemName.value = celldscription;
+                    txtQuantity.value = cellquantity;
+                    txtfBinEntry.value = cellfromBinEntry;
+                });
+
+            }
+        });
+
+    }
+
+    
+    function AddRow(row) {
+        if ($("#chkLineNumSelect" + row).prop("checked") == true) {
+            lsRowNumber.push(row);
+        }
+        else {
+            var index = lsRowNumber.indexOf(row);
+            lsRowNumber.splice(index, 1);
+        }
+    }
+
+    //btnGetRow
+    //var length2;
+    //var chkDuplicate;
+    //function CheckItemBS_Duplicate(itemcode, bsnumber) {
+    //    length2 = tbInfImData2.column(0).data().length;
+    //    console.log('length :> ' + length2);
+    //    if (length2 != 0) {
+    //        for (var x = 0; x < tbInfImData2.column(0).data().length; x++) {
+    //            let xdata = tbInfImData2.row(x).data();
+    //            console.log(xdata.itemCode + ":" + itemcode + "," + xdata.batchSerialNumber + ":" + bsnumber);
+    //            if (xdata.itemCode != itemcode && xdata.batchSerialNumber != bsnumber) {
+
+    //                chkDuplicate = 'non-duplicate';
+
+    //            } else if (xdata.itemCode == itemcode && xdata.batchSerialNumber == bsnumber) {
+
+    //                chkDuplicate = 'duplicate';
+
+    //            }
+
+    //        }
+    //    }
+    //    else if (length2 == 0) {
+
+    //        chkDuplicate = 'non-duplicate';
+
+    //    }
+
+    //    return chkDuplicate;
+    //}
+
+    
+    var tbInfImDataLineA = $('#TbInfImDataLine').DataTable({
+        responsive: true,
+        bLengthChange: false,
+        binfo: false,
+        data: allDataLine,
+        columns: [
+            { data: "lineNum", autoWidth: true },
+            { data: "docNum", autoWidth: true },
+            { data: "itemCode", autoWidth: true },
+            { data: "dscription", autoWidth: true },
+            { data: "quantity", autoWidth: true },
+            { data: "uomCode", autoWidth: true },
+            { data: "whsCode", autoWidth: true },
+            { data: "price", autoWidth: true },
+            { data: "isBtchSerNum", autoWidth: true },
+            { data: "batchSerialNumber", autoWidth: true },
+            { data: "patient", autoWidth: true }
+        ],
+        rowCallback: function (row, data, index) {
+        },
+        autoWidth: true,
+        pageLength: 10,
+        select: true,
+        paging: true,
+        ordering: false,
+        info: false,
+        searching: false
+    });
+
+    
+    $("#btnSelectData").click(function () {
+        //LDataTb1 = [];
+
+        for (var i = 0; i < tbInfImData.column(0).data().length; i++) {
+            Ltmp = [];
+            const checked = document.querySelector('#chkLineNumSelect' + i + ':checked') !== null;
+            let data = tbInfImData.row(i).data();
+
+            if (checked == true) {
+                //console.log('Check is ' + checked);
+                //console.log(data);
+                //Add Line Data
+                var tmpAdd = {};
+                tmpAdd.docEntry = data.docEntry;
+                tmpAdd.docNum = $('#txtDocNum').val();
+                tmpAdd.lineNum = '';
+                tmpAdd.itemCode = data.itemCode;
+                tmpAdd.dscription = data.dscription;
+                tmpAdd.batchSerialQty = $('#inputQty' + i).val();
+                tmpAdd.uomCode = data.uomCode;
+                tmpAdd.whsCode = data.whsCode;
+                tmpAdd.price = data.price;
+                tmpAdd.lineTotal = data.lineTotal;
+                tmpAdd.isBtchSerNum = data.isBtchSerNum;
+                tmpAdd.batchSerialNumber = data.batchSerialNumber;
+                tmpAdd.quantity = data.quantity;
+                tmpAdd.patient = data.patient;
+                Ltmp.push(tmpAdd);
+                console.log('Push ->');
+                console.log(Ltmp);
+                tbInfImData2.rows.add(Ltmp);
+                tbInfImData2.search('').draw();
+                Ltmp = [];
+                
+                //========== End Add ==========
+                document.getElementById("chkLineNumSelect" + i).checked = false;
+            }
+            
+        }
+
+    });
+
+    //$('#TbInfImDataSelect').on("click", "button", function () {
+    //    tbline1 = [];
+    //    var td = $(this).closest("tr");
+    //    if (td.hasClass("child")) { td.prev('.parent').remove(); }
+    //    td.remove();
+    //});
+
+    function removeRowTo(rowno) {
+
+        //console.log($(this).parent());
+        //tbInfImData2.row($(this).parents('tr')).remove().draw(false);
+
+        //alert('rowNo : ' + row);
+        var data = tbInfImData2.row(rowno).data();
+        //console.log(data);
+        var itemCode = data.itemCode;
+        let msg = "คุณต้องการลบ Item " + itemCode + " นี้ใช่ไหม";
+        if (confirm(msg) == true) {
+            console.log('OK -> Remove Row' + rowno);
+            tbInfImData2.rows(rowno).remove().draw(false);
+        }
+        else {
+            console.log('Cancel -> Remove Row' + rowno);
+        }
+    }
+
+
+
+    $('.modal-toggle').click(function (e) {
+        var tab = $(this).data('href');
+        $('li > a[href="' + tab + '"]').tab("show");
+
+        console.log(tab);
+        allDataLine = [];
+        if (tab == '#head') {
+            // Copy Row To #head Tab
+            for (let dtRow = 0; dtRow < tbInfImData2.column(0).data().length; dtRow++) {
+                arrayDataLine = {};
+                var ldata = tbInfImData2.row(dtRow).data();
+                console.log(ldata);
+                
+                //arrayDataLine.cardCode = $('#CusID').val();
+                //arrayDataLine.cardName = $('#CusName').val();
+                
+                arrayDataLine.lineNum = dtRow;
+                arrayDataLine.docNum = ldata.docNum;
+                arrayDataLine.itemCode = ldata.itemCode;
+                arrayDataLine.dscription = ldata.dscription;
+                arrayDataLine.quantity = ldata.batchSerialQty;
+                arrayDataLine.uomCode = ldata.uomCode;
+                arrayDataLine.whsCode = ldata.whsCode;
+                arrayDataLine.price = ldata.price;
+                arrayDataLine.isBtchSerNum = ldata.isBtchSerNum;
+                arrayDataLine.batchSerialNumber = ldata.batchSerialNumber;
+                arrayDataLine.U_TranferNo = ldata.docNum;
+                arrayDataLine.patient = ldata.patient;
+                allDataLine.push(arrayDataLine);
+            }
+
+            console.log(allDataLine);
+            tbInfImDataLineA.clear().draw();
+            tbInfImDataLineA.rows.add(allDataLine).draw(false);
+        }
+
+    });
+
+
+    //Add Data Head And Line -> SAP
+    function POSTDataAPI() {
+        console.log('Sending SAP...');
+        document.getElementById("frmLoading").style.display = "block";
+        var sHead = {};
+        var sLine = [];
+        var dLine = [];
+        var serialLine = [];
+        var batchLine = [];
+        var arrayLine = {};
+        var arrDataLine = {};
+        var arrDataLineB = {};
+        var arrDataLineS = {};
+        //Data Line
+        for (let ctbline = 0; ctbline < tbInfImDataLineA.column(0).data().length; ctbline++) {
+            var ldata = tbInfImDataLineA.row(ctbline).data();
+            console.log(ldata);
+
+            batchLine = [];
+            serialLine = [];
+            arrDataLineB = {};
+            arrDataLineS = {};
+            if (ldata.isBtchSerNum == "B") {
+                arrDataLineB.itemCode = ldata.itemCode;
+                arrDataLineB.quantity = ldata.quantity;
+                arrDataLineB.batchNumber = ldata.batchSerialNumber;
+                batchLine.push(arrDataLineB);
+                serialLine = [];
+            }
+
+            else if (ldata.isBtchSerNum == "S") {
+                arrDataLineS.itemCode = ldata.itemCode;
+                arrDataLineS.quantity = ldata.quantity;
+                arrDataLineS.serialNumber = ldata.batchSerialNumber;
+                serialLine.push(arrDataLineS);
+                batchLine = [];
+            }
+            else if (ldata.isBtchSerNum == "N") {
+                batchLine = [];
+                serialLine = [];
+            }
+
+            arrDataLine = {};
+            arrDataLine.lineNum = ldata.lineNum;
+            arrDataLine.manageItem = ldata.isBtchSerNum;
+            arrDataLine.itemCode = ldata.itemCode;
+            arrDataLine.quantity = ldata.quantity;
+            arrDataLine.uomName = ldata.uomCode;
+            arrDataLine.price = ldata.price;
+            arrDataLine.whsCode = ldata.whsCode;
+            arrDataLine.U_TranferNo = ldata.U_TranferNo;
+            arrDataLine.U_Patient = ldata.patient;
+            arrDataLine.batches = batchLine;  
+            arrDataLine.serial = serialLine;
+            dLine.push(arrDataLine);
+        }
+        console.log(dLine);
+
+        //Data Head
+        sHead.seriesCode = $('#txt_H_SeriesCode').val();
+        sHead.cardCode = $('#txt_H_CusID').val();
+        sHead.docDate = $('#txt_H_PostingDate').val();
+        sHead.docDueDate = $('#txt_H_DeliveryDate').val();
+        sHead.taxDate = $('#txt_H_DocumentDate').val();
+        sHead.slpCode = $('#txt_H_SlpCode').val();
+        sHead.remark = $('#comments').val();
+        sHead.lines = dLine;
+        console.log(sHead);
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("PostSalesOrderIM", "Inventory")',
+            data: { sendSalesOrderForIM: sHead},
+            dataType: "JSON",
+            error: function (request, error) {
+                    console.log(arguments);
+                    alert(" Can't do because: " + error);
+            },
+            success: function (ex) {
+                //console.log(ex);
+                if (ex.errorCode == 0) {
+                    alert("Create SO -> Success");
+                    document.getElementById("Save").style.display = 'none';
+                    document.getElementById("frmLoading").style.display = "none";
+
+                    setTimeout(() => {
+                        document.location.reload();
+                    }, 1000);
+
+
+                } else {
+                    console.log(ex.errorMsg);
+                    alert(ex.errorMsg);
+                    document.getElementById("Save").style.display = 'block';
+                    document.getElementById("frmLoading").style.display = "none";
+                }
+            }
+        });
+    }
+
+</script>

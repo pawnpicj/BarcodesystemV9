@@ -40,6 +40,7 @@ namespace BarCodeAPIService.Service
                     oIC.Reference2 = sendInventoryCounting.Ref2;
                     oIC.Remarks = sendInventoryCounting.Comments;
                     oIC.SingleCounterID = Convert.ToInt32(sendInventoryCounting.CountingType);
+                    oIC.UserFields.Item("U_C_binlo").Value = sendInventoryCounting.Udf_BinLocation;
                     //Counter=36
 
                     foreach (SendInventoryCountingLine l in sendInventoryCounting.Line)

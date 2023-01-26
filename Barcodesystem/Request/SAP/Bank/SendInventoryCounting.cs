@@ -19,6 +19,8 @@ namespace BarCodeLibrary.Request.SAP
         public string Ref2 { get; set; }
         public string Comments { get; set; }
 
+        public string Udf_BinLocation { get; set; }
+
         public List<SendInventoryCountingLine> Line { get; set; }
     }
 

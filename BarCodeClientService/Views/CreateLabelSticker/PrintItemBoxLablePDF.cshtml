@@ -1,0 +1,174 @@
+﻿@model BarCodeLibrary.Respones.SAP.Pannreaksmey.ResponsePrintItemLable;
+@{
+    ViewData["Title"] = "Print-Item-Box";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/bootstrap-grid.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <!-- Font Awesome JS -->
+    <link href="~/css/styles.css" rel="stylesheet" />
+    <script src="~/font icon/fontaws.js"></script>
+    <script src="~/font icon/fonticons.js"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+</head>
+<style>
+    body {
+        /*margin: 0;*/
+        margin: 0px 0px -20px 5px;
+        background-color: #FFFFFF;
+        padding: 0px 0px 0px 0px;
+    }
+    .container-fluid {
+        font-family: arial;
+        font-size: 6px;
+        /*margin: 0 auto auto auto;*/
+        width: 99%;
+        height: 200px;
+        outline: solid 1px #FFFFFF;
+    }
+    #ImgFDA {
+        max-width: 250px;
+        max-height: 50px;
+    }
+    #img1 {
+        width: 115px;
+        height: 115px;
+    }
+    #imgQrFDA {
+        width: 250px;
+        height: 250px;
+    }
+    #imgQrNoFDA {
+        width: 250px;
+        height: 250px;
+    }
+
+    div.logo {
+        background-image: url("/Icon/FDA Number.jpg");
+      /*  -moz-transform:scale(0.75);
+        -webkit-transform:scale(0.75);
+        transform:scale(0.75);*/
+    }
+    .portrait {
+        height: 40px;
+        width: 700px;
+
+    }
+    .br1 {
+        height: 30px;
+    }
+    /*  @@page {
+            size: auto;
+            size: A3;
+            margin: 0mm;
+        }
+
+        @@media print {
+            #header, #nav .noprint {
+                display: none;
+            }
+
+            body {
+                height: 75px;
+                width: 180px;
+                margin: 4px 7px 2px 4px;
+            }
+        }
+
+        @@media screen {
+            .hideonprint {
+                display: table-cell;
+            }
+        }*/
+</style>
+<body>
+    @*<table>
+        <thead>
+            <tr>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>*@
+    @{
+        int i = 1;
+        string linkfda = "";
+        string properties = "";
+    }
+    @{ string strPathAndQuery = Convert.ToString(Context.Request.Protocol) + "" + Convert.ToString(Context.Request.PathBase); }
+    @foreach (var l in Model.Data)
+    {
+
+        //properties = Context.Request.Path + "<br>" + Context.Request.Scheme + "<br>" + Context.Request.Host + "<br>" + Context.Request.Method + "<br>" + Context.Request.Body + "<br>" + Context.Request.Headers + "<br>" + Context.Request.Protocol + "<br>" + Context.Request.HttpContext + "<br>" + Context.Request.Query + "<br>" + Context.Request.ContentLength + "<br>" + Context.Request.ContentType + "<br>" + Context.Request.BodyReader + "<br>" + Context.Request.Cookies + "<br>" + Context.Request.IsHttps + "<br>" + Context.Request.RouteValues + "<br>" + Context.Request.HasFormContentType;
+
+    @if (Context.Request.PathBase == "/")
+        {
+            linkfda = Context.Request.Scheme + "://" + Convert.ToString(Context.Request.Host) + "/Icon/FDA_Number1-removebg.png";
+        }
+        else
+        {
+            linkfda = Context.Request.Scheme + "://" + Convert.ToString(Context.Request.Host) + ""+ Convert.ToString(Context.Request.PathBase) + "/Icon/FDA_Number1-removebg.png";
+        }
+    @*<div class="container-fluid"></div>*@
+    <table width="100%" class="container-fluid" border="0">
+        <tr>
+            <td width="70%">&nbsp;
+            </td>
+            <td width="30%" align="center">
+                &nbsp;                
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center">
+                <img src="@Url.Action("GenerateQRCode","QRBarcode")?itemcode=@string.Empty&&itemname=@string.Empty&&fda=@string.Empty&&str=@l.ConcatText2" id="imgQrNoFDA" @i />
+                <br><font size="+2" style="font-weight:bold">@l.UOM</font>
+                <br><font size="+2">ItemCode : @l.ItemCode</font>
+                <br><font size="+2">B/SN/L : @l.BatchSN</font>
+            </td>
+        </tr>
+    </table>
+
+    @*<div class="br1"><br></div>*@
+        i = i + 1;
+    @*<label><font size="3">&nbsp;</font></label>*@
+    }
+    @*</tr>
+            </tbody>
+        </table>*@
+
+    @*<font color="red">=== @i ====</font>*@
+
+    <script>
+        //window.print();
+        //onafterprint = function () {
+        //    this.window.history.back();
+        //}
+        oncancel = function () {
+            this.window.history.back();
+        }
+        genQR();
+        function genQR() {
+            var gapi = "https://chart.googleapis.com/chart?chf=bg,s,65432100&cht=qr&chs=";
+            var myimg = document.getElementById("img");
+            var myimg1 = document.getElementById("img1");
+            var myimg2 = document.getElementById("img2");
+            var mytext = "Hello";
+            var mytext1 = "welcom";
+            var mytext2 = "Hi";
+            //myimg.src = gapi + "90x90&chl=" + mytext;
+            //myimg1.src = gapi + "60x60&chl=" + mytext1;
+            // myimg2.src = gapi + "60x60" + "&chl=" + mytext2;
+
+        }
+    </script>
+</body>
+</html>

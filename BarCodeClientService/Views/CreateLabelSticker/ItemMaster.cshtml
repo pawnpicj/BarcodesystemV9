@@ -329,6 +329,8 @@
                                     <th>Batch/SN</th>
                                     <th>UOM</th>
                                     <th>FDA</th>
+                                    <th>UnitS</th>
+                                    <th>UnitB</th>
                                 </tr>
                             </thead>
                         </table>
@@ -338,6 +340,8 @@
                 <button class="btn btn-success" id="Print" style="margin-left:5px;">Print</button>
                 &nbsp;&nbsp;&nbsp;
                 <button class="btn btn-success" id="Print3x" style="margin-left:5px;">Print 3x</button>
+                &nbsp;&nbsp;&nbsp;
+                <button class="btn btn-success" id="PrintBox" style="margin-left:5px;">Print Box</button>
             </div>
         </div>
     </div>
@@ -546,9 +550,12 @@
             { data: "productCode", autoWidth: true },
             { data: "batchSN", autoWidth: true },
             { data: "UOM", autoWidth: true },
-            { data: "fda",autoWidth:true}
+            { data: "fda", autoWidth: true },
+            { data: "unitS", autoWidth: true },
+            { data: "unitB", autoWidth: true }
         ]
     });
+
     //$('#TbListItemPrint').DataTable({
     //    bLengthChange: false,
     //    binfo: false,
@@ -565,6 +572,7 @@
     //});
     //TbListItemPrint
     var table = $('#TbListItem').DataTable();
+    table.columns([8, 9]).visible(false, false);
 /*    var tableprint = $('#TbListItemPrint').DataTable();*/
     var HeaderLs = [];
     var allbinLInes = [];
@@ -621,8 +629,10 @@
                     itemLines.expDate = txtExpireDate + "";
                     itemLines.UOM = valMixUom + "";
                     itemLines.fda = $('#txtFDA').val();
+                    itemLines.unitS = number1;
+                    itemLines.unitB = number2;                    
                     itemLines.concatText = "- " + $('#ItemCode').val() + "\n- " + $('#ItemName').val() + "\n- " + $('#ProductGroup').val();
-                    itemLines.concatText2 = $('#ItemCode').val() + ";" + $('#batchSN').val() + ";;" + ";" + i.toString().padStart(4, '0') + "";
+                    itemLines.concatText2 = $('#ItemCode').val() + ";" + $('#batchSN').val() + ";QTY" + number1 + ";" + ";" + i.toString().padStart(4, '0') + "";
                     allitemLInes.push(itemLines);
                     HeaderLs.push(itemLines);
                     table.rows.add(allitemLInes).draw(false);
@@ -643,8 +653,10 @@
                         itemLines.expDate = txtExpireDate + "";
                         itemLines.UOM = valMixUom + "";
                         itemLines.fda = $('#txtFDA').val();
+                        itemLines.unitS = number1;
+                        itemLines.unitB = number2;
                         itemLines.concatText = "- " + $('#ItemCode').val() + "\n- " + $('#ItemName').val() + "\n- " + $('#ProductGroup').val();
-                        itemLines.concatText2 = $('#ItemCode').val() + ";;" + $('#batchSN').val() + i.toString().padStart(2, '0') + ";" + ";" + i.toString().padStart(4, '0') + "";
+                        itemLines.concatText2 = $('#ItemCode').val() + ";;" + $('#batchSN').val() + ";QTY" + number1 + ";" + i.toString().padStart(4, '0') + "";
                         allitemLInes.push(itemLines);
                         HeaderLs.push(itemLines);
                         table.rows.add(allitemLInes).draw(false);
@@ -663,8 +675,10 @@
                         itemLines.expDate = txtExpireDate + "";
                         itemLines.UOM = valMixUom + "";
                         itemLines.fda = $('#txtFDA').val();
+                        itemLines.unitS = number1;
+                        itemLines.unitB = number2;
                         itemLines.concatText = "- " + $('#ItemCode').val() + "\n\n-" + $('#ItemName').val() + "\n\n-" + $('#ProductGroup').val();
-                        itemLines.concatText2 = $('#ItemCode').val() + ";;;" + ";" + i.toString().padStart(4, '0') + "";
+                        itemLines.concatText2 = $('#ItemCode').val() + ";;;QTY" + number1 + ";" + i.toString().padStart(4, '0') + "";
                         allitemLInes.push(itemLines);
                         HeaderLs.push(itemLines);
                         //itemLines = {};
@@ -720,6 +734,8 @@
             arrayLine.batchSN = data.batchSN;
             arrayLine.fda = data.fda;
             arrayLine.UOM = data.UOM;
+            arrayLine.unitS = data.unitS;
+            arrayLine.unitB = data.unitB;
             sLine.push(arrayLine);
         }
         console.log(sLine);
@@ -758,14 +774,6 @@
     });
 
     $('#Print3x').click(function () {
-
-        //var headstr = "<html><head><style>table.table-bordered{border:1px solid black;margin-top:20px;}table.table-bordered > thead > tr > th{border:1px solid black;}table.table-bordered > tbody > tr > td{border:1px solid black;}</style></head><body>";
-        //var footstr = "</body>";
-        //var item = document.getElementById("body1").innerHTML;
-        //document.body.innerHTML = headstr + item + footstr;dfdsd
-
-        //print.Data = allitemLInes;
-        /*if (allitemLInes.length > 0) { }*/
         var sLine = [];
         var arrayLine = {};
         var print = {};
@@ -801,6 +809,51 @@
                     success: function (data) {
                         if (data == 1) {
                             window.location.href = '@Url.Action("PrintItem3LablePDF", "CreateLabelSticker")?sizeSticker=' + countRow;
+                    }
+                    }
+                });
+            }
+        }
+
+
+    });
+
+    //PrintBox
+    $('#PrintBox').click(function () {
+        var sLine = [];
+        var arrayLine = {};
+        var print = {};
+        var countRow = 0;
+        for (let rr = 0; rr < table.column(0).data().length; rr++) {
+            arrayLine = {};
+            var data = table.row(rr).data();
+            arrayLine.itemCode = data.itemCode;
+            arrayLine.itemName = data.itemName;
+            arrayLine.productCode = data.productCode;
+            arrayLine.quantity = data.quantity;
+            arrayLine.concatText = data.concatText;
+            arrayLine.concatText2 = data.concatText2;
+            arrayLine.batchSN = data.batchSN;
+            arrayLine.fda = data.fda;
+            arrayLine.UOM = data.UOM;
+            sLine.push(arrayLine);
+            countRow = countRow + 1;
+        }
+        console.log(sLine);
+
+        print.Data = sLine;
+        countRow = countRow;
+        if (sLine.length > 0) {
+            if ($('#labelSize').val() == '0') {
+                console.log("Box");
+                $.ajax({
+                    url: '@Url.Action("PrintItemLablePDFAction", "CreateLabelSticker")',
+                    type: "POST",
+                    data: { print: print},
+                    dataType: "JSON",
+                    success: function (data) {
+                        if (data == 1) {
+                            window.location.href = '@Url.Action("PrintItemBoxLablePDF", "CreateLabelSticker")';
                     }
                     }
                 });

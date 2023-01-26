@@ -3,6 +3,7 @@ using BarCodeClientService.Models;
 using BarCodeLibrary.APICall;
 using BarCodeLibrary.Respones.SAP;
 using BarCodeLibrary.Respones.SAP.Bank;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 

@@ -8,6 +8,7 @@ using BarCodeLibrary.Respones.SAP.Bank;
 using BarCodeLibrary.Respones.SAP.Pannreaksmey;
 using BarCodeLibrary.Respones.SAP.Tengkimleang;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Rotativa.AspNetCore;
 
@@ -167,6 +168,14 @@ namespace BarCodeClientService.Controllers
             return Ok(a);
         }
 
+
+        public IActionResult GetBinLocationCounting(string whscode,string iyear)
+        {
+            //Case : RptBinLocationCounting
+            var a = API.Read<ResponseGetBinLocation>("api/GetBinLocation/GetBinLocationCounting/" + whscode + "/" + iyear);
+            return Ok(a);
+        }
+
         //GetWTRLine
         public IActionResult GetWTRLine(string docentry)
         {
@@ -314,6 +323,13 @@ namespace BarCodeClientService.Controllers
             return Ok(1);
         }
 
+        [HttpPost]
+        public IActionResult PrintBinCAction(ResponsePrintBinC print)
+        {
+            PrintBinCStatic.Data = print.Data;
+            return Ok(1);
+        }
+
         public IActionResult PrintLableForTransfer()
         {
             ResponsePrintLableINF responsePrintLableINF = new ResponsePrintLableINF();
@@ -337,6 +353,20 @@ namespace BarCodeClientService.Controllers
             PrintItemLableStatic.Data = null;
 
             return new ViewAsPdf(responsePrintLableINF)
+            {
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
+                PageMargins = new Rotativa.AspNetCore.Options.Margins(0, 0, 1, 0)
+            };
+        }
+
+        public IActionResult PrintBinCounted()
+        {
+            ResponsePrintBinC responsePrintBinC = new ResponsePrintBinC();
+            responsePrintBinC.Data = PrintBinCStatic.Data;
+            PrintBinCStatic.Data = null;
+
+            return new ViewAsPdf(responsePrintBinC)
             {
                 PageSize = Rotativa.AspNetCore.Options.Size.A4,
                 PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,

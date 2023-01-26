@@ -127,6 +127,24 @@ namespace BarCodeClientService.Controllers
                 //CustomSwitches = "--page-offset 0 --footer-center [page] --footer-font-size 12"
             };
         }
+
+        //PrintItemBox
+        public IActionResult PrintItemBoxLablePDF()
+        {
+            ResponsePrintItemLable responsePrintItemLable = new ResponsePrintItemLable();
+            responsePrintItemLable.Data = PrintItemLableStatic.Data;
+            PrintItemLableStatic.Data = null;
+            return new ViewAsPdf(responsePrintItemLable)
+            {
+                PageSize = Rotativa.AspNetCore.Options.Size.Letter,
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
+                PageMargins = new Rotativa.AspNetCore.Options.Margins(0, 0, 1, 0),
+                PageWidth = 120,
+                PageHeight = 90
+                //CustomSwitches = "--page-offset 0 --footer-center [page] --footer-font-size 12"
+            };
+        }
+
         // Method for Pint Item Label's size 4.5x7
         public IActionResult PrintItemLablePDFSecon()
         {

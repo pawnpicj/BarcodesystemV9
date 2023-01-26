@@ -1,0 +1,116 @@
+﻿@using BarCodeClientService.Models
+@model BarCodeLibrary.Respones.SAP.Bank.ResponsePrintBinC;
+@*@model BarCodeClientService.Models.Barcode;*@
+
+    @{
+        ViewData["Title"] = "Print Bin-Location Counted";
+        Layout = null;
+    }
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Print List Transfer</title>
+        <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+        <link href="~/lib/bootstrap/dist/css/bootstrap-grid.css" rel="stylesheet" />
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+        <!-- Font Awesome JS -->
+        <link href="~/css/styles.css" rel="stylesheet" />
+        <script src="~/font icon/fontaws.js"></script>
+        <script src="~/font icon/fonticons.js"></script>
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+    </head>
+    <style>
+        body {
+            /*margin: 0;*/
+            margin: auto 0px -20px 50px;
+            background-color: #FFFFFF;
+            padding: 0px 0px 0px 0px;
+            font-family: arial;
+        }
+
+        .container-fluid {
+            font-family: arial;
+            font-size: 6px;
+            /*margin: 0 auto auto auto;*/
+            width: 99%;
+            height: 200px;
+            outline: solid 1px #FFFFFF;
+        }
+
+        #ImgFDA {
+            max-width: 250px;
+            max-height: 80px;
+        }
+
+        #img1 {
+            width: 115px;
+            height: 115px;
+        }
+
+        #imgQrFDA {
+            width: 210px;
+            height: 210px;
+        }
+
+        #imgQrNoFDA {
+            width: 48px;
+            height: 48px;
+        }
+
+        #imgDocNum {
+            width: 90px;
+            height: 90px;
+        }
+
+        div.logo {
+            background-image: url("/Icon/FDA Number.jpg");
+            /*  -moz-transform:scale(0.75);
+        -webkit-transform:scale(0.75);
+        transform:scale(0.75);*/
+        }
+
+        .portrait {
+            height: 40px;
+            width: 700px;
+        }
+
+        .br1 {
+            height: 30px;
+        }
+
+        .lb1 {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .thb, .tdb{
+            border:1px solid #000000;
+        }
+    </style>
+
+    @{
+        string strLine = "";
+        string QR_Data;
+        string docnum = "";
+        int rowno = 0;
+        int rrowno = 0;
+        double BatchSerialQty = 0;
+        string batchSerialNo = "";
+    }
+
+    <body>
+
+        <center><h1>รายงาน Bin Location Counted</h1></center>
+        @foreach (var l in Model.Data)
+        {
+            <label>@l.binCode</label>
+        }
+        <br>
+
+    </body>
+
+</html>

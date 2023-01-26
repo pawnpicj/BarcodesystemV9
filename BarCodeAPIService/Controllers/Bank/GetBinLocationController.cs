@@ -24,5 +24,12 @@ namespace BarCodeAPIService.Controllers.Bank
             return Ok(a);
         }
 
+        [HttpGet("GetBinLocationCounting/{whscode}/{iyear}")]
+        public async Task<IActionResult> GetBinLocationCountingAsync(string whscode, string iyear)
+        {
+            var a = await getBinLocation.responseGetBinLocationCounting(whscode, iyear);
+            return Ok(a);
+        }
+
     }
 }

@@ -1125,6 +1125,16 @@
                 var sSerial = strArr[2];
                 var sBatchSerial;
 
+                var sArr3 = strArr[3];
+                var sQty;
+
+                if (sArr3 !== "") {
+                    sQty = sArr3.substring(3, 9);
+                    sQty = parseFloat(sQty);
+                } else {
+                    sQty = document.getElementById("txtQuantity01").value;
+                }
+
                 $('#txtScanBarCode01').val("");
                 $('#txtScanBarCode01').focus();
 
@@ -1166,7 +1176,7 @@
                                     //=========================
                                     var bItemCode = jqueryXml[0].data[0].itemCode;
                                     var bItemName = jqueryXml[0].data[0].itemName;
-                                    var bQuantity = document.getElementById("txtQuantity01").value;
+                                    var bQuantity = sQty;
                                     var bWhsCode = jqueryXml[0].data[0].whsCode;
                                     var bWhsEntry = jqueryXml[0].data[0].whsEntry;
                                     var bBinCode = jqueryXml[0].data[0].binCode;
@@ -1191,7 +1201,7 @@
                                             '',
                                             bItemCode,
                                             bItemName,
-                                            $('#txtQuantity01').val(),
+                                            bQuantity,
                                             $('#FromWhsCode').val(),
                                             bBinEntry,
                                             $('#ToWhsCode').val(),
@@ -1230,7 +1240,7 @@
                                         //=========================
                                         var bItemCode = jqueryXml[0].data[0].itemCode;
                                         var bItemName = jqueryXml[0].data[0].itemName;
-                                        var bQuantity = document.getElementById("txtQuantity01").value;
+                                        var bQuantity = sQty;
                                         var bWhsCode = jqueryXml[0].data[0].whsCode;
                                         var bWhsEntry = jqueryXml[0].data[0].whsEntry;
                                         var bBinCode = jqueryXml[0].data[0].binCode;
@@ -1262,7 +1272,7 @@
                                                 '',
                                                 bItemCode,
                                                 bItemName,
-                                                $('#txtQuantity01').val(),
+                                                bQuantity,
                                                 $('#FromWhsCode').val(),
                                                 bBinEntry,
                                                 $('#ToWhsCode').val(),
@@ -1304,7 +1314,7 @@
 
                                     var bItemCode = jqueryXml[0].data[0].itemCode;
                                     var bItemName = jqueryXml[0].data[0].itemName;
-                                    var bQuantity = document.getElementById("txtQuantity01").value;
+                                    var bQuantity = sQty;
                                     var bWhsCode = jqueryXml[0].data[0].whsCode;
                                     var bWhsEntry = jqueryXml[0].data[0].whsEntry;
                                     var bBinCode = jqueryXml[0].data[0].binCode;
@@ -1326,7 +1336,7 @@
                                             '',
                                             bItemCode,
                                             bItemName,
-                                            $('#txtQuantity01').val(),
+                                            bQuantity,
                                             $('#FromWhsCode').val(),
                                             bBinEntry,
                                             $('#ToWhsCode').val(),

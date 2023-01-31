@@ -632,7 +632,7 @@
                     itemLines.unitS = number1;
                     itemLines.unitB = number2;                    
                     itemLines.concatText = "- " + $('#ItemCode').val() + "\n- " + $('#ItemName').val() + "\n- " + $('#ProductGroup').val();
-                    itemLines.concatText2 = $('#ItemCode').val() + ";" + $('#batchSN').val() + ";QTY" + number1 + ";" + ";" + i.toString().padStart(4, '0') + "";
+                    itemLines.concatText2 = $('#ItemCode').val() + ";" + $('#batchSN').val() + ";;QTY" + number1 + ";" + ";" + i.toString().padStart(4, '0') + "";
                     allitemLInes.push(itemLines);
                     HeaderLs.push(itemLines);
                     table.rows.add(allitemLInes).draw(false);

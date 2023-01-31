@@ -1127,12 +1127,15 @@
 
                 var sArr3 = strArr[3];
                 var sQty;
+                let lcase1 = sArr3.toLowerCase();
+                let iQTY = lcase1.slice(0, 3);
 
-                if (sArr3 !== "") {
+                if (iQTY != "qty") {
+                    sQty = document.getElementById("txtQuantity01").value;
+                    sQty = parseFloat(sQty);
+                } else if (iQTY == "qty") {
                     sQty = sArr3.substring(3, 9);
                     sQty = parseFloat(sQty);
-                } else {
-                    sQty = document.getElementById("txtQuantity01").value;
                 }
 
                 $('#txtScanBarCode01').val("");

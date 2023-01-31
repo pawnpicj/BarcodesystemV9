@@ -432,7 +432,6 @@
                                 </div>
                                 <br>
                                 @*<button class="btn btn-warning" id="btnSearch" style="width:100%" onclick="fncGetBinCounted();"><b>Search</b></button>*@
-
                             </div>
                         </div>
                         <hr>
@@ -830,16 +829,25 @@
 <script src="~/js/Array.js"></script>
 <script type="text/javascript">
     document.getElementById("frmLoading").style.display = "block";
-
     function ClearBinCode() {
         document.getElementById("txtBinCode").value = '';
         document.getElementById("txtBinName").value = '';
     }
 
+    console.log("Page path is: " + window.location.pathname);
+    var fpath = window.location.pathname
+    var fjs;
+    if (fpath.substring(1, 6) === "SAPUI") {
+        fjs = "http://203.151.171.116/SAPUI/js/setup-inc.json"
+    } else {
+        fjs = "../../js/setup-inc.json";
+    }
+
     var oXHR = new XMLHttpRequest();
     console.log(oXHR);
     oXHR.onreadystatechange = reportStatus;
-    oXHR.open("GET", "../../js/setup-inc.json", true);  // get json file.
+    //oXHR.open("GET", "../../js/setup-inc.json", true);  // get json file.
+    oXHR.open("GET", fjs, true);  // get json file.
     oXHR.send();
 
     function reportStatus() {

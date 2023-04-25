@@ -15,12 +15,15 @@ namespace BarCodeLibrary.Request.SAP
         public DateTime DocDate { get; set; }
         public DateTime TaxDate { get; set; }
 
+        public string ShipToCode { get; set; }
+        public string Address { get; set; }
+        
         public string FromWhsCode { get; set; }
         public string ToWhsCode { get; set; }
         public string ToBinCode { get; set; }
         public int ToBinEntry { get; set; }
 
-        public string SalesEmployeeCode { get; set; }
+        public int SalesEmployeeCode { get; set; }
 
         public string Comments { get; set; }
         public string JournalRemark { get; set; }
@@ -76,6 +79,7 @@ namespace BarCodeLibrary.Request.SAP
     {
         public string ItemCode { get; set; }
         public string BatchNumber { get; set; }
+        public int fromBinEntryX { get; set; }
         public int Quantity { get; set; }
         public string ProductType { get; set; }
     }
@@ -84,6 +88,7 @@ namespace BarCodeLibrary.Request.SAP
     {
         public string ItemCode { get; set; }
         public string SerialNumber { get; set; }
+        public int fromBinEntryX { get; set; }
         public int Quantity { get; set; }
         public string ProductType { get; set; }
     }

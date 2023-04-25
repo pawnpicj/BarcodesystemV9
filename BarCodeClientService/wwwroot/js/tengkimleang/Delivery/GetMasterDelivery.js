@@ -80,10 +80,11 @@
             dataType: "JSON",
             success: function(data) {
                 LCopyFromPO = data;
-                console.log(data);
+                //console.log("getPurchaseOrder");
+                //console.log(data);
                 TbCopyFromPO.clear();
                 TbCopyFromPO.rows.add(LCopyFromPO);
-                TbCopyFromPO.search("").columns().search("").draw();
+                TbCopyFromPO.search('').draw();
             },
             error: function(erro) {
                 console.log(erro.responseText);

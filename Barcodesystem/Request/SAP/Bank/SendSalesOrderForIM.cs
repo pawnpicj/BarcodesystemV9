@@ -15,6 +15,8 @@ namespace BarCodeLibrary.Request.SAP
         public string CurrencyCode { get; set; }
         public string Remark { get; set; }
         public string SlpCode { get; set; }
+        public string Patient { get; set; }
+        public string TranferNo { get; set; }
         public List<SendSalesOrderLine> Lines { get; set; }
     }
 
@@ -28,6 +30,8 @@ namespace BarCodeLibrary.Request.SAP
         public double Price { get; set; }
         public double PriceBeforeDis { get; set; }
         public string WhsCode { get; set; }
+        public int BinEntry { get; set; }
+        public string BinCode { get; set; }
         public string UomName { get; set; }
         public int LineNum { get; set; }
         public string U_TranferNo { get; set; }

@@ -5,20 +5,23 @@ let GetMasterData = {
         GetMasterData.overallFunction.getSeries(DocDate, currentDate, url, ObjectCode);
     },
     getSaleEmployee(url) {
+        console.log("SaleEmployee");
         GetMasterData.overallFunction.getSaleEmployee(url);
     },
     getCurrency(url, cardCode) {
+        console.log("Currency");
         GetMasterData.overallFunction.getCurrency(url, cardCode);
     },
     getCustomer(url, cusType) {
+        console.log("Customer");
         GetMasterData.overallFunction.getCustomer(url,cusType);
     },
     getPurchaseOrder(url, cardCode) {
-        console.log("Hello");
+        console.log("PurchaseOrder");
         GetMasterData.overallFunction.getPurchaseOrder(url, cardCode);
     },
     getGoodReceiptPO(url, cardCode) {
-        console.log("Hello");
+        console.log("GoodReceiptPO");
         GetMasterData.overallFunction.getGoodReceiptPO(url, cardCode);
     },
     getTaxCode(url) {
@@ -39,6 +42,8 @@ let DataTableInit = {
             bFilter: false,
             bInfo: false,
             bPaginate: false,
+            bSelect: true,
+            ordering: false,
             data: LinesAR,
             columns:
                 [
@@ -67,14 +72,19 @@ let DataTableInit = {
                         data: "Quantity", autoWidth: true
                         //render: function (data, type, full, meta) { return '<input type="number" class="clsinput" style="padding:0px; position:absolute;width:40px;border:none;" onchange="QtyChange(' + meta.row + ')" id="tbQty' + meta.row + '" value="' + full.Quantity + '" readonly=true; >'; }, autoWidth: true
                     },
+                    { data: "InputQuantity", autoWidth: true },
                     { data: "PriceBeforeDis", autoWidth: true },
                     { data: "LineTotal", autoWidth: true },
                     { data: "UomName", autoWidth: true },
                     { data: "TaxCode", autoWidth: true },
-                    { data: "Whs", autoWidth: true },                    
+                    { data: "Whs", autoWidth: true },
+                    { data: "Patient", autoWidth: true },
+                    { data: "TranferNo", autoWidth: true },
                     {
-                        render: function (data, type, full, meta) { return '<button class="btn-sm btn-danger" style="margin-left: 40%;" onClick="Remove(' + meta.row + ')"><i class="fas fa-trash-alt"></i></button>'; }
+                        data: "LineNo",
+                        render: function (data, type, full, meta) { return meta.row; }
                     }
+                    
                 ],
             rowCallback: function (row, data, index) {
                 //$('td', row).css('background-color', '#ffffff');
@@ -103,8 +113,8 @@ let DataTableInit = {
     },
     TablePurchaseOrder() {
         $('#TbCopyFromPO').DataTable({
-
             responsive: true,
+            ordering: false,
             bLengthChange: false,
             binfo: false,
             data: LCopyFromPO,

@@ -52,7 +52,12 @@ namespace BarCodeClientService.Controllers
         {
             return View();
         }
-        
+
+        public IActionResult formRptTransferIM()
+        {
+            return View();
+        }
+
 
         public IActionResult FrmPrintForTransfer()
         {
@@ -74,6 +79,12 @@ namespace BarCodeClientService.Controllers
         public IActionResult GetSaleEmployee()
         {
             var a = API.Read<ResponseOSLPGetSalesEmployee>("api/SaleEmployee");
+            return Ok(a);
+        }
+
+        public IActionResult GetOBinByCode(string binCode) {
+            //api/BinCode/GetBinCodeByCode/01-A01-01-A02
+            var a = API.Read<ResponseOBINGetBinCode>("api/BinCode/GetBinCodeByCode/" + binCode);
             return Ok(a);
         }
 
@@ -300,6 +311,20 @@ namespace BarCodeClientService.Controllers
             return Ok(a);
         }
 
+        //Report Transfer IM
+        public IActionResult RptTransferIM(string fromDate, string toDate)
+        {
+            var a = API.Read<ResponseIMReport>("api/InventoryTransferIM/RptTransferIM/" + fromDate + "/" + toDate);
+            if (a.ErrorCode == 0)
+            {
+                return Ok(a.Data);
+            }
+            else
+            {
+                return BadRequest(a.ErrorMessage);
+            }
+        }
+
         //Open Sales Order for Use Notify
         [HttpGet]
         public IActionResult GetIMByCus(string cusCode)
@@ -314,7 +339,6 @@ namespace BarCodeClientService.Controllers
                 return BadRequest(a.ErrorMessage);
             }
         }
-
 
         [HttpPost]
         public IActionResult PrintItemLablePDFAction(ResponsePrintLableINF print)

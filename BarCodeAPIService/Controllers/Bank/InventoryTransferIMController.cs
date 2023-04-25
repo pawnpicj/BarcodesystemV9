@@ -42,5 +42,14 @@ namespace BarCodeAPIService.Controllers
                 return Ok(a);
             return BadRequest(a);
         }
+
+        [HttpGet("RptTransferIM/{fromDate}/{toDate}")]
+        public async Task<IActionResult> RptTransferIMAsync(string fromDate, string toDate)
+        {
+            var a = await inventoryTransferIMService.responseIMReport(fromDate, toDate);
+            if (a.ErrorCode == 0)
+                return Ok(a);
+            return BadRequest(a);
+        }
     }
 }

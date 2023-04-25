@@ -1,0 +1,333 @@
+﻿@{
+    ViewData["Title"] = "Inventory Transfer IM Report";
+    var dt = DateTime.Now;
+    ViewData["Date"] = dt.ToShortDateString();
+}
+
+<link href="~/css/styles.css" rel="stylesheet" />
+<link href="~/css/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/css/DataTable/rowReorder.dataTables.min.css" rel="stylesheet" />
+<link href="~/css/buttons.dataTables.min.css" rel="stylesheet" />
+<link href="~/css/rowGroup.dataTables.min.css" rel="stylesheet" />
+
+@*<link href="~/css/DataTable/responsive.dataTables.min.css" rel="stylesheet" />*@
+
+<script src="~/css/DataTable/jquery-3.3.1.js"></script>
+@*<script src="~/css/DataTable/jquery-3.5.1.js"></script>*@
+<script src="~/css/DataTable/jquery.dataTables.min.js"></script>
+<script src="~/css/DataTable/dataTables.rowReorder.min.js"></script>
+<script src="~/css/DataTable/moment.min.js"></script>
+<script src="~/css/DataTable/datetime-moment.js"></script>
+<script src="~/css/DataTable/dataTables.buttons.min.js"></script>
+<script src="~/css/DataTable/dataTables.select.min.js"></script>
+<script src="~/css/DataTable/dataTables.dateTime.min.js"></script>
+<script src="~/css/DataTable/dataTables.editor.min.js"></script>
+
+<script src="~/js/pdfmake/dataTables.rowGroup.min.js"></script>
+<script src="~/js/pdfmake/jszip.min.js"></script>
+<script src="~/js/pdfmake/pdfmake.min.js"></script>
+<script src="~/js/pdfmake/vfs_fonts.js"></script>
+<script src="~/js/pdfmake/buttons.html5.min.js"></script>
+<script src="~/js/pdfmake/buttons.print.min.js"></script>
+
+<style>
+    tr.selected {
+        background: red;
+        color: red;
+    }
+
+    #main {
+        position: absolute;
+    }
+
+    .color_tap {
+        background-color: #5f95c3;
+        color: #ffffff;
+        font-weight: 600;
+        margin-right: 1px;
+        min-width: 60px;
+    }
+
+    .nav-tabs .nav-link {
+        border: 1px solid rgb(193, 193, 193);
+        border-radius: 0px 12px 0px 0px;
+        height: 40px;
+        line-height: 20px;
+    }
+
+    .modal {
+        z-index: 200000;
+    }
+
+    .modal-header {
+        background: #5f95c3;
+        color: #ffffff;
+        height: 40px;
+    }
+
+        .modal-header b {
+            margin-top: -10px;
+        }
+
+    #TbAR table tr td {
+        height: 35px;
+        margin-left: 15px;
+        margin-top: 10px;
+        padding: 0px !important;
+        position: relative !important;
+        /*background-color: none;*/
+    }
+
+    table {
+        width: 90%;
+    }
+
+        table tbody tr td {
+            background-color: #ffffff;
+            color: black;
+        }
+
+        table tbody tr.selected td {
+            background: #94d8e1;
+            color: red;
+        }
+
+            table tbody tr.selected td .clsinput {
+                background: #94d8e1;
+                color: red;
+            }
+
+    input[type="radio"] {
+        margin-top: -1px;
+        vertical-align: middle;
+        height: 28px;
+        width: 28px;
+    }
+
+    .lbl_rdo {
+        font-size: 18px;
+        /*font-weight: bold;*/
+    }
+
+    .clsinput:focus {
+        outline: none;
+    }
+
+    /* =================================================== */
+    .cover-spin {
+        position: fixed;
+        width: 100%;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background-color: rgba(255,255,255,0.7);
+        z-index: 9999;
+        display: none;
+    }
+
+    @@-webkit-keyframes spin {
+        from {
+            -webkit-transform: rotate(0deg);
+        }
+
+        to {
+            -webkit-transform: rotate(360deg);
+        }
+    }
+
+    @@keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .cover-spin::after {
+        content: '';
+        display: block;
+        position: absolute;
+        left: 48%;
+        top: 40%;
+        width: 40px;
+        height: 40px;
+        border-style: solid;
+        border-color: black;
+        border-top-color: transparent;
+        border-width: 4px;
+        border-radius: 50%;
+        -webkit-animation: spin .8s linear infinite;
+        animation: spin .8s linear infinite;
+    }
+    /* =================================================== */
+
+    th {
+        background-image: none;
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
+        font-size: 12px;
+        text-align: center;
+    }
+
+    .bgGray {
+        background-color: #f0eff1;
+    }
+</style>
+<div id="#main">
+
+    <div id="frmLoading" class="cover-spin" style="display:none"></div>
+
+    <div><h4>Inventory Transfer IM Report</h4></div>
+    From : <input type="date" id="txtFromDate" />&nbsp;&nbsp;&nbsp;
+    To : <input type="date" id="txtToDate" />
+         <button class="btn-sm btn-danger" onclick="fncGetRptIM();">&nbsp;Search&nbsp;</button>
+
+    <div class="table-responsive-sm">
+        <table id="TbRptIM" class="table table-bordered  table-striped table-hover display table-sm" style="width: 100%; background: #f0eff1; color: #696969;">
+            <thead>
+                <tr>
+                    <th>CardCode</th>
+                    <th>CardName</th>
+                    <th>DocNum</th>
+                    <th>DocDate</th>
+                    <th>BinLocaton</th>
+                    <th>ItemCode</th>
+                    <th>Description</th>
+                    <th>Batch/Serial</th>
+                    <th>BN/SN</th>
+                    <th>Expire Date</th>
+                    <th>Quantity</th>
+                    <th>Uom</th>
+                    <th>Price</th>
+                    <th>DocTotal</th>
+                    <th>Balance</th>
+                    <th>Sale</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var now = new Date();
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+        var today1 = now.getFullYear() + "-" + (month) + "-01";
+        var today2 = now.getFullYear() + "-" + (month) + "-" + (day);
+        //$('#txtFromDate').val(today1);
+        //$('#txtToDate').val(today2);
+    });
+
+    var LData = [];
+
+    var collapsedGroups = {};
+    var tbRptIM = $('#TbRptIM').DataTable({
+        bLengthChange: false,
+        binfo: false,
+        data: LData,
+        columns: [
+            { data: "cardCode" },
+            { data: "cardName" },
+            { data: "docNum" },
+            { data: "docDate" },
+            { data: "fisrtBin" },
+            { data: "itemCode" },
+            { data: "dscription" },
+            { data: "isBtchSerNum" },
+            { data: "batchSerialNumber" },
+            { data: "expDate" },
+            { data: "quantity" },
+            { data: "uomCode" },
+            { data: "price", render: $.fn.dataTable.render.number(',', '.', 2, '') },
+            { data: "docTotal", render: $.fn.dataTable.render.number(',', '.', 2, '')},
+            { data: "balance" },
+            { data: "slpName" }
+        ],
+        "drawCallback": function (settings) {
+            var api = this.api();
+            var rows = api.rows({ page: 'current' }).nodes();
+            var last = null;
+            this.api().rows({ page: 'current' }).every(function (rowIdx, tableLoop, rowLoop) {
+                var group = this.cell(rowIdx, 2).render('display');
+                console.log("ROW " + rowLoop + ": [" + this.cell(rowIdx, 2).render('display') + "]");
+                if (last !== group) {
+                    $(rows).eq(rowLoop).before(
+                        '<tr class="group"><td colspan="16" class="bgGray">' + group + '</td></tr>'
+                    );
+                    last = group;
+                }
+
+            });
+        },
+        dom: 'Bfrtip',
+        buttons: [
+            'excel'
+        ],
+        autoWidth: true,
+        pageLength: 30,
+        select: false,
+        paging: true,
+        ordering: false,
+    });
+    tbRptIM.columns([2]).visible(false, false);
+
+
+
+
+    function fncGetRptIM() {
+        document.getElementById("frmLoading").style.display = "block";
+        //txtFromDate, txtToDate
+        var cFromDate = $("#txtFromDate").val();
+        var cToDate = $("#txtToDate").val();
+        var FromDateX = ""
+        var ToDateX =""
+
+        if (cFromDate !== "" && cToDate !== "") {
+
+            var nowFromDate = new Date(cFromDate);
+            var dayFromDate = ("0" + nowFromDate.getDate()).slice(-2);
+            var monthFromDate = ("0" + (nowFromDate.getMonth() + 1)).slice(-2);
+            var yearFromDate = nowFromDate.getFullYear();
+            FromDateX = dayFromDate + monthFromDate + yearFromDate
+
+            var nowToDate = new Date(cToDate);
+            var dayToDate = ("0" + nowToDate.getDate()).slice(-2);
+            var monthToDate = ("0" + (nowToDate.getMonth() + 1)).slice(-2);
+            var yearToDate = nowToDate.getFullYear();
+            ToDateX = dayToDate + monthToDate + yearToDate
+            console.log(FromDateX + "-" + ToDateX);
+
+            tbRptIM.clear().draw();
+            var Ltmp = [];
+            var tmpAdd = {};
+            $.ajax({
+                url: '@Url.Action("RptTransferIM", "Inventory")',
+                data: { fromDate: FromDateX, toDate: ToDateX },
+                type: "GET",
+                dataType: "JSON",
+                "dataSrc": 'data',
+                success: function (data) {
+                    console.log("Successfully.");
+                    console.log(data);
+                    tbRptIM.rows.add(data);
+                    tbRptIM.search('').draw();
+                    Ltmp = [];
+                    tbRptIM.rowGroup().enable().draw();
+                    document.getElementById("frmLoading").style.display = "none";
+                }
+            });
+
+        } else {
+            alert("กรุณาเลือกวันที่");
+        }
+
+
+    }
+
+
+</script>

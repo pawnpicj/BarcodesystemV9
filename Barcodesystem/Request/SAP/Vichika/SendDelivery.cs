@@ -26,7 +26,10 @@ namespace BarCodeLibrary.Request.SAP
         public string Whs { get; set; }
         public string UomName { get; set; }
         public string DocEntry { get; set; }
+        public string Patient { get; set; }
+        public string TranferNo { get; set; }
         public int LineNum { get; set; }
+        public string YesNo { get; set; }
         public List<GetSerialDelivery> Serial { get; set; }
         public List<GetBatchDelivery> Batches { get; set; }
     }

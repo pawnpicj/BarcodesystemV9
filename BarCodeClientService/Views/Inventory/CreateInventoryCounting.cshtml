@@ -1675,6 +1675,11 @@
             } else if(iQTY == "qty") {
                 sQty = sArr3.substring(3, 9);
                 sQty = parseFloat(sQty);
+                if (isNaN(sQty)) {
+                    sQty = document.getElementById("txtQuantity01").value;
+                } else {
+                    sQty = 0;
+                }
             }
 
             var sBatchSerial;
@@ -2161,16 +2166,16 @@
                 var productType = "";
                 var batchSerialNo = "";
 
-                console.log('Date pure....');
-                console.log(data);
+                //console.log('Date pure....');
+                //console.log(data);
 
                 if (data[8] != "") {
                     productType = "b";
-                    batchSerialNo = data[8];
+                    batchSerialNo = data[1] + ";" + data[8];
                 } else {
                     if (data[9] != "") {
                         productType = "s";
-                        batchSerialNo = data[9];
+                        batchSerialNo = data[1] + ";" + data[9];
                     }
                 }
 

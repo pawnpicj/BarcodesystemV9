@@ -15,9 +15,9 @@ namespace BarCodeLibrary.Respones.SAP
         public int DocEntry { get; set; }
         public string CardCode { get; set; }
         public string CardName { get; set; }
-        public int CntctCode { get; set; }
+        public string CntctCode { get; set; }
         public string NumAtCard { get; set; }
-        public int DocNum { get; set; }
+        public string DocNum { get; set; }
         public string DocStatus { get; set; }
         public string DocDate { get; set; }
         public string DocDueDate { get; set; }
@@ -25,6 +25,9 @@ namespace BarCodeLibrary.Respones.SAP
         public double DocTotal { get; set; }
         public double DiscPrcnt { get; set; }
         public double DiscountAMT { get; set; }
+        public string ToBinLocation { get; set; }
+        public int SlpCode { get; set; }
+        public string SlpName { get; set; }
         public List<RDR1> Line { get; set; }
     }
 
@@ -33,6 +36,7 @@ namespace BarCodeLibrary.Respones.SAP
         public string ItemCode { get; set; }
         public string Description { get; set; }
         public double Quatity { get; set; }
+        public double InputQuantity { get; set; }        
         public double Price { get; set; }
         public double PriceBeforeDis { get; set; }
         public double DiscPrcnt { get; set; }
@@ -43,6 +47,8 @@ namespace BarCodeLibrary.Respones.SAP
         public string ManageItem { get; set; }
         public string UomName { get; set; }
         public string TaxCode { get; set; }
+        public string Patient { get; set; }
+        public string TranferNo { get; set; }
         public int LineNum { get; set; }
     }
 }

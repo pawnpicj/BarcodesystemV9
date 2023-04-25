@@ -24,6 +24,7 @@ namespace BarCodeLibrary.Respones.SAP
         public int ToBinEntry { get; set; }
         public string ToBinCode { get; set; }
         public string LoanNum { get; set; }
+        public string Patient { get; set; }
         public List<WTR1IM> Line { get; set; }
     }
 
@@ -37,6 +38,8 @@ namespace BarCodeLibrary.Respones.SAP
         public double Price { get; set; }
         public double PriceBefDi { get; set; }
         public string WhsCode { get; set; }
+        public int BinEntry { get; set; }
+        public string BinCode { get; set; }
         public double LineTotal { get; set; }
         public int UomEntry { get; set; }
         public string UomCode { get; set; }

@@ -19,6 +19,7 @@ namespace BarCodeAPIService.Service
     {
         private int ErrCode;
         private string ErrMsg;
+
         public Task<ResponseDelivery> PostDelivery(SendDelivery sendDelivery)
         {
             try
@@ -48,39 +49,69 @@ namespace BarCodeAPIService.Service
                         + DateTime.Today.Millisecond;
                     foreach (var l in sendDelivery.Lines)
                     {
-                        oDeliveryDocuments.Lines.ItemCode = l.ItemCode;
-                        oDeliveryDocuments.Lines.Quantity = l.Quantity;
-                        oDeliveryDocuments.Lines.UnitPrice = l.PriceBeforeDis;
-                        oDeliveryDocuments.Lines.DiscountPercent = l.Discount;
-                        oDeliveryDocuments.Lines.WarehouseCode = l.Whs;
-                       // oDeliveryDocuments.Lines.UoMEntry = Convert.ToInt32(l.UomName);
-                        if (l.DocEntry != null)
+                        if(l.YesNo == "Yes")
                         {
-                            oDeliveryDocuments.Lines.BaseEntry = Convert.ToInt32(l.DocEntry);
-                            oDeliveryDocuments.Lines.BaseType = 17;
-                            oDeliveryDocuments.Lines.BaseLine = l.LineNum;
+                            //Start Line
+
+                            oDeliveryDocuments.Lines.ItemCode = l.ItemCode;
+                            oDeliveryDocuments.Lines.Quantity = l.Quantity;
+                            oDeliveryDocuments.Lines.UnitPrice = l.PriceBeforeDis;
+                            oDeliveryDocuments.Lines.DiscountPercent = l.Discount;
+                            oDeliveryDocuments.Lines.WarehouseCode = l.Whs;
+
+                            string strPatient = "";
+                            string xPatient = "";
+                            strPatient = l.Patient;
+                            if (strPatient is not null)
+                            {
+                                xPatient = strPatient;
+                            }
+                            else
+                            {
+                                xPatient = " ";
+                            }
+                            oDeliveryDocuments.Lines.UserFields.Fields.Item("U_Patient").Value = xPatient;
+
+                            string strTranferNo = "";
+                            string xTranferNo = "";
+                            strTranferNo = l.TranferNo;
+                            if (strTranferNo is not null)
+                            {
+                                oDeliveryDocuments.Lines.UserFields.Fields.Item("U_TranferNo").Value = xTranferNo;
+                            }
+
+                            // oDeliveryDocuments.Lines.UoMEntry = Convert.ToInt32(l.UomName);
+                            if (l.DocEntry != null)
+                            {
+                                oDeliveryDocuments.Lines.BaseEntry = Convert.ToInt32(l.DocEntry);
+                                oDeliveryDocuments.Lines.BaseType = 17;
+                                oDeliveryDocuments.Lines.BaseLine = l.LineNum;
+                            }
+
+                            if (l.ManageItem == "S")
+                                foreach (var serial in l.Serial)
+                                {
+                                    oDeliveryDocuments.Lines.SerialNumbers.Quantity = 1;
+                                    //oGoodReceiptPO.Lines.SerialNumbers.ManufacturerSerialNumber = serial.MfrSerialNo;
+                                    oDeliveryDocuments.Lines.SerialNumbers.InternalSerialNumber = serial.SerialNumber;
+                                    oDeliveryDocuments.Lines.SerialNumbers.Add();
+                                }
+                            else if (l.ManageItem == "B")
+                                foreach (var batch in l.Batches)
+                                {
+                                    //oGoodReceiptPO.Lines.BatchNumbers.AddmisionDate = batch.AdmissionDate;
+                                    //oDeliveryDocuments.Lines.BatchNumbers.ExpiryDate = Convert.ToDateTime(batch.ExpDate);
+                                    //oGoodReceiptPO.Lines.BatchNumbers.ManufacturingDate = batch.MfrDate;
+                                    oDeliveryDocuments.Lines.BatchNumbers.Quantity = batch.Qty;
+                                    oDeliveryDocuments.Lines.BatchNumbers.BatchNumber = batch.BatchNumber;
+                                    oDeliveryDocuments.Lines.BatchNumbers.Add();
+                                }
+
+                            oDeliveryDocuments.Lines.Add();
+
+                            //End Line
                         }
 
-                        if (l.ManageItem == "S")
-                            foreach (var serial in l.Serial)
-                            {
-                                oDeliveryDocuments.Lines.SerialNumbers.Quantity = 1;
-                                //oGoodReceiptPO.Lines.SerialNumbers.ManufacturerSerialNumber = serial.MfrSerialNo;
-                                oDeliveryDocuments.Lines.SerialNumbers.InternalSerialNumber = serial.SerialNumber;
-                                oDeliveryDocuments.Lines.SerialNumbers.Add();
-                            }
-                        else if (l.ManageItem == "B")
-                            foreach (var batch in l.Batches)
-                            {
-                                //oGoodReceiptPO.Lines.BatchNumbers.AddmisionDate = batch.AdmissionDate;
-                                oDeliveryDocuments.Lines.BatchNumbers.ExpiryDate = Convert.ToDateTime(batch.ExpDate);
-                                //oGoodReceiptPO.Lines.BatchNumbers.ManufacturingDate = batch.MfrDate;
-                                oDeliveryDocuments.Lines.BatchNumbers.Quantity = batch.Qty;
-                                oDeliveryDocuments.Lines.BatchNumbers.BatchNumber = batch.BatchNumber;
-                                oDeliveryDocuments.Lines.BatchNumbers.Add();
-                            }
-
-                        oDeliveryDocuments.Lines.Add();
                     }
 
                     Retval = oDeliveryDocuments.Add();
@@ -188,7 +219,7 @@ namespace BarCodeAPIService.Service
                     {
                         dtLine = new DataTable();
                         Query =
-                            $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetSOLine}','{row["DocENtry"]}','','','','')";
+                            $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetSOLine}','{row["DocEntry"]}','','','','')";
                         login.AD = new OdbcDataAdapter(Query, login.CN);
                         login.AD.Fill(dtLine);
                         pOR1s = new List<RDR1>();
@@ -198,6 +229,7 @@ namespace BarCodeAPIService.Service
                                 ItemCode = drLine["ItemCode"].ToString(),
                                 Description = drLine["Description"].ToString(),
                                 Quatity = Convert.ToDouble(drLine["Quantity"].ToString()),
+                                InputQuantity = Convert.ToDouble(drLine["InputQuantity"].ToString()),
                                 Price = Convert.ToDouble(drLine["Price"].ToString()),
                                 PriceBeforeDis = Convert.ToDouble(drLine["PriceBefDi"].ToString()),
                                 DiscPrcnt = Convert.ToDouble(drLine["DiscPrcnt"].ToString()),
@@ -208,6 +240,8 @@ namespace BarCodeAPIService.Service
                                 ManageItem = drLine["ManageItem"].ToString(),
                                 UomName = drLine["UomName"].ToString(),
                                 TaxCode = drLine["TaxCode"].ToString(),
+                                Patient = drLine["Patient"].ToString(),
+                                TranferNo = drLine["TranferNo"].ToString(),
                                 LineNum = Convert.ToInt32(drLine["LineNum"].ToString())
                             });
                         oPORs.Add(new ORDR
@@ -215,16 +249,19 @@ namespace BarCodeAPIService.Service
                             DocEntry = Convert.ToInt32(row["DocENtry"].ToString()),
                             CardCode = row["CardCode"].ToString(),
                             CardName = row["CardName"].ToString(),
-                            CntctCode = Convert.ToInt32(row["CntctCode"].ToString()),
+                            CntctCode = row["CntctCode"].ToString(),
                             NumAtCard = row["NumAtCard"].ToString(),
-                            DocNum = Convert.ToInt32(row["DocNum"].ToString()),
+                            DocNum = row["DocNum"].ToString(),
                             DocStatus = row["DocStatus"].ToString(),
                             DocDate = Convert.ToDateTime(row["DocDate"]).ToShortDateString(),
                             DocDueDate = Convert.ToDateTime(row["DocDueDate"]).ToShortDateString(),
                             TaxDate = Convert.ToDateTime(row["TaxDate"]).ToShortDateString(),
                             DocTotal = Convert.ToDouble(row["DocTotal"]),
                             DiscPrcnt = Convert.ToDouble(row["DiscPrcnt"]),
-                            DiscountAMT = Convert.ToDouble(row["DiscSum"].ToString()),
+                            DiscountAMT = Convert.ToDouble(row["DiscSum"].ToString()),                            
+                            ToBinLocation = row["ToBinLocation"].ToString(),
+                            SlpCode = Convert.ToInt32(row["SlpCode"].ToString()),
+                            SlpName = row["SlpName"].ToString(),
                             Line = pOR1s.ToList()
                         });
                     }
@@ -304,6 +341,7 @@ namespace BarCodeAPIService.Service
                 });
             }
         }
+        
         public Task<ResponseGetSerial> responseGetSerial(string ItemCode, string WhsCode)
         {
             var serialGets = new List<GetSerial>();
@@ -349,6 +387,102 @@ namespace BarCodeAPIService.Service
                     Data = null
                 });
             }
+        }
+
+        public Task<ResponseGetORDR> responseGetSO(string cardCode)
+        {
+            var headSO = new List<ORDR>();
+            var lineSO = new List<RDR1>();
+            var dt = new DataTable();
+            var dtLine = new DataTable();
+            try
+            {
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
+                if (login.lErrCode == 0)
+                {
+                    var Query =
+                        $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_TENGKIMLEANG ('ORDR','-','','','','')";
+                    login.AD = new OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
+                    {
+
+                        //Start Line
+                        dtLine = new DataTable();
+                        Query =
+                            $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_TENGKIMLEANG ('RDR1','{row["DocEntry"]}','','','','')";
+                        login.AD = new OdbcDataAdapter(Query, login.CN);
+                        login.AD.Fill(dtLine);
+                        lineSO = new List<RDR1>();
+                        foreach (DataRow drLine in dtLine.Rows)
+                            lineSO.Add(new RDR1
+                            {
+                                //DataLine
+                                ItemCode = drLine["ItemCode"].ToString(),
+                                Description = drLine["Description"].ToString(),
+                                Quatity = Convert.ToDouble(drLine["Quantity"].ToString()),
+                                Price = Convert.ToDouble(drLine["Price"].ToString()),
+                                PriceBeforeDis = Convert.ToDouble(drLine["PriceBefDi"].ToString()),
+                                DiscPrcnt = Convert.ToDouble(drLine["DiscPrcnt"].ToString()),
+                                DiscountAMT = Convert.ToDouble(drLine["DiscountAmt"].ToString()),
+                                VatGroup = drLine["LineTotal"].ToString(),
+                                WhsCode = drLine["WhsCode"].ToString(),
+                                LineTotal = Convert.ToDouble(drLine["LineTotal"].ToString()),
+                                ManageItem = drLine["ManageItem"].ToString(),
+                                UomName = drLine["UomName"].ToString(),
+                                TaxCode = drLine["TaxCode"].ToString(),
+                                LineNum = Convert.ToInt32(drLine["LineNum"].ToString())
+
+                            });
+                        //End Line
+
+                        //Start Head
+                        headSO.Add(new ORDR
+                        {
+                            //DataHead
+                            DocEntry = Convert.ToInt32(row["DocEntry"].ToString())
+                            , CardCode = row["CardCode"].ToString()
+                            , CardName = row["CardName"].ToString()
+                            , CntctCode = row["CntctCode"].ToString()
+                            , NumAtCard = row["NumAtCard"].ToString()
+                            , DocNum = row["DocNum"].ToString()
+                            , DocStatus = row["DocStatus"].ToString()
+                            , DocDate = Convert.ToDateTime(row["DocDate"]).ToShortDateString()
+                            , DocDueDate = Convert.ToDateTime(row["DocDueDate"]).ToShortDateString()
+                            , TaxDate = Convert.ToDateTime(row["TaxDate"]).ToShortDateString()
+                            , DocTotal = Convert.ToDouble(row["DocTotal"])
+                            , DiscPrcnt = Convert.ToDouble(row["DiscPrcnt"])
+                            , DiscountAMT = Convert.ToDouble(row["DiscSum"].ToString())
+                            , ToBinLocation = row["ToBinLocation"].ToString()
+                            , Line = lineSO.ToList()
+                        });
+                    }
+                    return Task.FromResult(new ResponseGetORDR
+                    {
+                        ErrorCode = 0,
+                        ErrorMessage = "",
+                        Data = headSO.ToList()
+                    });
+
+                }
+                return Task.FromResult(new ResponseGetORDR
+                {
+                    ErrorCode = login.lErrCode,
+                    ErrorMessage = login.sErrMsg,
+                    Data = null
+                });
+
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseGetORDR
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMessage = ex.Message,
+                    Data = null
+                });
+            }
+
         }
     }
 }

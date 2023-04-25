@@ -51,7 +51,7 @@
     }
 
     /*Laptop*/
-    @@media (min-width:900px) and (max-width:1536px) {
+    @@media (min-width:300px) and (max-width:1920px) {
         #Icon {
             color: #5f95c3;
             font-size: 45px;
@@ -74,18 +74,27 @@
             text-align: center;
             padding-top: 15px;
         }
+
+        .lbh1 {
+            font-weight: bold;
+            text-shadow: 1px 1px #808080;
+            border-top: 1px solid #000000;
+            border-bottom: 1px solid #000000;
+            width: 100%;
+        }
     }
 </style>
 
 <div class="container">
+    <label class="lbh1">Inventory Transfer (IM)</label>
     <div class="row">
-        @* InventoryTransfer (Borrow Bills) *@
+
         <div class="alink col-lg-3">
             <a asp-controller="Inventory" asp-action="CreateInventoryTransferBB">
                 <div class="tabIcon">
                     <div style="text-align:center">
                         <p class="p1">
-                            <b>Inventory Tranfer<br>(Borrow Bills)</b><br>
+                            <b>Inventory Tranfer<br>(IM)</b><br>
                             <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
                         </p>
                     </div>
@@ -93,13 +102,29 @@
             </a>
         </div>
 
-        @* InventoryTransfer (Return Borrow Bills) *@
+        <div class="alink col-lg-3">
+            <a asp-controller="Inventory" asp-action="CreateSONotify">
+                <div class="tabIcon">
+                    <div style="text-align:center">
+                        <p class="p1">
+                            <b>SO for Notify<br>(แจ้งใช้)</b><br>
+                            <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
+                        </p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+    </div>
+
+    <label class="lbh1">Inventory Transfer (CV)</label>
+    <div class="row">
         <div class="alink col-lg-3">
             <a asp-controller="Inventory" asp-action="CreateInventoryTransferRBB">
                 <div class="tabIcon">
                     <div style="text-align:center">
                         <p class="p1">
-                            <b>Inventory Tranfer<br>(Return Borrow Bills)</b><br>
+                            <b>Inventory Tranfer<br>(CV)</b><br>
                             <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
                         </p>
                     </div>
@@ -107,8 +132,26 @@
             </a>
         </div>
 
+    </div>
 
-        @* PrintLableForTransfer *@
+    <label class="lbh1">Inventory Counting</label>
+    <div class="row">
+        <div class="alink col-lg-3">
+            <a asp-controller="Inventory" asp-action="CreateInventoryCounting">
+                <div class="tabIcon">
+                    <div style="text-align:center">
+                        <p class="p1">
+                            <b>Inventory Counting</b><br>
+                            <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
+                        </p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <label class="lbh1">Report</label>
+    <div class="row">
         <div class="alink col-lg-3">
             <a asp-controller="Inventory" asp-action="FrmPrintForTransfer">
                 <div class="tabIcon">
@@ -123,24 +166,11 @@
         </div>
 
         <div class="alink col-lg-3">
-            <a asp-controller="Inventory" asp-action="CreateInventoryCounting">
+            <a asp-controller="Inventory" asp-action="formRptTransferIM">
                 <div class="tabIcon">
                     <div style="text-align:center">
                         <p class="p1">
-                            <b>Inventory Counting</b><br>
-                            <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
-                        </p>
-                    </div>
-                </div>
-            </a>
-        </div>
-
-        <div class="alink col-lg-3">
-            <a asp-controller="Inventory" asp-action="CreateSONotify">
-                <div class="tabIcon">
-                    <div style="text-align:center">
-                        <p class="p1">
-                            <b>SO for Notify</b><br>
+                            <b>Report Inventory Transfer IM</b><br>
                             <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
                         </p>
                     </div>
@@ -149,5 +179,7 @@
         </div>
 
     </div>
+
+
 
 </div>

@@ -19,7 +19,7 @@ namespace BarCodeLibrary.Respones.SAP
         public double U_unitprice { get; set; }
         public string UomCode { get; set; }
         public string unitMsr { get; set; }
-
+        public string Patient { get; set; }
         public string FromWhsCode { get; set; }
         public string FromBinCode { get; set; }
         public int FromBinEntry { get; set; }

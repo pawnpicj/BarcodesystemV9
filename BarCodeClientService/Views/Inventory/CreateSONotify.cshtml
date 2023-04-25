@@ -185,6 +185,18 @@
                 <div class="row">
                     <div class="col-sm-6">
 
+                        Search INF-IM No. :
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <button class="input-group-text" id="Cifr"><i class="fa fa-check"></i></button>
+                            </div>
+                            <input type="text" id="txtDocEntry" disabled size="5" autocomplete="off" value="" />
+                            <input type="text" class="form-control" placeholder="" id="txtDocNum" value="" disabled>
+                            <div class="input-group-append">
+                                <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalInfIM" onclick="getIMByCus()"><i class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+
                         <div>
                             <label style="font-size:18px;font-weight:500">Customer Code :</label>
                             <div class="input-group">
@@ -194,11 +206,11 @@
                                     </button>
                                 </div>
                                 <input type="text" class="form-control" placeholder="Search Customer Code" id="CusID" value="" readonly>
-                                <div class="input-group-append">
-                                    <button class="input-group-text btnModelsCus" data-toggle="modal" data-target="#ModalCusCode">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </div>
+                                @*<div class="input-group-append">
+                    <button class="input-group-text btnModelsCus" data-toggle="modal" data-target="#ModalCusCode">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>*@
                             </div>
                         </div>
 
@@ -209,15 +221,10 @@
                             </div>
                         </div>
 
-                        Search INF-IM No. :
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <button class="input-group-text" id="Cifr"><i class="fa fa-check"></i></button>
-                            </div>
-                            <input type="text" id="txtDocEntry" disabled size="5" autocomplete="off" value="" />
-                            <input type="text" class="form-control" placeholder="" id="txtDocNum" value="" disabled>
-                            <div class="input-group-append">
-                                <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalInfIM" onclick="getIMByCus()"><i class="fa fa-search"></i></button>
+                        <div>
+                            <label style="font-size:18px;font-weight:500">Patient :</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="txtPatient" value="" readonly>
                             </div>
                         </div>
                     </div>
@@ -241,6 +248,8 @@
                                         <th>Quantity</th>
                                         <th>UOM</th>
                                         <th>Warehoues</th>
+                                        <th>Bin Location</th>
+                                        <th>BinEntry</th>
                                         <th>Price</th>
                                         <th>Total</th>
                                         <th>IsBatchSerial</th>
@@ -275,6 +284,8 @@
                                         <th>Quantity</th>
                                         <th>UOM</th>
                                         <th>Warehouse</th>
+                                        <th>Bin Location</th>
+                                        <th>BinEntry</th>
                                         <th>Price</th>
                                         <th>Total</th>
                                         <th>IsBatchSerial</th>
@@ -329,12 +340,17 @@
                             <div class="input-group-prepend">
                                 <button class="input-group-text" id="Cifr"><i class="fa fa-check"></i></button>
                             </div>
-                            <input type="text" placeholder="" id="txt_H_SlpCode" value="" autocomplete="off" disabled size="7" style="display:none">
-                            <input type="text" placeholder="" id="txt_H_SlpId" value="" autocomplete="off" disabled size="7">
+                            <input type="text" placeholder="" id="txt_H_SlpCode" value="" autocomplete="off" disabled size="7">
+                            <input type="text" placeholder="" id="txt_H_SlpId" value="" autocomplete="off" disabled size="7" style="display:none">
                             <input type="text" class="form-control" placeholder="" id="txt_H_SlpName" value="" autocomplete="off" disabled>
                             <div class="input-group-append">
                                 <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalSaleEmployee"><i class="fa fa-search"></i></button>
                             </div>
+                        </div>
+
+                        Patient :
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="" id="txt_H_Patient" value="" disabled>
                         </div>
 
                         Remarks :
@@ -373,6 +389,8 @@
                                         <th>Quantity</th>
                                         <th>UOM</th>
                                         <th>Warehouse</th>
+                                        <th>Bin Location</th>
+                                        <th>BinEntry</th>
                                         <th>Price</th>
                                         <th>IsBatchSerial</th>
                                         <th>B\S Number</th>
@@ -422,6 +440,7 @@
                                         <th>toWhs</th>
                                         <th>DocEntry</th>
                                         <th>SeriesName</th>
+                                        <th>Patient</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -430,8 +449,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-info" data-dismiss="modal" id="ChooseInf" style="background:#f0eff1;color:#696969;">Choose</button>
-                <button class="btn btn-info" data-dismiss="modal" id="CloseInf" style="background:#f0eff1;color:#696969;">Close</button>
+                <button class="btn btn-success" data-dismiss="modal" id="ChooseInf">Choose</button>
+                <button class="btn btn-danger" data-dismiss="modal" id="CloseInf">Close</button>
             </div>
         </div>
     </div>
@@ -463,8 +482,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-info" data-dismiss="modal" id="ChooseCus" style="background: #f0eff1; color: #696969;">Choose</button>
-                <button class="btn btn-info" data-dismiss="modal" style="background: #f0eff1; color: #696969;">Close</button>
+                <button class="btn btn-success" data-dismiss="modal" id="ChooseCus">Choose</button>
+                <button class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -495,8 +514,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-info" data-dismiss="modal" id="ChooseSlp" style="background:#f0eff1;color:#696969;">Choose</button>
-                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
+                <button class="btn btn-success" data-dismiss="modal" id="ChooseSlp">Choose</button>
+                <button class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -510,6 +529,7 @@
 <script type="text/javascript">
     /*document.getElementById("frmLoading").style.display = "block";*/
     var LData = [];
+    var LDataX = [];
     var lsRowNumber = [];
     var Ltmp = [];
     var LDataTb1 = [];
@@ -523,7 +543,7 @@
         binfo: false,
         data: LData,
         language: {
-            emptyTable: "<b>Table INF-IM is Empty</b>"
+            emptyTable: "<b>Loading ...</b>"
         },
         columns: [
             { data: "docNum", autoWidth: true },
@@ -535,7 +555,8 @@
             { data: "fromWhs", autoWidth: true },
             { data: "toWhs", autoWidth: true },
             { data: "docEntry", autoWidth: true },
-            { data: "seriesName", autoWidth: true }
+            { data: "seriesName", autoWidth: true },
+            { data: "patient", autoWidth: true }
         ],
         autoWidth: true,
         pageLength: 10,
@@ -574,6 +595,8 @@
         "info": false,
         "searching": true
     });
+
+    tbSaleEmployee.columns([1]).visible(false, false);
 
     $('#ChooseSlp').click(function () {
         const index = tbSaleEmployee.row('.selected').index();
@@ -622,11 +645,11 @@
     $('#ChooseCus').click(function() {
         const index = tbCus.row('.selected').index();
         const data = tbCus.row(index).data();
-        $('#CusID').val(data.cardCode);
-        $('#CusName').val(data.cardName);
+        //$('#CusID').val(data.cardCode);
+        //$('#CusName').val(data.cardName);
 
-        $('#txt_H_CusID').val(data.cardCode);
-        $('#txt_H_CusName').val(data.cardName);
+        //$('#txt_H_CusID').val(data.cardCode);
+        //$('#txt_H_CusName').val(data.cardName);
     });
     /* End DataTable List Of Customer */
 
@@ -636,12 +659,13 @@
         var dataLineIm = [];
         $.ajax({
             url: '@Url.Action("GetIMByCus", "Inventory")',
-            data: { cusCode: $('#CusID').val() },
+            data: { cusCode: 'empty' },
             type: "GET",
             dataType: "JSON",
             "dataSrc": 'data',
             success: function (data) {
-                //console.log(data);
+                console.log("Loading...");
+                console.log(data);
                 //console.log(data.length);
 
                 for (let dRow = 0; dRow < data.length; dRow++) {
@@ -658,6 +682,7 @@
                     arrayLine.toWhs = data[dRow].toWhs;
                     arrayLine.docEntry = data[dRow].docEntry;
                     arrayLine.seriesName = data[dRow].seriesName;
+                    arrayLine.patient = data[dRow].patient;
                     arrayLine.line = data[dRow].line;
                     sLine.push(arrayLine);
                 }
@@ -676,7 +701,7 @@
     var tbInfImData = $('#TbInfImData').DataTable({
         bLengthChange: false,
         binfo: false,
-        data: LData,
+        data: LDataX,
         columnDefs: [{
             "defaultContent": "-",
             "targets": "_all"
@@ -703,6 +728,8 @@
             { data: "batchSerialQty", autoWidth: true },
             { data: "uomCode", autoWidth: true },
             { data: "whsCode", autoWidth: true },
+            { data: "binCode", autoWidth: true },
+            { data: "binEntry", autoWidth: true },
             { data: "price", autoWidth: true },
             { data: "lineTotal", autoWidth: true },
             { data: "isBtchSerNum", autoWidth: true },
@@ -719,7 +746,7 @@
         searching: false
     });
 
-    tbInfImData.columns([1, 2 , 6, 10, 13, 14]).visible(false, false);
+    tbInfImData.columns([1, 2 , 6, 10, 12, 15]).visible(false, false);
     //onClick="removeRowTo(' + meta.row + ')"
 
     var LtmpDataSelected = [];
@@ -747,6 +774,8 @@
             { data: "batchSerialQty", autoWidth: true },
             { data: "uomCode", autoWidth: true },
             { data: "whsCode", autoWidth: true },
+            { data: "binCode", autoWidth: true },
+            { data: "binEntry", autoWidth: true },
             { data: "price", autoWidth: true },
             { data: "lineTotal", autoWidth: true },
             { data: "isBtchSerNum", autoWidth: true },
@@ -765,14 +794,31 @@
         searching: false
     });
 
-    tbInfImData2.columns([1, 2, 3, 10, 13, 14]).visible(false, false);
+    tbInfImData2.columns([1, 2, 3, 10, 12, 15]).visible(false, false);
 
     $('#ChooseInf').click(function () {
         const index = tbInf.row('.selected').index();
         const data = tbInf.row(index).data();
         $('#txtDocEntry').val(data.docEntry);
         $('#txtDocNum').val(data.docNum);
-        console.log(data);
+
+        $('#CusID').val(data.cardCode);
+        $('#CusName').val(data.cardName);
+
+        $('#txt_H_CusID').val(data.cardCode);
+        $('#txt_H_CusName').val(data.cardName);
+
+        var txtInputPatient;
+        if (data.patient != "") {
+            txtInputPatient = data.patient;
+        } else {
+            txtInputPatient = "";
+        }
+
+        $('#txtPatient').val(txtInputPatient);
+        $('#txt_H_Patient').val(txtInputPatient);
+
+        //console.log(data);
         sLineIm = []
         if (data.line.length > 0) {
             for (let dRow = 0; dRow < data.line.length; dRow++) {
@@ -785,6 +831,8 @@
                 arrayLine.price = data.line[dRow].price;
                 arrayLine.priceBefDi = data.line[dRow].priceBefDi;
                 arrayLine.whsCode = data.line[dRow].whsCode;
+                arrayLine.binEntry = data.line[dRow].binEntry;
+                arrayLine.binCode = data.line[dRow].binCode;
                 arrayLine.lineTotal = data.line[dRow].lineTotal;
                 arrayLine.uomEntry = data.line[dRow].uomEntry;
                 arrayLine.uomCode = data.line[dRow].uomCode;
@@ -795,7 +843,7 @@
                 arrayLine.patient = data.line[dRow].patient;
                 sLineIm.push(arrayLine);
             }
-            //console.log(sLineIm);
+            console.log(sLineIm);
             tbInfImData.clear();
             tbInfImData.rows.add(sLineIm);
             tbInfImData.draw();
@@ -942,6 +990,8 @@
             { data: "quantity", autoWidth: true },
             { data: "uomCode", autoWidth: true },
             { data: "whsCode", autoWidth: true },
+            { data: "binCode", autoWidth: true },
+            { data: "binEntry", autoWidth: true },            
             { data: "price", autoWidth: true },
             { data: "isBtchSerNum", autoWidth: true },
             { data: "batchSerialNumber", autoWidth: true },
@@ -980,6 +1030,8 @@
                 tmpAdd.batchSerialQty = $('#inputQty' + i).val();
                 tmpAdd.uomCode = data.uomCode;
                 tmpAdd.whsCode = data.whsCode;
+                tmpAdd.binEntry = data.binEntry;
+                tmpAdd.binCode = data.binCode;
                 tmpAdd.price = data.price;
                 tmpAdd.lineTotal = data.lineTotal;
                 tmpAdd.isBtchSerNum = data.isBtchSerNum;
@@ -1033,14 +1085,14 @@
         var tab = $(this).data('href');
         $('li > a[href="' + tab + '"]').tab("show");
 
-        console.log(tab);
+        //console.log(tab);
         allDataLine = [];
         if (tab == '#head') {
             // Copy Row To #head Tab
             for (let dtRow = 0; dtRow < tbInfImData2.column(0).data().length; dtRow++) {
                 arrayDataLine = {};
                 var ldata = tbInfImData2.row(dtRow).data();
-                console.log(ldata);
+                //console.log(ldata);
                 
                 //arrayDataLine.cardCode = $('#CusID').val();
                 //arrayDataLine.cardName = $('#CusName').val();
@@ -1052,6 +1104,8 @@
                 arrayDataLine.quantity = ldata.batchSerialQty;
                 arrayDataLine.uomCode = ldata.uomCode;
                 arrayDataLine.whsCode = ldata.whsCode;
+                arrayDataLine.binCode = ldata.binCode;
+                arrayDataLine.binEntry = ldata.binEntry;
                 arrayDataLine.price = ldata.price;
                 arrayDataLine.isBtchSerNum = ldata.isBtchSerNum;
                 arrayDataLine.batchSerialNumber = ldata.batchSerialNumber;
@@ -1060,7 +1114,7 @@
                 allDataLine.push(arrayDataLine);
             }
 
-            console.log(allDataLine);
+            //console.log(allDataLine);
             tbInfImDataLineA.clear().draw();
             tbInfImDataLineA.rows.add(allDataLine).draw(false);
         }
@@ -1070,6 +1124,10 @@
 
     //Add Data Head And Line -> SAP
     function POSTDataAPI() {
+
+        var txtSlpCode = $('#txt_H_SlpCode').val();
+        if (txtSlpCode != "") {
+
         console.log('Sending SAP...');
         document.getElementById("frmLoading").style.display = "block";
         var sHead = {};
@@ -1118,6 +1176,8 @@
             arrDataLine.uomName = ldata.uomCode;
             arrDataLine.price = ldata.price;
             arrDataLine.whsCode = ldata.whsCode;
+            arrDataLine.binCode = ldata.binCode;
+            arrDataLine.binEntry = ldata.binEntry;
             arrDataLine.U_TranferNo = ldata.U_TranferNo;
             arrDataLine.U_Patient = ldata.patient;
             arrDataLine.batches = batchLine;  
@@ -1134,6 +1194,8 @@
         sHead.taxDate = $('#txt_H_DocumentDate').val();
         sHead.slpCode = $('#txt_H_SlpCode').val();
         sHead.remark = $('#comments').val();
+        sHead.patient = $('#txt_H_Patient').val();
+        sHead.tranferNo = $('#txtDocNum').val();
         sHead.lines = dLine;
         console.log(sHead);
 
@@ -1166,6 +1228,11 @@
                 }
             }
         });
+
+
+        } else {
+            alert("Please Select Sale Employee.");
+        }
     }
 
 </script>

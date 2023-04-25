@@ -132,6 +132,15 @@
         text-align: center;
     }
 
+    .color_tap_cv {
+        min-width: 60px;
+        background-color: #ffa200;
+        color: black;
+        font-weight: 600;
+        margin-right: 1px;
+        cursor:pointer;
+    }
+
     /* =================================================== */
     .cover-spin {
         position: fixed;
@@ -192,7 +201,7 @@
             <a asp-action="DashboardInventory" asp-controller="Dashboard" onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fas fa-home"></i> Dashboard</a>
             <span>
                 <a asp-action="ShowInventory" asp-controller="InventoryTransfer" onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fa fa-caret-right align-right"></i> Inventory Transfer</a>
-                <i class="fa fa-caret-right align-right"></i> Create InventoryTransfer (Return Borrow Bills)
+                <i class="fa fa-caret-right align-right"></i> Create InventoryTransfer (CV)
             </span>
         </h5>
     </div>
@@ -201,10 +210,13 @@
     <div style="padding: 10px; color: #696969;">
         <ul class="nav nav-tabs Tap-PA" id="mytab" role="tablist">
             @*<li class="nav-item">
-                    <a class="nav-link active color_tap" id="cus-tab" data-toggle="tab" href="#cus" role="tab" aria-controls="Customer" aria-selected="true">Customer</a>
-                </li>*@
+            <a class="nav-link active color_tap" id="cus-tab" data-toggle="tab" href="#cus" role="tab" aria-controls="Customer" aria-selected="true">Customer</a>
+        </li>*@
             <li class="nav-item">
                 <a class="nav-link color_tap" id="item-tab" data-toggle="tab" href="#item" role="tab" aria-controls="Items" aria-selected="false">Add Data</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link color_tap_cv" id="gim" style="cursor: pointer;">IM[ยืม]</a>
             </li>
         </ul>
         <div class="tab-content" id="myTabContent">
@@ -212,7 +224,6 @@
             <div class="tab-pane fade show active" id="item" role="tabpanel" aria-labelledby="item-tab" style="margin-top: 10px">
                 <div class="row">
                     <div class="col-sm-6">
-
                         Search InventoryTransfer IM No. :
                         <div class="input-group">
                             <div class="input-group-prepend">
@@ -339,6 +350,9 @@
                             Remark :
                             <div class="input-group">
                                 <input type="text" class="form-control" value="" id="comments">
+                                <input type="text" class="form-control hiddenAdmin" value="" id="txtShipToCode">
+                                <input type="text" class="form-control hiddenAdmin" value="" id="txtAddress">
+                                @* hiddenAdmin *@
                             </div>
                         </div>
                         <div align="center">
@@ -364,6 +378,7 @@
                                         <th>ItemCode</th>
                                         <th>ItemName</th>
                                         <th>SAP-QTY</th>
+                                        <th>Patient</th>
                                         <th>UomCode</th>
                                         <th>FromWarehouse</th>
                                         <th>FromBinCode</th>
@@ -536,6 +551,8 @@
                                         <th>toWhs</th>
                                         <th>DocEntry</th>
                                         <th>SeriesName</th>
+                                        <th>ShipToCode</th>
+                                        <th>Address</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -544,8 +561,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-info" data-dismiss="modal" id="ChooseInf" style="background:#f0eff1;color:#696969;">Choose</button>
-                <button class="btn btn-info" data-dismiss="modal" id="CloseInf" style="background:#f0eff1;color:#696969;">Close</button>
+                <button class="btn btn-success" data-dismiss="modal" id="ChooseInf">Choose</button>
+                <button class="btn btn-danger" data-dismiss="modal" id="CloseInf">Close</button>
             </div>
         </div>
     </div>
@@ -764,7 +781,9 @@
             { "data": "fromWhs" },
             { "data": "toWhs" },
             { "data": "docEntry" },
-            { "data": "seriesName" }
+            { "data": "seriesName" },
+            { "data": "shipToCode" },
+            { "data": "address" }
         ],
         "pageLength": 7,
         "order": [[0, 'desc']],
@@ -775,7 +794,7 @@
         "searching": true
     });
 
-    table0.columns([4, 5, 6, 7]).visible(false, false);
+    table0.columns([4, 5, 6, 7, 8, 9]).visible(false, false);
 
     table0.on('select', function () {
 
@@ -790,6 +809,8 @@
         var cellseriesName = table0.rows({ selected: true }).data()[0]['seriesName'];
         var celltoBinEntry = table0.rows({ selected: true }).data()[0]['toBinEntry'];
         var celltoBinCode = table0.rows({ selected: true }).data()[0]['toBinCode'];
+        var cellshipToCode = table0.rows({ selected: true }).data()[0]['shipToCode'];
+        var celladdress = table0.rows({ selected: true }).data()[0]['address'];
         //console.log(rowData);
 
         $('#ChooseInf').click(function () {
@@ -804,6 +825,8 @@
             var txtSeriesIM = document.getElementById("txtSeriesIM");
             var txtToBinEntry = document.getElementById("txtBinEntry");
             var txtToBinCode = document.getElementById("ToBinCode");
+            var txtShipToCode = document.getElementById("txtShipToCode");
+            var txtAddress = document.getElementById("txtAddress");
 
             txtDocNum.value = celldocNum;
             txtCardCode.value = cellcardCode;
@@ -816,6 +839,8 @@
             txtSeriesIM.value = cellseriesName;
             txtToBinEntry.value = celltoBinEntry;
             txtToBinCode.value = celltoBinCode;
+            txtShipToCode.value = cellshipToCode;
+            txtAddress.value = celladdress;
         });
     });
 
@@ -862,8 +887,8 @@
 
     //============== fncLoadData ==============
 
-    
-    function ApplyDataTable(id) {        
+
+    function ApplyDataTable(id) {
         $.noConflict();
         $.ajax({
             url: '@Url.Action("GetWTRLine", "Inventory")',
@@ -884,6 +909,7 @@
                         { "data": "itemCode", "autoWidth": true },
                         { "data": "dscription", "autoWidth": true },
                         { "data": "quantity", "autoWidth": true },
+                        { "data": "patient", "autoWidth": true },
                         { "data": "uomCode", "autoWidth": true },
                         { "data": "fromWhsCode", "autoWidth": true },
                         { "data": "fromBinCode", "autoWidth": true },
@@ -922,7 +948,7 @@
 
     }
 
-    
+
 
     function fncLoadData() {
         var docentry = $("#txtDocEntry").val();
@@ -996,6 +1022,11 @@
                 } else if (iQTY == "qty") {
                     sQty = sArr3.substring(3, 9);
                     sQty = parseFloat(sQty);
+                    if (isNaN(sQty)) {
+                        sQty = document.getElementById("txtQuantity01").value;
+                    } else {
+                        sQty = sQty;
+                    }
                 }
 
                 $('#txtScanBarCode01').val("");
@@ -1064,7 +1095,7 @@
                                     if (chkQty == 'pass') {
 
                                         t.row.add([
-                                            '',                                            
+                                            '',
                                             bItemCode,
                                             bItemName,
                                             bQuantity,
@@ -1092,8 +1123,15 @@
                     }
                     //SerialNum
                     else if (sSerial != '') {
-                        sBatchSerial = sSerial;
-                        console.warn(sItemCode + ";" + sBatchSerial + ";" + txtWarehouse);
+                        if (sItemCode == 'DGC110' || sItemCode == 'GC18' || sItemCode == 'DGC120' || sItemCode == 'GC120' || sItemCode == 'DGC14' || sItemCode == 'GC14' || sItemCode == 'DGC110' || sItemCode == 'GC110' || sItemCode == 'C/Cmix-1.0' || sItemCode == 'C/Cmix-0.5' || sItemCode == 'OCAN-0.5A') {
+                            if (sSerial.length >= 14) {
+                                sBatchSerial = sSerial.substring(0, 12);
+                            } else {
+                                sBatchSerial = sSerial;
+                            }
+                            console.log(sBatchSerial);
+                        }
+                        console.log(sItemCode + ";" + sBatchSerial + ";" + txtWarehouse);
                             $.ajax({
                                 url: '@Url.Action("GetStockItemSerialW", "Inventory")',
                                 data: { itemcode: sItemCode, serialnumber: sBatchSerial, whscode: txtWarehouse},
@@ -1337,7 +1375,6 @@
     //Add Data Head And Line -> SAP
     function POSTDataAPI() {
         //======================================
-
         document.getElementById("frmLoading").style.display = "block";
         var sHead = {};
         var sLine = [];
@@ -1378,6 +1415,7 @@
             arrDataLine.productType = productType;
             arrDataLine.batchYN = ldata.batchYN;
             arrDataLine.serialYN = ldata.serialYN;
+            arrDataLine.patient = ldata.patient;
             arrDataLine.baseEntry = $('#txtDocEntry').val();
             arrDataLine.u_unitprice = ldata.u_unitprice;
             arrDataLine.qtyInSap = parseFloat(ldata.quantity);
@@ -1398,16 +1436,16 @@
             var productType = "";
             var batchSerialNo = "";
 
-            console.log('Date pure....');
-            console.log(data);
+            //console.log('Date pure....');
+            //console.log(data);
 
             if (data[9] != "") {
                 productType = "b";
-                batchSerialNo = data[9];
+                batchSerialNo = data[1] + ";" + data[9];
             } else {
                 if (data[10] != "") {
                     productType = "s";
-                    batchSerialNo = data[10];
+                    batchSerialNo = data[1] + ";" + data[10];
                 }
             }
 
@@ -1425,7 +1463,7 @@
             arrayLine.productType = productType;
             arrayLine.batchNo = data[9];
             arrayLine.serialNo = data[10];
-            arrayLine.u_TranferNo = "0";
+            arrayLine.u_TranferNo = null;
             arrayLine.batchSerialNo = batchSerialNo;
             sLine.push(arrayLine);
         }
@@ -1454,6 +1492,8 @@
         arrDataLineM = {};
         arrDataHead = {};
         arrLineAll = [];
+
+
         //console.log("===== Pure Data =====");
         //console.log(data2);
         var cSerialNo
@@ -1463,6 +1503,8 @@
 
             var serialbox = [];
             var batchbox = [];
+            var xDocNum = null;
+            xDocNum = $('#txtDocNum').val();
             for (let y = 0; y < output.length; y++) {
                 //arrDataLineS = {};
                 //console.log(output);
@@ -1498,6 +1540,7 @@
                     arrDataHead.baseLine = data2[x].baseLine;
                     arrDataHead.itemCode = data2[x].itemCode;
                     arrDataHead.quantity = sumQTY;
+                    arrDataHead.U_Patient = data2[x].patient;
                     arrDataHead.qtyInSap = data2[x].qtyInSap;
                     arrDataHead.price = data2[x].u_unitprice;
                     arrDataHead.uomCode = data2[x].uomCode;
@@ -1506,12 +1549,12 @@
                     arrDataHead.fromBinEntry = data2[x].fromBinEntry;
                     arrDataHead.toBinEntry = data2[x].toBinEntry;
                     arrDataHead.productType = data2[x].productType;
-                    arrDataHead.U_TranferNo = '-';
+                    arrDataHead.U_TranferNo = xDocNum;
                     arrDataHead.mStatus = data2[x].mStatus;
                     arrDataHead.baseEntry = data2[x].baseEntry;
                     arrDataHead.batchLine = batchbox;
                     arrDataHead.serialLine = serialbox;
-                    
+
 
                 }
                 else {
@@ -1520,6 +1563,7 @@
                     arrDataHead.baseLine = data2[x].baseLine;
                     arrDataHead.itemCode = data2[x].itemCode;
                     arrDataHead.quantity = sumQTY;
+                    arrDataHead.U_Patient = data2[x].patient;
                     arrDataHead.qtyInSap = data2[x].qtyInSap;
                     arrDataHead.price = data2[x].u_unitprice;
                     arrDataHead.uomCode = data2[x].uomCode;
@@ -1528,14 +1572,14 @@
                     arrDataHead.fromBinEntry = data2[x].fromBinEntry;
                     arrDataHead.toBinEntry = data2[x].toBinEntry;
                     arrDataHead.productType = data2[x].productType;
-                    arrDataHead.U_TranferNo = '-';
+                    arrDataHead.U_TranferNo = xDocNum;
                     arrDataHead.mStatus = data2[x].mStatus;
                     arrDataHead.baseEntry = data2[x].baseEntry;
                     arrDataHead.batchLine = batchbox;
                     arrDataHead.serialLine = serialbox;
                 }
             }
-            //console.log(arrDataHead);
+            console.log(arrDataHead);
             arrLineAll.push(arrDataHead);
 
             sumQTY = 0;
@@ -1559,6 +1603,8 @@
         sHead.comments = $('#comments').val();
         sHead.journalRemark = $('#jrnlMemo').val();
         sHead.u_loannum = $('#txtDocNum').val();
+        sHead.shipToCode = $('#txtShipToCode').val();
+        sHead.address = $('#txtAddress').val();
         sHead.line = arrLineAll;
         console.log(sHead);
 
@@ -1593,7 +1639,12 @@
                 }
             }
         });
+        //======================================
     }
 
+
+    $('#gim').click(function () {
+        window.location.href = "@Url.Action("CreateInventoryTransferBB", "Inventory")";
+    });
 </script>
 

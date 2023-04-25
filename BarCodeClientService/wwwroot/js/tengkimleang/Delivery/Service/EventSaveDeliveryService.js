@@ -6,6 +6,7 @@
     },
 
     valiDateLine(array) {
+        console.log("Array valiDateLine :-")
         console.log(array);
         var i = EventSaveGoodReceiptPO.iEventSaveGoodReceipt.validLine(array);
         return i;
@@ -22,9 +23,11 @@
             ],
             "");
         if (validate === 0) {
-            console.log("Line Here");
-            console.log(LinesAR);
+            //console.log("Line Here");
+            //console.log(LinesAR);
+            //Send to IEventSaveGoodReceipt.validLine
             validate = EventSaveGoodReceiptPO.valiDateLine(LinesAR);
+            //console.log(validate);
             if (validate === 0) {
                 var sendGoodReceiptPO = {};
                 sendGoodReceiptPO.CardCode = $("#CusID").val();
@@ -33,10 +36,11 @@
                 sendGoodReceiptPO.TaxDate = $("#DocumentDate").val();
                 sendGoodReceiptPO.OrderNumber = $("#OrderNumberID").val();
                 sendGoodReceiptPO.CurrencyCode = $("#BPDocCurr").val();
-                sendGoodReceiptPO.SlpCode = $("#SaleEmp").val();
+                sendGoodReceiptPO.SlpCode = $("#txtSlpCode").val();
                 sendGoodReceiptPO.Remark = $("#Remark").val();
                 sendGoodReceiptPO.Lines = LinesAR;
-                //console.log(sendGoodReceiptPO);
+                console.log("Data for SAP ->");
+                console.log(sendGoodReceiptPO);
                 $.ajax({
                     url: url,
                     type: "POST",
@@ -52,7 +56,7 @@
                     },
                     error: function (erro) {
                         console.log(erro.responseText);
-                        alert("Internal Error");
+                        alert("Internal Error -> " + erro.responseText);
                         document.getElementById("frmLoading").style.display = "none";
                     }
                 });

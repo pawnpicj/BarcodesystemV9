@@ -9,6 +9,6 @@ namespace BarCodeAPIService.Service
         Task<ResponseGetOWTR> responseGetOWTR();
         Task<ResponseGetWTRLine> responseGetWTRLine(int DocEntry);
         Task<ResponseGetIMHeadLine> responseGetIMByCus(string cusCode);
-
+        Task<ResponseIMReport> responseIMReport(string fromDate, string toDate);
     }
 }

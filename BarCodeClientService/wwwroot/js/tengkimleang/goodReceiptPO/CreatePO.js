@@ -40,6 +40,10 @@ let DataTableInit = {
             bInfo: false,
             bPaginate: false,
             data: LinesAR,
+            columnDefs: [{
+                "defaultContent": "-",
+                "targets": "_all"
+            }],
             columns:
                 [
                     {

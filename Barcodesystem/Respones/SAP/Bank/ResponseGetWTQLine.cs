@@ -15,6 +15,7 @@ namespace BarCodeLibrary.Respones.SAP
         public int BaseLine { get; set; }
         public string ItemCode { get; set; }
         public string Dscription { get; set; }
+        public string Patient { get; set; }
         public double Quantity { get; set; }
         public string FromWhsCod { get; set; }
         public string WhsCode { get; set; }

@@ -89,6 +89,7 @@ namespace BarCodeAPIService.Service
                             BaseLine = Convert.ToInt32(lrow["BaseLine"].ToString()),
                             ItemCode = lrow["ItemCode"].ToString(),
                             Dscription = lrow["Dscription"].ToString(),
+                            Patient = lrow["Patient"].ToString(),
                             Quantity = Convert.ToDouble(lrow["Quantity"].ToString()),
                             FromWhsCod = lrow["FromWhsCod"].ToString(),
                             WhsCode = lrow["WhsCode"].ToString(),

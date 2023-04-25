@@ -25,6 +25,7 @@ namespace BarCodeAPIService.Controllers
                 return Ok(a);
             return BadRequest(a);
         }
+
         [HttpGet(APIRoute.Delivery.GetBatch + "{itemCode}/{WhsCode}")]
         public async Task<IActionResult> GetBatchAsync(string itemCode,string WhsCode)
         {
@@ -33,6 +34,7 @@ namespace BarCodeAPIService.Controllers
                 return Ok(a);
             return BadRequest(a);
         }
+
         [HttpGet(APIRoute.Delivery.GetSerial + "{itemCode}/{WhsCode}")]
         public async Task<IActionResult> GetSerialAsyc(string itemCode, string WhsCode)
         {
@@ -50,6 +52,7 @@ namespace BarCodeAPIService.Controllers
                 return Ok(a);
             return BadRequest(a);
         }
+
         [HttpGet(APIRoute.Delivery.GetSaleOrderList)]
         public async Task<IActionResult> GetSaleOrderListAsync()
         {
@@ -58,5 +61,15 @@ namespace BarCodeAPIService.Controllers
                 return Ok(a);
             return BadRequest(a);
         }
+
+        [HttpGet("GetSODelivery/{cardCode}")]
+        public async Task<IActionResult> GetSODeliveryAsyc(string cardCode)
+        {
+            var a = await Delivery.responseGetSO(cardCode);
+            if (a.ErrorCode == 0)
+                return Ok(a);
+            return BadRequest(a);
+        }
+
     }
 }

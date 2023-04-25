@@ -145,6 +145,10 @@
         text-align: center;
     }
 
+    input[aria-controls='TbToBinLocation']:focus {
+        background-color: khaki;
+    }
+
     /* =================================================== */
     .cover-spin {
         position: fixed;
@@ -206,7 +210,7 @@
             <a asp-action="DashboardInventory" asp-controller="Dashboard" onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fas fa-home"></i> Dashboard</a>
             <span>
                 <a asp-action="ShowInventory" asp-controller="InventoryTransfer" onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fa fa-caret-right align-right"></i> Inventory Transfer</a>
-                <i class="fa fa-caret-right align-right"></i> Create InventoryTransfer (Borrow Bills)
+                <i class="fa fa-caret-right align-right"></i> Create InventoryTransfer (IM)
             </span>
         </h5>
     </div>
@@ -215,8 +219,8 @@
     <div style="padding: 10px; color: #696969;">
         <ul class="nav nav-tabs Tap-PA" id="mytab" role="tablist">
             @*<li class="nav-item">
-            <a class="nav-link active color_tap" id="cus-tab" data-toggle="tab" href="#cus" role="tab" aria-controls="Customer" aria-selected="true">Customer</a>
-        </li>*@
+                    <a class="nav-link active color_tap" id="cus-tab" data-toggle="tab" href="#cus" role="tab" aria-controls="Customer" aria-selected="true">Customer</a>
+                </li>*@
             <li class="nav-item">
                 <a class="nav-link color_tap" id="item-tab" data-toggle="tab" href="#item" role="tab" aria-controls="Items" aria-selected="false">Add Data</a>
             </li>
@@ -261,8 +265,8 @@
                             </div>
                             <input type="text" class="form-control" placeholder="" id="CardCode" disabled>
                             @*<div class="input-group-append">
-                <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalCusCode"><i class="fa fa-search"></i></button>
-            </div>*@
+                                    <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalCusCode"><i class="fa fa-search"></i></button>
+                                </div>*@
                         </div>
                         Customer Name :
                         <div class="input-group">
@@ -281,7 +285,7 @@
                                 <input type="date" class="form-control" id="DocumentDate">
                             </div>
                         </div>
-                        <div>
+                        <div Class="hiddenAdmin">
                             Patient [ชื่อผู้ป่วย] :
                             <div class="input-group">
                                 <input type="text" class="form-control" id="txtPatient">
@@ -298,24 +302,24 @@
                                 </div>
                                 <input type="text" class="form-control" placeholder="" value="" id="FromWhsCode" disabled>
                                 <!--<div class="input-group-append">
-                            <button class="input-group-text btnModelsOcrCode" data-toggle="modal" data-target="#ModalWarehouse"><i class="fa fa-search"></i></button>-->
+                                <button class="input-group-text btnModelsOcrCode" data-toggle="modal" data-target="#ModalWarehouse"><i class="fa fa-search"></i></button>-->
                                 @*ModalFromWhsCode*@
                                 <!--</div>-->
                             </div>
                         </div>
                         @*<div>
-                            From Bin Location :
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <button class="input-group-text" id="COcrCode2"><i class="fa fa-check"></i></button>
+                                From Bin Location :
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <button class="input-group-text" id="COcrCode2"><i class="fa fa-check"></i></button>
+                                    </div>
+                                    <input type="text" class="form-control" placeholder="" value="" id="FromBinCode" disabled>
+                                    <input type="text" class="form-control" placeholder="Search Code" value="C62" id="OcrCode2">
+                                    <div class="input-group-append">
+                                        <button class="input-group-text btnModelsOcrCode2" data-toggle="modal" data-target="#ModalBinLocation"><i class="fa fa-search"></i></button>ModalFromBinCode
+                                    </div>
                                 </div>
-                                <input type="text" class="form-control" placeholder="" value="" id="FromBinCode" disabled>
-                                <input type="text" class="form-control" placeholder="Search Code" value="C62" id="OcrCode2">
-                                <div class="input-group-append">
-                                    <button class="input-group-text btnModelsOcrCode2" data-toggle="modal" data-target="#ModalBinLocation"><i class="fa fa-search"></i></button>ModalFromBinCode
-                                </div>
-                            </div>
-                        </div>*@
+                            </div>*@
                         <div>
                             To Warehouse :
                             <div class="input-group">
@@ -324,7 +328,7 @@
                                 </div>
                                 <input type="text" class="form-control" placeholder="" id="ToWhsCode" value="" disabled>
                                 <!--<div class="input-group-append">
-                            <button class="input-group-text btnModelsOcrCode3" data-toggle="modal" data-target="#ModalToWarehouse"><i class="fa fa-search"></i></button>-->
+                                <button class="input-group-text btnModelsOcrCode3" data-toggle="modal" data-target="#ModalToWarehouse"><i class="fa fa-search"></i></button>-->
                                 @*ModalToWhsCode*@
                                 <!--</div>-->
                             </div>
@@ -354,8 +358,8 @@
                             <input type="text" size="7" placeholder="" id="SlpCode0" value="" disabled>
                             <input type="text" class="form-control" placeholder="" id="SlpCode" value="" disabled>
                             @*<div class="input-group-append">
-                                <button class="input-group-text btnModelsOcrCode4" data-toggle="modal" data-target="#ModalSaleEmployee"><i class="fa fa-search"></i></button>
-                            </div>*@
+                                    <button class="input-group-text btnModelsOcrCode4" data-toggle="modal" data-target="#ModalSaleEmployee"><i class="fa fa-search"></i></button>
+                                </div>*@
                         </div>
                         <div style="display: none;">
                             Journal Remark :
@@ -392,6 +396,7 @@
                                         <th>ItemCode</th>
                                         <th>ItemName</th>
                                         <th>SAP-QTY</th>
+                                        <th>Patient</th>
                                         <th>FromWarehouse</th>
                                         <th>ToWarehouse</th>
                                         <th>UomCode</th>
@@ -416,27 +421,27 @@
                                 </div>
 
                                 @*<div style="display:none;">
-                                    <label>
-                                        Input Quantity :
-                                    </label>
-                                    <div class="input-group">
-                                        <input type="number" class="form-control" placeholder="" id="Quantity" value="1" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
-                                    </div>
+                                        <label>
+                                            Input Quantity :
+                                        </label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" placeholder="" id="Quantity" value="1" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
+                                        </div>
 
-                                    <label>
-                                        Scan Barcode :
-                                    </label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" value="" id="txtScanBarCode" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
-                                    </div>
+                                        <label>
+                                            Scan Barcode :
+                                        </label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" value="" id="txtScanBarCode" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
+                                        </div>
 
-                                    <label>
-                                        Scan Batch/Serial :
-                                    </label><div class="input-group">
-                                        <input type="text" class="form-control" value="" id="txtScanBatchSerial" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
-                                    </div>
-                                    <button class="input-group-text" id="addRow" style="display:none;"><i class="fa fa-plus"></i></button>
-                                </div>*@
+                                        <label>
+                                            Scan Batch/Serial :
+                                        </label><div class="input-group">
+                                            <input type="text" class="form-control" value="" id="txtScanBatchSerial" style="background-color: antiquewhite; border: 3px solid #000000; margin: 0 auto; text-align: center; ">
+                                        </div>
+                                        <button class="input-group-text" id="addRow" style="display:none;"><i class="fa fa-plus"></i></button>
+                                    </div>*@
 
                                 @* =================== TabScanBarCode =================== *@
                                 <div id="TabScanBarCode" class="BoxScan">
@@ -533,8 +538,10 @@
                                         <th>Quantity</th>
                                         <th>fromWhsCode</th>
                                         <th>fromBinEntry</th>
+                                        <th>fromBinCode</th>
                                         <th>toWhsCode</th>
                                         <th>toBinEntry</th>
+                                        <th>toBinCode</th>
                                         <th>batchNumber</th>
                                         <th>serialNumber</th>
                                         @*<th>Q</th>*@
@@ -548,7 +555,9 @@
                     <hr>
                     <div class="row" style="padding: 15px;margin-top:-20px;margin-bottom:-20px;">
                         <div class="nav navbar-nav ml-auto">
+                            @* <i class="fas fa-bug"></i> *@
                             <div class="btn-group">
+                                @*<button class="btn btn-warning" id="btnReport" onclick="sendEmail();"><i class="fas fa-bug"></i></button>*@
                                 <button class="btn btn-success" id="Save" style="margin-left:5px;" onclick="POSTDataAPI()">Send To SAP</button>
                             </div>
                         </div>
@@ -599,8 +608,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-info" data-dismiss="modal" id="ChooseInf" style="background:#f0eff1;color:#696969;">Choose</button>
-                    <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
+                    <button class="btn btn-success" data-dismiss="modal" id="ChooseInf">Choose</button>
+                    <button class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -756,8 +765,9 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-info" data-dismiss="modal" id="ChooseToBinLocation" style="background:#f0eff1;color:#696969;">Choose</button>
-                    <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
+                    @*<button class="btn btn-warning" id="ChooseCardCode" onclick="focusCardCode();">S</button>*@
+                    <button class="btn btn-success" data-dismiss="modal" id="ChooseToBinLocation">Choose</button>
+                    <button class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -827,6 +837,7 @@
     </div>
 
     <script src="~/js/Array.js"></script>
+    <script src="https://smtpjs.com/v3/smtp.js"></script>
     <script type="text/javascript">
         document.getElementById("frmLoading").style.display = "block";
     //+++++ GetInventoryTransferRequestLine +++++
@@ -915,6 +926,8 @@
             { "width": "5%" },
             { "width": "5%" },
             { "width": "5%" },
+            { "width": "5%" },
+            { "width": "5%" },
             { "width": "5%" }
         ],
         "select": false,
@@ -925,6 +938,7 @@
     });
 
         var tline = $('#TbDataLine').DataTable();
+
 
         var LBins = [];
 
@@ -973,6 +987,9 @@
                         tbBin.clear();
                         tbBin.rows.add(LBins);
                         tbBin.draw();
+
+                        $("input[aria-controls='TbToBinLocation']").focus();
+                        //delayAuto();
                     }
                 });
             } else {
@@ -981,6 +998,22 @@
             }
 
         });
+
+        //function focusCardCode() {
+        //    var fCardCode = $('#CardCode').val();
+        //    $("input[aria-controls='TbToBinLocation']").focus().val(fCardCode);
+        //    $("input[aria-controls='TbToBinLocation']").change();
+        //}
+
+        //function delay(time) {
+        //    return new Promise(resolve => setTimeout(resolve, time));
+        //}
+
+        //async function delayAuto() {
+        //    await delay(500);
+        //    var fCardCode = $('#CardCode').val();
+        //    $("input[aria-controls='TbToBinLocation']").blur().val(fCardCode);
+        //}
 
         tbBin.on('select', function () {
             var cellbinCode = tbBin.rows({ selected: true }).data()[0]['binCode'];
@@ -1016,6 +1049,7 @@
                         { "data": "itemCode", "autoWidth": true },
                         { "data": "dscription", "autoWidth": true },
                         { "data": "quantity", "autoWidth": true },
+                        { "data": "patient", "autoWidth": true },
                         { "data": "fromWhsCod", "autoWidth": true },
                         { "data": "whsCode", "autoWidth": true },
                         { "data": "uomCode", "autoWidth": true },
@@ -1038,6 +1072,7 @@
                 document.getElementById("txtScanBarCode01").value = '';
                 document.getElementById("txtScanBarCode01").focus();
 
+                tline.columns([9, 10]).visible(false, false);
             }
         });
 
@@ -1130,12 +1165,22 @@
                 let lcase1 = sArr3.toLowerCase();
                 let iQTY = lcase1.slice(0, 3);
 
+                //console.log(sArr3 + "+" + lcase1 + "-" + iQTY + "->" + sArr3.substring(3, 9));
+
                 if (iQTY != "qty") {
                     sQty = document.getElementById("txtQuantity01").value;
                     sQty = parseFloat(sQty);
+
                 } else if (iQTY == "qty") {
                     sQty = sArr3.substring(3, 9);
                     sQty = parseFloat(sQty);
+
+                    if (isNaN(sQty)) {
+                        sQty = document.getElementById("txtQuantity01").value;
+                    } else {
+                        sQty = sQty;
+                    }
+
                 }
 
                 $('#txtScanBarCode01').val("");
@@ -1199,7 +1244,6 @@
 
                                     //console.log(ok);
                                     if (chkQty == 'pass') {
-
                                         t.row.add([
                                             '',
                                             bItemCode,
@@ -1207,8 +1251,10 @@
                                             bQuantity,
                                             $('#FromWhsCode').val(),
                                             bBinEntry,
+                                            bBinCode,
                                             $('#ToWhsCode').val(),
                                             $('#txtBinEntry').val(),
+                                            $('#ToBinCode').val(),
                                             bBatchNumber,
                                             ''
                                         ]).draw(false);
@@ -1228,8 +1274,16 @@
                     }
                     //SerialNum
                     else if (sSerial != '') {
-                        sBatchSerial = sSerial;
-                        console.warn(sItemCode + ";" + sBatchSerial + ";" + txtWarehouse);
+                        if (sItemCode == 'DGC110' || sItemCode == 'GC18' || sItemCode == 'DGC120' || sItemCode == 'GC120' || sItemCode == 'DGC14' || sItemCode == 'GC14' || sItemCode == 'DGC110' || sItemCode == 'GC110' || sItemCode == 'C/Cmix-1.0' || sItemCode == 'C/Cmix-0.5' || sItemCode == 'OCAN-0.5A') {
+                            if (sSerial.length >= 14) {
+                                sBatchSerial = sSerial.substring(0, 12);
+                            } else {
+                                sBatchSerial = sSerial;
+                            }
+                            console.log(sBatchSerial);
+                        }
+                        //sBatchSerial = sSerial;
+                        console.log(sItemCode + ";" + sBatchSerial + ";" + txtWarehouse);
                             $.ajax({
                                 url: '@Url.Action("GetStockItemSerialW", "Inventory")',
                                 data: { itemcode: sItemCode, serialnumber: sBatchSerial, whscode: txtWarehouse},
@@ -1237,7 +1291,7 @@
                                 dataType: "JSON",
                                 "dataSrc": 'data',
                                 success: function (data) {
-                                    console.log(data);
+                                    //console.log(data);
                                     var jqueryXml = $(data);
                                     if (jqueryXml[0].data.length != 0) {
                                         //=========================
@@ -1278,8 +1332,10 @@
                                                 bQuantity,
                                                 $('#FromWhsCode').val(),
                                                 bBinEntry,
+                                                bBinCode,
                                                 $('#ToWhsCode').val(),
                                                 $('#txtBinEntry').val(),
+                                                $('#ToBinCode').val(),
                                                 '',
                                                 bSerialNumber
                                             ]).draw(false);
@@ -1342,13 +1398,14 @@
                                             bQuantity,
                                             $('#FromWhsCode').val(),
                                             bBinEntry,
+                                            bBinCode,
                                             $('#ToWhsCode').val(),
                                             $('#txtBinEntry').val(),
+                                            $('#ToBinCode').val(),
                                             '',
                                             ''
                                         ]).draw(false);
                                     }
-
 
                                     //$('#txtScanBarCode01').val("");
                                     $('#txtScanBarCode01').focus();
@@ -1364,6 +1421,7 @@
 
                         });
                     }
+                    t.columns([5, 8]).visible(false, false);
                     //END = Check Type [Batch], [Serial] And [No Batch No Serial]
                 }
 
@@ -1436,8 +1494,8 @@
             var data = t.row(rowno).data();
             ///console.log(data);
             var itemCode = data[1];
-            var batchNum = data[8];
-            var serialNum = data[9];
+            var batchNum = data[10];
+            var serialNum = data[11];
             let msg = "คุณต้องการลบ " + itemCode + ";" + batchNum + ";" + serialNum + ";";
             if (confirm(msg) == true) {
                 console.log('OK -> Remove Row' + rowno);
@@ -1491,6 +1549,7 @@
                 arrDataLine.productType = productType;
                 arrDataLine.batchYN = ldata.batchYN;
                 arrDataLine.serialYN = ldata.serialYN;
+                arrDataLine.patient = ldata.patient;
                 arrDataLine.baseEntry = $('#txtDocEntry').val();
                 arrDataLine.u_unitprice = ldata.u_unitprice;
                 arrDataLine.qtyInSap = parseFloat(ldata.quantity);
@@ -1513,17 +1572,17 @@
                 //console.log('Date pure....');
                 //console.log(data);
 
-                if (data[8] != "") {
+                if (data[10] != "") {
                     productType = "b";
-                    batchSerialNo = data[8];
+                    batchSerialNo = data[1] + ";" + data[10];
                 } else {
-                    if (data[9] != "") {
+                    if (data[11] != "") {
                         productType = "s";
-                        batchSerialNo = data[9];
+                        batchSerialNo = data[1] + ";" +data[11];
                     }
                 }
 
-                if (data[8] == "" && data[9] == "") {
+                if (data[10] == "" && data[11] == "") {
                     productType = "n";
                     batchSerialNo = 'non' + data[1];
                 }
@@ -1535,12 +1594,13 @@
                 arrayLine.toWhsCode = data[6];
                 arrayLine.toBinEntry = data[7];
                 arrayLine.productType = productType;
-                arrayLine.batchNo = data[8];
-                arrayLine.serialNo = data[9];
-                arrayLine.u_TranferNo = "0";
+                arrayLine.batchNo = data[10];
+                arrayLine.serialNo = data[11];
+                arrayLine.u_TranferNo = null;
                 arrayLine.batchSerialNo = batchSerialNo;
                 sLine.push(arrayLine);
             }
+            //console.log("SubLine..");
             //console.log(sLine);
 
             //console.log("Grouping...")
@@ -1557,7 +1617,8 @@
             const output = Object.values(groupBy).map((item) => ({
                 ...item
             }));
-            //console.log(output);
+            console.log("groupBy...");
+            console.log(output);
 
             const data2 = dLine;
             //===========================================================
@@ -1587,16 +1648,17 @@
                             arrDataLineB.itemCode = output[y].itemCode;
                             arrDataLineB.quantity = output[y].quantity;
                             arrDataLineB.batchNumber = output[y].batchNo;
+                            arrDataLineB.fromBinEntryX = output[y].fromBinEntry;
                             batchbox.push(arrDataLineB);
                             serialbox = [];
                             sumQTY = sumQTY + output[y].quantity;
                         }
 
-
                         if (output[y].productType == 's') {
                             arrDataLineS.itemCode = output[y].itemCode;
                             arrDataLineS.quantity = output[y].quantity;
                             arrDataLineS.serialNumber = output[y].serialNo;
+                            arrDataLineS.fromBinEntryX = output[y].fromBinEntry;
                             serialbox.push(arrDataLineS);
                             batchbox = [];
                             sumQTY = sumQTY + output[y].quantity;
@@ -1610,6 +1672,7 @@
                         arrDataHead.baseLine = data2[x].baseLine;
                         arrDataHead.itemCode = data2[x].itemCode;
                         arrDataHead.quantity = sumQTY;
+                        arrDataHead.U_Patient = data2[x].patient;
                         arrDataHead.qtyInSap = data2[x].qtyInSap;
                         arrDataHead.price = data2[x].u_unitprice;
                         arrDataHead.uomCode = data2[x].uomCode;
@@ -1618,7 +1681,7 @@
                         arrDataHead.fromBinEntry = data2[x].fromBinEntry;
                         arrDataHead.toBinEntry = $('#txtBinEntry').val();
                         arrDataHead.productType = data2[x].productType;
-                        arrDataHead.U_TranferNo = '-';
+                        arrDataHead.U_TranferNo = null;
                         arrDataHead.baseEntry = data2[x].baseEntry;
                         arrDataHead.batchLine = batchbox;
                         arrDataHead.serialLine = serialbox;
@@ -1630,6 +1693,7 @@
                         arrDataHead.baseLine = data2[x].baseLine;
                         arrDataHead.itemCode = data2[x].itemCode;
                         arrDataHead.quantity = sumQTY;
+                        arrDataHead.U_Patient = data2[x].patient;
                         arrDataHead.qtyInSap = data2[x].qtyInSap;
                         arrDataHead.price = data2[x].u_unitprice;
                         arrDataHead.uomCode = data2[x].uomCode;
@@ -1638,7 +1702,7 @@
                         arrDataHead.fromBinEntry = data2[x].fromBinEntry;
                         arrDataHead.toBinEntry = $('#txtBinEntry').val();
                         arrDataHead.productType = data2[x].productType;
-                        arrDataHead.U_TranferNo = '-';
+                        arrDataHead.U_TranferNo = null;
                         arrDataHead.baseEntry = data2[x].baseEntry;
                         arrDataHead.batchLine = batchbox;
                         arrDataHead.serialLine = serialbox;
@@ -1676,7 +1740,6 @@
             console.log(sHead);
 
             console.log("-> To Saving...");
-
             $.ajax({
                 type: "POST",
                 url: '@Url.Action("PostInventoryTransfer", "Inventory")',
@@ -1706,6 +1769,7 @@
                     }
                 }
             });
+
     }
 
         $('#PrintLabel').click(function () {
@@ -1716,5 +1780,26 @@
             window.location.href = "@Url.Action("CreateInventoryTransferRBB", "Inventory")";
         });
 
+        @*$('#btnReport').click(function () {
+            window.location.href = "@Url.Action("SendFile", "Email")";
+        });*@
+
+
+        //function sendEmail() {
+        //    Email.send({
+        //        Host: "smtp.gmail.com",
+        //        Username: "porpichit602@gmail.com",
+        //        Password: "#June199o#",
+        //        To: 'pornpichit.jit@gmail.com',
+        //        From: "porpichit602@gmail.com",
+        //        Subject: "Sending Email using javascript",
+        //        Body: "Well that was easy!!"
+        //    })
+        //        .then(function (message) {
+        //            alert("Mail has been sent successfully")
+        //        });
+        //}
+
     </script>
+
 

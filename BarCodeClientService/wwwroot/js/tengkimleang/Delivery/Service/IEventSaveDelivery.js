@@ -12,37 +12,45 @@
         return 0;
     }
     validLine(array) {
-        console.log(array);
+        //console.log(array);
         if (array.length == 0) {
             EventSaveGoodReceiptPO.iEventSaveGoodReceipt.messageBox("PLease Input Item Before Send Data!");
             return 1;
         }
         for (var i = 0; i < array.length; i++) {
             //console.log(array[i].ManageItem);
-            console.log(array[i].ItemCode);
+            //console.log(array[i]);
+            //console.log(array[i].ItemCode);
             if (array[i].ManageItem === "S") {
+                console.log("Serial -> ");
+                console.log(array[i].Serial);
                 var qty = 0;
                 for (var arr in array[i].Serial) {
                     qty = qty + 1;
                 }
-                if (parseInt(array[i].Quantity) !== qty) {
-                    EventSaveGoodReceiptPO.iEventSaveGoodReceipt.messageBox(
-                        "Please Input Quantity in ItemCode " + array[i].ItemCode + " Line " + (i + 1));
-                    return 1;
-                }
-            } else if (array[i].ManageItem === "B") {
+                //if (parseInt(array[i].Quantity) !== qty) {
+                //    EventSaveGoodReceiptPO.iEventSaveGoodReceipt.messageBox(
+                //        i + "-> Please Input Quantity in ItemCode " + array[i].ItemCode + " Line " + (i + 1));
+                //    return 1;
+                //}
+            }
+            else if (array[i].ManageItem === "B") {
+                console.log("Batches -> ");
                 console.log(array[i].Batches);
                 var qty = 0;
                 for (var k = 0; k < array[i].Batches.length; k++) {
                     console.log(array[i].Batches[k].qty);
                     qty = qty + parseFloat(array[i].Batches[k].qty);
                 }
-                console.log(qty);
-                if (parseInt(array[i].Quantity) !== qty) {
-                    EventSaveGoodReceiptPO.iEventSaveGoodReceipt.messageBox(
-                        "Please Input Quantity in ItemCode " + array[i].ItemCode + " Line " + (i + 1));
-                    return 1;
-                }
+                //console.log(qty);
+                //if (parseInt(array[i].Quantity) !== qty) {
+                //    EventSaveGoodReceiptPO.iEventSaveGoodReceipt.messageBox(
+                //        i + "-> Please Input Quantity in ItemCode " + array[i].ItemCode + " Line " + (i + 1));
+                //    return 1;
+                //}
+            }
+            else if (array[i].ManageItem === "") {
+                console.log("No BN/SN -> ");
             }
         }
         return 0;

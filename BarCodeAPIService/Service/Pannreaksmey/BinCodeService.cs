@@ -5,55 +5,111 @@ using System.Threading.Tasks;
 using BarCodeAPIService.Connection;
 using BarCodeLibrary.Respones.SAP;
 using SAPbobsCOM;
+using BarCodeAPIService.Models;
+using System.Globalization;
+using System.Data;
+using System.Data.Odbc;
 
 namespace BarCodeAPIService.Service
 {
     public class BinCodeService : IBinCodeService
     {
-        public Task<ResponseOBINGetBinCode> ResponseOBINGetBinCode()
+        public Task<ResponseOBINGetBinCode> ResponseGetBinCodeByCode(string binCode)
         {
-            var oBIN = new List<OBIN>();
-            Company oCompany;
+            var oLine = new List<OBIN>();
+            var dt = new DataTable();
+            var dtLine = new DataTable();
             try
             {
-                Login login = new();
-                if (login.LErrCode == 0)
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
+                if (login.lErrCode == 0)
                 {
-                    oCompany = login.Company;
-                    Recordset? oRS = null;
-                    var Query = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_Smey('OBIN','','','','','')";
-                    oRS = (Recordset)oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
-                    oRS.DoQuery(Query);
-                    while (!oRS.EoF)
+                    var Query =
+                        $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_Smey('OBinByCode','{binCode}','','','','')";
+                    login.AD = new OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
                     {
-                        oBIN.Add(new OBIN
+                        oLine.Add(new OBIN
                         {
-                            BinCode = oRS.Fields.Item(0).Value.ToString(),
-                            Descr = oRS.Fields.Item(1).Value.ToString(),
-                            WhsCode = oRS.Fields.Item(2).Value.ToString(),
-                            WhsName = oRS.Fields.Item(3).Value.ToString(),
-                            AbsEntry = Convert.ToInt32(oRS.Fields.Item(4).Value.ToString())
+                            BinCode = row["BinCode"].ToString(),
+                            Descr = row["Descr"].ToString(),
+                            WhsCode = row["WhsCode"].ToString(),
+                            WhsName = row["WhsName"].ToString(),
+                            AbsEntry = Convert.ToInt32(row["AbsEntry"].ToString())
                         });
-                        oRS.MoveNext();
                     }
-
                     return Task.FromResult(new ResponseOBINGetBinCode
                     {
                         ErrorCode = 0,
                         ErrorMessage = "",
-                        Data = oBIN.ToList()
+                        Data = oLine.ToList()
                     });
                 }
-
                 return Task.FromResult(new ResponseOBINGetBinCode
                 {
-                    ErrorCode = login.LErrCode,
-                    ErrorMessage = login.SErrMsg,
+                    ErrorCode = login.lErrCode,
+                    ErrorMessage = login.sErrMsg,
                     Data = null
                 });
+
             }
             catch (Exception ex)
             {
+
+                return Task.FromResult(new ResponseOBINGetBinCode
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMessage = ex.Message,
+                    Data = null
+                });
+            }
+
+        }
+
+        public Task<ResponseOBINGetBinCode> ResponseOBINGetBinCode()
+        {
+            var oLine = new List<OBIN>();
+            var dt = new DataTable();
+            var dtLine = new DataTable();
+            try
+            {
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
+                if (login.lErrCode == 0)
+                {
+                    var Query =
+                        $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_Smey('OBIN','','','','','')";
+                    login.AD = new OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        oLine.Add(new OBIN
+                        {
+                            BinCode = row["BinCode"].ToString(),
+                            Descr = row["Descr"].ToString(),
+                            WhsCode = row["WhsCode"].ToString(),
+                            WhsName = row["WhsName"].ToString(),
+                            AbsEntry = Convert.ToInt32(row["AbsEntry"].ToString())
+                        });
+                    }
+                    return Task.FromResult(new ResponseOBINGetBinCode
+                    {
+                        ErrorCode = 0,
+                        ErrorMessage = "",
+                        Data = oLine.ToList()
+                    });
+                }
+                return Task.FromResult(new ResponseOBINGetBinCode
+                {
+                    ErrorCode = login.lErrCode,
+                    ErrorMessage = login.sErrMsg,
+                    Data = null
+                });
+
+            }
+            catch (Exception ex)
+            {
+
                 return Task.FromResult(new ResponseOBINGetBinCode
                 {
                     ErrorCode = ex.HResult,

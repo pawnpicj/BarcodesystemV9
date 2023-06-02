@@ -81,8 +81,8 @@ let DataTableInit = {
                     { data: "Patient", autoWidth: true },
                     { data: "TranferNo", autoWidth: true },
                     {
-                        data: "LineNo",
-                        render: function (data, type, full, meta) { return meta.row; }
+                        data: "LineNum", autoWidth: true
+                        //render: function (data, type, full, meta) { return meta.row; }
                     }
                     
                 ],

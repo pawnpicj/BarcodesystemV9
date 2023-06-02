@@ -25,7 +25,7 @@ namespace BarCodeLibrary.Request.SAP
         public double PriceBeforeDis { get; set; }
         public string Whs { get; set; }
         public string UomName { get; set; }
-        public string DocEntry { get; set; }
+        public int DocEntry { get; set; }
         public string Patient { get; set; }
         public string TranferNo { get; set; }
         public int LineNum { get; set; }

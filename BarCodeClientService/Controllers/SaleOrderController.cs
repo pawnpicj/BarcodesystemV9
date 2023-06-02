@@ -143,6 +143,7 @@ namespace BarCodeClientService.Controllers
                 //CustomSwitches = "--page-offset 0 --footer-center [page] --footer-font-size 12"
             };
         }
+
         [HttpPost]
         public IActionResult PostDeliveryActionResult(SendDelivery sendDelivery)
         {
@@ -157,6 +158,8 @@ namespace BarCodeClientService.Controllers
                 return Ok(a);
             }
         }
+
+
         //public IActionResult GetSeriesCode(string yyyy, string typeSeries)
         //{
         //    string yy = DateTime.Now.Year.ToString();

@@ -32,7 +32,7 @@ namespace BarCodeLibrary.APICall
             {
                 HttpClient client = new HttpClient();
                 client.BaseAddress = new Uri(Url);
-                client.Timeout = new TimeSpan(0, 0, 500);
+                client.Timeout = TimeSpan.FromMinutes(10);
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "dmFuc3lzdGVtQGdtYWlsLmNvbTpuc2NAdmFuc3lzdGVt");

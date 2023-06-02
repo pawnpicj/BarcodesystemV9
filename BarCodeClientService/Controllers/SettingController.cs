@@ -50,5 +50,27 @@ namespace BarCodeClientService.Controllers
             return Ok(json);
         }
 
+        [HttpPost]
+        public IActionResult SaveConsole(string msg)
+        {
+            string path = $"{Environment.WebRootPath}\\js\\delivery-log.txt";
+
+            string text = msg;
+
+            //using (var tc = new StreamWriter(path, false))
+            //{
+            //    tc.Write(String.Empty);
+            //    tc.Close();
+            //}
+
+            using (var tw = new StreamWriter(path, true))
+            {
+                tw.WriteLine(text.ToString());
+                tw.Close();
+            }
+
+            return Ok(text);
+        }
+
     }
 }

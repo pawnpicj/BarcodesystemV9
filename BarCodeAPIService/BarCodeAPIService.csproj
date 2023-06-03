@@ -49,7 +49,7 @@
 
 	<ItemGroup>
 	  <Reference Include="SAPBusinessOneSDK">
-	    <HintPath>..\Barcodesystem\SAPBusinessOneSDK.dll</HintPath>
+	    <HintPath>..\Barcodesystem\v1\SAPBusinessOneSDK.dll</HintPath>
 	  </Reference>
 	</ItemGroup>
 

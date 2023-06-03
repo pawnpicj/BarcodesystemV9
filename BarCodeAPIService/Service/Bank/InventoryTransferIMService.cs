@@ -239,7 +239,7 @@ namespace BarCodeAPIService.Service
             }
         }
 
-        public Task<ResponseIMReport> responseIMReport(string fromDate, string toDate)
+        public Task<ResponseIMReport> responseIMReport(string fromDate, string toDate, string customer, string saleEmp)
         {
             var oWTRIM = new List<RPT_OWTRIM>();
             var dt = new DataTable();
@@ -268,8 +268,29 @@ namespace BarCodeAPIService.Service
                     cFromDate = fromYear + "-" + fromMonth + "-" + fromDay;
                     cToDate = toYear + "-" + toMonth + "-" + toDay;
 
+                    var cCustomer = "";
+                    var cSaleEmp = "";
+                    if (customer == "" || customer == "empty")
+                    {
+                        cCustomer = "empty";
+                    }
+                    else
+                    {
+                        cCustomer = customer;
+                    }
+
+
+                    if (saleEmp == "" || saleEmp == "empty")
+                    {
+                        cSaleEmp = "empty";
+                    }
+                    else
+                    {
+                        cSaleEmp = saleEmp;
+                    }
+
                     var Query =
-                        $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK ('RptTransferIM','{cFromDate}','{cToDate}','','','')";
+                        $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK ('RptTransferIM','{cFromDate}','{cToDate}','{cCustomer}','{cSaleEmp}','')";
                     login.AD = new OdbcDataAdapter(Query, login.CN);
                     login.AD.Fill(dt);
                     foreach (DataRow row in dt.Rows)

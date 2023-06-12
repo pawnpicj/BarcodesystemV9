@@ -159,6 +159,19 @@ namespace BarCodeClientService.Controllers
             }
         }
 
+        [HttpPost]
+        public IActionResult PostDelivery(SendDelivery sendDelivery)
+        {
+            var a = API.PostWithReturn<ResponseDelivery>("api/Delivery/POSTDelivery", sendDelivery);
+            if (a.ErrorCode != 0)
+            {
+                return BadRequest(a);
+            }
+            else
+            {
+                return Ok(a);
+            }
+        }
 
         //public IActionResult GetSeriesCode(string yyyy, string typeSeries)
         //{

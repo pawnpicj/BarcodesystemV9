@@ -522,7 +522,7 @@
 </div>
 
 <script src="~/js/tengkimleang/goodReceiptPO/GetMasterGoodReceiptPO.js"></script>
-<script src="~/js/tengkimleang/goodReceiptPO/CreatePO.js"></script>
+@*<script src="~/js/tengkimleang/goodReceiptPO/CreatePO.js"></script>*@
 <script src="~/js/Array.js"></script>
 <script src="~/js/tengkimleang/Method/MethodDataTable.js"></script>
 
@@ -633,14 +633,14 @@
     //+++++ Series Code +++++ END
 
     /* DataTable List Of Customer */
-    var LCus = [];
+    @*var LCus = [];
     DataTableInit.TableCustomer();
     var tbCus = $('#TbCusCode').DataTable();
     DataMethod.AddClassSelected('TbCusCode', tbCus);
     $(".btnModelsCus").click(function() {
         $("#ModalCusCode").modal({ backdrop: "static" });
         GetMasterData.getCustomer('@Url.Action("GetCustomerClientResult", "GoodsReceiptPO")','C');
-    });
+    });*@
 
     $('#ChooseCus').click(function() {
         const index = tbCus.row('.selected').index();

@@ -183,7 +183,9 @@
     <div><h4>Inventory Transfer IM Report</h4></div>
     From : <input type="date" id="txtFromDate" />&nbsp;&nbsp;&nbsp;
     To : <input type="date" id="txtToDate" />
-         <button class="btn-sm btn-danger" onclick="fncGetRptIM();">&nbsp;Search&nbsp;</button>
+    Customer : <input type="text" id="txtCustomer" />
+    Sale Employee : <input type="text" id="txtSaleEmployee" />
+    <button class="btn-sm btn-danger" onclick="fncGetRptIM();">&nbsp;Search&nbsp;</button>
 
     <div class="table-responsive-sm">
         <table id="TbRptIM" class="table table-bordered  table-striped table-hover display table-sm" style="width: 100%; background: #f0eff1; color: #696969;">
@@ -284,6 +286,8 @@
         //txtFromDate, txtToDate
         var cFromDate = $("#txtFromDate").val();
         var cToDate = $("#txtToDate").val();
+        var cCustomer = $("#txtCustomer").val();
+        var cSaleEmployee = $("#txtSaleEmployee").val();
         var FromDateX = ""
         var ToDateX =""
 

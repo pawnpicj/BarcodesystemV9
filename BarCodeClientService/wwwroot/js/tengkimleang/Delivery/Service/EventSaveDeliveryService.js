@@ -1,11 +1,13 @@
-﻿let EventSaveGoodReceiptPO = {
+﻿let array = [];
+
+let EventSaveGoodReceiptPO = {
     iEventSaveGoodReceipt: new IEventSaveGoodReceipt(),
     validDateForm(array, condition) {
         var i = EventSaveGoodReceiptPO.iEventSaveGoodReceipt.validForm(array, condition);
         return i;
     },
 
-    valiDateLine(array) {
+    valiDateLine(array) {        
         console.log("Array valiDateLine :-")
         console.log(array);
         var i = EventSaveGoodReceiptPO.iEventSaveGoodReceipt.validLine(array);

@@ -636,21 +636,21 @@
     @*var LCus = [];
     DataTableInit.TableCustomer();
     var tbCus = $('#TbCusCode').DataTable();
-    DataMethod.AddClassSelected('TbCusCode', tbCus);
+    DataMethod.AddClassSelected(DataMethod.AddClassSelected('TbCusCode', tbCus);
     $(".btnModelsCus").click(function() {
         $("#ModalCusCode").modal({ backdrop: "static" });
         GetMasterData.getCustomer('@Url.Action("GetCustomerClientResult", "GoodsReceiptPO")','C');
     });*@
 
-    $('#ChooseCus').click(function() {
-        const index = tbCus.row('.selected').index();
-        const data = tbCus.row(index).data();
-        //$('#CusID').val(data.cardCode);
-        //$('#CusName').val(data.cardName);
+    //$('#ChooseCus').click(function() {
+    //    const index = tbCus.row('.selected').index();
+    //    const data = tbCus.row(index).data();
+    //    //$('#CusID').val(data.cardCode);
+    //    //$('#CusName').val(data.cardName);
 
-        //$('#txt_H_CusID').val(data.cardCode);
-        //$('#txt_H_CusName').val(data.cardName);
-    });
+    //    //$('#txt_H_CusID').val(data.cardCode);
+    //    //$('#txt_H_CusName').val(data.cardName);
+    //});
     /* End DataTable List Of Customer */
 
     //Search Inventory Tranfer IM

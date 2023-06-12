@@ -312,9 +312,10 @@ namespace BarCodeClientService.Controllers
         }
 
         //Report Transfer IM
-        public IActionResult RptTransferIM(string fromDate, string toDate)
+        [HttpGet]
+        public IActionResult RptTransferIM(string fromDate, string toDate, string customer, string saleEmp)
         {
-            var a = API.Read<ResponseIMReport>("api/InventoryTransferIM/RptTransferIM/" + fromDate + "/" + toDate);
+            var a = API.Read<ResponseIMReport>("api/InventoryTransferIM/RptTransferIM/" + fromDate + "/" + toDate + "/" + customer + "/" + saleEmp);
             if (a.ErrorCode == 0)
             {
                 return Ok(a.Data);

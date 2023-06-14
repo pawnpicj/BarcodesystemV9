@@ -877,3 +877,50 @@ ITEM:300-309|Row:11|Status:pass,11,Case1
 ->ScanBarCode:300-334;225106;;QTY;002;
 ITEM:300-334|Row:15|Status:pass,15,Case1
 SO DocNum : 123050003
+SO DocNum : 123060004
+->ScanBarCode:0102Z;PDWPU210401;;QTY1;000;
+ITEM:0102Z|Row:0|Status:pass,0,Case0
+->ScanBarCode:0102Z;PDWPU210401;;QTY1;000;
+ITEM:0102Z|Row:0|Status:notpass,0,empty
+->ScanBarCode:0102Z;PDWPU210401;;QTY1;000;
+ITEM:0102Z|Row:0|Status:notpass,0,empty
+SO DocNum : 123060004
+->ScanBarCode:0102Z;PDWPU210401;;QTY1;000;
+ITEM:0102Z|Row:0|Status:pass,0,Case0
+->ScanBarCode:0102Z;PDWPU210401;;QTY1;000;
+ITEM:0102Z|Row:0|Status:notpass,0,empty
+->ScanBarCode:0102Z;PDWPU210401;;QTY1;000;
+ITEM:0102Z|Row:0|Status:notpass,0,empty
+->ScanBarCode:0102Z;PDWPU210401;;QTY1;000;
+ITEM:0102Z|Row:0|Status:notpass,0,empty
+->ScanBarCode:0102Z;PDWPU210401;;QTY1;000;
+ITEM:0102Z|Row:0|Status:notpass,0,empty
+->ScanBarCode:0102Z;PDWPU210401;;QTY1;000;
+ITEM:0102Z|Row:0|Status:notpass,0,empty
+SO DocNum : 123060004
+->ScanBarCode:0102;0102-0100A;;QTY1;0001;
+ITEM:0102|Row:1|Status:pass,1,Case0
+->ScanBarCode:0102Z;PDWPU210401;;QTY1;000;
+ITEM:0102Z|Row:0|Status:pass,0,Case1
+->ScanBarCode:0102Z;PDWPU210401;;QTY1;000;
+ITEM:0102Z|Row:0|Status:notpass,0,empty
+->ScanBarCode:0102Z;PDWPU210401;;QTY1;000;
+ITEM:0102Z|Row:0|Status:notpass,0,empty
+SO DocNum : 123060004
+->ScanBarCode:0102Z;PDWPU210401;;QTY1;000;
+ITEM:0102Z|Row:0|Status:pass,0,Case0
+->ScanBarCode:0102Z;PDWPU210401;;QTY1;000;
+ITEM:0102Z|Row:0|Status:pass,0,Case0
+->ScanBarCode:0102Z;PDWPU210401;;QTY1;000;
+ITEM:0102Z|Row:0|Status:pass,0,Case0
+->ScanBarCode:0102Z;PDWPU210401;;QTY1;000;
+ITEM:0102Z|Row:0|Status:pass,0,Case0
+->ScanBarCode:0102Z;PDWPU210401;;QTY1;000;
+ITEM:0102Z|Row:0|Status:pass,0,Case0
+->ScanBarCode:0102Z;PDWPU210401;;QTY1;000;
+ITEM:0102Z|Row:0|Status:notpass,0,empty
+->ScanBarCode:0102;0102-0100A;;QTY1;0001;
+ITEM:0102|Row:1|Status:pass,1,Case1
+SO DocNum : 123060002
+->ScanBarCode:300-303;229105;;QTY1;0000;
+ITEM:300-303|Row:0|Status:pass,0,Case0

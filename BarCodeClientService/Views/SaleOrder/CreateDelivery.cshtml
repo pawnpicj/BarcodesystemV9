@@ -3146,8 +3146,8 @@
                             if (parseInt(dataX.LineNum) == parseInt(output[y0].rowNo)) {
                                 console.log('%cLineNum ==', 'background-color: green;');
 
-                                if (parseInt(output[y0].quantity) < parseInt(dataX.Quantity)) {
-                                    console.log("%cยังรับไม่ครบ" + output[y0].quantity + "<" + dataX.Quantity, 'background-color: yellow;');
+                                if (parseInt(output[y0].quantity) < parseInt(dataX.InputQuantity)) {
+                                    console.log("%cยังรับไม่ครบ" + output[y0].quantity + "<" + dataX.InputQuantity, 'background-color: yellow;');
                                     rowNo = dataX.LineNum;
                                     msgBox = "pass";
                                     caseX = "Case2";

@@ -31,6 +31,50 @@ let EventSaveGoodReceiptPO = {
             validate = EventSaveGoodReceiptPO.valiDateLine(LinesAR);
             //console.log(validate);
             if (validate === 0) {
+
+                dLine = [];
+                dSubLine = {};
+                //console.log(LinesAR);
+                for (let x = 0; x < LinesAR.length; x++) {
+                    dSubLine = {};
+                    //console.log("Id :-" + x);
+                    dSubLine.DocEntry = LinesAR[x].DocEntry;
+                    dSubLine.LineNum = LinesAR[x].LineNum;
+                    dSubLine.ItemCode = LinesAR[x].ItemCode;
+                    dSubLine.Quantity = LinesAR[x].Quantity;
+                    dSubLine.PriceBeforeDis = LinesAR[x].PriceBeforeDis;
+                    dSubLine.Discount = LinesAR[x].Discount;
+                    dSubLine.Whs = LinesAR[x].Whs;
+                    dSubLine.Patient = LinesAR[x].Patient;
+                    dSubLine.ManageItem = LinesAR[x].ManageItem;
+                    dSubLine.YesNo = LinesAR[x].YesNo;
+
+                    bLine = [];
+                    bSubLine = {};
+                    for (let b = 0; b < LinesAR[x].Batches.length; b++) {
+                        bSubLine = {};
+                        bSubLine.ItemCode = LinesAR[x].Batches[b].ItemCode;
+                        bSubLine.qty = LinesAR[x].Batches[b].qty;
+                        bSubLine.BatchNumber = LinesAR[x].Batches[b].BatchNumber;
+                        bLine.push(bSubLine);
+                    }
+
+                    sLine = [];
+                    sSubLine = {};
+                    for (let s = 0; s < LinesAR[x].Serial.length; s++) {
+                        sSubLine = {};
+                        sSubLine.ItemCode = LinesAR[x].Serial[s].ItemCode;
+                        sSubLine.qty = LinesAR[x].Serial[s].qty;
+                        sSubLine.SerialNumber = LinesAR[x].Serial[s].SerialNumber;
+                        sLine.push(sSubLine);
+                    }
+
+                    dSubLine.Batches = bLine;
+                    dSubLine.Serial = sLine;
+                    dLine.push(dSubLine);
+                }
+                console.log(dLine);
+
                 var sendGoodReceiptPO = {};
                 sendGoodReceiptPO.CardCode = $("#CusID").val();
                 sendGoodReceiptPO.Series = $("#SeriesID").val();
@@ -40,7 +84,7 @@ let EventSaveGoodReceiptPO = {
                 sendGoodReceiptPO.CurrencyCode = $("#BPDocCurr").val();
                 sendGoodReceiptPO.SlpCode = $("#txtSlpCode").val();
                 sendGoodReceiptPO.Remark = $("#Remark").val();
-                sendGoodReceiptPO.Lines = LinesAR;
+                sendGoodReceiptPO.Lines = dLine;
                 console.log("Data for SAP ->");
                 console.log(sendGoodReceiptPO);
                 $.ajax({

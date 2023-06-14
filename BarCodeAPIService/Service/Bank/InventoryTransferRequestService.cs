@@ -91,6 +91,7 @@ namespace BarCodeAPIService.Service
                             Dscription = lrow["Dscription"].ToString(),
                             Patient = lrow["Patient"].ToString(),
                             Quantity = Convert.ToDouble(lrow["Quantity"].ToString()),
+                            InputQuantity = Convert.ToDouble(lrow["InputQuantity"].ToString()),
                             FromWhsCod = lrow["FromWhsCod"].ToString(),
                             WhsCode = lrow["WhsCode"].ToString(),
                             UomCode = lrow["UomCode"].ToString(),

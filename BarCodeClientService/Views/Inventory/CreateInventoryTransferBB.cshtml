@@ -396,6 +396,7 @@
                                         <th>ItemCode</th>
                                         <th>ItemName</th>
                                         <th>SAP-QTY</th>
+                                        <th>Input-QTY</th>
                                         <th>Patient</th>
                                         <th>FromWarehouse</th>
                                         <th>ToWarehouse</th>
@@ -1049,6 +1050,7 @@
                         { "data": "itemCode", "autoWidth": true },
                         { "data": "dscription", "autoWidth": true },
                         { "data": "quantity", "autoWidth": true },
+                        { "data": "inputQuantity", "autoWidth": true },
                         { "data": "patient", "autoWidth": true },
                         { "data": "fromWhsCod", "autoWidth": true },
                         { "data": "whsCode", "autoWidth": true },
@@ -1469,7 +1471,7 @@
                 var data = tline.row(i).data();
                 //console.log(data);
 
-                var cQuantity1 = parseFloat(data.quantity);
+                var cQuantity1 = parseFloat(data.inputQuantity);
                 var cQuantity2 = cQty;
 
                 if (data.itemCode == itm && cQuantity1 <= cQuantity2) {
@@ -1542,6 +1544,7 @@
                 arrDataLine.baseLine = ldata.baseLine;
                 arrDataLine.itemCode = ldata.itemCode;
                 arrDataLine.quantity = parseFloat(ldata.quantity);
+                arrDataLine.inputQty = parseFloat(ldata.inputQuantity);
                 arrDataLine.uomCode = ldata.uomCode;
                 arrDataLine.fromWhsCode = ldata.fromWhsCod;
                 arrDataLine.toWhsCode = ldata.whsCode;
@@ -1669,12 +1672,13 @@
                             sumQTY = sumQTY + output[y].quantity;
                         }
 
-                        //console.log(output[y].quantity + "->" + sumQTY);
+                        //console.log(output[y].quantity + "->" + sumQTY);inputQty
                         arrDataHead.baseLine = data2[x].baseLine;
                         arrDataHead.itemCode = data2[x].itemCode;
                         arrDataHead.quantity = sumQTY;
                         arrDataHead.U_Patient = data2[x].patient;
                         arrDataHead.qtyInSap = data2[x].qtyInSap;
+                        arrDataHead.inputQty = data2[x].inputQty;
                         arrDataHead.price = data2[x].u_unitprice;
                         arrDataHead.uomCode = data2[x].uomCode;
                         arrDataHead.fromWhsCode = data2[x].fromWhsCode;
@@ -1696,6 +1700,7 @@
                         arrDataHead.quantity = sumQTY;
                         arrDataHead.U_Patient = data2[x].patient;
                         arrDataHead.qtyInSap = data2[x].qtyInSap;
+                        arrDataHead.inputQty = data2[x].inputQty;
                         arrDataHead.price = data2[x].u_unitprice;
                         arrDataHead.uomCode = data2[x].uomCode;
                         arrDataHead.fromWhsCode = data2[x].fromWhsCode;

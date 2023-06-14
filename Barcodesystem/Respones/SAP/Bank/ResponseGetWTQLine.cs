@@ -17,6 +17,7 @@ namespace BarCodeLibrary.Respones.SAP
         public string Dscription { get; set; }
         public string Patient { get; set; }
         public double Quantity { get; set; }
+        public double InputQuantity { get; set; }
         public string FromWhsCod { get; set; }
         public string WhsCode { get; set; }
         public string UomCode { get; set; }

@@ -39,11 +39,11 @@ namespace BarCodeAPIService.Service
                     oDeliveryDocuments.DocCurrency = sendDelivery.CurrencyCode;
                     oDeliveryDocuments.Comments = (sendDelivery.Remark == null) ? "" : sendDelivery.Remark;
                     oDeliveryDocuments.SalesPersonCode = Convert.ToInt32(sendDelivery.SlpCode);
-                    oDeliveryDocuments.UserFields.Fields.Item("U_WebID").Value = sendDelivery.Series + DateTime.Today.Day
+                    oDeliveryDocuments.UserFields.Fields.Item("U_WebID").Value = "DE" + sendDelivery.Series + DateTime.Today.Day
                         + DateTime.Today.Month
                         + DateTime.Today.Year
-                        + DateTime.Today.DayOfYear
                         + DateTime.Today.Hour
+                        + "-"
                         + DateTime.Today.Minute
                         + DateTime.Today.Second
                         + DateTime.Today.Millisecond;

@@ -1,0 +1,3 @@
+SO DocNum : 123060002
+->ScanBarCode:300-318;322102;;QTY1;0001;
+ITEM:300-318|Row:1|Status:pass,1,Case0

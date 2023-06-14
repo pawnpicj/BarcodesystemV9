@@ -877,3 +877,140 @@ ITEM:300-309|Row:11|Status:pass,11,Case1
 ->ScanBarCode:300-334;225106;;QTY;002;
 ITEM:300-334|Row:15|Status:pass,15,Case1
 SO DocNum : 123050003
+SO DocNum : 123050003
+SO DocNum : 123040008
+SO DocNum : 123040001
+SO DocNum : 123060001
+SO DocNum : 123040001
+SO DocNum : 123040001
+SO DocNum : 123060003
+SO DocNum : 123060002
+SO DocNum : 123060002
+->ScanBarCode:300-303;229105;;QTY1;
+ITEM:300-303|Row:0|Status:pass,0,Case0
+SO DocNum : 123060003
+SO DocNum : 123060003
+->ScanBarCode:0102Z;PDWPU210401;;QTY1;
+ITEM:0102Z|Row:3|Status:pass,3,Case0
+->ScanBarCode:0102Z;PDWPU210401;;QTY1;
+ITEM:0102Z|Row:0|Status:notpass,0,empty
+->ScanBarCode:0102Z;PDWPU210401;;QTY1;
+ITEM:0102Z|Row:0|Status:notpass,0,empty
+->ScanBarCode:0102Z;PDWPU210401;;QTY1;
+ITEM:0102Z|Row:0|Status:notpass,0,empty
+->ScanBarCode:0102Z;PDWPU210401;;QTY1;
+ITEM:0102Z|Row:0|Status:notpass,0,empty
+SO DocNum : 123060004
+->ScanBarCode:0102Z;PDWPU210401;;QTY1;
+ITEM:0102Z|Row:0|Status:pass,0,Case0
+->ScanBarCode:0102Z;PDWPU210401;;QTY1;
+ITEM:0102Z|Row:0|Status:notpass,0,empty
+->ScanBarCode:0102Z;PDWPU210401;;QTY1;
+ITEM:0102Z|Row:0|Status:notpass,0,empty
+->ScanBarCode:0102Z;PDWPU210401;;QTY1;
+ITEM:0102Z|Row:0|Status:notpass,0,empty
+->ScanBarCode:0102Z;PDWPU210401;;QTY;
+ITEM:0102Z|Row:0|Status:notpass,0,empty
+SO DocNum : 123060002
+->ScanBarCode:300-303;229105;;QTY1;0000;
+ITEM:300-303|Row:0|Status:pass,0,Case0
+SO DocNum : 123060002
+->ScanBarCode:300-303;229105;;QTY1;0000;
+ITEM:300-303|Row:0|Status:pass,0,Case0
+SO DocNum : 123060005
+->ScanBarCode:0102Z;PDWPU210401;;QTY1;0000;
+ITEM:0102Z|Row:0|Status:pass,0,Case0
+SO DocNum : 123060002
+SO DocNum : 123060006
+SO DocNum : 123060002
+SO DocNum : 123060002
+SO DocNum : 123060002
+SO DocNum : 123060002
+SO DocNum : 123060006
+SO DocNum : 123060002
+SO DocNum : 123060002
+SO DocNum : 123060002
+SO DocNum : 123060002
+SO DocNum : 123060002
+SO DocNum : 123060002
+SO DocNum : 123060002
+SO DocNum : 123060002
+SO DocNum : 123060002
+SO DocNum : 123060002
+SO DocNum : 123060002
+SO DocNum : 123060002
+->ScanBarCode:300-303;229105;;QTY1;000;
+ITEM:300-303|Row:0|Status:pass,0,Case0
+SO DocNum : 123060002
+->ScanBarCode:300-303;229105;;QTY1;000;
+ITEM:300-303|Row:0|Status:pass,0,Case0
+SO DocNum : 123060002
+->ScanBarCode:300-303;229105;;QTY1;000;
+ITEM:300-303|Row:0|Status:pass,0,Case0
+SO DocNum : 123060002
+->ScanBarCode:300-303;229105;;QTY1;000;
+ITEM:300-303|Row:0|Status:pass,0,Case0
+SO DocNum : 123060007
+->ScanBarCode:300-303;229105;;QTY1;000;
+ITEM:300-303|Row:0|Status:pass,0,Case0
+->ScanBarCode:300-303;229105;;QTY1;000;
+ITEM:300-303|Row:0|Status:pass,0,Case0
+->ScanBarCode:300-303;229105;;QTY1;000;
+ITEM:300-303|Row:0|Status:pass,0,Case0
+->ScanBarCode:300-303;229105;;QTY1;000;
+ITEM:300-303|Row:0|Status:notpass,0,empty
+->ScanBarCode:97-102;;94770710;QTY;0001;
+SO DocNum : 123060007
+->ScanBarCode:97-102;;94770710;QTY;0001;
+SO DocNum : 123060007
+->ScanBarCode:97-102;;94770710;QTY1;
+SO DocNum : 123060007
+->ScanBarCode:97-102;;94770710;QTY;0001;
+SO DocNum : 123060007
+->ScanBarCode:97-102;;94770710;QTY;0001;
+SO DocNum : 123060007
+->ScanBarCode:97-102;;94770710;QTY;0001;
+SO DocNum : 123060007
+->ScanBarCode:97-102;;94770710;QTY;0001;
+SO DocNum : 123060007
+->ScanBarCode:97-102;;94770710;QTY;0001;
+SO DocNum : 123060007
+->ScanBarCode:97-102;;94770710;QTY;0001;
+ITEM:97-102|Row:1|Status:pass,1,Case0
+->ScanBarCode:300-303;229105;;QTY1;000;
+ITEM:300-303|Row:0|Status:pass,0,Case1
+->ScanBarCode:300-303;229105;;QTY1;000;
+ITEM:300-303|Row:0|Status:pass,0,Case1
+->ScanBarCode:300-303;229105;;QTY1;000;
+ITEM:300-303|Row:0|Status:pass,0,Case1
+->ScanBarCode:300-303;229105;;QTY1;000;
+ITEM:300-303|Row:0|Status:notpass,0,empty
+->ScanBarCode:300-303;229105;;QTY1;000;
+ITEM:300-303|Row:0|Status:notpass,0,empty
+SO DocNum : 123060007
+->ScanBarCode:300-303;229105;;QTY1;000;
+ITEM:300-303|Row:0|Status:pass,0,Case0
+->ScanBarCode:300-303;229105;;QTY1;000;
+ITEM:300-303|Row:0|Status:pass,0,Case0
+->ScanBarCode:300-303;229105;;QTY1;000;
+ITEM:300-303|Row:0|Status:pass,0,Case0
+->ScanBarCode:300-303;229105;;QTY1;000;
+ITEM:300-303|Row:0|Status:notpass,0,empty
+->ScanBarCode:97-102;;94770710;QTY;0001;
+ITEM:97-102|Row:1|Status:pass,1,Case1
+->ScanBarCode:97-102;;94770710;QTY;0001;
+ITEM:97-102|Row:0|Status:notpass,0,empty
+->ScanBarCode:97-102;;94770710;QTY;0001;
+ITEM:97-102|Row:0|Status:notpass,0,empty
+SO DocNum : 123060007
+->ScanBarCode:97-102;;94770710;QTY;0001;
+ITEM:97-102|Row:1|Status:pass,1,Case0
+->ScanBarCode:300-303;229105;;QTY1;000;
+ITEM:300-303|Row:0|Status:pass,0,Case1
+->ScanBarCode:300-303;229105;;QTY1;000;
+ITEM:300-303|Row:0|Status:pass,0,Case1
+->ScanBarCode:300-303;229105;;QTY1;000;
+ITEM:300-303|Row:0|Status:pass,0,Case1
+SO DocNum : 123060002
+->ScanBarCode:300-303;229105;;QTY1;000;
+ITEM:300-303|Row:0|Status:pass,0,Case0

@@ -76,8 +76,8 @@ namespace BarCodeAPIService.Service
                         oStockTransfer.Lines.WarehouseCode = l.ToWhsCode;
                         oStockTransfer.Lines.Quantity = l.Quantity;
                         oStockTransfer.Lines.BaseEntry = l.BaseEntry;
-                        oStockTransfer.Lines.BaseType = SAPbobsCOM.InvBaseDocTypeEnum.InventoryTransferRequest;
                         oStockTransfer.Lines.BaseLine = l.BaseLine;
+                        oStockTransfer.Lines.BaseType = SAPbobsCOM.InvBaseDocTypeEnum.InventoryTransferRequest;
 
                         string strPatient = "";
                         string xPatient = "";
@@ -176,7 +176,7 @@ namespace BarCodeAPIService.Service
                         }
                         else
                         {
-                            BalanceQty = (l.QtyInSap - sumQty);
+                            BalanceQty = (l.InputQty - sumQty);
                         }
 
                         //oStockTransfer.Lines.UserFields.Fields.Item("U_BalanceQty").Value = BalanceQty.ToString();

@@ -2546,9 +2546,11 @@
                             } else {
                                 sBatchSerial = sSerial;
                             }
-                            console.log(sBatchSerial);
+                            
+                        } else {
+                            sBatchSerial = sSerial;
                         }
-
+                        console.log(sBatchSerial);
                         $.ajax({
                             url: '@Url.Action("GetStockItemSerialBin", "Inventory")',
                             data: { itemcode: sItemCode, serialnumber: sBatchSerial, binentry: sBinCode },
@@ -2815,14 +2817,17 @@
                     //#region Serial Number
                     else if (sSerial != '') {
                         console.clear();
-                        console.log("Whs And Batch Serial.");
+                        console.log("Whs And Serial Number.");
+                        console.log("Serial No = " + sSerial);
                         if (sItemCode == 'DGC110' || sItemCode == 'GC18' || sItemCode == 'DGC120' || sItemCode == 'GC120' || sItemCode == 'DGC14' || sItemCode == 'GC14' || sItemCode == 'DGC110' || sItemCode == 'GC110' || sItemCode == 'C/Cmix-1.0' || sItemCode == 'C/Cmix-0.5' || sItemCode == 'OCAN-0.5A') {
                             if (sSerial.length >= 14) {
                                 sBatchSerial = sSerial.substring(0, 12);
                             } else {
                                 sBatchSerial = sSerial;
                             }
-                            console.log(sBatchSerial);
+                            console.log("Serial No is " + sBatchSerial);
+                        } else {
+                            sBatchSerial = sSerial;
                         }
                         //sBatchSerial = sSerial;
                         console.log("Add Serial NoBinLocation :- " + sItemCode + ";" + sBatchSerial + ";" + sWarehouse);
@@ -3146,8 +3151,8 @@
                             if (parseInt(dataX.LineNum) == parseInt(output[y0].rowNo)) {
                                 console.log('%cLineNum ==', 'background-color: green;');
 
-                                if (parseInt(output[y0].quantity) < parseInt(dataX.Quantity)) {
-                                    console.log("%cยังรับไม่ครบ" + output[y0].quantity + "<" + dataX.Quantity, 'background-color: yellow;');
+                                if (parseInt(output[y0].quantity) < parseInt(dataX.InputQuantity)) {
+                                    console.log("%cยังรับไม่ครบ" + output[y0].quantity + "<" + dataX.InputQuantity, 'background-color: yellow;');
                                     rowNo = dataX.LineNum;
                                     msgBox = "pass";
                                     caseX = "Case2";
@@ -3327,8 +3332,8 @@
                             if (parseInt(dataX.LineNum) == parseInt(output[y0].rowNo)) {
                                 console.log('%cLineNum ==', 'background-color: green;');
 
-                                if (parseInt(output[y0].quantity) < parseInt(dataX.Quantity)) {
-                                    console.log("%cยังรับไม่ครบ" + output[y0].quantity + "<" + dataX.Quantity, 'background-color: yellow;');
+                                if (parseInt(output[y0].quantity) < parseInt(dataX.InputQuantity)) {
+                                    console.log("%cยังรับไม่ครบ" + output[y0].quantity + "<" + dataX.InputQuantity, 'background-color: yellow;');
                                     rowNo = dataX.LineNum;
                                     msgBox = "pass";
                                     caseX = "Case2";

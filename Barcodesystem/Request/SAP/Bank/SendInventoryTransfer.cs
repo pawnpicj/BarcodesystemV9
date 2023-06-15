@@ -46,8 +46,10 @@ namespace BarCodeLibrary.Request.SAP
         public double Quantity { get; set; }
         public double QtyInSap { get; set; }
         public double InputQty { get; set; }
+        public double TotalQty { get; set; }
         public double Price { get; set; }
-
+        public int UomEntry { get; set; }
+        public string UomCode { get; set; }
         public string FromWhsCode { get; set; }
         public string ToWhsCode { get; set; }
 

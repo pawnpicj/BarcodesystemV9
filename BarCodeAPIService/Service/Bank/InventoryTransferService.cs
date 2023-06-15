@@ -74,7 +74,8 @@ namespace BarCodeAPIService.Service
                         oStockTransfer.Lines.ItemCode = l.ItemCode;
                         oStockTransfer.Lines.FromWarehouseCode = l.FromWhsCode;
                         oStockTransfer.Lines.WarehouseCode = l.ToWhsCode;
-                        oStockTransfer.Lines.Quantity = l.Quantity;
+                        oStockTransfer.Lines.Quantity = l.QtyInSap;
+
                         oStockTransfer.Lines.BaseEntry = l.BaseEntry;
                         oStockTransfer.Lines.BaseLine = l.BaseLine;
                         oStockTransfer.Lines.BaseType = SAPbobsCOM.InvBaseDocTypeEnum.InventoryTransferRequest;
@@ -170,7 +171,7 @@ namespace BarCodeAPIService.Service
                         //==================================================
 
 
-                        if ((l.QtyInSap - sumQty) == 0)
+                        if ((l.InputQty - sumQty) == 0)
                         {
                             BalanceQty = 0;
                         }
@@ -201,58 +202,6 @@ namespace BarCodeAPIService.Service
                     }
                     else
                     {
-                        //sumQty = 0;
-                        //BalanceQty = 0;
-                        //oCompany = login.Company;
-                        //SAPbobsCOM.Recordset oRS = null;
-                        //oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-                        //foreach (SendInventoryTransferLine l in sendInventoryTransfer.Line)
-                        //{
-                        //    sumQty = 0;
-                        //    int DocEntry = 0;
-                        //    string ItemCode = "";
-                        //    int LineNum = 0;
-                        //    double iBalanceQty = 0;
-
-                        //    if (l.ProductType == "b" && l.BatchLine != null)
-                        //    {
-
-                        //        foreach (var batch in l.BatchLine)
-                        //        {
-                        //            sumQty = sumQty + batch.Quantity;
-                        //        }
-
-                        //    }
-                        //    else if (l.ProductType == "s" && l.SerialLine != null)
-                        //    {
-                        //        foreach (var serial in l.SerialLine)
-                        //        {
-                        //            sumQty = sumQty + serial.Quantity;
-                        //        }
-                        //    }
-                        //    else if (l.ProductType == "n")
-                        //    {
-                        //        sumQty = sumQty + l.Quantity;
-                        //    }
-
-                        //    if ((l.QtyInSap - sumQty) == 0)
-                        //    {
-                        //        BalanceQty = 0;
-                        //    }
-                        //    else
-                        //    {
-                        //        BalanceQty = (l.QtyInSap - sumQty);
-                        //    }
-
-                        //    DocEntry = l.BaseEntry;
-                        //    ItemCode = l.ItemCode;
-                        //    LineNum = l.BaseLine;
-                        //    iBalanceQty = Convert.ToDouble(BalanceQty.ToString());
-
-                        //    string SQL1 = "CALL \"" + ConnectionString.CompanyDB + "\"._USP_CALLTRANS_BANK('Upd-WTQ1'," + DocEntry + ",'" + ItemCode + "'," + LineNum + "," + iBalanceQty + ",'')";
-                        //    oRS.DoQuery(SQL1);
-                        //}
-
                         //Success
                         return Task.FromResult(new ResponseInventoryTransfer
                         {
@@ -341,7 +290,9 @@ namespace BarCodeAPIService.Service
                             oStockTransfer.Lines.ItemCode = l.ItemCode;
                             oStockTransfer.Lines.FromWarehouseCode = l.FromWhsCode;
                             oStockTransfer.Lines.WarehouseCode = l.ToWhsCode;
-                            oStockTransfer.Lines.Quantity = l.Quantity;
+                            oStockTransfer.Lines.Quantity = l.QtyInSap;
+                            oStockTransfer.Lines.UoMEntry = l.UomEntry;
+                            oStockTransfer.Lines.UseBaseUnits = BoYesNoEnum.tNO;
                             //oStockTransfer.Lines.BaseEntry = l.BaseEntry;
                             //67
                             //oStockTransfer.Lines.BaseType = SAPbobsCOM.InvBaseDocTypeEnum.Default;
@@ -443,13 +394,13 @@ namespace BarCodeAPIService.Service
                                 sumQty = sumQty + l.Quantity;
                             }
 
-                            if ((l.QtyInSap - sumQty) == 0)
+                            if ((l.TotalQty - sumQty) == 0)
                             {
                                 BalanceQty = 0;
                             }
                             else
                             {
-                                BalanceQty = (l.QtyInSap - sumQty);
+                                BalanceQty = (l.TotalQty - sumQty);
                             }
 
                             oStockTransfer.Lines.UserFields.Fields.Item("U_BalanceQty").Value = BalanceQty.ToString();
@@ -518,7 +469,7 @@ namespace BarCodeAPIService.Service
                                 sumQty = sumQty + l.Quantity;
                             }
 
-                            if ((l.QtyInSap - sumQty) == 0)
+                            if ((l.TotalQty - sumQty) == 0)
                             {
                                 BalanceQty = 0;
                                 //str_U_loannum = ", \"" + param2 + "\" = " + sendInventoryTransfer.U_loannum + " ";
@@ -527,7 +478,7 @@ namespace BarCodeAPIService.Service
                             }
                             else
                             {
-                                BalanceQty = (l.QtyInSap - sumQty);
+                                BalanceQty = (l.TotalQty - sumQty);
                                 str_U_loannum = "";
                                 str_U_mStatus = ", \"" + param3 + "\" = '"+ l.mStatus +"'";
                             }

@@ -378,8 +378,10 @@
                                         <th>ItemCode</th>
                                         <th>ItemName</th>
                                         <th>SAP-QTY</th>
+                                        <th>Input-QTY</th>
                                         <th>Patient</th>
                                         <th>UomCode</th>
+                                        <th>UomEntry</th>
                                         <th>FromWarehouse</th>
                                         <th>FromBinCode</th>
                                         <th>FromBinEntry</th>
@@ -909,8 +911,10 @@
                         { "data": "itemCode", "autoWidth": true },
                         { "data": "dscription", "autoWidth": true },
                         { "data": "quantity", "autoWidth": true },
+                        { "data": "inputQuantity", "autoWidth": true },
                         { "data": "patient", "autoWidth": true },
                         { "data": "uomCode", "autoWidth": true },
+                        { "data": "uomEntry", "autoWidth": true },
                         { "data": "fromWhsCode", "autoWidth": true },
                         { "data": "fromBinCode", "autoWidth": true },
                         { "data": "fromBinEntry", "autoWidth": true },
@@ -933,7 +937,7 @@
                     "searching": false
                 });
 
-                tline.columns([5, 6, 7, 8, 9, 10]).visible(false, false);
+                tline.columns([5, 7, 8, 10, 11, 13]).visible(false, false);
 
                 /*<input type="checkbox" !checked="checked" id = "chk' + full.itemCode + '" value = "'+ full.itemCode +'" onchange = "chkso(this)" >*/
                 console.log("Download Data Complete");
@@ -1131,6 +1135,10 @@
                             }
                             console.log(sBatchSerial);
                         }
+                        else {
+                            sBatchSerial = sSerial;
+                        }
+
                         console.log(sItemCode + ";" + sBatchSerial + ";" + txtWarehouse);
                             $.ajax({
                                 url: '@Url.Action("GetStockItemSerialW", "Inventory")',
@@ -1334,7 +1342,7 @@
             var data = tline.row(i).data();
             //console.log(data);
 
-            var cQuantity1 = parseFloat(data.quantity);
+            var cQuantity1 = parseFloat(data.inputQuantity);
             var cQuantity2 = cQty;
 
             if (data.itemCode == itm && cQuantity1 <= cQuantity2) {
@@ -1408,6 +1416,7 @@
             arrDataLine.itemCode = ldata.itemCode;
             arrDataLine.quantity = parseFloat(ldata.quantity);
             arrDataLine.uomCode = ldata.uomCode;
+            arrDataLine.uomEntry = ldata.uomEntry;
             arrDataLine.fromWhsCode = ldata.fromWhsCode;
             arrDataLine.fromBinEntry = ldata.fromBinEntry;
             arrDataLine.toWhsCode = ldata.toWhsCode;
@@ -1419,6 +1428,7 @@
             arrDataLine.baseEntry = $('#txtDocEntry').val();
             arrDataLine.u_unitprice = ldata.u_unitprice;
             arrDataLine.qtyInSap = parseFloat(ldata.quantity);
+            arrDataLine.totalQty = parseFloat(ldata.inputQuantity);
             arrDataLine.mStatus = $('#mStatus' + ctbline).val();
 
             dLine.push(arrDataLine);
@@ -1493,7 +1503,6 @@
         arrDataHead = {};
         arrLineAll = [];
 
-
         //console.log("===== Pure Data =====");
         //console.log(data2);
         var cSerialNo
@@ -1542,8 +1551,10 @@
                     arrDataHead.quantity = sumQTY;
                     arrDataHead.U_Patient = data2[x].patient;
                     arrDataHead.qtyInSap = data2[x].qtyInSap;
+                    arrDataHead.totalQty = data2[x].totalQty;
                     arrDataHead.price = data2[x].u_unitprice;
                     arrDataHead.uomCode = data2[x].uomCode;
+                    arrDataHead.uomEntry = data2[x].uomEntry;
                     arrDataHead.fromWhsCode = data2[x].fromWhsCode;
                     arrDataHead.toWhsCode = data2[x].toWhsCode;
                     arrDataHead.fromBinEntry = data2[x].fromBinEntry;
@@ -1565,8 +1576,10 @@
                     arrDataHead.quantity = sumQTY;
                     arrDataHead.U_Patient = data2[x].patient;
                     arrDataHead.qtyInSap = data2[x].qtyInSap;
+                    arrDataHead.totalQty = data2[x].totalQty;
                     arrDataHead.price = data2[x].u_unitprice;
                     arrDataHead.uomCode = data2[x].uomCode;
+                    arrDataHead.uomEntry = data2[x].uomEntry;
                     arrDataHead.fromWhsCode = data2[x].fromWhsCode;
                     arrDataHead.toWhsCode = data2[x].toWhsCode;
                     arrDataHead.fromBinEntry = data2[x].fromBinEntry;

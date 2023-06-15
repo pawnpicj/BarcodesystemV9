@@ -1,3 +1,20 @@
 SO DocNum : 123060002
 ->ScanBarCode:300-318;322102;;QTY1;0001;
 ITEM:300-318|Row:1|Status:pass,1,Case0
+SO DocNum : 123060008
+->ScanBarCode:0102Z;PDWPU210401;;QTY1;0000;
+ITEM:0102Z|Row:0|Status:pass,0,Case0
+->ScanBarCode:0102Z;PDWPU210401;;QTY1;0000;
+ITEM:0102Z|Row:0|Status:pass,0,Case0
+->ScanBarCode:0102Z;PDWPU210401;;QTY1;0000;
+ITEM:0102Z|Row:0|Status:pass,0,Case0
+->ScanBarCode:0102Z;PDWPU210401;;QTY1;0000;
+ITEM:0102Z|Row:0|Status:pass,0,Case0
+->ScanBarCode:0102Z;PDWPU210401;;QTY1;0000;
+ITEM:0102Z|Row:0|Status:pass,0,Case0
+->ScanBarCode:0102Z;PDWPU210401;;QTY1;0000;
+ITEM:0102Z|Row:0|Status:notpass,0,empty
+SO DocNum : 123060002
+->ScanBarCode:300-312;322105;;QTY1;0002;
+ITEM:300-312|Row:2|Status:pass,2,Case0
+SO DocNum : 123060002

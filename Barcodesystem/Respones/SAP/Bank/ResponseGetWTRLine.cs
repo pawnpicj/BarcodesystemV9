@@ -16,8 +16,10 @@ namespace BarCodeLibrary.Respones.SAP
         public string ItemCode { get; set; }
         public string Dscription { get; set; }
         public double Quantity { get; set; }
+        public double InputQuantity { get; set; }
         public double U_unitprice { get; set; }
         public string UomCode { get; set; }
+        public string UomEntry { get; set; }        
         public string unitMsr { get; set; }
         public string Patient { get; set; }
         public string FromWhsCode { get; set; }

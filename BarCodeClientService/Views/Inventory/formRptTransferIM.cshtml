@@ -259,7 +259,6 @@
 
 <script type="text/javascript">
 
-
     $(document).ready(function () {
         var now = new Date();
         var day = ("0" + now.getDate()).slice(-2);
@@ -272,26 +271,52 @@
         const LCustomer = [];
         const arrCustomer = {};
 
-    $.ajax({
-        url: '@Url.Action("GetContactPerson", "Home")',
-        type: "GET",
-        dataType: "JSON",
-        "dataSrc": 'data',
-        success: function (data) {
-            console.log("GetContactPerson.");
-            //console.log(data);
-            //console.log(data.data.length);
+        $.ajax({
+            url: '@Url.Action("GetContactPerson", "Home")',
+            type: "GET",
+            dataType: "JSON",
+            "dataSrc": 'data',
+            success: function (data) {
+                console.log("Get ContactPerson.");
+                //console.log(data);
+                //console.log(data.data.length);
 
-            for (let i = 0; i < data.data.length; i++) {
-                console.log(data.data[i].cardCode + "-" + data.data[i].name);
-                arrCustomer.cardCode = data.data[i].cardCode + "-" + data.data[i].name;
-                LCustomer.push(arrCustomer);
+                for (let i = 0; i < data.data.length; i++) {
+                    //console.log(data.data[i].cardCode + "-" + data.data[i].name);
+                    nameCustomer = data.data[i].cardCode + "-" + data.data[i].name;
+                    LCustomer.push(nameCustomer);
+                }
+
+                autocomplete(document.getElementById("txtCustomer"), LCustomer);
+                //console.log("Show List Array Customer.");
+                //console.log(LCustomer);
             }
-            console.log("Show List Array Customer.");
-            console.log(LCustomer);
-        }
-    });
+        });
 
+        const lSaleEmployee = [];
+        const arrSaleEmployee = {};
+
+        $.ajax({
+            url: '@Url.Action("GetSaleEmployee", "Home")',
+            type: "GET",
+            dataType: "JSON",
+            "dataSrc": 'data',
+            success: function (data) {
+                console.log("Get SaleEmployeee.");
+                //console.log(data);
+                //console.log(data.data.length);
+
+                for (let i = 0; i < data.data.length; i++) {
+                    //console.log(data.data[i].cardCode + "-" + data.data[i].name);
+                    nameSaleEmployee = data.data[i].slpCode + "-" + data.data[i].slpName;
+                    lSaleEmployee.push(nameSaleEmployee);
+                }
+
+                autocomplete(document.getElementById("txtSaleEmployee"), lSaleEmployee);
+                //console.log("Show List Array Customer.");
+                //console.log(LCustomer);
+            }
+        });
 
     });
 
@@ -377,9 +402,26 @@
             tbRptIM.clear().draw();
             var Ltmp = [];
             var tmpAdd = {};
+
+            if (cCustomer != '') {
+                const strArr1 = cCustomer.split("-");
+                var CusCode = strArr1[0];
+                keyCustomer = CusCode;
+            } else {
+                keyCustomer = 'empty';
+            }
+
+            if (cSaleEmployee != '') {
+                const strArr2 = cSaleEmployee.split("-");
+                var SaleCode = strArr2[0];
+                keySales = SaleCode;
+            } else {
+                keySales = 'empty';
+            }
+
             $.ajax({
                 url: '@Url.Action("RptTransferIM", "Inventory")',
-                data: { fromDate: FromDateX, toDate: ToDateX, customer: 'empty', saleEmp:'empty' },
+                data: { fromDate: FromDateX, toDate: ToDateX, customer: keyCustomer, saleEmp: keySales },
                 type: "GET",
                 dataType: "JSON",
                 "dataSrc": 'data',
@@ -400,8 +442,6 @@
 
 
     }
-
-    countries = [];
 
     function autocomplete(inp, arr) {
         /*the autocomplete function takes two arguments,
@@ -500,6 +540,4 @@
         });
     }
 
-    autocomplete(document.getElementById("txtCustomer"), LCustomer);
-    autocomplete(document.getElementById("txtSaleEmployee"), countries);
 </script>

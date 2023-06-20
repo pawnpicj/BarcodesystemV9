@@ -135,3 +135,4 @@ ITEM:0102|Row:1|Status:pass,1,Case1
 ->ScanBarCode:0102;0102-0100A;;QTY1;0001;
 ITEM:0102|Row:1|Status:pass,1,Case1
 SO DocNum : 123060009
+SO DocNum : 123060009

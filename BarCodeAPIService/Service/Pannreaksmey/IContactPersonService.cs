@@ -6,5 +6,6 @@ namespace BarCodeAPIService.Service
     public interface IContactPersonService
     {
         Task<ResponseOCPRGetContactPerson> ResponseOCPRGetContactPerson();
+        Task<ResponseOCPRGetContactPerson> ResponseOCRDGetCustomer();
     }
 }

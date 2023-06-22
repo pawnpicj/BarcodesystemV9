@@ -61,6 +61,12 @@ namespace BarCodeClientService.Controllers
             return Ok(a);
         }
 
+        public IActionResult GetCustomerC()
+        {
+            var a = API.Read<ResponseOCPRGetContactPerson>("api/ContactPerson/GetCustomerC");
+            return Ok(a);
+        }
+
         public IActionResult GetSaleEmployee()
         {
             var a = API.Read<ResponseOSLPGetSalesEmployee>("api/SaleEmployee");

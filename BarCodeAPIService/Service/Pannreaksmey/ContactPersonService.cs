@@ -62,5 +62,56 @@ namespace BarCodeAPIService.Service
                 });
             }
         }
+
+        public Task<ResponseOCPRGetContactPerson> ResponseOCRDGetCustomer()
+        {
+            var oCPR = new List<OCPR>();
+            var dt = new DataTable();
+            try
+            {
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
+                if (login.lErrCode == 0)
+                {
+                    var Query = "CALL \"" + ConnectionString.CompanyDB +
+                                "\"._USP_CALLTRANS_Smey ('OCRDCustomer','','','','','')";
+                    login.AD = new OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
+                        oCPR.Add(new OCPR
+                        {
+                            CardCode = row[0].ToString(),
+                            Name = row[1].ToString(),
+                            Position = "",
+                            Address = "",
+                            Tel1 = "",
+                            Tel2 = "",
+                            Cellolar = ""
+                        });
+                    return Task.FromResult(new ResponseOCPRGetContactPerson
+                    {
+                        ErrorCode = 0,
+                        ErrorMessage = "",
+                        Data = oCPR.ToList()
+                    });
+                }
+
+                return Task.FromResult(new ResponseOCPRGetContactPerson
+                {
+                    ErrorCode = login.lErrCode,
+                    ErrorMessage = login.sErrMsg,
+                    Data = null
+                });
+            }
+
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseOCPRGetContactPerson
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMessage = ex.Message,
+                    Data = null
+                });
+            }
+        }
     }
 }

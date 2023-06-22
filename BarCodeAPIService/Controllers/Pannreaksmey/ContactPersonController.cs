@@ -24,5 +24,14 @@ namespace BarCodeAPIService.Controllers
                 return Ok(a);
             return BadRequest(a);
         }
+
+        [HttpGet("GetCustomerC")]
+        public async Task<IActionResult> GetCustomerCAnsync()
+        {
+            var a = await contactPerson.ResponseOCRDGetCustomer();
+            if (a.ErrorCode == 0)
+                return Ok(a);
+            return BadRequest(a);
+        }
     }
 }

@@ -1409,7 +1409,8 @@
         var sLine = [];
         console.log("Send Data to SAP");
         document.getElementById("frmLoading").style.display = "block";
-        LinesAR = LinesAR;
+        xLinesAR = [];
+        xLinesAR = LinesAR;
         //console.log(LinesAR);
 
         for (let ls = 0; ls < tbLineScan.column(0).data().length; ls++) {
@@ -1477,6 +1478,9 @@
             var datatl = tbItemLine.row(tl).data();
             //console.log(datatl);
 
+            xLinesAR[tl].Batches = [];
+            xLinesAR[tl].Serial = [];
+
             for (let y = 0; y < output.length; y++) {
 
                 arrDataLineS = {};
@@ -1488,19 +1492,19 @@
                         arrDataLineB.qty = output[y].quantity;
                         arrDataLineB.BatchNumber = output[y].batchNo;
                         //LtmpBatch.push(arrDataLineB);
-                        LinesAR[tl].Batches.push(arrDataLineB);
-                        LinesAR[tl].YesNo = "Yes";
+                        xLinesAR[tl].Batches.push(arrDataLineB);
+                        xLinesAR[tl].YesNo = "Yes";
                     }
                     else if (datatl.ManageItem == "S") {
                         arrDataLineS.ItemCode = output[y].itemCode;
                         arrDataLineS.qty = output[y].quantity;
                         arrDataLineS.SerialNumber = output[y].serialNo;
                         //LtmpSerial.push(SerialNumber);
-                        LinesAR[tl].Serial.push(arrDataLineS);
-                        LinesAR[tl].YesNo = "Yes";
+                        xLinesAR[tl].Serial.push(arrDataLineS);
+                        xLinesAR[tl].YesNo = "Yes";
                     }
                     else if (datatl.ManageItem == "N") {
-                        LinesAR[tl].YesNo = "Yes";
+                        xLinesAR[tl].YesNo = "Yes";
                     }
 
                 }
@@ -3046,7 +3050,7 @@
                     break;
                 }
             }
-            
+
             isAdd = "pass," + rowNo + ",Case0";
 
         }
@@ -3116,7 +3120,12 @@
                     cyy += 1;
                 }
             }
+
+            console.log("===========Step 1=============");
             console.log("Count Item -:" + cyy);
+            caseX = "empty";
+            console.log("Case X -:" + caseX);
+            console.log("==============================");
             if (cyy == 0) {
                 console.log("= = = = No = = = =");
                 for (let i = 0; i < tbItemLine.column(1).data().length; i++) {
@@ -3141,15 +3150,17 @@
                     var dataX = tbItemLine.row(ii).data();
                     for (let y0 = 0; y0 < output.length; y0++) {
                         //output[y0].itemCode
+                        console.log("ItemCode :- " + itemCode + "," + dataX.ItemCode + "," + output[y0].itemCode);
+                        if ((itemCode === dataX.ItemCode) && (itemCode === output[y0].itemCode)) {
+                            console.warn("Same");
 
-                        if (dataX.ItemCode === output[y0].itemCode) {
                             console.log("ItemCode :- " + dataX.ItemCode + "," + output[y0].itemCode);
                             console.log("RowNo :- " + dataX.LineNum + "," + output[y0].rowNo);
                             arr1.push(dataX.LineNum);
                             arr2.push(parseInt(output[y0].rowNo));
 
                             if (parseInt(dataX.LineNum) == parseInt(output[y0].rowNo)) {
-                                console.log('%cLineNum ==', 'background-color: green;');
+                                console.log('%cLineNum ==' + dataX.LineNum, 'background-color: green;');
 
                                 if (parseInt(output[y0].quantity) < parseInt(dataX.InputQuantity)) {
                                     console.log("%cยังรับไม่ครบ" + output[y0].quantity + "<" + dataX.InputQuantity, 'background-color: yellow;');
@@ -3205,6 +3216,7 @@
 
         arr1.length = 0;
         arr2.length = 0;
+
         return isAdd;
     }
 

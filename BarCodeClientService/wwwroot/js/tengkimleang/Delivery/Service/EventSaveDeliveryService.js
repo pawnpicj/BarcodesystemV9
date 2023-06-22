@@ -28,44 +28,45 @@ let EventSaveGoodReceiptPO = {
             //console.log("Line Here");
             //console.log(LinesAR);
             //Send to IEventSaveGoodReceipt.validLine
-            validate = EventSaveGoodReceiptPO.valiDateLine(LinesAR);
+            validate = EventSaveGoodReceiptPO.valiDateLine(xLinesAR);
             //console.log(validate);
             if (validate === 0) {
 
                 dLine = [];
                 dSubLine = {};
-                //console.log(LinesAR);
-                for (let x = 0; x < LinesAR.length; x++) {
+                //console.log(LinesAR);     
+
+                for (let x = 0; x < xLinesAR.length; x++) {
                     dSubLine = {};
                     //console.log("Id :-" + x);
-                    dSubLine.DocEntry = LinesAR[x].DocEntry;
-                    dSubLine.LineNum = LinesAR[x].LineNum;
-                    dSubLine.ItemCode = LinesAR[x].ItemCode;
-                    dSubLine.Quantity = LinesAR[x].Quantity;
-                    dSubLine.PriceBeforeDis = LinesAR[x].PriceBeforeDis;
-                    dSubLine.Discount = LinesAR[x].Discount;
-                    dSubLine.Whs = LinesAR[x].Whs;
-                    dSubLine.Patient = LinesAR[x].Patient;
-                    dSubLine.ManageItem = LinesAR[x].ManageItem;
-                    dSubLine.YesNo = LinesAR[x].YesNo;
+                    dSubLine.DocEntry = xLinesAR[x].DocEntry;
+                    dSubLine.LineNum = xLinesAR[x].LineNum;
+                    dSubLine.ItemCode = xLinesAR[x].ItemCode;
+                    dSubLine.Quantity = xLinesAR[x].Quantity;
+                    dSubLine.PriceBeforeDis = xLinesAR[x].PriceBeforeDis;
+                    dSubLine.Discount = xLinesAR[x].Discount;
+                    dSubLine.Whs = xLinesAR[x].Whs;
+                    dSubLine.Patient = xLinesAR[x].Patient;
+                    dSubLine.ManageItem = xLinesAR[x].ManageItem;
+                    dSubLine.YesNo = xLinesAR[x].YesNo;
 
                     bLine = [];
                     bSubLine = {};
-                    for (let b = 0; b < LinesAR[x].Batches.length; b++) {
+                    for (let b = 0; b < xLinesAR[x].Batches.length; b++) {
                         bSubLine = {};
-                        bSubLine.ItemCode = LinesAR[x].Batches[b].ItemCode;
-                        bSubLine.qty = LinesAR[x].Batches[b].qty;
-                        bSubLine.BatchNumber = LinesAR[x].Batches[b].BatchNumber;
+                        bSubLine.ItemCode = xLinesAR[x].Batches[b].ItemCode;
+                        bSubLine.qty = xLinesAR[x].Batches[b].qty;
+                        bSubLine.BatchNumber = xLinesAR[x].Batches[b].BatchNumber;
                         bLine.push(bSubLine);
                     }
 
                     sLine = [];
                     sSubLine = {};
-                    for (let s = 0; s < LinesAR[x].Serial.length; s++) {
+                    for (let s = 0; s < xLinesAR[x].Serial.length; s++) {
                         sSubLine = {};
-                        sSubLine.ItemCode = LinesAR[x].Serial[s].ItemCode;
-                        sSubLine.qty = LinesAR[x].Serial[s].qty;
-                        sSubLine.SerialNumber = LinesAR[x].Serial[s].SerialNumber;
+                        sSubLine.ItemCode = xLinesAR[x].Serial[s].ItemCode;
+                        sSubLine.qty = xLinesAR[x].Serial[s].qty;
+                        sSubLine.SerialNumber = xLinesAR[x].Serial[s].SerialNumber;
                         sLine.push(sSubLine);
                     }
 

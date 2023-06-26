@@ -615,8 +615,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-info" data-dismiss="modal" id="ChooseWhs" style="background:#f0eff1;color:#696969;">Choose</button>
-                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
+                <button class="btn btn-success" data-dismiss="modal" id="ChooseWhs">Choose</button>
+                <button class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -647,8 +647,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-info" data-dismiss="modal" id="ChooseBinLocation" style="background:#f0eff1;color:#696969;">Choose</button>
-                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
+                <button class="btn btn-success" data-dismiss="modal" id="ChooseBinLocation">Choose</button>
+                <button class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -710,8 +710,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-info" data-dismiss="modal" id="ChooseSeries" style="background:#f0eff1;color:#696969;">Choose</button>
-                <button class="btn btn-info" data-dismiss="modal" id="CloseSeries" style="background:#f0eff1;color:#696969;">Close</button>
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseSeries">Choose</button>
+                <button class="btn btn-danger" data-dismiss="modal" id="CloseSeries">Close</button>
             </div>
         </div>
     </div>
@@ -741,8 +741,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-info" data-dismiss="modal" id="ChooseWhsC" style="background:#f0eff1;color:#696969;">Choose</button>
-                <button class="btn btn-info" data-dismiss="modal" style="background:#f0eff1;color:#696969;">Close</button>
+                <button class="btn btn-info" data-dismiss="modal" id="ChooseWhsC">Choose</button>
+                <button class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -1433,8 +1433,11 @@
 
             //$('#TbLineStock tbody').empty();
         } else {
-            alert("Please Select Warehouse or Bin-Location");
+            alert("Please Select Warehouse or Bin-Location.\r\n");
             document.getElementById("frmLoading").style.display = "none";
+
+            document.getElementById("btnSearch").style.display = "block";
+            document.getElementById("btnSearch").disabled = false;
         }
     }
 
@@ -1672,13 +1675,13 @@
             if (iQTY != "qty") {
                 sQty = document.getElementById("txtQuantity01").value;
                 sQty = parseFloat(sQty);
-            } else if(iQTY == "qty") {
+            } else if (iQTY == "qty") {
                 sQty = sArr3.substring(3, 9);
                 sQty = parseFloat(sQty);
                 if (isNaN(sQty)) {
                     sQty = document.getElementById("txtQuantity01").value;
                 } else {
-                    sQty = 0;
+                    sQty = sQty;
                 }
             }
 
@@ -2317,7 +2320,7 @@
                 success: function (ex) {
                     //console.log(ex);
                     if (ex.errorCode == 0) {
-                        alert("Success");
+                        alert("Successfully.");
                         document.getElementById("btnSave").style.display = 'none';
                         document.getElementById("frmLoading").style.display = "none";
                         location.reload();

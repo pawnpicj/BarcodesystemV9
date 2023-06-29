@@ -51,6 +51,26 @@ namespace BarCodeClientService.Controllers
         }
 
         [HttpPost]
+        public IActionResult PostSettingDelivery(SetupTypeModel setupTypeModel)
+        {
+            string path = $"{Environment.WebRootPath}\\js\\setup-delivery.json";
+            string json = JsonConvert.SerializeObject(setupTypeModel);
+
+            using (var tc = new StreamWriter(path, false))
+            {
+                tc.Write(String.Empty);
+                tc.Close();
+            }
+
+            using (var tw = new StreamWriter(path, true))
+            {
+                tw.WriteLine(json.ToString());
+                tw.Close();
+            }
+            return Ok(json);
+        }
+
+        [HttpPost]
         public IActionResult SaveConsole(string msg)
         {
             string path = $"{Environment.WebRootPath}\\js\\delivery-log.txt";

@@ -72,7 +72,9 @@
         });
     }
 
-    getPurchaseOrder(url, cardCode) {
+    getPurchaseOrder(url, cardCode, typeShow) {
+        console.log("CardCode : " + cardCode);
+        console.log("TypeShow : " + typeShow);
         $.ajax({
             url: url,
             type: "GET",

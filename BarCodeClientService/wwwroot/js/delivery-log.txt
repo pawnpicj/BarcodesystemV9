@@ -1040,3 +1040,4 @@ ITEM:700-318|Row:2|Status:pass,2,Case1
 ITEM:700-318|Row:3|Status:pass,3,Case3
 ->ScanBarCode:700-318;025001;;QTY1;002;
 ITEM:700-318|Row:0|Status:notpass,0,Case4
+SO DocNum : 123060006

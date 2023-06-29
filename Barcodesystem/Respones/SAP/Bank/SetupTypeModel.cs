@@ -12,5 +12,6 @@ namespace BarCodeLibrary.Respones.SAP.Bank
         public string dateCounting { get; set; }
         public string timeCounting { get; set; }
         public string active { get; set; }
+        public string typeShow { get; set; }
     }
 }

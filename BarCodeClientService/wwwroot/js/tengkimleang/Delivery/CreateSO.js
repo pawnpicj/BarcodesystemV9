@@ -16,9 +16,9 @@ let GetMasterData = {
         console.log("Customer");
         GetMasterData.overallFunction.getCustomer(url,cusType);
     },
-    getPurchaseOrder(url, cardCode) {
+    getPurchaseOrder(url, cardCode, typeShow) {
         console.log("PurchaseOrder");
-        GetMasterData.overallFunction.getPurchaseOrder(url, cardCode);
+        GetMasterData.overallFunction.getPurchaseOrder(url, cardCode, typeShow);
     },
     getGoodReceiptPO(url, cardCode) {
         console.log("GoodReceiptPO");

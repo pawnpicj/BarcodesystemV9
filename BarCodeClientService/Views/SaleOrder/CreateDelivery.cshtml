@@ -41,6 +41,14 @@
         min-width: 60px;
     }
 
+    .color_tap3 {
+        min-width: 60px;
+        background-color: #ffc024;
+        color: #ffffff;
+        font-weight: 600;
+        margin-right: 1px;
+    }
+
     .nav-tabs .nav-link {
         border: 1px solid rgb(193, 193, 193);
         border-radius: 0px 12px 0px 0px;
@@ -186,12 +194,18 @@
                     <label style="font-size:18px;font-weight:500">Items</label>
                 </a>
             </li>
+            @*<li class="nav-item">
+                <a class="nav-link color_tap3" id="item-tab" data-toggle="tab" href="#setting" role="tab" aria-controls="Setting" aria-selected="false" >
+                    <label style="font-size:18px;font-weight:500">Setting</label>
+                </a>
+            </li>*@
         </ul>
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="cus" role="tabpanel" aria-labelledby="cus-tab" style="margin-top: 10px">
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="nav navbar-nav mr-auto">
+                            
                             <div class="btn-group">
                                 <button class="btn btn-info" id="CopyFromPO" data-toggle="modal" data-target="#ModalCopyFromPO" disabled>
                                     Select SO
@@ -231,6 +245,15 @@
                         </div>
                     </div>
                     <div class="col-sm-6">
+                        <div>
+                            <div class="input-group">
+                                <select id="ShowType" class="form-control" onchange="funcShowType();">
+                                    <option value="0">แสดงทั้งหมด</option>
+                                    <option value="1">ไม่แสดงแจ้งใช้</option>
+                                    <option value="2">แสดงเฉพาะแจ้งใช้</option>
+                                </select>
+                            </div>
+                        </div>
                         <div>
                             Series :
                             <div class="input-group">
@@ -887,6 +910,57 @@
         }
     }
 
+    var fpath = window.location.pathname
+    var fjs;
+    if (fpath.substring(1, 6) === "SAPUI") {
+        fjs = "http://203.151.171.116/SAPUI/js/setup-delivery.json"
+    } else {
+        fjs = "../../js/setup-delivery.json";
+    }
+
+    var oXHR = new XMLHttpRequest();
+    //console.log(oXHR);
+    oXHR.onreadystatechange = reportStatus;
+    //oXHR.open("GET", "../../js/setup-inc.json", true);  // get json file.
+    oXHR.open("GET", fjs, true);  // get json file.
+    oXHR.send();
+
+    function reportStatus() {
+        if (oXHR.readyState == 4) {		// Check if request is complete.
+            //document.getElementById('demo').innerHTML = this.responseText;
+            createTableFromJSON(this.responseText);
+        }
+    }
+
+    function createTableFromJSON(jsonData) {
+        var data1 = [];
+        data1 = JSON.parse(jsonData);
+        if (data1.type = "delivery") {
+            document.querySelector('#ShowType').value = data1.typeShow;
+        }
+
+    }
+
+    function funcShowType() {
+        //alert("TypeShow : "+document.getElementById('ShowType').value);
+
+        const params = {
+            type: 'delivery',
+            desc: 'Delivery',
+            typeShow: document.getElementById('ShowType').value
+        }
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("PostSettingDelivery", "Setting")',
+            data: { setupTypeModel: params },
+            dataType: "JSON",
+            success: function (ex) {
+                //alert('Setting Updated.');
+                location.reload();
+            }
+        });
+    }
 
     /* Init DataTable */
     /* List Serial And Batch */
@@ -1560,7 +1634,7 @@
             total1 = total1 + result.linesAR[x].InputQuantity;
         }
         $('#txt_totalQty1').val(total1);
-        
+
 
         SaveConsole("GetSO", result.docNum)
 
@@ -1594,10 +1668,12 @@
     });
 
     $('#CopyFromPO').click(function () {
-        console.log("OPENNING SO");
+        console.log("OPENNING SO" + document.getElementById('ShowType').value);
         temporyListPO = [];
         const cardCode = "empty";
-        GetMasterData.getPurchaseOrder('@Url.Action("GetSO", "SaleOrder")', cardCode);
+        const typeShow = document.getElementById('ShowType').value;
+
+        GetMasterData.getPurchaseOrder('@Url.Action("GetSO", "SaleOrder")', cardCode, typeShow);
 
         @*if ($("#CusID").val() != "") {
             const cardCode = $("#CusID").val();
@@ -2550,7 +2626,7 @@
                             } else {
                                 sBatchSerial = sSerial;
                             }
-                            
+
                         } else {
                             sBatchSerial = sSerial;
                         }
@@ -3474,7 +3550,7 @@
 
     function alertMsg(msg) {
         console.log("Message :- "+msg);
-        $('#alertMsg').val(msg);       
+        $('#alertMsg').val(msg);
         return;
     }
 

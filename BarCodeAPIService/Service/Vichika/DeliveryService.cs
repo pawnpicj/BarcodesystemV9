@@ -200,12 +200,27 @@ namespace BarCodeAPIService.Service
             }
         }
 
-        public Task<ResponseGetORDR> responseGetORDR(string cardName)
+        public Task<ResponseGetORDR> responseGetORDR(string cardName, string TypeShow)
         {
             var oPORs = new List<ORDR>();
             var pOR1s = new List<RDR1>();
             var dt = new DataTable();
             var dtLine = new DataTable();
+
+            string inputX = "Null";
+            if (TypeShow == "0")
+            {
+                inputX = "RDR1";
+            }
+            else if(TypeShow == "1")
+            {
+                inputX = "RDR1-Notify";
+            }
+            else if (TypeShow == "2")
+            {
+                inputX = "RDR1-NotifyOnly";
+            }
+
             try
             {
                 var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
@@ -218,8 +233,8 @@ namespace BarCodeAPIService.Service
                     foreach (DataRow row in dt.Rows)
                     {
                         dtLine = new DataTable();
-                        Query =
-                            $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetSOLine}','{row["DocEntry"]}','','','','')";
+                        //Query = $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetSOLine}','{row["DocEntry"]}','','','','')";
+                        Query = $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{inputX}','{row["DocEntry"]}','','','','')";
                         login.AD = new OdbcDataAdapter(Query, login.CN);
                         login.AD.Fill(dtLine);
                         pOR1s = new List<RDR1>();

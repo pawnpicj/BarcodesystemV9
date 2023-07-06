@@ -50,9 +50,9 @@ namespace BarCodeClientService.Controllers
             return View();
         }
         [HttpGet]
-        public IActionResult GetSO(string cardCode)
+        public IActionResult GetSO(string cardCode, string typeShow)
         {
-            var a = API.Read<ResponseGetORDR>(APIRoute.Delivery.Controller + APIRoute.Delivery.GetSO + cardCode);
+            var a = API.Read<ResponseGetORDR>(APIRoute.Delivery.Controller + APIRoute.Delivery.GetSO + cardCode + "/" + typeShow);
             if (a.ErrorCode!=0)
             {
                 return BadRequest(a);

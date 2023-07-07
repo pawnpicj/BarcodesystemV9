@@ -913,7 +913,7 @@
     var fpath = window.location.pathname
     var fjs;
     var character = fpath.substring(1, 6);
-    var strURL = toLowerCase(fpath.substring(1, 6));
+    var strURL = character.toLowerCase();
     if (strURL === "sapui") {
         fjs = "http://203.151.171.116/" + character + "/js/setup-delivery.json";
     } else {

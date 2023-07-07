@@ -862,14 +862,9 @@
     console.log("Page path is: " + window.location.pathname);
     var fpath = window.location.pathname
     var fjs;
+    console.log(fpath.substring(1, 6));
     if (fpath.substring(1, 6) === "SAPUI") {
-        var character = fpath.substring(1, 6);
-        if (character == character.toLowerCase()) {
-            fjs = "http://203.151.171.116/SAPUI/js/setup-inc.json";
-        }
-        else {
-            fjs = "http://203.151.171.116/sapui/js/setup-inc.json";
-        }
+        fjs = "http://203.151.171.116/SAPUI/js/setup-inc.json";
 
     } else {
         fjs = "../../js/setup-inc.json";

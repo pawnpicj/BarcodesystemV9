@@ -56,6 +56,9 @@ namespace BarCodeClientService.Controllers
             string path = $"{Environment.WebRootPath}\\js\\setup-delivery.json";
             string json = JsonConvert.SerializeObject(setupTypeModel);
 
+            Console.WriteLine("Path : " + path);
+            System.Diagnostics.Debug.WriteLine("Path : " + path);
+
             using (var tc = new StreamWriter(path, false))
             {
                 tc.Write(String.Empty);

@@ -919,27 +919,36 @@
     }
 
     var oXHR = new XMLHttpRequest();
-    //console.log(oXHR);
+    console.log(oXHR);
     oXHR.onreadystatechange = reportStatus;
     //oXHR.open("GET", "../../js/setup-inc.json", true);  // get json file.
     oXHR.open("GET", fjs, true);  // get json file.
     oXHR.send();
 
     function reportStatus() {
-        if (oXHR.readyState == 4) {		// Check if request is complete.
+        //console.log("Status : " + oXHR.readyState);
+        if (oXHR.readyState == 4 && oXHR.status == 200) {		// Check if request is complete.
             //document.getElementById('demo').innerHTML = this.responseText;
-            createTableFromJSON(this.responseText);
+            //console.log(oXHR.responseURL);
+
+            var data1 = [];
+            data1 = JSON.parse(oXHR.responseText);
+            //console.log(data1);
+            if (data1.type = "delivery") {
+                document.querySelector('#ShowType').value = data1.typeShow;
+            }
+            //createTableFromJSON(this.responseText);
         }
     }
 
-    function createTableFromJSON(jsonData) {
-        var data1 = [];
-        data1 = JSON.parse(jsonData);
-        if (data1.type = "delivery") {
-            document.querySelector('#ShowType').value = data1.typeShow;
-        }
+    //function createTableFromJSON(jsonData) {
+    //    var data1 = [];
+    //    data1 = JSON.parse(jsonData);
+    //    if (data1.type = "delivery") {
+    //        document.querySelector('#ShowType').value = data1.typeShow;
+    //    }
 
-    }
+    //}
 
     function funcShowType() {
         //alert("TypeShow : "+document.getElementById('ShowType').value);

@@ -124,6 +124,14 @@
         background-color: khaki;
     }
 
+    .textBorderBlack {
+        width: 50px;
+        text-align: center;
+        font-weight: bolder;
+        color: black;
+        font-size:18px;
+    }
+
     /* =================================================== */
     .cover-spin {
         position: fixed;
@@ -176,6 +184,13 @@
     /* =================================================== */
 </style>
 
+<audio id="isPass">
+    <source src="~/Sound/Pass.wav">
+</audio>
+<audio id="isNoPass">
+    <source src="~/Sound/NoPass.wav">
+</audio>
+
 <script type="text/javascript">
     /*DocDate*/
     $(document).ready(function () {
@@ -219,6 +234,15 @@
         document.getElementById("txtScanBatchSerial02").value = "";
     }
 
+    var isPass = document.getElementById("isPass");
+    function playAudioPass() {
+        isPass.play();
+    }
+
+    var isNoPass = document.getElementById("isNoPass");
+    function playAudioNoPass() {
+        isNoPass.play();
+    }
 
 </script>
 
@@ -520,6 +544,7 @@
                     <div class="row">
                         <div class="col">
                             <button id="btnDelRow" class="btn btn-info">&nbsp;Delete Row&nbsp;</button>
+                            <input type="text" class="bg-warning textBorderBlack" value="0" id="txtNoCounting" readonly />
                         </div>
                         <div class="col" align="right">
                             <button id="btnNewItem" class="btn btn-success" data-toggle="modal" data-target="#ModalFormAddItem">&nbsp;Add Item&nbsp;</button>
@@ -838,7 +863,14 @@
     var fpath = window.location.pathname
     var fjs;
     if (fpath.substring(1, 6) === "SAPUI") {
-        fjs = "http://203.151.171.116/SAPUI/js/setup-inc.json"
+        var character = fpath.substring(1, 6);
+        if (character == character.toLowerCase()) {
+            fjs = "http://203.151.171.116/SAPUI/js/setup-inc.json";
+        }
+        else {
+            fjs = "http://203.151.171.116/sapui/js/setup-inc.json";
+        }
+
     } else {
         fjs = "../../js/setup-inc.json";
     }
@@ -1450,6 +1482,7 @@
     }
 
     function funcAddItemManual(itemType, itemCode, batchSerial, whsCode) {
+        //playAudioNoPass();
         if (confirm("คุณต้องการเพิ่ม Batch Or Serial นี้หรือไม่") == true) {
             //Start Work                   
             if (itemType == 'batch') {
@@ -1508,8 +1541,8 @@
                 sBatchSerial = batchSerial;
                 console.log(itemCode + ";" + sBatchSerial + ";" + whsCode + ";");
                 if (sItemCode == 'DGC110' || sItemCode == 'GC18' || sItemCode == 'DGC120' || sItemCode == 'GC120' || sItemCode == 'DGC14' || sItemCode == 'GC14' || sItemCode == 'DGC110' || sItemCode == 'GC110' || sItemCode == 'C/Cmix-1.0' || sItemCode == 'C/Cmix-0.5' || sItemCode == 'OCAN-0.5A') {
-                    if (sSerial.length >= 14) {
-                        sBatchSerial = sSerial.substring(0, 12);
+                    if (sBatchSerial.length >= 14) {
+                        sBatchSerial = sBatchSerial.substring(0, 12);
                     } else {
                         sBatchSerial = sBatchSerial;
                     }
@@ -1543,8 +1576,10 @@
                                     //console.log("Serial Line : " + chks);
                                     //console.log(data[9]);
                                     if (sBatchSerial == data[9] && sBatchSerial != '') {
+                                        playAudioNoPass();
                                         console.log("Item :" + bItemCode + ", Serial duplicate -> " + sBatchSerial);
-                                        alert("Item:" + bItemCode + ", Serial duplicate->" + sBatchSerial);
+                                        alert("Item:" + bItemCode + ", Serial duplicate->" + sBatchSerial);                                        
+                                        document.getElementById("frmLoading").style.display = "none";
                                         return false;
                                     }
                                 }
@@ -1562,8 +1597,9 @@
                                     sBatchSerial
                                 ]).draw(false);
                             }
-                            else {
-                                alert("Serial Number does not exist.\r\nไม่มีเลข Serial ใน Warehouse นี้");
+                            else {                                
+                                document.getElementById("frmLoading").style.display = "none";
+                                alert("Serial Number does not exist.\r\nไม่มีเลข Serial ใน Warehouse นี้");                                                                
                             }
 
                         }
@@ -1613,7 +1649,9 @@
                                 ]).draw(false);
                             }
                             else {
+                                playAudioNoPass();
                                 alert("ไม่มี Item Barcode ใน Warehouse นี้");
+                                document.getElementById("frmLoading").style.display = "none";
                             }
 
                         }
@@ -1628,7 +1666,6 @@
 
     //Add Data In Row
     var t = $('#TbLineScan').DataTable({
-
         "bDestroy": true,
         "autoWidth": true,
         "responsive": true,
@@ -1653,14 +1690,33 @@
         "info": false,
         "searching": false,
         "scrollX": true,
-        "scrollY": false
+        "scrollY": false,
+        rowCallback: function (row, data, index) {
+
+        },
+        "footerCallback": function (row, data, start, end, display) {
+            var api = this.api();
+            nb_cols = api.columns().nodes().length;
+            //console.log(data[0].quantity);
+            console.log("Callback Data :::");
+            console.log(api);
+            var sumQty = 0;
+            for (let ls = 0; ls < api.column(0).data().length; ls++) {
+                var datals = api.row(ls).data();
+                //console.log(datals);
+                //console.log("QTY :" + parseInt(datals[2]));
+                sumQty = sumQty + parseInt(parseInt(datals[2]));
+            }
+
+            $('#txtNoCounting').val(sumQty);
+        },
     });
     // { "width": "20%", "targets": 0 },
     //BarcodeUDOM
     $('#addRow01').on('click', function () {
 
         if ($('#txtScanBarCode01').val() != '') {
-
+            document.getElementById("frmLoading").style.display = "block";
             var txtScanBarCode = document.getElementById("txtScanBarCode01").value;
             const strArr = txtScanBarCode.split(";");
             //document.getElementById("demo").innerHTML = StrBarCodeArr[4];
@@ -1741,15 +1797,18 @@
 
                             $('#txtScanBarCode01').val("");
                             $('#txtScanBarCode01').focus();
+                            playAudioPass();
+                            document.getElementById("frmLoading").style.display = "none";
 
                         } else {
+                            playAudioNoPass();
                             alert("Batch Number does not exist.\r\nไม่มีเลข Batch ใน Bin Location นี้");
-
                             //function add item comfirm
                             funcAddItemManual('batch', sItemCode, sBatchSerial, sWhsCode)
 
                             $('#txtScanBarCode01').val("");
                             $('#txtScanBarCode01').focus();
+                            document.getElementById("frmLoading").style.display = "none";
                         }
 
                     }
@@ -1804,8 +1863,10 @@
                                 //console.log("Serial Line : " + chks);
                                 //console.log(data[9]);
                                 if (sBatchSerial == data[9] && sBatchSerial != '') {
+                                    playAudioNoPass();
                                     console.log("Item :" + bItemCode + ", Serial duplicate -> " + sBatchSerial);
-                                    alert("Item:" + bItemCode + ", Serial duplicate->" + sBatchSerial);
+                                    alert("Item:" + bItemCode + ", Serial duplicate->" + sBatchSerial);                                    
+                                    document.getElementById("frmLoading").style.display = "none";
                                     return false;
                                 }
                             }
@@ -1825,15 +1886,19 @@
 
                             $('#txtScanBarCode01').val("");
                             $('#txtScanBarCode01').focus();
+                            playAudioPass();
+                            document.getElementById("frmLoading").style.display = "none";
                         }
                         else {
+                            playAudioNoPass();
                             alert("Serial Number does not exist.\r\nไม่มีเลข Serial ใน Bin Location นี้");
 
                             //function add item comfirm
                             funcAddItemManual('serial', sItemCode, sBatchSerial, sWhsCode)
 
                             $('#txtScanBarCode01').val("");
-                            $('#txtScanBarCode01').focus();
+                            $('#txtScanBarCode01').focus();                            
+                            document.getElementById("frmLoading").style.display = "none";
                         }
 
                     }
@@ -1884,9 +1949,12 @@
 
                             $('#txtScanBarCode01').val("");
                             $('#txtScanBarCode01').focus();
+                            playAudioPass();
+                            document.getElementById("frmLoading").style.display = "none";
 
                         }
                         else {
+                            playAudioNoPass();
                             alert("ไม่มี Item Barcode ใน Bin Location นี้");
 
                             //function add item comfirm                            
@@ -1894,6 +1962,7 @@
 
                             $('#txtScanBarCode01').val("");
                             $('#txtScanBarCode01').focus();
+                            document.getElementById("frmLoading").style.display = "none";
                         }
 
                     }

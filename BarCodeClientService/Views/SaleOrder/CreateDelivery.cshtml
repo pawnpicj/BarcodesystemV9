@@ -912,9 +912,15 @@
 
     var fpath = window.location.pathname
     var fjs;
-    console.log(fpath.substring(1, 6));
     if (fpath.substring(1, 6) === "SAPUI") {
-        fjs = "http://203.151.171.116/SAPUI/js/setup-inc.json";
+        var character = fpath.substring(1, 6);
+        console.log(character);
+        if (character == character.toLowerCase()) {
+            fjs = "http://203.151.171.116/sapui/js/setup-delivery.json";
+        }
+        else {
+            fjs = "http://203.151.171.116/SAPUI/js/setup-delivery.json";
+        }
     } else {
         fjs = "../../js/setup-delivery.json";
     }

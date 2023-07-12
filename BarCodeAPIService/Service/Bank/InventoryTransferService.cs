@@ -98,7 +98,6 @@ namespace BarCodeAPIService.Service
                             }
                             oStockTransfer.Lines.UserFields.Fields.Item("U_Patient").Value = xPatient;
 
-
                             //if (l.U_TranferNo != "" && l.U_TranferNo != "-")
                             //{
                             //    oStockTransfer.Lines.UserFields.Fields.Item("U_TranferNo").Value = l.U_TranferNo;
@@ -535,7 +534,6 @@ namespace BarCodeAPIService.Service
                 });
             }
         }
-
         public Task<ResponseInventoryTransfer> responseInventoryTransferIM(SendInventoryTransfer sendInventoryTransfer)
         {
             try

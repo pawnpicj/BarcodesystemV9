@@ -147,7 +147,7 @@ namespace BarCodeClientService.Controllers
 
             return Ok(a);
         }
-
+        
         public IActionResult GetSeriesSO(string yymm, string typeSeries)
         {
             var yyyy = DateTime.Now.Year.ToString();
@@ -240,6 +240,12 @@ namespace BarCodeClientService.Controllers
             return Ok(a);
         }
 
+        public IActionResult GetStockItemBatchWCounting(string itemcode, string batchnumber, string whscode)
+        {
+            var a = API.Read<ResponseGetStockItemBatchAndSerial>("GetStockItemBatchWCounting/" + itemcode + "/" + batchnumber + "/" + whscode);
+            return Ok(a);
+        }
+
         public IActionResult GetStockItemSerial(string itemcode, string serialnumber)
         {
             var xitemcode = itemcode;
@@ -257,6 +263,12 @@ namespace BarCodeClientService.Controllers
         public IActionResult GetStockItemSerialW(string itemcode, string serialnumber, string whscode)
         {
             var a = API.Read<ResponseGetStockItemBatchAndSerial>("GetStockItemSerialW/" + itemcode + "/" + serialnumber + "/" + whscode);
+            return Ok(a);
+        }
+
+        public IActionResult GetStockItemSerialWCounting(string itemcode, string serialnumber, string whscode)
+        {
+            var a = API.Read<ResponseGetStockItemBatchAndSerial>("GetStockItemSerialWCounting/" + itemcode + "/" + serialnumber + "/" + whscode);
             return Ok(a);
         }
 

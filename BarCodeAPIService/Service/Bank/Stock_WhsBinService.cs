@@ -359,6 +359,62 @@ namespace BarCodeAPIService.Service.Bank
             }
         }
 
+        public Task<ResponseGetStockItemBatchAndSerial> responseGetStockItemBatchWCounting(string itemCode, string batchNumber, string whsCode)
+        {
+            var dataLine = new List<GetStockItemBatchAndSerial>();
+            var dt = new DataTable();
+
+            try
+            {
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
+                if (login.lErrCode == 0)
+                {
+
+                    var Query = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK ('GetStock_Batch_Whs_Counting','{itemCode}','{batchNumber}','{whsCode}','','')";
+                    login.AD = new OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        dataLine.Add(new GetStockItemBatchAndSerial
+                        {
+                            ItemCode = row["ItemCode"].ToString(),
+                            ItemName = row["ItemName"].ToString(),
+                            Quantity = Convert.ToDouble(row["Qty"].ToString()),
+                            UOMCode = row["UOMCode"].ToString(),
+                            WhsEntry = Convert.ToInt32(row["WhsEntry"].ToString()),
+                            WhsCode = row["WhsCode"].ToString(),
+                            BinEntry = Convert.ToInt32(row["BinEntry"].ToString()),
+                            BinCode = row["BinCode"].ToString(),
+                            BatchNumber = row["BatchNumber"].ToString(),
+                            ExpDate = row["ExpDate"].ToString()
+                        });
+                    }
+                    return Task.FromResult(new ResponseGetStockItemBatchAndSerial
+                    {
+                        ErrorCode = 0,
+                        ErrorMessage = "",
+                        Data = dataLine.ToList()
+                    });
+                }
+
+                return Task.FromResult(new ResponseGetStockItemBatchAndSerial
+                {
+                    ErrorCode = login.lErrCode,
+                    ErrorMessage = login.sErrMsg,
+                    Data = null
+                });
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseGetStockItemBatchAndSerial
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMessage = ex.Message,
+                    Data = null
+                });
+            }
+        }
+
         public Task<ResponseGetStockItemBatchAndSerial> responseGetStockItemSerialW(string itemCode, string serialNumber, string whsCode)
         {
             var dataLine = new List<GetStockItemBatchAndSerial>();
@@ -371,6 +427,62 @@ namespace BarCodeAPIService.Service.Bank
                 {
 
                     var Query = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK ('GetStock_Serial_Whs','{itemCode}','{serialNumber}','{whsCode}','','')";
+                    login.AD = new OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        dataLine.Add(new GetStockItemBatchAndSerial
+                        {
+                            ItemCode = row["ItemCode"].ToString(),
+                            ItemName = row["ItemName"].ToString(),
+                            Quantity = Convert.ToDouble(row["Qty"].ToString()),
+                            UOMCode = row["UOMCode"].ToString(),
+                            WhsEntry = Convert.ToInt32(row["WhsEntry"].ToString()),
+                            WhsCode = row["WhsCode"].ToString(),
+                            BinEntry = Convert.ToInt32(row["BinEntry"].ToString()),
+                            BinCode = row["BinCode"].ToString(),
+                            SerialNumber = row["SerialNumber"].ToString(),
+                            ExpDate = row["ExpDate"].ToString()
+                        });
+                    }
+                    return Task.FromResult(new ResponseGetStockItemBatchAndSerial
+                    {
+                        ErrorCode = 0,
+                        ErrorMessage = "",
+                        Data = dataLine.ToList()
+                    });
+                }
+
+                return Task.FromResult(new ResponseGetStockItemBatchAndSerial
+                {
+                    ErrorCode = login.lErrCode,
+                    ErrorMessage = login.sErrMsg,
+                    Data = null
+                });
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseGetStockItemBatchAndSerial
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMessage = ex.Message,
+                    Data = null
+                });
+            }
+        }
+
+        public Task<ResponseGetStockItemBatchAndSerial> responseGetStockItemSerialWCounting(string itemCode, string serialNumber, string whsCode)
+        {
+            var dataLine = new List<GetStockItemBatchAndSerial>();
+            var dt = new DataTable();
+
+            try
+            {
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
+                if (login.lErrCode == 0)
+                {
+
+                    var Query = $"CALL \"{ConnectionString.CompanyDB}\"._USP_CALLTRANS_BANK ('GetStock_Serial_Whs_Counting','{itemCode}','{serialNumber}','{whsCode}','','')";
                     login.AD = new OdbcDataAdapter(Query, login.CN);
                     login.AD.Fill(dt);
                     foreach (DataRow row in dt.Rows)

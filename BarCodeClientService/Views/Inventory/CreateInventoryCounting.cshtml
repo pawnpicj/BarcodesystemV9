@@ -1484,7 +1484,7 @@
                 sBatchSerial = batchSerial;
                 console.log(itemCode + ";" + sBatchSerial + ";" + whsCode + ";");
                 $.ajax({
-                    url: '@Url.Action("GetStockItemBatchW", "Inventory")',
+                    url: '@Url.Action("GetStockItemBatchWCounting", "Inventory")',
                     data: { itemcode: itemCode, batchnumber: sBatchSerial, whscode: whsCode },
                     type: "GET",
                     dataType: "JSON",
@@ -1544,7 +1544,7 @@
                     }
 
                     $.ajax({
-                        url: '@Url.Action("GetStockItemSerialW", "Inventory")',
+                        url: '@Url.Action("GetStockItemSerialWCounting", "Inventory")',
                         data: { itemcode: itemCode, serialnumber: sBatchSerial, whscode: whsCode },
                         type: "GET",
                         dataType: "JSON",

@@ -20,6 +20,9 @@ namespace BarCodeAPIService.Service.Bank
         Task<ResponseGetStockItemBatchAndSerial> responseGetStockItemBatchW(string itemCode, string batchNumber, string whsCode);
         Task<ResponseGetStockItemBatchAndSerial> responseGetStockItemSerialW(string itemCode, string serialNumber, string whsCode);
 
+        Task<ResponseGetStockItemBatchAndSerial> responseGetStockItemBatchWCounting(string itemCode, string batchNumber, string whsCode);
+        Task<ResponseGetStockItemBatchAndSerial> responseGetStockItemSerialWCounting(string itemCode, string serialNumber, string whsCode);
+
         Task<ResponseScanItemsInIM> responseScanItemsInIM(string docEntry, string itemCode, string batchSerialNo);
 
         Task<ResponseGetListItemInIM> responseGetListItemInIM(string docEntry);

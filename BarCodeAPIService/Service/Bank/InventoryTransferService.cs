@@ -17,9 +17,7 @@ namespace BarCodeAPIService.Service
     {
         private int ErrCode;
         private string ErrMsg;
-
         public double BQty;
-
         public Task<ResponseInventoryTransfer> responseInventoryTransfer(SendInventoryTransfer sendInventoryTransfer)
         {
             try
@@ -83,7 +81,7 @@ namespace BarCodeAPIService.Service
                             oStockTransfer.Lines.ItemCode = l.ItemCode;
                             oStockTransfer.Lines.FromWarehouseCode = l.FromWhsCode;
                             oStockTransfer.Lines.WarehouseCode = l.ToWhsCode;
-                            oStockTransfer.Lines.Quantity = l.QtyInSap;
+                            oStockTransfer.Lines.Quantity = l.Quantity;
 
                             string strPatient = "";
                             string xPatient = "";
@@ -238,7 +236,6 @@ namespace BarCodeAPIService.Service
                 });
             }
         }
-
         public Task<ResponseInventoryTransfer> responseInventoryTransferCV(SendInventoryTransfer sendInventoryTransfer)
         {
             try

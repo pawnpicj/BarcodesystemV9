@@ -153,23 +153,7 @@ namespace BarCodeAPIService.Service
                                     nS++;
                                 }
 
-                            }
-                            else if (l.ProductType == "n")
-                            {
-                                oStockTransfer.Lines.BinAllocations.BinActionType = SAPbobsCOM.BinActionTypeEnum.batFromWarehouse;
-                                oStockTransfer.Lines.BinAllocations.SerialAndBatchNumbersBaseLine = 0;
-                                oStockTransfer.Lines.BinAllocations.BinAbsEntry = l.fromBinEntry;
-                                oStockTransfer.Lines.BinAllocations.Quantity = l.Quantity;
-                                oStockTransfer.Lines.BinAllocations.Add();
-
-                                oStockTransfer.Lines.BinAllocations.BinActionType = SAPbobsCOM.BinActionTypeEnum.batToWarehouse;
-                                oStockTransfer.Lines.BinAllocations.SerialAndBatchNumbersBaseLine = 0;
-                                oStockTransfer.Lines.BinAllocations.BinAbsEntry = l.toBinEntry;
-                                oStockTransfer.Lines.BinAllocations.Quantity = l.Quantity;
-                                oStockTransfer.Lines.BinAllocations.Add();
-
-                                sumQty = sumQty + l.Quantity;
-                            }
+                            }                            
                             //==================================================
 
 
@@ -187,6 +171,63 @@ namespace BarCodeAPIService.Service
 
                             oStockTransfer.Lines.Add();
 
+                        }
+                        //No B/SN
+                        if(l.ProductType == "n")
+                        {
+                            oStockTransfer.Lines.SetCurrentLine(lineNumb);
+
+                            oStockTransfer.Lines.BaseEntry = l.BaseEntry;
+                            oStockTransfer.Lines.BaseLine = l.BaseLine;
+                            oStockTransfer.Lines.BaseType = SAPbobsCOM.InvBaseDocTypeEnum.InventoryTransferRequest;
+
+                            oStockTransfer.Lines.ItemCode = l.ItemCode;
+                            oStockTransfer.Lines.FromWarehouseCode = l.FromWhsCode;
+                            oStockTransfer.Lines.WarehouseCode = l.ToWhsCode;
+                            oStockTransfer.Lines.Quantity = l.Quantity;
+
+                            string strPatient = "";
+                            string xPatient = "";
+                            strPatient = l.U_Patient;
+                            if (strPatient is not null)
+                            {
+                                xPatient = strPatient;
+                            }
+                            else
+                            {
+                                xPatient = " ";
+                            }
+                            oStockTransfer.Lines.UserFields.Fields.Item("U_Patient").Value = xPatient;
+                                
+                                oStockTransfer.Lines.BinAllocations.BinActionType = SAPbobsCOM.BinActionTypeEnum.batFromWarehouse;
+                                oStockTransfer.Lines.BinAllocations.SerialAndBatchNumbersBaseLine = 0;
+                                oStockTransfer.Lines.BinAllocations.BinAbsEntry = l.fromBinEntry;
+                                oStockTransfer.Lines.BinAllocations.Quantity = l.Quantity;
+                                oStockTransfer.Lines.BinAllocations.Add();
+
+                                oStockTransfer.Lines.BinAllocations.BinActionType = SAPbobsCOM.BinActionTypeEnum.batToWarehouse;
+                                oStockTransfer.Lines.BinAllocations.SerialAndBatchNumbersBaseLine = 0;
+                                oStockTransfer.Lines.BinAllocations.BinAbsEntry = l.toBinEntry;
+                                oStockTransfer.Lines.BinAllocations.Quantity = l.Quantity;
+                                oStockTransfer.Lines.BinAllocations.Add();
+
+                                sumQty = sumQty + l.Quantity;
+                            //==================================================
+
+
+                            if ((l.InputQty - sumQty) == 0)
+                            {
+                                BalanceQty = 0;
+                            }
+                            else
+                            {
+                                BalanceQty = (l.InputQty - sumQty);
+                            }
+
+                            //oStockTransfer.Lines.UserFields.Fields.Item("U_BalanceQty").Value = BalanceQty.ToString();
+                            lineNumb++;
+
+                            oStockTransfer.Lines.Add();
                         }
 
                     }

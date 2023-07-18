@@ -1536,7 +1536,7 @@
                 //sItemCode = itemCode;
                 sBatchSerial = batchSerial;
                 console.log(itemCode + ";" + sBatchSerial + ";" + whsCode + ";");
-                if (itemCode == 'DGC110' || itemCode == 'GC18' || itemCode == 'DGC120' || itemCode == 'GC120' || itemCode == 'DGC14' || itemCode == 'GC14' || itemCode == 'GC110' || itemCode == 'C/Cmix-1.0' || itemCode == 'C/Cmix-0.5' || itemCode == 'OCAN-0.5A') {
+                if (itemCode == 'DGC110' || itemCode == 'GC18' || itemCode == 'DGC120' || itemCode == 'GC120' || itemCode == 'DGC14' || itemCode == 'GC14' || itemCode == 'GC110' || itemCode == 'C/Cmix-1.0' || itemCode == 'C/Cmix-0.5' || itemCode == 'OCAN-0.5A' || sItemCode == 'DGC18') {
                     if (sBatchSerial.length >= 14) {
                         sBatchSerial = sBatchSerial.substring(0, 12);
                     } else {
@@ -1813,7 +1813,7 @@
             }
             // For Serial
             else if (sSerial != '') {
-                if (sItemCode == 'DGC110' || sItemCode == 'GC18' || sItemCode == 'DGC120' || sItemCode == 'GC120' || sItemCode == 'DGC14' || sItemCode == 'GC14' || sItemCode == 'DGC110' || sItemCode == 'GC110' || sItemCode == 'C/Cmix-1.0' || sItemCode == 'C/Cmix-0.5' || sItemCode == 'OCAN-0.5A') {
+                if (sItemCode == 'DGC110' || sItemCode == 'GC18' || sItemCode == 'DGC120' || sItemCode == 'GC120' || sItemCode == 'DGC14' || sItemCode == 'GC14' || sItemCode == 'DGC110' || sItemCode == 'GC110' || sItemCode == 'C/Cmix-1.0' || sItemCode == 'C/Cmix-0.5' || sItemCode == 'OCAN-0.5A' || sItemCode == 'DGC18') {
                     if (sSerial.length >= 14) {
                         sBatchSerial = sSerial.substring(0, 12);
                     } else {

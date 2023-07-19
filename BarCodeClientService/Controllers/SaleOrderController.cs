@@ -63,6 +63,7 @@ namespace BarCodeClientService.Controllers
                 return Ok(a.Data);
             }
         }
+
         [HttpGet]
         public IActionResult GetBatchActionResult(string itemCode,string whsCode)
         {

@@ -78,7 +78,7 @@
         $.ajax({
             url: url,
             type: "GET",
-            data: { CardCode: cardCode, TypeShow: typeShow },
+            data: { cardCode: cardCode, typeShow: typeShow },
             dataType: "JSON",
             success: function(data) {
                 LCopyFromPO = data;

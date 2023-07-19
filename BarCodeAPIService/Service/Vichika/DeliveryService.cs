@@ -207,7 +207,7 @@ namespace BarCodeAPIService.Service
             var dt = new DataTable();
             var dtLine = new DataTable();
 
-            string inputX = "0";
+            string inputX = "Null";
             if (TypeShow == "0")
             {
                 inputX = "RDR1";

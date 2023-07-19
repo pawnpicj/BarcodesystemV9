@@ -17,10 +17,10 @@ namespace BarCodeAPIService.Controllers
             this.Delivery = Delivery;
         }
 
-        [HttpGet(APIRoute.Delivery.GetSO+ "{CardCode}/{TypeShow}")]
-        public async Task<IActionResult> GetDeliveryAsyc(string CardCode, string TypeShow)
+        [HttpGet(APIRoute.Delivery.GetSO+ "{cardCode}/{typeShow}")]
+        public async Task<IActionResult> GetDeliveryAsyc(string cardCode, string typeShow)
         {
-            var a = await Delivery.responseGetORDR(CardCode, TypeShow);
+            var a = await Delivery.responseGetORDR(cardCode, typeShow);
             if (a.ErrorCode == 0)
                 return Ok(a);
             return BadRequest(a);

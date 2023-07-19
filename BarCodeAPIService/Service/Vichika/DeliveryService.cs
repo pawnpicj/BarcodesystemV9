@@ -200,26 +200,12 @@ namespace BarCodeAPIService.Service
             }
         }
 
-        public Task<ResponseGetORDR> responseGetORDR(string CardCode, string TypeShow)
+        public Task<ResponseGetORDR> responseGetORDR(string cardCode, string typeShow)
         {
             var oPORs = new List<ORDR>();
             var pOR1s = new List<RDR1>();
             var dt = new DataTable();
             var dtLine = new DataTable();
-
-            string inputX = "Null";
-            if (TypeShow == "0")
-            {
-                inputX = "RDR1";
-            }
-            else if(TypeShow == "1")
-            {
-                inputX = "RDR1-Notify";
-            }
-            else if (TypeShow == "2")
-            {
-                inputX = "RDR1-NotifyOnly";
-            }
 
             try
             {
@@ -227,13 +213,33 @@ namespace BarCodeAPIService.Service
                 if (login.lErrCode == 0)
                 {
                     var Query =
-                        $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetSO}','{CardCode}','','','','')";
+                        $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetSO}','{cardCode}','','','','')";
                     login.AD = new OdbcDataAdapter(Query, login.CN);
                     login.AD.Fill(dt);
                     foreach (DataRow row in dt.Rows)
                     {
                         dtLine = new DataTable();
                         //Query = $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetSOLine}','{row["DocEntry"]}','','','','')";
+
+                        string inputX = "";
+                            if (typeShow == "0")
+                            {
+                                inputX = "RDR1";
+                            }
+                            else if (typeShow == "1")
+                            {
+                                inputX = "RDR1-Notify";
+                            }
+                            else if (typeShow == "2")
+                            {
+                                inputX = "RDR1-NotifyOnly";
+                            }
+                            else
+                            {
+                                inputX = "RDR1";
+                            }
+
+
                         Query = $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{inputX}','{row["DocEntry"]}','','','','')";
                         login.AD = new OdbcDataAdapter(Query, login.CN);
                         login.AD.Fill(dtLine);

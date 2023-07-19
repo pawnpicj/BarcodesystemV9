@@ -13,5 +13,7 @@ namespace BarCodeAPIService.Service
         Task<ResponseDelivery> PostDelivery(SendDelivery sendDelivery);
         Task<ResponseGetSaleOrder> responseGetSaleOrder();
         Task<ResponseGetORDR> responseGetSO(string cardCode);
+        Task<ResponseGetORDR> responseGetSONew(string cardCode, string typeShow);
+
     }
 }

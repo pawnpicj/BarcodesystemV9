@@ -71,5 +71,14 @@ namespace BarCodeAPIService.Controllers
             return BadRequest(a);
         }
 
+        [HttpGet("GetSONew/{cardCode}/{typeShow}")]
+        public async Task<IActionResult> GetSONewAsyc(string cardCode, string typeShow)
+        {
+            var a = await Delivery.responseGetSONew(cardCode, typeShow);
+            if (a.ErrorCode == 0)
+                return Ok(a);
+            return BadRequest(a);
+        }
+
     }
 }

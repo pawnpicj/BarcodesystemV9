@@ -505,5 +505,118 @@ namespace BarCodeAPIService.Service
             }
 
         }
+
+        public Task<ResponseGetORDR> responseGetSONew(string cardCode, string typeShow)
+        {
+            var oPORs = new List<ORDR>();
+            var pOR1s = new List<RDR1>();
+            var dt = new DataTable();
+            var dtLine = new DataTable();
+
+            try
+            {
+                var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
+                if (login.lErrCode == 0)
+                {
+                    var Query =
+                        $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetSO}','{cardCode}','','','','')";
+                    login.AD = new OdbcDataAdapter(Query, login.CN);
+                    login.AD.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        dtLine = new DataTable();
+                        //Query = $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetSOLine}','{row["DocEntry"]}','','','','')";
+
+                        string inputX = "";
+                        if (typeShow == "0")
+                        {
+                            inputX = "RDR1";
+                        }
+                        else if (typeShow == "1")
+                        {
+                            inputX = "RDR1-Notify";
+                        }
+                        else if (typeShow == "2")
+                        {
+                            inputX = "RDR1-NotifyOnly";
+                        }
+                        else
+                        {
+                            inputX = "RDR1";
+                        }
+
+                        Query = $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('RDR1','{row["DocEntry"]}','','','','')";
+                        login.AD = new OdbcDataAdapter(Query, login.CN);
+                        login.AD.Fill(dtLine);
+                        pOR1s = new List<RDR1>();
+                        foreach (DataRow drLine in dtLine.Rows)
+                            pOR1s.Add(new RDR1
+                            {
+                                ItemCode = drLine["ItemCode"].ToString(),
+                                Description = drLine["Description"].ToString(),
+                                Quatity = Convert.ToDouble(drLine["Quantity"].ToString()),
+                                InputQuantity = Convert.ToDouble(drLine["InputQuantity"].ToString()),
+                                Price = Convert.ToDouble(drLine["Price"].ToString()),
+                                PriceBeforeDis = Convert.ToDouble(drLine["PriceBefDi"].ToString()),
+                                DiscPrcnt = Convert.ToDouble(drLine["DiscPrcnt"].ToString()),
+                                DiscountAMT = Convert.ToDouble(drLine["DiscountAmt"].ToString()),
+                                VatGroup = drLine["LineTotal"].ToString(),
+                                WhsCode = drLine["WhsCode"].ToString(),
+                                LineTotal = Convert.ToDouble(drLine["LineTotal"].ToString()),
+                                ManageItem = drLine["ManageItem"].ToString(),
+                                UomName = drLine["UomName"].ToString(),
+                                TaxCode = drLine["TaxCode"].ToString(),
+                                Patient = drLine["Patient"].ToString(),
+                                TranferNo = drLine["TranferNo"].ToString(),
+                                LineNum = Convert.ToInt32(drLine["LineNum"].ToString())
+                            });
+                        oPORs.Add(new ORDR
+                        {
+                            DocEntry = Convert.ToInt32(row["DocENtry"].ToString()),
+                            CardCode = row["CardCode"].ToString(),
+                            CardName = row["CardName"].ToString(),
+                            CntctCode = row["CntctCode"].ToString(),
+                            NumAtCard = row["NumAtCard"].ToString(),
+                            DocNum = row["DocNum"].ToString(),
+                            DocStatus = row["DocStatus"].ToString(),
+                            DocDate = Convert.ToDateTime(row["DocDate"]).ToShortDateString(),
+                            DocDueDate = Convert.ToDateTime(row["DocDueDate"]).ToShortDateString(),
+                            TaxDate = Convert.ToDateTime(row["TaxDate"]).ToShortDateString(),
+                            DocTotal = Convert.ToDouble(row["DocTotal"]),
+                            DiscPrcnt = Convert.ToDouble(row["DiscPrcnt"]),
+                            DiscountAMT = Convert.ToDouble(row["DiscSum"].ToString()),
+                            ToBinLocation = row["ToBinLocation"].ToString(),
+                            SlpCode = Convert.ToInt32(row["SlpCode"].ToString()),
+                            SlpName = row["SlpName"].ToString(),
+                            Line = pOR1s.ToList()
+                        });
+                    }
+
+                    return Task.FromResult(new ResponseGetORDR
+                    {
+                        ErrorCode = 0,
+                        ErrorMessage = "",
+                        Data = oPORs.ToList()
+                    });
+                }
+
+                return Task.FromResult(new ResponseGetORDR
+                {
+                    ErrorCode = login.lErrCode,
+                    ErrorMessage = login.sErrMsg,
+                    Data = null
+                });
+            }
+
+            catch (Exception ex)
+            {
+                return Task.FromResult(new ResponseGetORDR
+                {
+                    ErrorCode = ex.HResult,
+                    ErrorMessage = ex.Message,
+                    Data = null
+                });
+            }
+        }
     }
 }

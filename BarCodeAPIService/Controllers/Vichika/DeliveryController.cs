@@ -76,8 +76,13 @@ namespace BarCodeAPIService.Controllers
         {
             var a = await Delivery.responseGetSONew(cardCode, typeShow);
             if (a.ErrorCode == 0)
+            {
                 return Ok(a);
-            return BadRequest(a);
+            }
+            else
+            {
+                return BadRequest(a);
+            }
         }
 
     }

@@ -508,8 +508,8 @@ namespace BarCodeAPIService.Service
 
         public Task<ResponseGetORDR> responseGetSONew(string cardCode, string typeShow)
         {
-            var oPORs = new List<ORDR>();
-            var pOR1s = new List<RDR1>();
+            var oRDRs = new List<ORDR>();
+            var rDR1s = new List<RDR1>();
             var dt = new DataTable();
             var dtLine = new DataTable();
 
@@ -519,58 +519,12 @@ namespace BarCodeAPIService.Service
                 if (login.lErrCode == 0)
                 {
                     var Query =
-                        $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetSO}','','','','','')";
+                        $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('ORDR','','','','','')";
                     login.AD = new OdbcDataAdapter(Query, login.CN);
                     login.AD.Fill(dt);
                     foreach (DataRow row in dt.Rows)
                     {
-                        dtLine = new DataTable();
-                        //Query = $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetSOLine}','{row["DocEntry"]}','','','','')";
-
-                        string inputX = "";
-                        if (typeShow == "0")
-                        {
-                            inputX = "RDR1";
-                        }
-                        else if (typeShow == "1")
-                        {
-                            inputX = "RDR1-Notify";
-                        }
-                        else if (typeShow == "2")
-                        {
-                            inputX = "RDR1-NotifyOnly";
-                        }
-                        else
-                        {
-                            inputX = "RDR1";
-                        }
-
-                        Query = $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('RDR1','{row["DocEntry"]}','','','','')";
-                        login.AD = new OdbcDataAdapter(Query, login.CN);
-                        login.AD.Fill(dtLine);
-                        pOR1s = new List<RDR1>();
-                        foreach (DataRow drLine in dtLine.Rows)
-                            pOR1s.Add(new RDR1
-                            {
-                                ItemCode = drLine["ItemCode"].ToString(),
-                                Description = drLine["Description"].ToString(),
-                                Quatity = Convert.ToDouble(drLine["Quantity"].ToString()),
-                                InputQuantity = Convert.ToDouble(drLine["InputQuantity"].ToString()),
-                                Price = Convert.ToDouble(drLine["Price"].ToString()),
-                                PriceBeforeDis = Convert.ToDouble(drLine["PriceBefDi"].ToString()),
-                                DiscPrcnt = Convert.ToDouble(drLine["DiscPrcnt"].ToString()),
-                                DiscountAMT = Convert.ToDouble(drLine["DiscountAmt"].ToString()),
-                                VatGroup = drLine["LineTotal"].ToString(),
-                                WhsCode = drLine["WhsCode"].ToString(),
-                                LineTotal = Convert.ToDouble(drLine["LineTotal"].ToString()),
-                                ManageItem = drLine["ManageItem"].ToString(),
-                                UomName = drLine["UomName"].ToString(),
-                                TaxCode = drLine["TaxCode"].ToString(),
-                                Patient = drLine["Patient"].ToString(),
-                                TranferNo = drLine["TranferNo"].ToString(),
-                                LineNum = Convert.ToInt32(drLine["LineNum"].ToString())
-                            });
-                        oPORs.Add(new ORDR
+                        oRDRs.Add(new ORDR
                         {
                             DocEntry = Convert.ToInt32(row["DocENtry"].ToString()),
                             CardCode = row["CardCode"].ToString(),
@@ -588,7 +542,7 @@ namespace BarCodeAPIService.Service
                             ToBinLocation = row["ToBinLocation"].ToString(),
                             SlpCode = Convert.ToInt32(row["SlpCode"].ToString()),
                             SlpName = row["SlpName"].ToString(),
-                            Line = pOR1s.ToList()
+                            Line = rDR1s.ToList()
                         });
                     }
 
@@ -596,7 +550,7 @@ namespace BarCodeAPIService.Service
                     {
                         ErrorCode = 0,
                         ErrorMessage = "",
-                        Data = oPORs.ToList()
+                        Data = oRDRs.ToList()
                     });
                 }
 

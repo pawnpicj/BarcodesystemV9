@@ -263,10 +263,11 @@
         var now = new Date();
         var day = ("0" + now.getDate()).slice(-2);
         var month = ("0" + (now.getMonth() + 1)).slice(-2);
-        var today1 = now.getFullYear() + "-" + (month) + "-01";
+        //var today1 = now.getFullYear() + "-" + "01" + "-01";
+        var today1 = "2021-01-01";
         var today2 = now.getFullYear() + "-" + (month) + "-" + (day);
-        //$('#txtFromDate').val(today1);
-        //$('#txtToDate').val(today2);
+        $('#txtFromDate').val(today1);
+        $('#txtToDate').val(today2);
 
         const LCustomer = [];
         const arrCustomer = {};

@@ -1478,7 +1478,7 @@
 
     function funcAddItemManual(itemType, itemCode, batchSerial, whsCode) {
         //playAudioNoPass();
-        if (confirm("คุณต้องการเพิ่ม Batch Or Serial นี้หรือไม่") == true) {
+        //if (confirm("คุณต้องการเพิ่ม Batch Or Serial นี้หรือไม่") == true) {
             //Start Work                   
             if (itemType == 'batch') {
                 sBatchSerial = batchSerial;
@@ -1655,9 +1655,9 @@
                     });
             }
             //End Work   
-        } else {
-            console.log("Canceled!")
-        }
+        //} else {
+        //    console.log("Canceled!")
+        //}
     }
 
     //Add Data In Row
@@ -1712,6 +1712,7 @@
     $('#addRow01').on('click', function () {
 
         if ($('#txtScanBarCode01').val() != '') {
+            document.getElementById("txtScanBarCode01").disabled = true;
             document.getElementById("frmLoading").style.display = "block";
             var txtScanBarCode = document.getElementById("txtScanBarCode01").value;
             const strArr = txtScanBarCode.split(";");
@@ -1757,7 +1758,10 @@
                     "dataSrc": 'data',
                     success: function (data) {
                         var jqueryXml = $(data);
-                        console.log(data);
+                        //console.log(data);
+                        if (data === undefined) {
+                            fncClearAndFocus();
+                        }
                         if (jqueryXml[0].data.length != 0) {
 
                             var bItemCode = jqueryXml[0].data[0].itemCode;
@@ -1791,20 +1795,21 @@
                                 ''
                             ]).draw(false);
 
-                            $('#txtScanBarCode01').val("");
-                            $('#txtScanBarCode01').focus();
                             playAudioPass();
                             document.getElementById("frmLoading").style.display = "none";
-
+                            document.getElementById("txtScanBarCode01").disabled = false;
+                            $('#txtScanBarCode01').val("");
+                            $('#txtScanBarCode01').focus();
                         } else {
                             playAudioNoPass();
                             alert("Batch Number does not exist.\r\nไม่มีเลข Batch ใน Bin Location นี้");
                             //function add item comfirm
                             funcAddItemManual('batch', sItemCode, sBatchSerial, sWhsCode)
 
+                            document.getElementById("frmLoading").style.display = "none";
+                            document.getElementById("txtScanBarCode01").disabled = false;
                             $('#txtScanBarCode01').val("");
                             $('#txtScanBarCode01').focus();
-                            document.getElementById("frmLoading").style.display = "none";
                         }
 
                     }
@@ -1830,7 +1835,9 @@
                     "dataSrc": 'data',
                     success: function (data) {
                         var jqueryXml = $(data);
-
+                        if (data === undefined) {
+                            fncClearAndFocus();
+                        }
                         if (jqueryXml[0].data.length != 0) {
                             //=========================
                             //jqueryXml[0].data[0].quantity
@@ -1863,6 +1870,7 @@
                                     console.log("Item :" + bItemCode + ", Serial duplicate -> " + sBatchSerial);
                                     alert("Item:" + bItemCode + ", Serial duplicate->" + sBatchSerial);                                    
                                     document.getElementById("frmLoading").style.display = "none";
+                                    document.getElementById("txtScanBarCode01").disabled = false;
                                     return false;
                                 }
                             }
@@ -1879,11 +1887,12 @@
                                 '',
                                 sBatchSerial
                             ]).draw(false);
-
-                            $('#txtScanBarCode01').val("");
-                            $('#txtScanBarCode01').focus();
+                            
                             playAudioPass();
                             document.getElementById("frmLoading").style.display = "none";
+                            document.getElementById("txtScanBarCode01").disabled = false;
+                            $('#txtScanBarCode01').val("");
+                            $('#txtScanBarCode01').focus();
                         }
                         else {
                             playAudioNoPass();
@@ -1892,9 +1901,10 @@
                             //function add item comfirm
                             funcAddItemManual('serial', sItemCode, sBatchSerial, sWhsCode)
 
-                            $('#txtScanBarCode01').val("");
-                            $('#txtScanBarCode01').focus();                            
                             document.getElementById("frmLoading").style.display = "none";
+                            document.getElementById("txtScanBarCode01").disabled = false;
+                            $('#txtScanBarCode01').val("");
+                            $('#txtScanBarCode01').focus();
                         }
 
                     }
@@ -1911,7 +1921,9 @@
                     "dataSrc": 'data',
                     success: function (val) {
                         var jqueryXml = $(val);
-                        //console.log(val);
+                        if (val === undefined) {
+                            fncClearAndFocus();
+                        }
                         if (jqueryXml[0].data.length != 0) {
 
                             var bItemCode = jqueryXml[0].data[0].itemCode;
@@ -1943,22 +1955,22 @@
                                 ''
                             ]).draw(false);
 
-                            $('#txtScanBarCode01').val("");
-                            $('#txtScanBarCode01').focus();
                             playAudioPass();
                             document.getElementById("frmLoading").style.display = "none";
-
+                            document.getElementById("txtScanBarCode01").disabled = false;
+                            $('#txtScanBarCode01').val("");
+                            $('#txtScanBarCode01').focus();
                         }
                         else {
                             playAudioNoPass();
                             alert("ไม่มี Item Barcode ใน Bin Location นี้");
 
                             //function add item comfirm                            
-                            funcAddItemManual('no', sItemCode, sBatchSerial, sWhsCode)
-
+                            funcAddItemManual('no', sItemCode, sBatchSerial, sWhsCode)                            
+                            document.getElementById("frmLoading").style.display = "none";
+                            document.getElementById("txtScanBarCode01").disabled = false;
                             $('#txtScanBarCode01').val("");
                             $('#txtScanBarCode01').focus();
-                            document.getElementById("frmLoading").style.display = "none";
                         }
 
                     }
@@ -2151,6 +2163,13 @@
         $('#txtScanBarCode01').val('');
         $('#txtScanBarCode01').focus();
     });
+
+    function fncClearAndFocus() {
+        document.getElementById("frmLoading").style.display = "none";
+        document.getElementById("txtScanBarCode01").disabled = false;
+        $('#txtScanBarCode01').val("");
+        $('#txtScanBarCode01').focus();
+    }
 
     function up(max) {
         document.getElementById("txtQuantity01").value = parseInt(document.getElementById("txtQuantity01").value) + 1;

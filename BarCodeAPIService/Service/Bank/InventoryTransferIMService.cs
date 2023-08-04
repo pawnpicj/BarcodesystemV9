@@ -297,29 +297,55 @@ namespace BarCodeAPIService.Service
                     login.AD.Fill(dt);
                     foreach (DataRow row in dt.Rows)
                     {
-                        if (row["YNCV"].ToString() == "N" && row["YNNotify"].ToString() == "N")
+                        //if (row["YNCV"].ToString() == "N" && row["YNNotify"].ToString() == "N")
+                        //{
+                        //}
+
+                        double QtyX = double.Parse(row["Quantity"].ToString());
+                        double QtyCv = double.Parse(row["QTYCV"].ToString());
+                        double QtyNotify = double.Parse(row["QTYNotify"].ToString());
+                        double CalcQty = QtyX - (QtyCv + QtyNotify);
+                        string str = "";
+
+                        if (CalcQty != 0 && (row["YNCV"].ToString() == "Y" || row["YNNotify"].ToString() == "Y"))
                         {
-                            oWTRIM.Add(new RPT_OWTRIM
+                            str = Convert.ToString(QtyX) + "-(" + Convert.ToString(QtyCv) + "+" + Convert.ToString(QtyNotify) + ") = " + CalcQty + " | " + row["YNCV"].ToString() + "/" + row["YNNotify"].ToString();
+                        }
+                        else
+                        {
+                            str = Convert.ToString(QtyX) + "-(" + Convert.ToString(QtyCv) + "+" + Convert.ToString(QtyNotify) + ") = " + CalcQty + " | " + row["YNCV"].ToString() + "/" + row["YNNotify"].ToString();
+                        }
+
+                        if (CalcQty != 0)
+                        {
+                            if (row["YNCV"].ToString() == "N" || row["YNNotify"].ToString() == "N")
                             {
-                                //Head
-                                CardCode = row["CardCode"].ToString(),
-                                CardName = row["CardName"].ToString(),
-                                DocEntry = Convert.ToInt32(row["DocEntry"].ToString()),
-                                DocNum = "IM " + row["DocNum"].ToString(),
-                                DocDate = row["DocDate"].ToString(),
-                                FisrtBin = row["FisrtBin"].ToString(),
-                                ItemCode = row["ItemCode"].ToString(),
-                                Dscription = row["Dscription"].ToString(),
-                                IsBtchSerNum = row["IsBtchSerNum"].ToString(),
-                                BatchSerialNumber = row["BatchSerialNumber"].ToString(),
-                                ExpDate = row["ExpDate"].ToString(),
-                                Quantity = Convert.ToDouble(row["BatchSerialQTY"].ToString()),
-                                UomCode = row["UomCode"].ToString(),
-                                Price = Convert.ToDouble(row["Price"].ToString()),
-                                DocTotal = Convert.ToDouble(row["DocTotal"].ToString()),
-                                Balance = Convert.ToDouble(row["Balance"].ToString()),
-                                SlpName = row["SlpName"].ToString()
-                            });
+                                oWTRIM.Add(new RPT_OWTRIM
+                                {
+                                    //Head
+                                    CardCode = row["CardCode"].ToString(),
+                                    CardName = row["CardName"].ToString(),
+                                    DocEntry = Convert.ToInt32(row["DocEntry"].ToString()),
+                                    DocNum = "IM " + row["DocNum"].ToString(),
+                                    DocDate = row["DocDate"].ToString(),
+                                    FisrtBin = row["FisrtBin"].ToString(),
+                                    ItemCode = row["ItemCode"].ToString(),
+                                    Dscription = row["Dscription"].ToString(),
+                                    IsBtchSerNum = row["IsBtchSerNum"].ToString(),
+                                    BatchSerialNumber = row["BatchSerialNumber"].ToString(),
+                                    ExpDate = row["ExpDate"].ToString(),
+                                    Quantity = Convert.ToDouble(row["BatchSerialQTY"].ToString()),
+                                    //Quantity = str.ToString(),
+                                    UomCode = row["UomCode"].ToString(),
+                                    Price = Convert.ToDouble(row["Price"].ToString()),
+                                    DocTotal = Convert.ToDouble(row["DocTotal"].ToString()),
+                                    Balance = CalcQty,//Convert.ToDouble(row["Balance"].ToString())
+                                    SlpName = row["SlpName"].ToString()
+                                });
+
+                            }
+
+
                         }
                         
                     }

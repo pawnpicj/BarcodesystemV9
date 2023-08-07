@@ -316,7 +316,7 @@ namespace BarCodeAPIService.Service
                             str = Convert.ToString(QtyX) + "-(" + Convert.ToString(QtyCv) + "+" + Convert.ToString(QtyNotify) + ") = " + CalcQty + " | " + row["YNCV"].ToString() + "/" + row["YNNotify"].ToString();
                         }
 
-                        if (CalcQty != 0)
+                        if (CalcQty > 0)
                         {
                             if (row["YNCV"].ToString() == "N" || row["YNNotify"].ToString() == "N")
                             {

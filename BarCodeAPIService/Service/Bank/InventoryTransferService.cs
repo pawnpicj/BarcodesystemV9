@@ -81,7 +81,7 @@ namespace BarCodeAPIService.Service
                             oStockTransfer.Lines.ItemCode = l.ItemCode;
                             oStockTransfer.Lines.FromWarehouseCode = l.FromWhsCode;
                             oStockTransfer.Lines.WarehouseCode = l.ToWhsCode;
-                            oStockTransfer.Lines.Quantity = l.Quantity;
+                            oStockTransfer.Lines.Quantity = l.QtyInSap;
 
                             string strPatient = "";
                             string xPatient = "";
@@ -184,7 +184,7 @@ namespace BarCodeAPIService.Service
                             oStockTransfer.Lines.ItemCode = l.ItemCode;
                             oStockTransfer.Lines.FromWarehouseCode = l.FromWhsCode;
                             oStockTransfer.Lines.WarehouseCode = l.ToWhsCode;
-                            oStockTransfer.Lines.Quantity = l.Quantity;
+                            oStockTransfer.Lines.Quantity = l.QtyInSap;
 
                             string strPatient = "";
                             string xPatient = "";

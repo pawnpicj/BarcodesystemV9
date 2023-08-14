@@ -92,15 +92,33 @@
                 alert("Oppp Maybe Internal Error Look Like this:" + data.errorMessage);
             }
         }
-    });
+        });
     }
+
+    $.ajax({
+        url: '@Url.Action("GetDataConfig", "Home")',
+        type: "GET",
+        dataType: "JSON",
+        "dataSrc": 'data',
+        complete: function (data) {
+            console.log("GetSaleEmployee1 : " + data);
+            jqueryXml = $(data);
+        },
+        success: function (data) {
+            console.log("GetSaleEmployee2 : " + data);
+            jqueryXml = $(data);
+        },
+        error: function (err) {
+            console.log(err.responseText);
+        }
+    });
 
     //function GetDataConfig() { }
         $.ajax({
         url: '@Url.Action("GetDataConfig", "Home")',
         type: "GET",
         dataType: "JSON",
-            success: function (data) {
+        success: function (data) {
                 //START -> Check Error [Cannot read properties of undefined]
                 if (data !== undefined) {
                     var jqueryXml = $(data);
@@ -128,7 +146,7 @@
                     }
                 }
                 else {
-                    fncErr();
+                    //fncErr();
                 }
                 //END -> Check Error [Cannot read properties of undefined]
 

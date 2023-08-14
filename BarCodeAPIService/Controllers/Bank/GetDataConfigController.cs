@@ -37,6 +37,8 @@ namespace BarCodeAPIService.Controllers.Bank
             list.Add(configuration["UserNameSAP"]);
             return Ok(list);
 
+            //return Json(list);
+
         }
 
 

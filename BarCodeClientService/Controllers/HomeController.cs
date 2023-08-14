@@ -1,10 +1,12 @@
 ﻿using System.Diagnostics;
+using System.IO;
 using BarCodeClientService.Models;
 using BarCodeLibrary.APICall;
 using BarCodeLibrary.Respones.SAP;
 using BarCodeLibrary.Respones.SAP.Bank;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace BarCodeClientService.Controllers
@@ -93,7 +95,7 @@ namespace BarCodeClientService.Controllers
 
         public IActionResult GetDataConfig()
         {
-            var a = API.Read<ResponseGetDataConfig>("GetDataConfig");
+            var a = API.Read<ResponseGetDataConfig>("api/GetDataConfig");
             return Ok(a);
         }
 

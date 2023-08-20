@@ -45,6 +45,7 @@ let EventSaveGoodReceiptPO = {
                     dSubLine.Quantity = xLinesAR[x].Quantity;
                     dSubLine.PriceBeforeDis = xLinesAR[x].PriceBeforeDis;
                     dSubLine.Discount = xLinesAR[x].Discount;
+                    dSubLine.PriceAfterVAT = xLinesAR[x].GrossPrice;
                     dSubLine.Whs = xLinesAR[x].Whs;
                     dSubLine.Patient = xLinesAR[x].Patient;
                     dSubLine.ManageItem = xLinesAR[x].ManageItem;

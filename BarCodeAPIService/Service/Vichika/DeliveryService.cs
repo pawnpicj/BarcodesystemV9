@@ -56,7 +56,8 @@ namespace BarCodeAPIService.Service
                             oDeliveryDocuments.Lines.ItemCode = l.ItemCode;
                             oDeliveryDocuments.Lines.Quantity = l.Quantity;
                             oDeliveryDocuments.Lines.UnitPrice = l.PriceBeforeDis;
-                            oDeliveryDocuments.Lines.DiscountPercent = l.Discount;
+                            //oDeliveryDocuments.Lines.DiscountPercent = l.Discount;
+                            oDeliveryDocuments.Lines.PriceAfterVAT = l.PriceAfterVAT;
                             oDeliveryDocuments.Lines.WarehouseCode = l.Whs;
 
                             string strPatient = "";
@@ -261,6 +262,7 @@ namespace BarCodeAPIService.Service
                                 ManageItem = drLine["ManageItem"].ToString(),
                                 UomName = drLine["UomName"].ToString(),
                                 TaxCode = drLine["TaxCode"].ToString(),
+                                PriceAfVAT = Convert.ToDouble(drLine["PriceAfVAT"].ToString()),
                                 Patient = drLine["Patient"].ToString(),
                                 TranferNo = drLine["TranferNo"].ToString(),
                                 LineNum = Convert.ToInt32(drLine["LineNum"].ToString())

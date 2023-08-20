@@ -77,6 +77,7 @@ let DataTableInit = {
                     { data: "LineTotal", autoWidth: true },
                     { data: "UomName", autoWidth: true },
                     { data: "TaxCode", autoWidth: true },
+                    { data: "GrossPrice", autoWidth: true },
                     { data: "Whs", autoWidth: true },
                     { data: "Patient", autoWidth: true },
                     { data: "TranferNo", autoWidth: true },

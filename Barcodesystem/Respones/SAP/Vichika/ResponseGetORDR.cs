@@ -47,6 +47,7 @@ namespace BarCodeLibrary.Respones.SAP
         public string ManageItem { get; set; }
         public string UomName { get; set; }
         public string TaxCode { get; set; }
+        public double PriceAfVAT { get; set; }
         public string Patient { get; set; }
         public string TranferNo { get; set; }
         public int LineNum { get; set; }

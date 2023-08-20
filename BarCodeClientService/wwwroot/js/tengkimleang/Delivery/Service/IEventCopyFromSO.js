@@ -40,6 +40,7 @@
                 objLineItem.LineTotal = data.line[k].lineTotal;
                 objLineItem.UomName = data.line[k].uomName;
                 objLineItem.TaxCode = data.line[k].taxCode;
+                objLineItem.GrossPrice = data.line[k].priceAfVAT;
                 objLineItem.Whs = data.line[k].whsCode;
                 objLineItem.DocEntry = data.docEntry;
                 objLineItem.LineNum = data.line[k].lineNum;

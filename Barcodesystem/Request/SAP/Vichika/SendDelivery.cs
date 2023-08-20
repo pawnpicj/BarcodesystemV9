@@ -23,6 +23,7 @@ namespace BarCodeLibrary.Request.SAP
         public double Discount { get; set; }
         public string ManageItem { get; set; }
         public double PriceBeforeDis { get; set; }
+        public double PriceAfterVAT { get; set; }
         public string Whs { get; set; }
         public string UomName { get; set; }
         public int DocEntry { get; set; }

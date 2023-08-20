@@ -113,6 +113,13 @@
         }
     });
 
+    document.getElementById("getStatus").innerHTML = "Status : Online";
+    document.getElementById("getStatus").style.color = "Green";
+    document.getElementById("getStatus").style.fontWeight = "Bold";
+    document.getElementById("getDBName").innerHTML = "DB Name : UDOM_TRD";
+    document.getElementById("getDBName").style.color = "Green";
+    document.getElementById("getDBName").style.fontWeight = "Bold";
+
     //function GetDataConfig() { }
         $.ajax({
         url: '@Url.Action("GetDataConfig", "Home")',

@@ -195,9 +195,9 @@
                 </a>
             </li>
             @*<li class="nav-item">
-                <a class="nav-link color_tap3" id="item-tab" data-toggle="tab" href="#setting" role="tab" aria-controls="Setting" aria-selected="false" >
-                    <label style="font-size:18px;font-weight:500">Setting</label>
-                </a>
+            <a class="nav-link color_tap3" id="item-tab" data-toggle="tab" href="#setting" role="tab" aria-controls="Setting" aria-selected="false" >
+            <label style="font-size:18px;font-weight:500">Setting</label>
+            </a>
             </li>*@
         </ul>
         <div class="tab-content" id="myTabContent">
@@ -205,7 +205,7 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="nav navbar-nav mr-auto">
-                            
+
                             <div class="btn-group">
                                 <button class="btn btn-info" id="CopyFromPO" data-toggle="modal" data-target="#ModalCopyFromPO" disabled>
                                     Select SO
@@ -223,10 +223,10 @@
                                 </div>
                                 <input type="text" class="form-control" placeholder="Search Code" id="CusID" value="" readonly>
                                 @*<div class="input-group-append">
-                                        <button class="input-group-text btnModelsCus" data-toggle="modal" data-target="#ModalCusCode">
-                                            <i class="fa fa-search"></i>
-                                        </button>
-                                    </div>*@
+                                <button class="input-group-text btnModelsCus" data-toggle="modal" data-target="#ModalCusCode">
+                                <i class="fa fa-search"></i>
+                                </button>
+                                </div>*@
                             </div>
                         </div>
                         <div>
@@ -274,17 +274,17 @@
                             </div>
                         </div>
                         @*<div>
-                                BP Currency :
-                                <div class="input-group">
-                                    <select class="form-control" id="BPDocCurr"></select>
-                                </div>
-                            </div>*@
+                        BP Currency :
+                        <div class="input-group">
+                        <select class="form-control" id="BPDocCurr"></select>
+                        </div>
+                        </div>*@
                         Sales Employees :
-                    <div class="input-group">
-                        <select class="form-control" id="SaleEmp" style="display:none"></select>
-                        <input type="text" size="7" placeholder="" id="txtSlpCode" value="" disabled>
-                        <input type="text" class="form-control" placeholder="" id="txtSlpName" value="" disabled>
-                    </div>
+                        <div class="input-group">
+                            <select class="form-control" id="SaleEmp" style="display:none"></select>
+                            <input type="text" size="7" placeholder="" id="txtSlpCode" value="" disabled>
+                            <input type="text" class="form-control" placeholder="" id="txtSlpName" value="" disabled>
+                        </div>
 
                     </div>
                 </div>
@@ -434,6 +434,7 @@
                                         <th>Line Total</th>
                                         <th>Uom Name</th>
                                         <th>TaxCode</th>
+                                        <th>GrossPrice</th>
                                         <th>Warehouse</th>
                                         <th>Patient</th>
                                         <th>TranferNo</th>
@@ -476,9 +477,9 @@
                 <div class="row" style="margin-top: 5px;">
                     <div class="col-sm-4">
                         Table[1] QTY :
-                        <input type="text" class="form-control bg-warning textBorderBlack" value="0" id="txt_totalQty1" readonly/>
+                        <input type="text" class="form-control bg-warning textBorderBlack" value="0" id="txt_totalQty1" readonly />
                         Table[2] QTY :
-                        <input type="text" class="form-control bg-primary textBorderWhite" value="0" id="txt_totalQty2" readonly/>
+                        <input type="text" class="form-control bg-primary textBorderWhite" value="0" id="txt_totalQty2" readonly />
                     </div>
                     <div class="col-sm-4">
                         Discount % :
@@ -505,9 +506,9 @@
             <div class="nav navbar-nav mr-auto">
                 <div class="btn-group">
                     @*<button class="btn btn-info" id="CopyFromPO" style="background: #f0eff1; color: #696969;"
-                                    data-toggle="modal" data-target="#ModalCopyFromPO" disabled>
-                                Copy From PO
-                        </button>*@
+                    data-toggle="modal" data-target="#ModalCopyFromPO" disabled>
+                    Copy From PO
+                    </button>*@
                     <button class="btn btn-info" id="CopyToGoodReturn" style="background: #f0eff1; color: #696969;"
                             data-toggle="modal" data-target="#ModalCopyToGoodReturn" disabled>
                         Copy To Good Return
@@ -524,7 +525,7 @@
     </div>
     <hr />
     <div class="row" style="display:none;">
-        Status : <input id="alertMsg" type="text" readonly style="border-width: 0px; border: none; background:none;"/>
+        Status : <input id="alertMsg" type="text" readonly style="border-width: 0px; border: none; background:none;" />
     </div>
 </div>
 
@@ -915,7 +916,7 @@
     var character = fpath.substring(1, 6);
     var strURL = character.toLowerCase();
     if (strURL === "sapui") {
-        fjs = "http://203.151.171.239/" + character + "/js/setup-delivery.json";
+        fjs = "http://203.151.171.116/" + character + "/js/setup-delivery.json";
     } else {
         fjs = "../../js/setup-delivery.json";
     }
@@ -1686,7 +1687,7 @@
 
         GetMasterData.getPurchaseOrder('@Url.Action("GetSO", "SaleOrder")', cardCode, typeShow);
 
-        @*if ($("#CusID").val() != "") {
+    @*if ($("#CusID").val() != "") {
             const cardCode = $("#CusID").val();
             GetMasterData.getPurchaseOrder('@Url.Action("GetSO", "SaleOrder")', cardCode);
         } else {

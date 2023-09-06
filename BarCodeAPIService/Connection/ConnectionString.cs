@@ -4,6 +4,7 @@
     {
         public static string DbServerType { get; set; } = null!;
         public static string Server { get; set; } = null!;
+        public static string ServerGET { get; set; } = null!;
         public static string LicenseServer { get; set; } = null!;
         public static string SLDServer { get; set; } = null!;
         public static string DbUserName { get; set; } = null!;
@@ -12,6 +13,9 @@
         public static string UserName { get; set; } = null!;
         public static string Password { get; set; } = null!;
         public static string ConnHana { get; set; } = null;
+        public static string ConnectionStringHANA1 { get; set; } = null;
+        public static string ConnectionStringHANA2 { get; set; } = null;
+        public static string ConnectionStringSAP { get; set; } = null;        
         public static string BarcodeDb { get; set; } = null;
     }
 }

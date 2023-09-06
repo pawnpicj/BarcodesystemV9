@@ -9,6 +9,6 @@ namespace BarCodeAPIService.Service
     {
         Task<ResponseOUSRGetUser> ResponseOUSRGetUser();
         Task<ResponsePostUser> ResponsePostUserAsync(SendUser send);
-        Task<ResponseGetUser> RespponseGetuser();
+        Task<ResponseGetUser> ResponseGetuser();
     }
 }

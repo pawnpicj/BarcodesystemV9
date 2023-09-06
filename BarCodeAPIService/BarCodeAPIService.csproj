@@ -2,21 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFramework>net5.0</TargetFramework>
-		<Platforms>AnyCPU;ARM32</Platforms>
-		<Nullable>enable</Nullable>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<PlatformTarget>x86</PlatformTarget>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM32'">
-		<PlatformTarget>x64</PlatformTarget>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-	  <PlatformTarget>x86</PlatformTarget>
-	  <Prefer32Bit>false</Prefer32Bit>
+		<Nullable>disable</Nullable>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -24,6 +10,18 @@
 		<Content Remove="Views\**" />
 		<EmbeddedResource Remove="Views\**" />
 		<None Remove="Views\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <COMReference Include="SAPbobsCOM">
+	    <VersionMinor>0</VersionMinor>
+	    <VersionMajor>10</VersionMajor>
+	    <Guid>fc8030be-f5d2-4b8e-8f92-44228fe30100</Guid>
+	    <Lcid>0</Lcid>
+	    <WrapperTool>tlbimp</WrapperTool>
+	    <Isolated>false</Isolated>
+	    <EmbedInteropTypes>true</EmbedInteropTypes>
+	  </COMReference>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -45,12 +43,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Barcodesystem\BarCodeLibrary.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Reference Include="SAPBusinessOneSDK">
-	    <HintPath>..\Barcodesystem\v1\SAPBusinessOneSDK.dll</HintPath>
-	  </Reference>
 	</ItemGroup>
 
 </Project>

@@ -1,8 +1,9 @@
-﻿using System;
+﻿using BarCodeAPIService.Connection;
+using SAPbobsCOM;
+using System;
 using System.Data;
 using System.Data.Odbc;
-using BarCodeAPIService.Connection;
-using SAPbobsCOM;
+using System.Security.Cryptography;
 
 namespace BarCodeAPIService.Models
 {
@@ -37,15 +38,19 @@ namespace BarCodeAPIService.Models
             //string CompanyDB = "";
             try
             {
+                //HDBODBC
                 string connectionstr = "";
-
                 if (type == Type.SapHana)
-                    connectionstr = $"Driver={{HDBODBC32}};UID={ConnectionString.DbUserName};" +
-                                    $"PWD={ConnectionString.DbPassword};SERVERNODE={ConnectionString.Server};[DATABASE={ConnectionString.CompanyDB}];";
+                    connectionstr = "Driver={HDBODBC};UID=SYSTEM;PWD=SAPB1Admin;SERVERNODE=192.168.10.110:30115;[DATABASE=UDOM_TRD]";
+                //connectionstr = ConnectionString.ConnectionStringHANA1!;
+                //connectionstr = ConnectionString.ConnectionStringSAP!;
+                //connectionstr = $"Driver={{HDBODBC}};UID={ConnectionString.DbUserName};" +
+                //$"PWD={ConnectionString.DbPassword};SERVERNODE={ConnectionString.ServerGET};[DATABASE={ConnectionString.CompanyDB}];";
                 else if (type == Type.SqlHana)
                 {
-                    connectionstr = $"Driver={{HDBODBC32}};UID={ConnectionString.DbUserName};" +
-                                    $"PWD={ConnectionString.DbPassword};SERVERNODE={ConnectionString.Server};[DATABASE={ConnectionString.BarcodeDb}];";
+                    connectionstr = "Driver={HDBODBC};UID=SYSTEM;PWD=SAPB1Admin;SERVERNODE=192.168.10.110:30115;[DATABASE=BARCODESYSTEMDB]";
+                    //connectionstr = $"Driver={{HDBODBC}};UID={ConnectionString.DbUserName};" +
+                    //$"PWD={ConnectionString.DbPassword};SERVERNODE={ConnectionString.ServerGET};[DATABASE={ConnectionString.CompanyDB}];";
                 }
 
                 CN = new OdbcConnection(connectionstr);

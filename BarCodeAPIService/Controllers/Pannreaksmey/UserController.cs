@@ -35,7 +35,7 @@ namespace BarCodeAPIService.Controllers
         [HttpGet("GetUserLogin")]
         public async Task<IActionResult> GetUserLoginAsync()
         {
-            var a = await user.RespponseGetuser();
+            var a = await user.ResponseGetuser();
             return Ok(a);
         }
     }

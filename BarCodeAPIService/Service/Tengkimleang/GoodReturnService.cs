@@ -10,7 +10,6 @@ using BarCodeLibrary.Contract.RouteProcedure;
 using BarCodeLibrary.Request.SAP;
 using BarCodeLibrary.Respones.SAP;
 using SAPbobsCOM;
-using SAPbouiCOM;
 using Company = SAPbobsCOM.Company;
 using DataTable = System.Data.DataTable;
 

@@ -83,7 +83,7 @@ namespace BarCodeAPIService.Service
             });
         }
 
-        public Task<ResponseGetUser> RespponseGetuser()
+        public Task<ResponseGetUser> ResponseGetuser()
         {
             var clsCRUD = new ClsCRUD();
             var tbUSER = new List<TBUSER>();

@@ -16,6 +16,7 @@ namespace BarCodeAPIService.Controllers.Bank
     public class GetDataConfigController : Controller
     {
         private IConfiguration configuration;
+
         public GetDataConfigController(IConfiguration iConfig)
         {
             this.configuration = iConfig;
@@ -32,12 +33,21 @@ namespace BarCodeAPIService.Controllers.Bank
                                     .AddJsonFile("appsettings.json");
             var configuration = builder.Build();
 
-            var list = new List<string>();
-            list.Add(configuration["CompanyDB"]);
-            list.Add(configuration["UserNameSAP"]);
-            return Ok(list);
+            var companyDB = configuration["CompanyDB"];
+            var userNameSAP = configuration["UserNameSAP"];
 
-            //return Json(list);
+            return Json(new
+            {
+                errorCode = "0",
+                errorMessage = "",
+                data = new
+                {
+                    companyDB = companyDB,
+                    userNameSAP = userNameSAP
+
+                }
+            }
+            );
 
         }
 

@@ -33,6 +33,9 @@ namespace BarCodeLibrary.Respones.SAP
         public string FisrtBin { get; set; }
         public string IsBtchSerNum { get; set; }
         public string BatchSerialNumber { get; set; }
-        public double BatchSerialQTY { get; set; }        
+        public double BatchSerialQTY { get; set; }
+        public string Remark { get; set; }
+        public double BalanceByBS { get; set; }
+        public double QTYByBatchSerial { get; set; }
     }
 }

@@ -242,14 +242,15 @@
                     <th>BinLocaton</th>
                     <th>ItemCode</th>
                     <th>Description</th>
-                    <th>Batch/Serial</th>
-                    <th>BN/SN</th>
-                    <th>Expire Date</th>
                     <th>Quantity</th>
                     <th>Uom</th>
-                    <th>Price</th>
-                    <th>DocTotal</th>
+                    <th>Batch/Serial</th>
+                    <th>BN/SN</th>
+                    <th>Quantity BN/SN</th>
                     <th>Balance</th>
+                    <th>Expire Date</th>
+                    <th>Price</th>
+                    <th>DocTotal</th>                    
                     <th>Sale</th>
                 </tr>
             </thead>
@@ -336,14 +337,15 @@
             { data: "fisrtBin" },
             { data: "itemCode" },
             { data: "dscription" },
-            { data: "isBtchSerNum" },
-            { data: "batchSerialNumber" },
-            { data: "expDate" },
             { data: "quantity" },
             { data: "uomCode" },
+            { data: "isBtchSerNum" },
+            { data: "batchSerialNumber" },
+            { data: "qtyByBatchSerial" },
+            { data: "balanceByBS" },
+            { data: "expDate" },
             { data: "price", render: $.fn.dataTable.render.number(',', '.', 2, '') },
             { data: "docTotal", render: $.fn.dataTable.render.number(',', '.', 2, '')},
-            { data: "balance" },
             { data: "slpName" }
         ],
         "drawCallback": function (settings) {

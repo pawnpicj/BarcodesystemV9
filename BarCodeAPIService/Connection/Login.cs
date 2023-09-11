@@ -128,14 +128,14 @@ namespace BarCodeAPIService.Connection
                 oCompany.LicenseServer = ConnectionString.LicenseServer;
                 //tmpstr = oCompany.LicenseServer;
                 oCompany.language = BoSuppLangs.ln_English; // change to your language
-                oCompany.UseTrusted = true;
+                oCompany.UseTrusted = false;
                 oCompany.DbUserName = ConnectionString.DbUserName;
                 //tmpstr = oCompany.DbUserName;
                 oCompany.DbPassword = ConnectionString.DbPassword;
                 oCompany.CompanyDB = ConnectionString.CompanyDB;
                 oCompany.UserName = ConnectionString.UserName;
                 oCompany.Password = ConnectionString.Password;
-                oCompany.SLDServer = ConnectionString.SLDServer;
+                //oCompany.SLDServer = ConnectionString.SLDServer;
 
                 if (oCompany.Connect() != 0)
                 {

@@ -2,7 +2,15 @@
 
 	<PropertyGroup>
 		<TargetFramework>net5.0</TargetFramework>
-		<Nullable>disable</Nullable>
+		<Platforms>AnyCPU;ARM32</Platforms>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<PlatformTarget>x86</PlatformTarget>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM32'">
+		<PlatformTarget>x64</PlatformTarget>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -15,8 +23,8 @@
 	<ItemGroup>
 	  <COMReference Include="SAPbobsCOM">
 	    <VersionMinor>0</VersionMinor>
-	    <VersionMajor>10</VersionMajor>
-	    <Guid>fc8030be-f5d2-4b8e-8f92-44228fe30100</Guid>
+	    <VersionMajor>9</VersionMajor>
+	    <Guid>fc8030be-f5d2-4b8e-8f92-44228fe30090</Guid>
 	    <Lcid>0</Lcid>
 	    <WrapperTool>tlbimp</WrapperTool>
 	    <Isolated>false</Isolated>
@@ -26,6 +34,8 @@
 
 	<ItemGroup>
 		<PackageReference Include="ClrHeapAllocationAnalyzer" Version="3.0.0" />
+		<PackageReference Include="itext7" Version="7.2.4" />
+		<PackageReference Include="iTextSharp.LGPLv2.Core" Version="2.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.11" />
 		<PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
 		<PackageReference Include="Rotativa.AspNetCore" Version="1.2.0" />

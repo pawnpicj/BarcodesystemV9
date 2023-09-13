@@ -306,25 +306,32 @@ namespace BarCodeAPIService.Service
                         //lineItem = int.Parse(row["LineNum"].ToString());
 
                         double QtyX = double.Parse(row["Quantity"].ToString());
-                        double QtyCv = double.Parse(row["QTYCV"].ToString());
-                        double QtyNotify = double.Parse(row["QTYNotify"].ToString());
+                        double QtyCv = double.Parse(row["QTYCV_All"].ToString());
+                        double QtyNotify = double.Parse(row["QTYNotify_All"].ToString());
                         double CalcQty = QtyX - (QtyCv + QtyNotify);
+
+                        double QtyY = double.Parse(row["QtyBSNo"].ToString());
+                        double QtyCvY = double.Parse(row["QTYCV"].ToString());
+                        double QtyNotifyY = double.Parse(row["QTYNotify"].ToString());
+                        double CalcQtyBS = QtyY - (QtyCvY + QtyNotifyY);
+
                         string str = "";
                         string BatchSerialNumber = "";
                         double BalanceByBS = 0;
+                        double iBalance = 0;
 
-                        if (CalcQty != 0 && (row["YNCV"].ToString() == "Y" || row["YNNotify"].ToString() == "Y"))
+                        if (row["YNCV"].ToString() == "Y" || row["YNNotify"].ToString() == "Y")
                         {
                             //str = Convert.ToString(QtyX) + "-(" + Convert.ToString(QtyCv) + "+" + Convert.ToString(QtyNotify) + ") = " + CalcQty + " | " + row["YNCV"].ToString() + "/" + row["YNNotify"].ToString();
-                            str = "(" + Convert.ToString(QtyNotify) + " + " + Convert.ToString(QtyCv) + ") = " + Convert.ToString(QtyNotify + QtyCv);
+                            str = "" + CalcQtyBS;
                         }
                         else
                         {
                             //str = Convert.ToString(QtyX) + "-(" + Convert.ToString(QtyCv) + "+" + Convert.ToString(QtyNotify) + ") = " + CalcQty + " | " + row["YNCV"].ToString() + "/" + row["YNNotify"].ToString();
-                            str = "(" + Convert.ToString(QtyNotify) + " + " + Convert.ToString(QtyCv) + ") = " + Convert.ToString(QtyNotify + QtyCv);
+                            str = "" + CalcQtyBS;
                         }                        
 
-                        if (CalcQty > 0)
+                        if (CalcQty > 0 || CalcQtyBS > 0)
                         {
                             if (row["YNCV"].ToString() == "N" || row["YNNotify"].ToString() == "N")
                             {
@@ -351,8 +358,21 @@ namespace BarCodeAPIService.Service
                                 {
                                     BalanceByBS = Convert.ToDouble(row["Balance"].ToString());
                                 }
-
                                 //U_BalanceQty
+
+                                //Balance
+                                if (row["IsBtchSerNum"].ToString() == "B")
+                                {
+                                    iBalance = Convert.ToDouble(row["QtyBSNo"].ToString());
+                                }
+                                if (row["IsBtchSerNum"].ToString() == "S")
+                                {
+                                    iBalance = Convert.ToDouble(row["QtyBSNo"].ToString());
+                                }
+                                else if (row["IsBtchSerNum"].ToString() == "N")
+                                {
+                                    iBalance = Convert.ToDouble(row["Balance"].ToString());
+                                }
 
                                 oWTRIM.Add(new RPT_OWTRIM
                                 {
@@ -372,7 +392,7 @@ namespace BarCodeAPIService.Service
                                     UomCode = row["UomCode"].ToString(),
                                     Price = Convert.ToDouble(row["Price"].ToString()),
                                     DocTotal = Convert.ToDouble(row["DocTotal"].ToString()),
-                                    Balance = Convert.ToDouble(row["Balance"].ToString()),
+                                    Balance = iBalance,
                                     BalanceByBS = BalanceByBS,
                                     SlpCode = row["SlpCode"].ToString(),
                                     SlpName = row["SlpName"].ToString(),

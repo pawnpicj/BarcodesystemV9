@@ -314,6 +314,14 @@ namespace BarCodeAPIService.Service
                         double QtyCvY = double.Parse(row["QTYCV"].ToString());
                         double QtyNotifyY = double.Parse(row["QTYNotify"].ToString());
                         double CalcQtyBS = QtyY - (QtyCvY + QtyNotifyY);
+                        if (row["IsBtchSerNum"].ToString() == "B" || row["IsBtchSerNum"].ToString() == "S")
+                        {
+                            CalcQtyBS = CalcQtyBS;
+                        }
+                        else if (row["IsBtchSerNum"].ToString() == "N")
+                        {
+                            CalcQtyBS = -1;
+                        }
 
                         string str = "";
                         string BatchSerialNumber = "";
@@ -323,15 +331,15 @@ namespace BarCodeAPIService.Service
                         if (row["YNCV"].ToString() == "Y" || row["YNNotify"].ToString() == "Y")
                         {
                             //str = Convert.ToString(QtyX) + "-(" + Convert.ToString(QtyCv) + "+" + Convert.ToString(QtyNotify) + ") = " + CalcQty + " | " + row["YNCV"].ToString() + "/" + row["YNNotify"].ToString();
-                            str = "" + CalcQtyBS;
+                            str = "QtyX:- " + CalcQty + " QtyY:- " + CalcQtyBS;
                         }
                         else
                         {
                             //str = Convert.ToString(QtyX) + "-(" + Convert.ToString(QtyCv) + "+" + Convert.ToString(QtyNotify) + ") = " + CalcQty + " | " + row["YNCV"].ToString() + "/" + row["YNNotify"].ToString();
-                            str = "" + CalcQtyBS;
+                            str = "QtyX:- " + CalcQty + " QtyY:- " + CalcQtyBS;
                         }                        
 
-                        if (CalcQty > 0 || CalcQtyBS > 0)
+                        if (CalcQty > 0 && CalcQtyBS != 0)
                         {
                             if (row["YNCV"].ToString() == "N" || row["YNNotify"].ToString() == "N")
                             {

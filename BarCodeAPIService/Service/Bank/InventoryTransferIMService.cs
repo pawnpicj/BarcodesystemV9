@@ -301,32 +301,20 @@ namespace BarCodeAPIService.Service
 
                     foreach (DataRow row in dt.Rows)
                     {
-
-
-                        //lineItem = int.Parse(row["LineNum"].ToString());
-
-                        double QtyX = double.Parse(row["Quantity"].ToString());
-                        double QtyCv = double.Parse(row["QTYCV_All"].ToString());
-                        double QtyNotify = double.Parse(row["QTYNotify_All"].ToString());
-                        double CalcQty = QtyX - (QtyCv + QtyNotify);
+                        string str = "";
+                        string BatchSerialNumber = "";
+                        double BalanceByBS = 0;
+                        double iBalance = 0;
 
                         double QtyY = double.Parse(row["QtyBSNo"].ToString());
                         double QtyCvY = double.Parse(row["QTYCV"].ToString());
                         double QtyNotifyY = double.Parse(row["QTYNotify"].ToString());
                         double CalcQtyBS = QtyY - (QtyCvY + QtyNotifyY);
-                        if (row["IsBtchSerNum"].ToString() == "B" || row["IsBtchSerNum"].ToString() == "S")
-                        {
-                            CalcQtyBS = CalcQtyBS;
-                        }
-                        else if (row["IsBtchSerNum"].ToString() == "N")
-                        {
-                            CalcQtyBS = -1;
-                        }
 
-                        string str = "";
-                        string BatchSerialNumber = "";
-                        double BalanceByBS = 0;
-                        double iBalance = 0;
+                        double QtyX = double.Parse(row["Quantity"].ToString());
+                        double QtyCv = double.Parse(row["QTYCV_All"].ToString());
+                        double QtyNotify = double.Parse(row["QTYNotify_All"].ToString());
+                        double CalcQty = QtyX - (QtyCv + QtyNotify);
 
                         if (row["YNCV"].ToString() == "Y" || row["YNNotify"].ToString() == "Y")
                         {
@@ -337,79 +325,56 @@ namespace BarCodeAPIService.Service
                         {
                             //str = Convert.ToString(QtyX) + "-(" + Convert.ToString(QtyCv) + "+" + Convert.ToString(QtyNotify) + ") = " + CalcQty + " | " + row["YNCV"].ToString() + "/" + row["YNNotify"].ToString();
                             str = "QtyX:- " + CalcQty + " QtyY:- " + CalcQtyBS;
-                        }                        
-
-                        if (CalcQty > 0 && CalcQtyBS != 0)
-                        {
-                            if (row["YNCV"].ToString() == "N" || row["YNNotify"].ToString() == "N")
-                            {
-
-                                if (row["IsBtchSerNum"].ToString() == "B")
-                                {
-                                    BatchSerialNumber = row["BatchesNumber"].ToString();
-                                }
-                                else if(row["IsBtchSerNum"].ToString() == "S")
-                                {
-                                    BatchSerialNumber = row["SerialNumber"].ToString();
-                                }
-
-                                //Balace-QTY-BSN
-                                if (row["IsBtchSerNum"].ToString() == "B")
-                                {
-                                    BalanceByBS = Convert.ToDouble(QtyNotify + QtyCv);
-                                }
-                                else if (row["IsBtchSerNum"].ToString() == "S")
-                                {
-                                    BalanceByBS = Convert.ToDouble(QtyNotify + QtyCv);
-                                }
-                                else if (row["IsBtchSerNum"].ToString() == "N")
-                                {
-                                    BalanceByBS = Convert.ToDouble(row["Balance"].ToString());
-                                }
-                                //U_BalanceQty
-
-                                //Balance
-                                if (row["IsBtchSerNum"].ToString() == "B")
-                                {
-                                    iBalance = Convert.ToDouble(row["QtyBSNo"].ToString());
-                                }
-                                if (row["IsBtchSerNum"].ToString() == "S")
-                                {
-                                    iBalance = Convert.ToDouble(row["QtyBSNo"].ToString());
-                                }
-                                else if (row["IsBtchSerNum"].ToString() == "N")
-                                {
-                                    iBalance = Convert.ToDouble(row["Balance"].ToString());
-                                }
-
-                                oWTRIM.Add(new RPT_OWTRIM
-                                {
-                                    //Head
-                                    CardCode = row["CardCode"].ToString(),
-                                    CardName = row["CardName"].ToString(),
-                                    DocEntry = Convert.ToInt32(row["DocEntry"].ToString()),
-                                    DocNum = "IM " + row["DocNum"].ToString(),
-                                    DocDate = row["DocDate"].ToString(),
-                                    FisrtBin = row["FisrtBin"].ToString(),
-                                    ItemCode = row["ItemCode"].ToString(),
-                                    Dscription = row["Dscription"].ToString(),
-                                    IsBtchSerNum = row["IsBtchSerNum"].ToString(),
-                                    BatchSerialNumber = BatchSerialNumber,
-                                    ExpDate = row["ExpDate"].ToString(),
-                                    Quantity = Convert.ToDouble(row["Quantity"].ToString()),
-                                    UomCode = row["UomCode"].ToString(),
-                                    Price = Convert.ToDouble(row["Price"].ToString()),
-                                    DocTotal = Convert.ToDouble(row["DocTotal"].ToString()),
-                                    Balance = iBalance,
-                                    BalanceByBS = BalanceByBS,
-                                    SlpCode = row["SlpCode"].ToString(),
-                                    SlpName = row["SlpName"].ToString(),
-                                    Remark = str.ToString(),
-                                    QTYByBatchSerial = Convert.ToDouble(row["QtyBSNo"].ToString())
-                                });
-
-                            }
                         }
+
+                        if (row["IsBtchSerNum"].ToString() == "B")
+                        {
+                            //CalcQtyBS = CalcQtyBS;
+                            iBalance = CalcQtyBS;
+                            BatchSerialNumber = row["BatchesNumber"].ToString();
+                        }
+                        else if (row["IsBtchSerNum"].ToString() == "S")
+                        {
+                            //CalcQtyBS = CalcQtyBS;
+                            iBalance = CalcQtyBS;
+                            BatchSerialNumber = row["SerialNumber"].ToString();
+                        }
+                        else if (row["IsBtchSerNum"].ToString() == "N")
+                        {
+                            //CalcQtyBS = 0;
+                            iBalance = CalcQty;
+                            BatchSerialNumber = "";
+                        }
+
+                        if (iBalance != 0)
+                        {
+                            //Data Line
+                            oWTRIM.Add(new RPT_OWTRIM
+                            {
+                                //Head
+                                CardCode = row["CardCode"].ToString(),
+                                CardName = row["CardName"].ToString(),
+                                DocEntry = Convert.ToInt32(row["DocEntry"].ToString()),
+                                DocNum = "IM " + row["DocNum"].ToString(),
+                                DocDate = row["DocDate"].ToString(),
+                                FisrtBin = row["FisrtBin"].ToString(),
+                                ItemCode = row["ItemCode"].ToString(),
+                                Dscription = row["Dscription"].ToString(),
+                                IsBtchSerNum = row["IsBtchSerNum"].ToString(),
+                                BatchSerialNumber = BatchSerialNumber,
+                                ExpDate = row["ExpDate"].ToString(),
+                                Quantity = Convert.ToDouble(row["Quantity"].ToString()),
+                                UomCode = row["UomCode"].ToString(),
+                                Price = Convert.ToDouble(row["Price"].ToString()),
+                                DocTotal = Convert.ToDouble(row["DocTotal"].ToString()),
+                                Balance = iBalance,
+                                BalanceByBS = BalanceByBS,
+                                SlpCode = row["SlpCode"].ToString(),
+                                SlpName = row["SlpName"].ToString(),
+                                Remark = str.ToString(),
+                                QTYByBatchSerial = Convert.ToDouble(row["QtyBSNo"].ToString())
+                            });
+                        }                        
 
                     }
 

@@ -3204,6 +3204,7 @@
 
             let cyy = 0;
             for (let yy = 0; yy < output.length; yy++) {
+                console.log("ItemCode :" + itemCode + "=?" + output[yy].itemCode);
                 if (itemCode == output[yy].itemCode) {
                     cyy += 1;
                 }
@@ -3239,6 +3240,7 @@
                     for (let y0 = 0; y0 < output.length; y0++) {
                         //output[y0].itemCode
                         console.log("ItemCode :- " + itemCode + "," + dataX.ItemCode + "," + output[y0].itemCode);
+                        //Checked Item Code
                         if ((itemCode === dataX.ItemCode) && (itemCode === output[y0].itemCode)) {
                             console.warn("Same");
 
@@ -3251,16 +3253,17 @@
                                 console.log('%cLineNum ==' + dataX.LineNum, 'background-color: green;');
 
                                 if (parseInt(output[y0].quantity) < parseInt(dataX.InputQuantity)) {
-                                    console.log("%cยังรับไม่ครบ" + output[y0].quantity + "<" + dataX.InputQuantity, 'background-color: yellow;');
+                                    console.log("%cยังรับไม่ครบ" + output[y0].quantity + "<" + dataX.InputQuantity + "LineNum " + dataX.LineNum, 'background-color: yellow;');
                                     rowNo = dataX.LineNum;
                                     msgBox = "pass";
                                     caseX = "Case2";
-                                    return true;
+                                    break;
                                 }
 
                                 rowNo = rowNo;
                                 msgBox = msgBox;
                                 caseX = caseX;
+                                
                             }
                             else if (parseInt(dataX.LineNum) != parseInt(output[y0].rowNo)) {
                                 console.log('%cLineNum !=', 'background-color: pink;');
@@ -3297,7 +3300,7 @@
 
             }
 
-            console.log("Added-2");
+            //console.log("Added-2");
             isAdd = msgBox + "," + rowNo + "," + caseX;
 
         }

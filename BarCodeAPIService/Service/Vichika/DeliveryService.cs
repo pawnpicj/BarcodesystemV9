@@ -49,15 +49,16 @@ namespace BarCodeAPIService.Service
                         + DateTime.Today.Millisecond;
                     foreach (var l in sendDelivery.Lines)
                     {
-                        if(l.YesNo == "Yes")
+                        double vPric = 450;
+                        if (l.YesNo == "Yes")
                         {
-                            //Start Line
-
+                            //Start Line                            
                             oDeliveryDocuments.Lines.ItemCode = l.ItemCode;
                             oDeliveryDocuments.Lines.Quantity = l.Quantity;
                             oDeliveryDocuments.Lines.UnitPrice = l.PriceBeforeDis;
                             //oDeliveryDocuments.Lines.DiscountPercent = l.Discount;
-                            oDeliveryDocuments.Lines.PriceAfterVAT = l.PriceAfterVAT;
+                            oDeliveryDocuments.Lines.PriceAfterVAT = Convert.ToDouble(Convert.ToInt16(l.PriceAfterVAT));
+                            oDeliveryDocuments.Lines.GrossPrice = Convert.ToDouble(Convert.ToInt16(l.PriceAfterVAT));
                             oDeliveryDocuments.Lines.WarehouseCode = l.Whs;
 
                             string strPatient = "";
@@ -87,6 +88,11 @@ namespace BarCodeAPIService.Service
                                 oDeliveryDocuments.Lines.BaseEntry = Convert.ToInt32(l.DocEntry);
                                 oDeliveryDocuments.Lines.BaseType = 17;
                                 oDeliveryDocuments.Lines.BaseLine = l.LineNum;
+
+                                oDeliveryDocuments.Lines.UserFields.Fields.Item("U_unitprice").Value = null;
+                                oDeliveryDocuments.Lines.UserFields.Fields.Item("U_Installment").Value = null;
+                                oDeliveryDocuments.Lines.UserFields.Fields.Item("U_Quantity").Value = null;
+                                
                             }
 
                             if (l.ManageItem == "S")

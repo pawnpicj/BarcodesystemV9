@@ -13,6 +13,8 @@ namespace BarCodeLibrary.Request.SAP
         public string CurrencyCode { get; set; }
         public string Remark { get; set; }
         public string SlpCode { get; set; }
+        public double VatSum { get; set; }
+        public double DocTotal { get; set; }
         public List<SendDeliveryLine> Lines { get; set; }
     }
 
@@ -26,6 +28,7 @@ namespace BarCodeLibrary.Request.SAP
         public double PriceAfterVAT { get; set; }
         public string Whs { get; set; }
         public string UomName { get; set; }
+        public string TaxCode { get; set; }
         public int DocEntry { get; set; }
         public string Patient { get; set; }
         public string TranferNo { get; set; }

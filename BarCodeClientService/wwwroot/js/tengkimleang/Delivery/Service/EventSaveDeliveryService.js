@@ -45,6 +45,7 @@ let EventSaveGoodReceiptPO = {
                     dSubLine.Quantity = xLinesAR[x].Quantity;
                     dSubLine.PriceBeforeDis = xLinesAR[x].PriceBeforeDis;
                     dSubLine.Discount = xLinesAR[x].Discount;
+                    dSubLine.TaxCode = xLinesAR[x].TaxCode;
                     dSubLine.PriceAfterVAT = xLinesAR[x].GrossPrice;
                     dSubLine.Whs = xLinesAR[x].Whs;
                     dSubLine.Patient = xLinesAR[x].Patient;
@@ -85,6 +86,7 @@ let EventSaveGoodReceiptPO = {
                 sendGoodReceiptPO.OrderNumber = $("#OrderNumberID").val();
                 sendGoodReceiptPO.CurrencyCode = $("#BPDocCurr").val();
                 sendGoodReceiptPO.SlpCode = $("#txtSlpCode").val();
+                sendGoodReceiptPO.DocTotal = $("#Total").val();
                 sendGoodReceiptPO.Remark = $("#Remark").val();
                 sendGoodReceiptPO.Lines = dLine;
                 console.log("Data for SAP ->");

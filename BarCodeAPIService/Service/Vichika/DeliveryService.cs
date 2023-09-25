@@ -31,6 +31,7 @@ namespace BarCodeAPIService.Service
                 if (login.LErrCode == 0)
                 {
                     oCompany = login.Company;
+                    double SumHTotal = 0;
                     oDeliveryDocuments = (Documents)oCompany.GetBusinessObject(BoObjectTypes.oDeliveryNotes);
                     oDeliveryDocuments.CardCode = sendDelivery.CardCode;
                     oDeliveryDocuments.DocDate = sendDelivery.DocDate;
@@ -39,6 +40,7 @@ namespace BarCodeAPIService.Service
                     oDeliveryDocuments.DocCurrency = sendDelivery.CurrencyCode;
                     oDeliveryDocuments.Comments = (sendDelivery.Remark == null) ? "" : sendDelivery.Remark;
                     oDeliveryDocuments.SalesPersonCode = Convert.ToInt32(sendDelivery.SlpCode);
+                    
                     oDeliveryDocuments.UserFields.Fields.Item("U_WebID").Value = "DE" + sendDelivery.Series + DateTime.Today.Day
                         + DateTime.Today.Month
                         + DateTime.Today.Year
@@ -51,36 +53,6 @@ namespace BarCodeAPIService.Service
                     {
                         if (l.YesNo == "Yes")
                         {
-                            //Start Line                            
-                            oDeliveryDocuments.Lines.ItemCode = l.ItemCode;
-                            oDeliveryDocuments.Lines.Quantity = l.Quantity;
-                            oDeliveryDocuments.Lines.UnitPrice = l.PriceBeforeDis;
-                            //oDeliveryDocuments.Lines.DiscountPercent = l.Discount;
-                            oDeliveryDocuments.Lines.PriceAfterVAT = Convert.ToDouble(Convert.ToInt16(l.PriceAfterVAT));
-                            oDeliveryDocuments.Lines.GrossPrice = Convert.ToDouble(Convert.ToInt16(l.PriceAfterVAT));
-                            oDeliveryDocuments.Lines.WarehouseCode = l.Whs;
-
-                            string strPatient = "";
-                            string xPatient = "";
-                            strPatient = l.Patient;
-                            if (strPatient is not null)
-                            {
-                                xPatient = strPatient;
-                            }
-                            else
-                            {
-                                xPatient = " ";
-                            }
-                            oDeliveryDocuments.Lines.UserFields.Fields.Item("U_Patient").Value = xPatient;
-
-                            string strTranferNo = "";
-                            string xTranferNo = "";
-                            strTranferNo = l.TranferNo;
-                            if (strTranferNo is not null)
-                            {
-                                oDeliveryDocuments.Lines.UserFields.Fields.Item("U_TranferNo").Value = xTranferNo;
-                            }
-
                             // oDeliveryDocuments.Lines.UoMEntry = Convert.ToInt32(l.UomName);
                             if (l.DocEntry != null)
                             {
@@ -88,10 +60,65 @@ namespace BarCodeAPIService.Service
                                 oDeliveryDocuments.Lines.BaseType = 17;
                                 oDeliveryDocuments.Lines.BaseLine = l.LineNum;
 
-                                //oDeliveryDocuments.Lines.UserFields.Fields.Item("U_unitprice").Value = null;
-                                //oDeliveryDocuments.Lines.UserFields.Fields.Item("U_Installment").Value = null;
-                                //oDeliveryDocuments.Lines.UserFields.Fields.Item("U_Quantity").Value = null;
+                                //Start Line
+                                oDeliveryDocuments.Lines.ItemCode = l.ItemCode;
+                                oDeliveryDocuments.Lines.Quantity = l.Quantity;
                                 
+                                double sVat;
+                                string PriceBefore = "";
+                                string PriceAfter = "";                                
+                                if (l.TaxCode == "S07")
+                                {
+                                    sVat = (l.PriceBeforeDis * 0.07) + l.PriceBeforeDis;
+                                }
+                                else
+                                {
+                                    sVat = l.PriceBeforeDis;
+                                }
+                                PriceBefore = l.PriceBeforeDis.ToString("F"); //420.5607
+                                PriceAfter = sVat.ToString("F"); //450
+                                double calcLine;
+                                string calcLineStr = "";
+                                calcLine = l.PriceBeforeDis * l.Quantity;
+                                calcLineStr = calcLine.ToString("F"); //450
+
+                                double calcLinePriceAfter = (Convert.ToDouble(PriceAfter) * l.Quantity);
+
+                                oDeliveryDocuments.Lines.Price = Convert.ToDouble(PriceBefore);
+                                oDeliveryDocuments.Lines.PriceAfterVAT = Convert.ToDouble(PriceAfter);
+                                oDeliveryDocuments.Lines.GrossPrice = Convert.ToDouble(PriceAfter);
+                                oDeliveryDocuments.Lines.LineTotal = Convert.ToDouble(calcLineStr);
+
+                                double TaxTotal;
+                                TaxTotal = (Convert.ToDouble(PriceAfter) * l.Quantity) - (Convert.ToDouble(PriceBefore) * l.Quantity);
+                                string TaxTotalStr = TaxTotal.ToString("F");
+                                oDeliveryDocuments.Lines.TaxTotal = Convert.ToDouble(TaxTotalStr);
+
+                                oDeliveryDocuments.Lines.GrossTotal = Convert.ToDouble(calcLineStr);                                
+                                oDeliveryDocuments.Lines.WarehouseCode = l.Whs;
+
+                                string strPatient = "";
+                                string xPatient = "";
+                                strPatient = l.Patient;
+                                if (strPatient is not null)
+                                {
+                                    xPatient = strPatient;
+                                }
+                                else
+                                {
+                                    xPatient = " ";
+                                }
+                                oDeliveryDocuments.Lines.UserFields.Fields.Item("U_Patient").Value = xPatient;
+
+                                string strTranferNo = "";
+                                string xTranferNo = "";
+                                strTranferNo = l.TranferNo;
+                                if (strTranferNo is not null)
+                                {
+                                    oDeliveryDocuments.Lines.UserFields.Fields.Item("U_TranferNo").Value = xTranferNo;
+                                }
+
+                                SumHTotal = SumHTotal + Convert.ToDouble(calcLinePriceAfter);
                             }
 
                             if (l.ManageItem == "S")
@@ -115,11 +142,13 @@ namespace BarCodeAPIService.Service
 
                             oDeliveryDocuments.Lines.Add();
 
+                            
                             //End Line
                         }
 
                     }
 
+                    oDeliveryDocuments.DocTotal = SumHTotal;
                     Retval = oDeliveryDocuments.Add();
                     if (Retval != 0)
                     {

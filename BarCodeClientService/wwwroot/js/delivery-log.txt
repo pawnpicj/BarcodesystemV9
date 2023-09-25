@@ -1517,3 +1517,28 @@ ITEM:300-302|Row:2|Status:pass,2,Case2
 ->ScanBarCode:300-302;023205;;QTY1;0001;
 ITEM:300-302|Row:0|Status:notpass,0,empty
 SO DocNum : 123090005
+SO DocNum : 123090006
+->ScanBarCode:300-317;024204;;QTY1;1;
+ITEM:300-317|Row:0|Status:pass,0,Case0
+->ScanBarCode:300-317;024204;;QTY1;1;
+ITEM:300-317|Row:0|Status:pass,0,Case2
+->ScanBarCode:300-317;024204;;QTY1;1;
+ITEM:300-317|Row:0|Status:pass,0,Case2
+->ScanBarCode:300-317;024204;;QTY1;1;
+ITEM:300-317|Row:0|Status:pass,0,Case2
+->ScanBarCode:300-317;024204;;QTY1;1;
+ITEM:300-317|Row:0|Status:pass,0,Case2
+->ScanBarCode:300-330;027205;;QTY1;1;
+ITEM:300-330|Row:1|Status:pass,1,Case1
+->ScanBarCode:300-330;027205;;QTY1;1;
+ITEM:300-330|Row:1|Status:pass,1,Case2
+->ScanBarCode:300-330;027205;;QTY1;1;
+ITEM:300-330|Row:1|Status:pass,1,Case2
+->ScanBarCode:300-330;027205;;QTY1;1;
+ITEM:300-330|Row:1|Status:pass,1,Case2
+->ScanBarCode:300-330;027205;;QTY1;1;
+ITEM:300-330|Row:1|Status:pass,1,Case2
+->ScanBarCode:300-320;021105;;QTY1;1;
+ITEM:300-320|Row:2|Status:pass,2,Case1
+->ScanBarCode:300-320;021105;;QTY1;1;
+ITEM:300-320|Row:2|Status:pass,2,Case2

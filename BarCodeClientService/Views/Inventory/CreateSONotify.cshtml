@@ -331,8 +331,11 @@
 
                         Customer Name :
                         <div class="input-group">
-                            <input type="text" id="txt_H_CusID" disabled size="8" value="" />
-                            <input type="text" class="form-control" placeholder="" id="txt_H_CusName" value="" disabled>
+                            <input type="text" id="txt_H_CusID" size="8" value="" />
+                            <input type="text" class="form-control" placeholder="" id="txt_H_CusName" value="">
+                            <div class="input-group-append">
+                                <button class="input-group-text btnModelsItem" data-toggle="modal" data-target="#ModalCusCode"><i class="fa fa-search"></i></button>
+                            </div>
                         </div>
 
                         Sale Employee :
@@ -633,24 +636,24 @@
     //+++++ Series Code +++++ END
 
     /* DataTable List Of Customer */
-    @*var LCus = [];
-    DataTableInit.TableCustomer();
-    var tbCus = $('#TbCusCode').DataTable();
-    DataMethod.AddClassSelected(DataMethod.AddClassSelected('TbCusCode', tbCus);
+    //var LCus = [];
+    //DataTableInit.TableCustomer();
+    @*var tbCus = $('#TbCusCode').DataTable();
+    DataMethod.AddClassSelected(DataMethod.AddClassSelected('TbCusCode', tbCus));
     $(".btnModelsCus").click(function() {
         $("#ModalCusCode").modal({ backdrop: "static" });
         GetMasterData.getCustomer('@Url.Action("GetCustomerClientResult", "GoodsReceiptPO")','C');
+    });    
+
+    $('#ChooseCus').click(function() {
+        const index = tbCus.row('.selected').index();
+        const data = tbCus.row(index).data();
+        //$('#CusID').val(data.cardCode);
+        //$('#CusName').val(data.cardName);
+
+        //$('#txt_H_CusID').val(data.cardCode);
+        //$('#txt_H_CusName').val(data.cardName);
     });*@
-
-    //$('#ChooseCus').click(function() {
-    //    const index = tbCus.row('.selected').index();
-    //    const data = tbCus.row(index).data();
-    //    //$('#CusID').val(data.cardCode);
-    //    //$('#CusName').val(data.cardName);
-
-    //    //$('#txt_H_CusID').val(data.cardCode);
-    //    //$('#txt_H_CusName').val(data.cardName);
-    //});
     /* End DataTable List Of Customer */
 
     //Search Inventory Tranfer IM

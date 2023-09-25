@@ -49,7 +49,6 @@ namespace BarCodeAPIService.Service
                         + DateTime.Today.Millisecond;
                     foreach (var l in sendDelivery.Lines)
                     {
-                        double vPric = 450;
                         if (l.YesNo == "Yes")
                         {
                             //Start Line                            
@@ -89,9 +88,9 @@ namespace BarCodeAPIService.Service
                                 oDeliveryDocuments.Lines.BaseType = 17;
                                 oDeliveryDocuments.Lines.BaseLine = l.LineNum;
 
-                                oDeliveryDocuments.Lines.UserFields.Fields.Item("U_unitprice").Value = null;
-                                oDeliveryDocuments.Lines.UserFields.Fields.Item("U_Installment").Value = null;
-                                oDeliveryDocuments.Lines.UserFields.Fields.Item("U_Quantity").Value = null;
+                                //oDeliveryDocuments.Lines.UserFields.Fields.Item("U_unitprice").Value = null;
+                                //oDeliveryDocuments.Lines.UserFields.Fields.Item("U_Installment").Value = null;
+                                //oDeliveryDocuments.Lines.UserFields.Fields.Item("U_Quantity").Value = null;
                                 
                             }
 

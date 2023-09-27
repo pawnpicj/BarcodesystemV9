@@ -60,13 +60,10 @@ namespace BarCodeAPIService.Service
                                 oDeliveryDocuments.Lines.BaseType = 17;
                                 oDeliveryDocuments.Lines.BaseLine = l.LineNum;
 
-                                //Start Line
-                                oDeliveryDocuments.Lines.ItemCode = l.ItemCode;
-                                oDeliveryDocuments.Lines.Quantity = l.Quantity;
-                                
+                                //Calc
                                 double sVat;
                                 string PriceBefore = "";
-                                string PriceAfter = "";                                
+                                string PriceAfter = "";
                                 if (l.TaxCode == "S07")
                                 {
                                     sVat = (l.PriceBeforeDis * 0.07) + l.PriceBeforeDis;
@@ -79,46 +76,24 @@ namespace BarCodeAPIService.Service
                                 PriceAfter = sVat.ToString("F"); //450
                                 double calcLine;
                                 string calcLineStr = "";
-                                calcLine = l.PriceBeforeDis * l.Quantity;
-                                calcLineStr = calcLine.ToString("F"); //450
 
-                                double calcLinePriceAfter = (Convert.ToDouble(PriceAfter) * l.Quantity);
-
-                                oDeliveryDocuments.Lines.Price = Convert.ToDouble(PriceBefore);
-                                oDeliveryDocuments.Lines.PriceAfterVAT = Convert.ToDouble(PriceAfter);
-                                oDeliveryDocuments.Lines.GrossPrice = Convert.ToDouble(PriceAfter);
-                                oDeliveryDocuments.Lines.LineTotal = Convert.ToDouble(calcLineStr);
-
-                                double TaxTotal;
-                                TaxTotal = (Convert.ToDouble(PriceAfter) * l.Quantity) - (Convert.ToDouble(PriceBefore) * l.Quantity);
-                                string TaxTotalStr = TaxTotal.ToString("F");
-                                oDeliveryDocuments.Lines.TaxTotal = Convert.ToDouble(TaxTotalStr);
-
-                                oDeliveryDocuments.Lines.GrossTotal = Convert.ToDouble(calcLineStr);                                
-                                oDeliveryDocuments.Lines.WarehouseCode = l.Whs;
-
-                                string strPatient = "";
-                                string xPatient = "";
-                                strPatient = l.Patient;
-                                if (strPatient is not null)
+                                if (PriceAfter == "450.00")
                                 {
-                                    xPatient = strPatient;
+                                    calcLine = (420.56 * l.Quantity);
+                                    calcLineStr = calcLine.ToString("F");
                                 }
                                 else
                                 {
-                                    xPatient = " ";
+                                    calcLine = l.PriceBeforeDis * l.Quantity;
+                                    calcLineStr = calcLine.ToString("F");
                                 }
-                                oDeliveryDocuments.Lines.UserFields.Fields.Item("U_Patient").Value = xPatient;
+                                decimal DecimalVar = Convert.ToDecimal(calcLineStr);
+                                //=======
 
-                                string strTranferNo = "";
-                                string xTranferNo = "";
-                                strTranferNo = l.TranferNo;
-                                if (strTranferNo is not null)
-                                {
-                                    oDeliveryDocuments.Lines.UserFields.Fields.Item("U_TranferNo").Value = xTranferNo;
-                                }
-
-                                SumHTotal = SumHTotal + Convert.ToDouble(calcLinePriceAfter);
+                                oDeliveryDocuments.Lines.DiscountPercent = l.Discount;
+                                oDeliveryDocuments.Lines.TaxCode = l.TaxCode;
+                                oDeliveryDocuments.Lines.LineTotal = (double)Math.Round(DecimalVar, 2);
+                                oDeliveryDocuments.Lines.Rate = 0.00;
                             }
 
                             if (l.ManageItem == "S")
@@ -148,7 +123,7 @@ namespace BarCodeAPIService.Service
 
                     }
 
-                    oDeliveryDocuments.DocTotal = SumHTotal;
+                    //oDeliveryDocuments.DocTotal = SumHTotal;
                     Retval = oDeliveryDocuments.Add();
                     if (Retval != 0)
                     {

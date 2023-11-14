@@ -32,6 +32,7 @@ namespace BarCodeAPIService.Service
                 {
                     oCompany = login.Company;
                     double SumHTotal = 0;
+                    double SumBefTotal = 0;
                     oDeliveryDocuments = (Documents)oCompany.GetBusinessObject(BoObjectTypes.oDeliveryNotes);
                     oDeliveryDocuments.CardCode = sendDelivery.CardCode;
                     oDeliveryDocuments.DocDate = sendDelivery.DocDate;
@@ -40,7 +41,8 @@ namespace BarCodeAPIService.Service
                     oDeliveryDocuments.DocCurrency = sendDelivery.CurrencyCode;
                     oDeliveryDocuments.Comments = (sendDelivery.Remark == null) ? "" : sendDelivery.Remark;
                     oDeliveryDocuments.SalesPersonCode = Convert.ToInt32(sendDelivery.SlpCode);
-                    
+                    oDeliveryDocuments.DiscountPercent = sendDelivery.DiscountPercent;
+
                     oDeliveryDocuments.UserFields.Fields.Item("U_WebID").Value = "DE" + sendDelivery.Series + DateTime.Today.Day
                         + DateTime.Today.Month
                         + DateTime.Today.Year
@@ -49,6 +51,18 @@ namespace BarCodeAPIService.Service
                         + DateTime.Today.Minute
                         + DateTime.Today.Second
                         + DateTime.Today.Millisecond;
+
+                    string strSq_Remark = "";
+                    if (sendDelivery.Sq_Remark is not null || sendDelivery.Sq_Remark != "")
+                    {
+                        strSq_Remark = sendDelivery.Sq_Remark;
+                    }
+                    else
+                    {
+                        strSq_Remark = "";
+                    }
+                    oDeliveryDocuments.UserFields.Fields.Item("U_sq_remark").Value = strSq_Remark;
+
                     foreach (var l in sendDelivery.Lines)
                     {
                         if (l.YesNo == "Yes")
@@ -79,12 +93,13 @@ namespace BarCodeAPIService.Service
 
                                 if (PriceAfter == "450.00")
                                 {
-                                    calcLine = (420.56 * l.Quantity);
+                                    calcLine = System.Math.Round((l.PriceBeforeDis * l.Quantity), 2);
                                     calcLineStr = calcLine.ToString("F");
                                 }
                                 else
                                 {
-                                    calcLine = l.PriceBeforeDis * l.Quantity;
+                                    //calcLine = l.PriceBeforeDis * l.Quantity;
+                                    calcLine = System.Math.Round(l.PriceBeforeDis * l.Quantity, 2);
                                     calcLineStr = calcLine.ToString("F");
                                 }
                                 decimal DecimalVar = Convert.ToDecimal(calcLineStr);
@@ -94,6 +109,9 @@ namespace BarCodeAPIService.Service
                                 oDeliveryDocuments.Lines.TaxCode = l.TaxCode;
                                 oDeliveryDocuments.Lines.LineTotal = (double)Math.Round(DecimalVar, 2);
                                 oDeliveryDocuments.Lines.Rate = 0.00;
+
+                                double DoubleVar = System.Math.Round(Convert.ToDouble(calcLineStr), 2);
+                                SumHTotal = SumHTotal + DoubleVar;
                             }
 
                             if (l.ManageItem == "S")
@@ -123,7 +141,21 @@ namespace BarCodeAPIService.Service
 
                     }
 
-                    //oDeliveryDocuments.DocTotal = SumHTotal;
+                    double DiscPerc = sendDelivery.DiscountPercent;
+                    double calcDiscPrcnt = DiscPerc / 100;
+
+                    //Calc Discount
+                    double cXBefPriceTotal = System.Math.Round(SumHTotal * calcDiscPrcnt, 2);
+                    double cYBefPriceTotal = System.Math.Round(SumHTotal - cXBefPriceTotal, 2);
+
+                    //Calc TaxTotal
+                    double calcTaxTotal = System.Math.Round(cYBefPriceTotal * 0.07, 2);
+
+                    
+                    double cSumHTotal = System.Math.Round(cYBefPriceTotal + calcTaxTotal, 2);
+                    cSumHTotal = System.Math.Round(cSumHTotal, 0);
+
+                    oDeliveryDocuments.DocTotal = cSumHTotal;
                     Retval = oDeliveryDocuments.Add();
                     if (Retval != 0)
                     {
@@ -159,7 +191,6 @@ namespace BarCodeAPIService.Service
                 });
             }
         }
-
         public Task<ResponseGetSaleOrder> responseGetSaleOrder()
         {
             var getSaleOrder = new List<GetSaleOrder>();
@@ -209,7 +240,6 @@ namespace BarCodeAPIService.Service
                 });
             }
         }
-
         public Task<ResponseGetORDR> responseGetORDR(string cardCode, string typeShow)
         {
             var oPORs = new List<ORDR>();
@@ -248,7 +278,6 @@ namespace BarCodeAPIService.Service
                             {
                                 inputX = "RDR1";
                             }
-
 
                         Query = $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{inputX}','{row["DocEntry"]}','','','','')";
                         login.AD = new OdbcDataAdapter(Query, login.CN);
@@ -324,7 +353,6 @@ namespace BarCodeAPIService.Service
                 });
             }
         }
-
         public Task<ResponseGetBatch> responseGetBatch(string ItemCode, string WhsCode)
         {
             var batchGets = new List<GetBatch>();
@@ -372,8 +400,7 @@ namespace BarCodeAPIService.Service
                     Data = null
                 });
             }
-        }
-        
+        }        
         public Task<ResponseGetSerial> responseGetSerial(string ItemCode, string WhsCode)
         {
             var serialGets = new List<GetSerial>();
@@ -420,7 +447,6 @@ namespace BarCodeAPIService.Service
                 });
             }
         }
-
         public Task<ResponseGetORDR> responseGetSO(string cardCode)
         {
             var headSO = new List<ORDR>();
@@ -516,26 +542,130 @@ namespace BarCodeAPIService.Service
             }
 
         }
-
-        public Task<ResponseGetORDR> responseGetSONew(string cardCode, string typeShow)
+        public Task<ResponseGetORDRNofity> responseGetORDRNofity(string cardCode, string typeShow)
         {
-            var oRDRs = new List<ORDR>();
-            var rDR1s = new List<RDR1>();
+            var hRDR = new List<hORDR>();
+            var lRDR = new List<lRDR1>();
+            var lRDRBS = new List<lLineBS>();
             var dt = new DataTable();
             var dtLine = new DataTable();
+            var dtSoBSLine = new DataTable();
 
             try
             {
                 var login = new LoginOnlyDatabase(LoginOnlyDatabase.Type.SapHana);
                 if (login.lErrCode == 0)
                 {
+                    var strCardCode = "";
+                    var strDocNum = "";
+                    var strWEBDOCNUM = "";
                     var Query =
-                        $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('ORDR','','','','','')";
+                        $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetSO}','{cardCode}','','','','')";
                     login.AD = new OdbcDataAdapter(Query, login.CN);
                     login.AD.Fill(dt);
                     foreach (DataRow row in dt.Rows)
                     {
-                        oRDRs.Add(new ORDR
+                        dtLine = new DataTable();
+                        dtSoBSLine = new DataTable();
+                        //Query = $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{ProcedureRoute.Type.GetSOLine}','{row["DocEntry"]}','','','','')";
+
+                        string inputX = "";
+                        if (typeShow == "0")
+                        {
+                            inputX = "RDR1";
+                        }
+                        else if (typeShow == "1")
+                        {
+                            inputX = "RDR1-Notify";
+                        }
+                        else if (typeShow == "2")
+                        {
+                            inputX = "RDR1-NotifyOnly";
+                        }
+                        else
+                        {
+                            inputX = "RDR1";
+                        }
+                        string strBalanceQty = "";
+                        Query = $"CALL \"{ConnectionString.CompanyDB}\".{ProcedureRoute._USP_CALLTRANS_TENGKIMLEANG} ('{inputX}','{row["DocEntry"]}','','','','')";
+                        login.AD = new OdbcDataAdapter(Query, login.CN);
+                        login.AD.Fill(dtLine);
+                        lRDR = new List<lRDR1>();
+                        foreach (DataRow drLine in dtLine.Rows)
+                        {
+                            strBalanceQty = drLine["U_BalanceQty"].ToString();
+                            if (strBalanceQty == "0")
+                            {
+                                strBalanceQty = "0";
+                            }
+                            else
+                            {
+                                strBalanceQty = drLine["InputQuantity"].ToString();
+                            }
+
+                            lRDR.Add(new lRDR1
+                            {
+                                ItemCode = drLine["ItemCode"].ToString(),
+                                Description = drLine["Description"].ToString(),
+                                Quatity = Convert.ToDouble(drLine["Quantity"].ToString()),
+                                InputQuantity = Convert.ToDouble(strBalanceQty),
+                                Price = Convert.ToDouble(drLine["Price"].ToString()),
+                                PriceBeforeDis = Convert.ToDouble(drLine["PriceBefDi"].ToString()),
+                                DiscPrcnt = Convert.ToDouble(drLine["DiscPrcnt"].ToString()),
+                                DiscountAMT = Convert.ToDouble(drLine["DiscountAmt"].ToString()),
+                                VatGroup = drLine["LineTotal"].ToString(),
+                                WhsCode = drLine["WhsCode"].ToString(),
+                                LineTotal = Convert.ToDouble(drLine["LineTotal"].ToString()),
+                                ManageItem = drLine["ManageItem"].ToString(),
+                                UomName = drLine["UomName"].ToString(),
+                                TaxCode = drLine["TaxCode"].ToString(),
+                                PriceAfVAT = Convert.ToDouble(drLine["PriceAfVAT"].ToString()),
+                                Patient = drLine["Patient"].ToString(),
+                                TranferNo = drLine["TranferNo"].ToString(),
+                                LineNum = Convert.ToInt32(drLine["LineNum"].ToString())
+                            });
+                        }                            
+
+                        strCardCode = row["CardCode"].ToString();
+                        strDocNum = row["IMNo"].ToString();
+                        strWEBDOCNUM = row["WebDocNum"].ToString();
+
+                        if(strWEBDOCNUM != "")
+                        {
+                            //Select Data From BARCODESYSTEMDB.TBSOBATCHSERIAL
+                            var Query2 = $"CALL \"{ConnectionString.BarcodeDb}\"._USP_CALLTRANS_SO ('Get_SO_BatchSerial','{strCardCode}','{strDocNum}','{strWEBDOCNUM}','','')";
+                            login.AD = new OdbcDataAdapter(Query2, login.CN);
+                            login.AD.Fill(dtSoBSLine);
+                            lRDRBS = new List<lLineBS>();
+                            foreach (DataRow drLine2 in dtSoBSLine.Rows)
+                            {
+                                lRDRBS.Add(new lLineBS
+                                {
+                                    LineNum = drLine2["LineNum"].ToString(),
+                                    ItemCode = drLine2["ItemCode"].ToString(),
+                                    Dscription = drLine2["Dscription"].ToString(),
+                                    Quatity = Convert.ToDouble(drLine2["Quantity"].ToString()),
+                                    InputQuantity = Convert.ToDouble(drLine2["Quantity"].ToString()),
+                                    UomCode = drLine2["UomCode"].ToString(),
+                                    GrossPrice = Convert.ToDouble(drLine2["GrossPrice"].ToString()),
+                                    BatchSerialType = drLine2["BatchSerialType"].ToString(),
+                                    BatchNumber = drLine2["BatchNumber"].ToString(),
+                                    SerialNumber = drLine2["SerialNumber"].ToString(),
+                                    Warehouse = drLine2["Warehouse"].ToString(),
+                                    BinEntry = drLine2["BinEntry"].ToString(),
+                                    BinLocation = drLine2["BinLocation"].ToString(),
+                                    Patient = drLine2["Patient"].ToString(),
+                                    BaseLine = drLine2["BASELINE"].ToString()
+                                });
+                            }
+                        }
+                        else
+                        {
+                            lRDRBS = new List<lLineBS>();
+                        }
+                        
+
+                        hRDR.Add(new hORDR
                         {
                             DocEntry = Convert.ToInt32(row["DocENtry"].ToString()),
                             CardCode = row["CardCode"].ToString(),
@@ -553,19 +683,21 @@ namespace BarCodeAPIService.Service
                             ToBinLocation = row["ToBinLocation"].ToString(),
                             SlpCode = Convert.ToInt32(row["SlpCode"].ToString()),
                             SlpName = row["SlpName"].ToString(),
-                            Line = rDR1s.ToList()
+                            SQRemark = row["SQ_Remark"].ToString(),
+                            Line = lRDR.ToList(),
+                            LineBatchSerial = lRDRBS.ToList()
                         });
                     }
 
-                    return Task.FromResult(new ResponseGetORDR
+                    return Task.FromResult(new ResponseGetORDRNofity
                     {
                         ErrorCode = 0,
                         ErrorMessage = "",
-                        Data = oRDRs.ToList()
+                        Data = hRDR.ToList()
                     });
                 }
 
-                return Task.FromResult(new ResponseGetORDR
+                return Task.FromResult(new ResponseGetORDRNofity
                 {
                     ErrorCode = login.lErrCode,
                     ErrorMessage = login.sErrMsg,
@@ -575,7 +707,7 @@ namespace BarCodeAPIService.Service
 
             catch (Exception ex)
             {
-                return Task.FromResult(new ResponseGetORDR
+                return Task.FromResult(new ResponseGetORDRNofity
                 {
                     ErrorCode = ex.HResult,
                     ErrorMessage = ex.Message,

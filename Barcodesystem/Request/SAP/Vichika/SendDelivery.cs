@@ -14,7 +14,9 @@ namespace BarCodeLibrary.Request.SAP
         public string Remark { get; set; }
         public string SlpCode { get; set; }
         public double VatSum { get; set; }
+        public double DiscountPercent { get; set; }
         public double DocTotal { get; set; }
+        public string Sq_Remark { get; set; }
         public List<SendDeliveryLine> Lines { get; set; }
     }
 

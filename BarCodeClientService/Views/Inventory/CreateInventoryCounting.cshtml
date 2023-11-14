@@ -1469,7 +1469,7 @@
     function funcAddItemManual(itemType, itemCode, batchSerial, whsCode) {
         //playAudioNoPass();
         //if (confirm("คุณต้องการเพิ่ม Batch Or Serial นี้หรือไม่") == true) {
-            //Start Work                   
+            //Start Work
             if (itemType == 'batch') {
                 sBatchSerial = batchSerial;
                 console.log(itemCode + ";" + sBatchSerial + ";" + whsCode + ";");
@@ -1564,7 +1564,7 @@
                                     if (sBatchSerial == data[9] && sBatchSerial != '') {
                                         playAudioNoPass();
                                         console.log("Item :" + bItemCode + ", Serial duplicate -> " + sBatchSerial);
-                                        alert("Item:" + bItemCode + ", Serial duplicate->" + sBatchSerial);                                        
+                                        alert("Item:" + bItemCode + ", Serial duplicate->" + sBatchSerial);
                                         document.getElementById("frmLoading").style.display = "none";
                                         return false;
                                     }
@@ -1583,9 +1583,9 @@
                                     sBatchSerial
                                 ]).draw(false);
                             }
-                            else {                                
+                            else {
                                 document.getElementById("frmLoading").style.display = "none";
-                                alert("Serial Number does not exist.\r\nไม่มีเลข Serial ใน Warehouse นี้");                                                                
+                                alert("Serial Number does not exist.\r\nไม่มีเลข Serial ใน Warehouse นี้");
                             }
 
                         }
@@ -1644,7 +1644,7 @@
 
                     });
             }
-            //End Work   
+            //End Work
         //} else {
         //    console.log("Canceled!")
         //}
@@ -1858,7 +1858,7 @@
                                 if (sBatchSerial == data[9] && sBatchSerial != '') {
                                     playAudioNoPass();
                                     console.log("Item :" + bItemCode + ", Serial duplicate -> " + sBatchSerial);
-                                    alert("Item:" + bItemCode + ", Serial duplicate->" + sBatchSerial);                                    
+                                    alert("Item:" + bItemCode + ", Serial duplicate->" + sBatchSerial);
                                     document.getElementById("frmLoading").style.display = "none";
                                     document.getElementById("txtScanBarCode01").disabled = false;
                                     return false;
@@ -1877,7 +1877,7 @@
                                 '',
                                 sBatchSerial
                             ]).draw(false);
-                            
+
                             playAudioPass();
                             document.getElementById("frmLoading").style.display = "none";
                             document.getElementById("txtScanBarCode01").disabled = false;
@@ -1955,8 +1955,8 @@
                             playAudioNoPass();
                             alert("ไม่มี Item Barcode ใน Bin Location นี้");
 
-                            //function add item comfirm                            
-                            funcAddItemManual('no', sItemCode, sBatchSerial, sWhsCode)                            
+                            //function add item comfirm
+                            funcAddItemManual('no', sItemCode, sBatchSerial, sWhsCode)
                             document.getElementById("frmLoading").style.display = "none";
                             document.getElementById("txtScanBarCode01").disabled = false;
                             $('#txtScanBarCode01').val("");
@@ -2386,6 +2386,29 @@
             console.log("Json Complete..");
             console.log(sHead);
 
+            //sendUserPassSAP
+            //get cookie
+            let user = getCookie("username");
+            let passer = getCookie("passw0rder");
+            var dataU = {};
+            dataU.userNameSAP = user;
+            dataU.password = passer;
+
+            //console.log("-> User And Password Sending...");
+            //console.log(dataU);
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("PostUserConfig", "Setting")',
+                data: { send: dataU},
+                dataType: "JSON",
+                error: function (request, error) {
+
+                },
+                success: function (ex) {
+                    console.log("Success PostUserConfig");
+                }
+            });
+
              $.ajax({
                 type: "POST",
                 url: '@Url.Action("PostInventoryCounting", "Inventory")',
@@ -2411,6 +2434,20 @@
 
     }
 
+    function getCookie(cname) {
+        let name = cname + "=";
+        let ca = document.cookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
 
     //Start #PrintList
     @*$("#PrintBinC").click(function () {

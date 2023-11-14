@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Create Delivery";
+    ViewData["Title"] = "Create Delivery Nofity";
     var dt = DateTime.Now;
     ViewData["Date"] = dt.ToShortDateString();
 }
@@ -186,7 +186,7 @@
             <span>
                 <a onclick="return confirm('Unsaved data will be lost. Do you want to continue without saving?')"><i class="fa fa-caret-right align-right"></i><label style="font-size:18px;font-weight:500">Sale Order</label></a>
                 <i class="fa fa-caret-right align-right"></i>
-            </span><label style="font-size:18px;font-weight:500">Create Delivery</label>
+            </span><label style="font-size:18px;font-weight:500">Create Delivery Nofity</label>
 
         </h5>
     </div>
@@ -230,10 +230,10 @@
                                 </div>
                                 <input type="text" class="form-control" placeholder="Search Code" id="CusID" value="" readonly>
                                 @*<div class="input-group-append">
-                                <button class="input-group-text btnModelsCus" data-toggle="modal" data-target="#ModalCusCode">
-                                <i class="fa fa-search"></i>
-                                </button>
-                                </div>*@
+                <button class="input-group-text btnModelsCus" data-toggle="modal" data-target="#ModalCusCode">
+                <i class="fa fa-search"></i>
+                </button>
+                </div>*@
                             </div>
                         </div>
                         <div>
@@ -252,7 +252,7 @@
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <div>
+                        <div style="display:none">
                             <div class="input-group">
                                 <select id="ShowType" class="form-control" onchange="funcShowType();">
                                     <option value="0">แสดงทั้งหมด</option>
@@ -281,11 +281,11 @@
                             </div>
                         </div>
                         @*<div>
-                        BP Currency :
-                        <div class="input-group">
-                        <select class="form-control" id="BPDocCurr"></select>
-                        </div>
-                        </div>*@
+        BP Currency :
+        <div class="input-group">
+        <select class="form-control" id="BPDocCurr"></select>
+        </div>
+        </div>*@
                         Sales Employees :
                         <div class="input-group">
                             <select class="form-control" id="SaleEmp" style="display:none"></select>
@@ -293,13 +293,17 @@
                             <input type="text" class="form-control" placeholder="" id="txtSlpName" value="" disabled>
                         </div>
 
+                        หมายเหตุ (SQ) :
+                        <div class="input-group">
+                            <textarea class="form-control" id="SQ_Remark" rows="3"></textarea>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="tab-pane fade" id="item" role="tabpanel" aria-labelledby="item-tab" style="margin-top: 10px;">
 
-                <div>
+                <div style="display:none;">
                     Add More Item
                     <button class="btn btn-info" id="btnShowAddItemBar" style="background:#f0eff1;color:#696969" onclick="shAddItemBar()">
                         <i class="fa fa-window-minimize" aria-hidden="true"></i>
@@ -410,7 +414,7 @@
                                 <button class="btn btn-warning" id="btnUpdateQty" style="margin-left:5px; display:none" onclick="fncUpdateQty();">Update Qty</button>
                             </div>
                         </div>
-                        <div id="TabScanBarcode" style="display:block;">
+                        <div id="TabScanBarcode" style="display: block;">
                             Scan Barcode :
                             <div class="input-group">
                                 <input type="text" class="form-control" id="txtScanBarCode01" autocomplete="off" style="background-color: antiquewhite; border: 3px solid #000000;text-align: center;" />
@@ -418,7 +422,7 @@
                             </div>
                             <button class="input-group-text" id="addRow01" style="display: none;" autocomplete="off"><i class="fa fa-plus"></i></button>
                         </div>
-                        <div id="TabBinLoc" style="display:block;">
+                        <div id="TabBinLoc" style="display:none;">
                             Bin Location : <input type="text" id="txtGetBinEntry" autocomplete="off" disabled readonly size="5" />
                             <input type="text" id="txtGetBinCode" autocomplete="off" disabled readonly />
                         </div>
@@ -453,7 +457,7 @@
                         </div>
 
                         <br>
-                        <div style="display:none">
+                        <div style="display:none;">
                             เลือก -> ItemCode&nbsp;<input type="text" id="txtSeleteItemCode" size="10" class="text-sm-left" readonly style="border-top:none; border-left:none; border-right:none;" />
                             QTY&nbsp;<input type="text" id="txtSeleteQty" size="2" class="text-sm-left" readonly style="border-top:none; border-left:none; border-right:none; text-align:center;" />
                             <input type="text" id="txtSeleteLine" size="2" class="text-sm-left" readonly style="border-top:none; border-left:none; border-right:none; display: none;" />
@@ -474,6 +478,31 @@
                                         <th>ExpDate</th>
                                         <th>BatchNumber</th>
                                         <th>SerialNumber</th>
+                                        <th>LineSap</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+
+                        <div>Data Batch/Serial</div>
+                        <div class="table-responsive">
+                            <table id="TbLineBatchSerial" class="table table-striped table-bordered table-condensed dt-responsive nowrap text-xsmall" style="width: 100%; background: #f0eff1; color: #696969;">
+                                <thead>
+                                    <tr>
+                                        <th>LineNo</th>
+                                        <th>ItemCode</th>
+                                        <th>ItemName</th>
+                                        <th>Quantity</th>
+                                        <th>InputQuantity</th>
+                                        <th>UOMCode</th>
+                                        <th>GrossPrice</th>
+                                        <th>BatchSerialType</th>
+                                        <th>BatchNumber</th>
+                                        <th>SerialNumber</th>
+                                        <th>Warehouse</th>
+                                        <th>BinEntry</th>
+                                        <th>BinLocation</th>
+                                        <th>Patient</th>
                                         <th>LineSap</th>
                                     </tr>
                                 </thead>
@@ -997,6 +1026,11 @@
     var tbItemLine = $('#TbAR').DataTable();
     DataMethod.AddClassSelected("TbAR", tbItemLine);
 
+    let LineBatchSerial = [];
+    DataTableInit.TableListBatchSerial();
+    var tbLineBatchSerial = $('#TbLineBatchSerial').DataTable();
+    DataMethod.AddClassSelected("TbLineBatchSerial", tbLineBatchSerial);
+
     $('#TbAR tbody').on('click', 'tr', function () {
         var data = tbItemLine.row(this).data();
         //console.log(data);
@@ -1518,15 +1552,16 @@
     $('#Save').click(function () {
         console.clear();
         var sLine = [];
+        var sLine2 = [];
         console.log("Send Data to SAP");
         document.getElementById("frmLoading").style.display = "block";
         xLinesAR = [];
         xLinesAR = LinesAR;
         //console.log(LinesAR);
 
-        for (let ls = 0; ls < tbLineScan.column(0).data().length; ls++) {
-            var datals = tbLineScan.row(ls).data();
-            //console.log(datals);
+        for (let ls = 0; ls < tbLineBatchSerial.column(0).data().length; ls++) {
+            var datals = tbLineBatchSerial.row(ls).data();
+            console.log(datals);
 
             arrayLine = {};
             var ManageItem = "";
@@ -1543,13 +1578,13 @@
             }
 
             if (datals.batchNumber == "" && datals.serialNumber == "") {
-                ManageItem = "n";
+                ManageItem = "N";
                 batchSerialNo = 'non' + datals.itemCode + ";" + datals.lineSap;
             }
 
             arrayLine.rowNo = datals.lineSap;
             arrayLine.itemCode = datals.itemCode;
-            arrayLine.quantity = parseInt(datals.quantity);
+            arrayLine.quantity = parseInt(datals.quatity);
             arrayLine.binEntry = datals.binEntry;
             arrayLine.binLocation = datals.binLocation;
             arrayLine.warehouse = datals.warehouse;
@@ -1564,6 +1599,48 @@
         }
         //console.log("Gen Table Scan Line ");
         //console.log(sLine);
+
+        for (let ls = 0; ls < tbLineScan.column(0).data().length; ls++) {
+            var datals2 = tbLineScan.row(ls).data();
+            //console.log(datals2);
+
+            arrayLine2 = {};
+            var ManageItem = "";
+            var batchSerialNo = "";
+
+            if (datals2.batchNumber != "") {
+                ManageItem = "B";
+                batchSerialNo = datals2.itemCode + ";" + datals2.batchNumber + ";" + datals2.lineSap;
+            } else {
+                if (datals2.serialNumber != "") {
+                    ManageItem = "S";
+                    batchSerialNo = datals2.itemCode + ";" + datals2.serialNumber + ";" + datals2.lineSap;
+                }
+            }
+
+            if (datals2.batchNumber == "" && datals2.serialNumber == "") {
+                ManageItem = "n";
+                batchSerialNo = 'non' + datals2.itemCode + ";" + datals2.lineSap;
+            }
+
+            arrayLine2.rowNo = datals2.lineSap;
+            arrayLine2.itemCode = datals2.itemCode;
+            arrayLine2.quantity = parseInt(datals2.quantity);
+            arrayLine2.binEntry = datals2.binEntry;
+            arrayLine2.binLocation = datals2.binLocation;
+            arrayLine2.warehouse = datals2.warehouse;
+            arrayLine2.uomCode = datals2.uomCode;
+            arrayLine2.taxCode = datals2.taxCode;
+            arrayLine2.ManageItem = ManageItem;
+            arrayLine2.batchNo = datals2.batchNumber;
+            arrayLine2.serialNo = datals2.serialNumber;
+            arrayLine2.batchSerialNo = batchSerialNo;
+            sLine.push(arrayLine2);
+
+        }
+        console.log("Array 2 Table ");
+        console.log(sLine);
+
         // #region Group batchSerialNo
 
         const groupBy = sLine.reduce((acc, cur) => {
@@ -1668,11 +1745,12 @@
 
     // Copy From PO
     $('#ChoosePO').click(function() {
-        const result = EventCopyFromPOService.ChoosePO_Click(temporyListPO, TbCopyFromPO);
-        console.log("=== result ===");
+        const result = EventCopyFromPOService.ChoosePONofity_Click(temporyListPO, TbCopyFromPO);
+        console.log("=== XresultX ===");
         console.log(result);
 
         LinesAR = result.linesAR;
+        LineBatchSerial = result.lineBatchSerial;
         $('#CusID').val(result.cardCode);
         $('#CusName').val(result.cardName);
         $('#txtSlpCode').val(result.slpCode);
@@ -1687,8 +1765,9 @@
         $("#DisA").val(result.discountLine);
         $("#BTax").val(Number(result.lineTotal + result.discountLine).toFixed(2));
         $('#txtGetBinCode').val(result.toBinLocation);
-
+        $('#SQ_Remark').val(result.sqRemark);
         //console.log("Length : " + result.linesAR.length);
+        //console.log("Length : " + result.LineBatchSerial.length);
 
         var total1 = 0;
         for (let x = 0; x < result.linesAR.length; x++) {
@@ -1702,6 +1781,10 @@
         tbItemLine.clear();
         tbItemLine.rows.add(LinesAR);
         tbItemLine.search('').draw();
+
+        tbLineBatchSerial.clear();
+        tbLineBatchSerial.rows.add(LineBatchSerial);
+        tbLineBatchSerial.search('').draw();
 
         //GetBinEntry
         //TextBox = txtGetBinEntry, txtGetBinCode
@@ -1718,16 +1801,9 @@
                     jqueryXml = $(data);
                     //console.log("showBinLocation : ");
                     //console.log(data);
-                    // Define a variable, but don't give it a value
-                    const result = Array.isArray(data);
-                    var sBinEntry = "";
-                    // Check if the variable is defined before accessing its properties
-                    if (result !== false) {
-                        sBinEntry = jqueryXml[0].data[0].absEntry;
-                    } else {
-                        sBinEntry = "";
-                    }
-                    console.log("GetBin : " + sBinEntry);
+                    //sBinEntry = jqueryXml[0].data[0].absEntry;
+                    sBinEntry = "";
+                    //console.log("GetBin : " + sBinEntry);
                     //showBinLocation = data[0].binCode;
                     $('#txtGetBinEntry').val(sBinEntry);
                 }
@@ -1742,7 +1818,7 @@
         const cardCode = "empty";
         const typeShow = document.getElementById('ShowType').value;
 
-        GetMasterData.getPurchaseOrder('@Url.Action("GetSO", "SaleOrder")', cardCode, typeShow);
+        GetMasterData.getPurchaseOrder('@Url.Action("GetSONofity", "SaleOrder")', cardCode, '0');
 
     @*if ($("#CusID").val() != "") {
             const cardCode = $("#CusID").val();

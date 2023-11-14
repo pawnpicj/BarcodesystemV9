@@ -316,21 +316,31 @@ namespace BarCodeAPIService.Service
                         double QtyNotify = double.Parse(row["QTYNotify_All"].ToString());
                         double CalcQty = QtyX - (QtyCv + QtyNotify);
 
+                        string UseBaseUn = row["UseBaseUn"].ToString();
+
                         if (row["YNCV"].ToString() == "Y" || row["YNNotify"].ToString() == "Y")
                         {
                             //str = Convert.ToString(QtyX) + "-(" + Convert.ToString(QtyCv) + "+" + Convert.ToString(QtyNotify) + ") = " + CalcQty + " | " + row["YNCV"].ToString() + "/" + row["YNNotify"].ToString();
-                            str = "QtyX:- " + CalcQty + " QtyY:- " + CalcQtyBS;
+                            str = "QtyX:- " + CalcQty + " QtyY:- " + CalcQtyBS + " UseBaseUn:- " + UseBaseUn;
                         }
                         else
                         {
                             //str = Convert.ToString(QtyX) + "-(" + Convert.ToString(QtyCv) + "+" + Convert.ToString(QtyNotify) + ") = " + CalcQty + " | " + row["YNCV"].ToString() + "/" + row["YNNotify"].ToString();
-                            str = "QtyX:- " + CalcQty + " QtyY:- " + CalcQtyBS;
+                            str = "QtyX:- " + CalcQty + " QtyY:- " + CalcQtyBS + " UseBaseUn:- " + UseBaseUn;
                         }
 
                         if (row["IsBtchSerNum"].ToString() == "B")
                         {
                             //CalcQtyBS = CalcQtyBS;
-                            iBalance = CalcQtyBS;
+                            if (CalcQty == 0)
+                            {
+                                iBalance = CalcQty;
+                            }
+                            else
+                            {
+                                iBalance = CalcQtyBS;
+                            }
+                            
                             BatchSerialNumber = row["BatchesNumber"].ToString();
                         }
                         else if (row["IsBtchSerNum"].ToString() == "S")

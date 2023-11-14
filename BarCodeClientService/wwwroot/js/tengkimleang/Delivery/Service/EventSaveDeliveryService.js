@@ -85,9 +85,11 @@ let EventSaveGoodReceiptPO = {
                 sendGoodReceiptPO.TaxDate = $("#DocumentDate").val();
                 sendGoodReceiptPO.OrderNumber = $("#OrderNumberID").val();
                 sendGoodReceiptPO.CurrencyCode = $("#BPDocCurr").val();
+                sendGoodReceiptPO.DiscountPercent = $("#DisPer").val();
                 sendGoodReceiptPO.SlpCode = $("#txtSlpCode").val();
                 sendGoodReceiptPO.DocTotal = $("#Total").val();
                 sendGoodReceiptPO.Remark = $("#Remark").val();
+                sendGoodReceiptPO.Sq_Remark = $("#SQ_Remark").val();
                 sendGoodReceiptPO.Lines = dLine;
                 console.log("Data for SAP ->");
                 console.log(sendGoodReceiptPO);

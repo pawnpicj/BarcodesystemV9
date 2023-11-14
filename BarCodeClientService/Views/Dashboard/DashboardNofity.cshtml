@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Dashboard-Sale A/R";
+    ViewData["Title"] = "Dashboard-Nofity (แจ้งใช้)";
 }
 <style type="text/css">
     /*Scanner*/
@@ -78,11 +78,11 @@
 <div class="container">
     <div class="row">
         <div class="alink col-lg-3">
-            <a asp-controller="SaleOrder" asp-action="CreateDelivery">
+            <a asp-controller="Inventory" asp-action="CreateSONotify">
                 <div class="tabIcon">
                     <div style="text-align:center">
                         <p class="p1">
-                            <b>Delivery</b><br>
+                            <b>1.SO แจ้งใช้</b><br>
                             <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
                         </p>
                     </div>
@@ -94,31 +94,7 @@
                 <div class="tabIcon">
                     <div style="text-align:center">
                         <p class="p1">
-                            <b>Delivery Nofity</b><br>
-                            <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
-                        </p>
-                    </div>
-                </div>
-            </a>
-        </div>
-        <div class="alink col-lg-3">
-            <a asp-controller="Return" asp-action="CreateReturn">
-                <div class="tabIcon">
-                    <div style="text-align:center">
-                        <p class="p1">
-                            <b>Delivery Return</b><br>
-                            <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
-                        </p>
-                    </div>
-                </div>
-            </a>
-        </div>
-        <div class="alink col-lg-3">
-            <a asp-controller="SaleOrder" asp-action="CreateBarCodeSaleOrder">
-                <div class="tabIcon">
-                    <div style="text-align:center">
-                        <p class="p1">
-                            <b>Print Label Delivery</b><br>
+                            <b>2.Delivery แจ้งใช้</b><br>
                             <i id="Icon" class="fas fa-file-medical" aria-hidden="true"></i>
                         </p>
                     </div>

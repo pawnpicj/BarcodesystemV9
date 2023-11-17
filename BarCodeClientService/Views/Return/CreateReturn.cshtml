@@ -462,51 +462,56 @@
             },
             success: function (ex) {
                 console.log("Success PostUserConfig");
+                console.log("-> To Saving...");
+                //======================================
+                var object = {};
+                object.CardCode = $("#CusID").val();
+                object.NumAtCard = $("#OrderNumberID").val();
+                object.Remark = $("#Remark").val();
+                object.Series = $("#SeriesID").val();
+                object.DocDate = $("#DocDate").val();
+                object.DocDueDate = $("#DocumentDate").val();
+                object.BPCurrency = $("#BPDocCurr").val();
+                var line = [];
+                var data = TbLine.rows().data();
+                console.log(data);
+                data.each(function (value, index) {
+                    var objectLine = {};
+                    objectLine.ItemCode = value.itemCode;
+                    objectLine.Quantity = value.quatity;
+                    objectLine.UnitPrice = value.price;
+                    objectLine.Discount = value.discPrcnt;
+                    objectLine.TaxCode = value.vatGroup;
+                    objectLine.WarehouseCode = value.whsCode;
+                    objectLine.UomCode = value.whsCode;
+                    objectLine.LineNum = value.lineNum;
+                    objectLine.BaseEntry = value.baseEntry;
+                    objectLine.ManageItem = value.manageItem;
+                    line.push(objectLine);
+                });
+                object.Lines = line;
+                $.ajax({
+                    url: '@Url.Action("CreateGoodReturn","Return")',
+                    type: "POST",
+                    data: { sendReturn: object },
+                    dataType: "JSON",
+                    success: function(data) {
+                        alert("Success");
+                        document.getElementById("frmLoading").style.display = "none";
+                        location.reload();
+                    },
+                    error: function(erro) {
+                        alert(erro.responseText);
+                        document.getElementById("frmLoading").style.display = "none";
+                    }
+                });
+                //======================================
             }
         });
 
-        var object = {};
-        object.CardCode = $("#CusID").val();
-        object.NumAtCard = $("#OrderNumberID").val();
-        object.Remark = $("#Remark").val();
-        object.Series = $("#SeriesID").val();
-        object.DocDate = $("#DocDate").val();
-        object.DocDueDate = $("#DocumentDate").val();
-        object.BPCurrency = $("#BPDocCurr").val();
-        var line = [];
-        var data = TbLine.rows().data();
-        console.log(data);
-        data.each(function (value, index) {
-            var objectLine = {};
-            objectLine.ItemCode = value.itemCode;
-            objectLine.Quantity = value.quatity;
-            objectLine.UnitPrice = value.price;
-            objectLine.Discount = value.discPrcnt;
-            objectLine.TaxCode = value.vatGroup;
-            objectLine.WarehouseCode = value.whsCode;
-            objectLine.UomCode = value.whsCode;
-            objectLine.LineNum = value.lineNum;
-            objectLine.BaseEntry = value.baseEntry;
-            objectLine.ManageItem = value.manageItem;
-            line.push(objectLine);
-        });
-        object.Lines = line;
-        $.ajax({
-            url: '@Url.Action("CreateGoodReturn","Return")',
-            type: "POST",
-            data: { sendReturn: object },
-            dataType: "JSON",
-            success: function(data) {
-                alert("Success");
-                document.getElementById("frmLoading").style.display = "none";
-                location.reload();
-            },
-            error: function(erro) {
-                alert(erro.responseText);
-                document.getElementById("frmLoading").style.display = "none";
-            }
-        });
+
     });
+
     $("#ChoosePO").click(function() {
         //alert("Hello");
         const index = TbCopyFromPO.row('.selected').index();

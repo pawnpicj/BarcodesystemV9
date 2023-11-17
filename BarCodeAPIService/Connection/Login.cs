@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using Newtonsoft.Json;
 using SAPbobsCOM;
 
 //using Microsoft.IdentityModel.Protocols;
@@ -21,33 +23,7 @@ namespace BarCodeAPIService.Connection
 
         public int LErrCode => _lErrCode;
 
-        public Company Company { get; private set; } = null!;
-
-        //private string Decrypt(string Str)
-        //{
-        //    int i = 1;
-        //    string Password = "";
-        //    string S = "";
-
-        //    try
-        //    {
-        //        for (i = 1; i <= Strings.Len(Str); i++)
-        //        {
-        //            if (Strings.Mid(Str, i, 1) != "?")
-        //                S = S + Strings.Mid(Str, i, 1);
-        //            else
-        //            {
-        //                Password = Password + Strings.Chr(System.Convert.ToInt32(S) - 7);
-        //                S = "";
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //    }
-
-        //    return Password;
-        //}
+        public Company Company { get; private set; } = null!;        
 
         private void LogIn1()
         {
@@ -122,6 +98,8 @@ namespace BarCodeAPIService.Connection
                     }
                 }
 
+
+
                 //string tmpstr;
                 oCompany.Server = ConnectionString.Server;
                 //tmpstr = oCompany.Server;
@@ -133,8 +111,27 @@ namespace BarCodeAPIService.Connection
                 //tmpstr = oCompany.DbUserName;
                 oCompany.DbPassword = ConnectionString.DbPassword;
                 oCompany.CompanyDB = ConnectionString.CompanyDB;
-                oCompany.UserName = ConnectionString.UserName;
-                oCompany.Password = ConnectionString.Password;
+
+                //Read User.js
+                //var filePath3 = Path.Combine(AppContext.BaseDirectory, "wwwroot\\js\\UserClient.json");
+                var filePath3 = Path.Combine(AppContext.BaseDirectory, "appSettings.json");
+                string json3 = System.IO.File.ReadAllText(filePath3);
+                dynamic jsonObj3 = JsonConvert.DeserializeObject(json3);
+                string username = jsonObj3["UserNameSAP"];
+                string passw0rd = jsonObj3["Password"];
+
+                if (username != "" && passw0rd != "")
+                {
+                    oCompany.UserName = username;
+                    oCompany.Password = passw0rd;
+                }
+                else
+                {
+                    oCompany.UserName = ConnectionString.UserName;
+                    oCompany.Password = ConnectionString.Password;
+                }
+
+                
                 //oCompany.SLDServer = ConnectionString.SLDServer;
 
                 if (oCompany.Connect() != 0)

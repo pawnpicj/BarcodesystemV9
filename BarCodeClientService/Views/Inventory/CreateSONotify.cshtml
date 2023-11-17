@@ -379,7 +379,7 @@
                         </div>
 
                         หมายเหตุ(SQ) :
-                        <textarea class="form-control" id="internal_remark" rows="3" style="width:100%"></textarea>
+                        <textarea class="form-control" id="internal_remark" rows="3" style="width:100%"> </textarea>
 
                         หมายเหตุในใบกำกับ
                         <textarea class="form-control" id="inv_remark" rows="2" style="width:100%"></textarea>
@@ -1474,7 +1474,7 @@
         sHead.taxDate = $('#txt_H_DocumentDate').val();
         sHead.slpCode = $('#txt_H_SlpCode').val();
         sHead.remark = $('#comments').val();
-        sHead.internal_remark = internal_remark;
+            sHead.sqRemark = internal_remark;
         sHead.patient = $('#txt_H_Patient').val();
         sHead.tranferNo = $('#txtDocNum').val();
         sHead.invRemark = $('#inv_remark').val();
@@ -1502,39 +1502,40 @@
                 },
                 success: function (ex) {
                     console.log("Success PostUserConfig");
+                    //============================================
+                    console.log("-> To Saving...");
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("PostSalesOrderIM", "Inventory")',
+                        data: { sendSalesOrderForIM: sHead},
+                        dataType: "JSON",
+                        error: function (request, error) {
+                                console.log(arguments);
+                                alert(" Can't do because: " + error);
+                        },
+                        success: function (ex) {
+                            //console.log(ex);
+                            if (ex.errorCode == 0) {
+                                alert("Create SO -> Success");
+                                document.getElementById("Save").style.display = 'none';
+                                document.getElementById("frmLoading").style.display = "none";
+
+                                setTimeout(() => {
+                                    document.location.reload();
+                                }, 1000);
+
+
+                            } else {
+                                console.log(ex.errorMsg);
+                                alert(ex.errorMsg);
+                                document.getElementById("Save").style.display = 'block';
+                                document.getElementById("frmLoading").style.display = "none";
+                            }
+                        }
+                    });
+                    //============================================
                 }
             });
-
-        $.ajax({
-            type: "POST",
-            url: '@Url.Action("PostSalesOrderIM", "Inventory")',
-            data: { sendSalesOrderForIM: sHead},
-            dataType: "JSON",
-            error: function (request, error) {
-                    console.log(arguments);
-                    alert(" Can't do because: " + error);
-            },
-            success: function (ex) {
-                //console.log(ex);
-                if (ex.errorCode == 0) {
-                    alert("Create SO -> Success");
-                    document.getElementById("Save").style.display = 'none';
-                    document.getElementById("frmLoading").style.display = "none";
-
-                    setTimeout(() => {
-                        document.location.reload();
-                    }, 1000);
-
-
-                } else {
-                    console.log(ex.errorMsg);
-                    alert(ex.errorMsg);
-                    document.getElementById("Save").style.display = 'block';
-                    document.getElementById("frmLoading").style.display = "none";
-                }
-            }
-        });
-
 
         } else {
             alert("Please Select Sale Employee.");

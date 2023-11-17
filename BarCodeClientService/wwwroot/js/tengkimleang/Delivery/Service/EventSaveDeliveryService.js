@@ -50,6 +50,7 @@ let EventSaveGoodReceiptPO = {
                     dSubLine.Whs = xLinesAR[x].Whs;
                     dSubLine.Patient = xLinesAR[x].Patient;
                     dSubLine.ManageItem = xLinesAR[x].ManageItem;
+                    dSubLine.BinEntry = xLinesAR[x].BinEntry;
                     dSubLine.YesNo = xLinesAR[x].YesNo;
 
                     bLine = [];
@@ -59,6 +60,7 @@ let EventSaveGoodReceiptPO = {
                         bSubLine.ItemCode = xLinesAR[x].Batches[b].ItemCode;
                         bSubLine.qty = xLinesAR[x].Batches[b].qty;
                         bSubLine.BatchNumber = xLinesAR[x].Batches[b].BatchNumber;
+                        bSubLine.BinEntry = xLinesAR[x].Batches[b].BinEntry;
                         bLine.push(bSubLine);
                     }
 
@@ -69,6 +71,7 @@ let EventSaveGoodReceiptPO = {
                         sSubLine.ItemCode = xLinesAR[x].Serial[s].ItemCode;
                         sSubLine.qty = xLinesAR[x].Serial[s].qty;
                         sSubLine.SerialNumber = xLinesAR[x].Serial[s].SerialNumber;
+                        sSubLine.BinEntry = xLinesAR[x].Serial[s].BinEntry;
                         sLine.push(sSubLine);
                     }
 

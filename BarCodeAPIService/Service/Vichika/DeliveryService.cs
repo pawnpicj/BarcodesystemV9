@@ -61,7 +61,8 @@ namespace BarCodeAPIService.Service
                     {
                         strSq_Remark = "";
                     }
-                    oDeliveryDocuments.UserFields.Fields.Item("U_sq_remark").Value = strSq_Remark;
+                    oDeliveryDocuments.UserFields.Fields.Item("U_sq_remark").Value = (sendDelivery.Sq_Remark == null) ? "" : sendDelivery.Sq_Remark;
+
 
                     foreach (var l in sendDelivery.Lines)
                     {
@@ -114,15 +115,26 @@ namespace BarCodeAPIService.Service
                                 SumHTotal = SumHTotal + DoubleVar;
                             }
 
-                            if (l.ManageItem == "S")
+                            if (l.ManageItem == "S") {
+                                int nS = 0;
                                 foreach (var serial in l.Serial)
                                 {
                                     oDeliveryDocuments.Lines.SerialNumbers.Quantity = 1;
                                     //oGoodReceiptPO.Lines.SerialNumbers.ManufacturerSerialNumber = serial.MfrSerialNo;
                                     oDeliveryDocuments.Lines.SerialNumbers.InternalSerialNumber = serial.SerialNumber;
                                     oDeliveryDocuments.Lines.SerialNumbers.Add();
+
+                                    oDeliveryDocuments.Lines.BinAllocations.SerialAndBatchNumbersBaseLine = nS;
+                                    oDeliveryDocuments.Lines.BinAllocations.BinAbsEntry = serial.BinEntry;
+                                    oDeliveryDocuments.Lines.BinAllocations.Quantity = 1;
+                                    oDeliveryDocuments.Lines.BinAllocations.Add();
+                                    nS++;
                                 }
+
+                            }
                             else if (l.ManageItem == "B")
+                            {
+                                int nB = 0;
                                 foreach (var batch in l.Batches)
                                 {
                                     //oGoodReceiptPO.Lines.BatchNumbers.AddmisionDate = batch.AdmissionDate;
@@ -131,7 +143,22 @@ namespace BarCodeAPIService.Service
                                     oDeliveryDocuments.Lines.BatchNumbers.Quantity = batch.Qty;
                                     oDeliveryDocuments.Lines.BatchNumbers.BatchNumber = batch.BatchNumber;
                                     oDeliveryDocuments.Lines.BatchNumbers.Add();
+
+                                    oDeliveryDocuments.Lines.BinAllocations.SerialAndBatchNumbersBaseLine = nB;
+                                    oDeliveryDocuments.Lines.BinAllocations.BinAbsEntry = batch.BinEntry;
+                                    oDeliveryDocuments.Lines.BinAllocations.Quantity = batch.Qty;
+                                    oDeliveryDocuments.Lines.BinAllocations.Add();
+                                    nB++;
                                 }
+                            }
+                            else if (l.ManageItem == "N")
+                            {
+                                oDeliveryDocuments.Lines.BinAllocations.SerialAndBatchNumbersBaseLine = 0;
+                                oDeliveryDocuments.Lines.BinAllocations.BinAbsEntry = l.BinEntry;
+                                oDeliveryDocuments.Lines.BinAllocations.Quantity = l.Quantity;
+                                oDeliveryDocuments.Lines.BinAllocations.Add();
+                            }
+
 
                             oDeliveryDocuments.Lines.Add();
 
@@ -156,6 +183,7 @@ namespace BarCodeAPIService.Service
                     cSumHTotal = System.Math.Round(cSumHTotal, 0);
 
                     oDeliveryDocuments.DocTotal = cSumHTotal;
+
                     Retval = oDeliveryDocuments.Add();
                     if (Retval != 0)
                     {

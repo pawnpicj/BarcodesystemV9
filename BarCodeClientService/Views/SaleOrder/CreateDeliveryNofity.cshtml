@@ -1680,20 +1680,25 @@
                         arrDataLineB.ItemCode = output[y].itemCode;
                         arrDataLineB.qty = output[y].quantity;
                         arrDataLineB.BatchNumber = output[y].batchNo;
+                        arrDataLineB.BinEntry = output[y].binEntry;
                         //LtmpBatch.push(arrDataLineB);
                         xLinesAR[tl].Batches.push(arrDataLineB);
                         xLinesAR[tl].YesNo = "Yes";
+                        xLinesAR[tl].BinEntry = 0;
                     }
                     else if (datatl.ManageItem == "S") {
                         arrDataLineS.ItemCode = output[y].itemCode;
                         arrDataLineS.qty = output[y].quantity;
                         arrDataLineS.SerialNumber = output[y].serialNo;
+                        arrDataLineS.BinEntry = output[y].binEntry;
                         //LtmpSerial.push(SerialNumber);
                         xLinesAR[tl].Serial.push(arrDataLineS);
                         xLinesAR[tl].YesNo = "Yes";
+                        xLinesAR[tl].BinEntry = 0;
                     }
                     else if (datatl.ManageItem == "N") {
                         xLinesAR[tl].YesNo = "Yes";
+                        xLinesAR[tl].BinEntry = output[y].binEntry;
                     }
 
                 }
@@ -1721,11 +1726,12 @@
 
             },
                 success: function (ex) {
-                console.log("Success PostUserConfig");
+                    console.log("Success PostUserConfig");
+                    EventSaveGoodReceiptPO.sendDelivery('@Url.Action("PostDelivery", "SaleOrder")');
             }
         });
 
-        EventSaveGoodReceiptPO.sendDelivery('@Url.Action("PostDelivery", "SaleOrder")');
+
     });
 
 

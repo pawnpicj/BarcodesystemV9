@@ -1384,10 +1384,11 @@
             },
             success: function (ex) {
                 console.log("Success PostUserConfig");
+                EventSaveGoodReceiptPO.sendGoodReceiptPO('@Url.Action("CreateGoodsReceiptPoResult", "GoodsReceiptPO")');
             }
         });
 
-        EventSaveGoodReceiptPO.sendGoodReceiptPO('@Url.Action("CreateGoodsReceiptPoResult", "GoodsReceiptPO")');
+
     });
 
 

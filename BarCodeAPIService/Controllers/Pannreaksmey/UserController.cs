@@ -79,11 +79,19 @@ namespace BarCodeAPIService.Controllers
 
         [HttpPost("PostUserConfig")]
         public async Task<IActionResult> PostUserConfigAsync(SendUser send)
-        {
-            //var filePath = @"C:\inetpub\backup\Barcodesystem\BarCodeAPIService\appsettings.json";
+        {            
             var filePath = Path.Combine(AppContext.BaseDirectory, "appSettings.json");
             string json = System.IO.File.ReadAllText(filePath);
             dynamic jsonObj = JsonConvert.DeserializeObject(json);
+
+            //var filePath2 = @"C:\inetpub\backup\Barcodesystem\BarCodeAPIService\appsettings.json";
+            //C:\inetpub\backup\Barcodesystem\BarCodeAPIService
+            //string json2 = System.IO.File.ReadAllText(filePath2);
+            //dynamic jsonObj2 = JsonConvert.DeserializeObject(json2);
+
+            //var filePath3 = Path.Combine(AppContext.BaseDirectory, "wwwroot\\js\\UserClient.json");
+            //string json3 = System.IO.File.ReadAllText(filePath3);
+            //dynamic jsonObj3 = JsonConvert.DeserializeObject(json3);
 
             var sectionPathUserX = "UserNameSAP";
             var sectionPathPasswX = "Password";
@@ -92,10 +100,22 @@ namespace BarCodeAPIService.Controllers
             {
                 jsonObj[sectionPathUserX] = send.UserNameSAP;
                 jsonObj[sectionPathPasswX] = send.Password;
+
+                //jsonObj2[sectionPathUserX] = send.UserNameSAP;
+                //jsonObj2[sectionPathPasswX] = send.Password;
+
+                //jsonObj3[sectionPathUserX] = send.UserNameSAP;
+                //jsonObj3[sectionPathPasswX] = send.Password;
             }
 
             string output = Newtonsoft.Json.JsonConvert.SerializeObject(jsonObj, Newtonsoft.Json.Formatting.Indented);
             System.IO.File.WriteAllText(filePath, output);
+
+            //string output2 = Newtonsoft.Json.JsonConvert.SerializeObject(jsonObj2, Newtonsoft.Json.Formatting.Indented);
+            //System.IO.File.WriteAllText(filePath2, output2);
+
+            //string output3 = Newtonsoft.Json.JsonConvert.SerializeObject(jsonObj3, Newtonsoft.Json.Formatting.Indented);
+            //System.IO.File.WriteAllText(filePath3, output3);
             //return Ok("appSettings Update.");
             //Success
             return Ok(send);

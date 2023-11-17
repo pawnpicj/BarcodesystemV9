@@ -2406,29 +2406,34 @@
                 },
                 success: function (ex) {
                     console.log("Success PostUserConfig");
+                    console.log("-> To Saving...");
+                    //======================================
+
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("PostInventoryCounting", "Inventory")',
+                        data: { sendInventoryCounting: sHead },
+                        dataType: "JSON",
+                        success: function (ex) {
+                            //console.log(ex);
+                            if (ex.errorCode == 0) {
+                                alert("Successfully.");
+                                document.getElementById("btnSave").style.display = 'none';
+                                document.getElementById("frmLoading").style.display = "none";
+                                location.reload();
+                            } else {
+                                console.log(ex.errorMsg);
+                                alert(ex.errorMsg);
+                                document.getElementById("btnSave").style.display = 'block';
+                                document.getElementById("frmLoading").style.display = "none";
+                            }
+                        }
+                    });
+                    //======================================
                 }
             });
 
-             $.ajax({
-                type: "POST",
-                url: '@Url.Action("PostInventoryCounting", "Inventory")',
-                data: { sendInventoryCounting: sHead },
-                dataType: "JSON",
-                success: function (ex) {
-                    //console.log(ex);
-                    if (ex.errorCode == 0) {
-                        alert("Successfully.");
-                        document.getElementById("btnSave").style.display = 'none';
-                        document.getElementById("frmLoading").style.display = "none";
-                        location.reload();
-                    } else {
-                        console.log(ex.errorMsg);
-                        alert(ex.errorMsg);
-                        document.getElementById("btnSave").style.display = 'block';
-                        document.getElementById("frmLoading").style.display = "none";
-                    }
-                }
-            });
+
             //End push
         }
 

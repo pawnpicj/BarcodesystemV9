@@ -102,13 +102,19 @@
     document.getElementById("getDBName").innerHTML = "DB Name : UDOM_TRD";
     document.getElementById("getDBName").style.color = "Green";
     document.getElementById("getDBName").style.fontWeight = "Bold";
+    if (getCookie("username") != "") {
+        document.getElementById("getUserSAP").innerHTML = "Username : " + getCookie("username");
+        document.getElementById("getUserSAP").style.color = "Green";
+        document.getElementById("getUserSAP").style.fontWeight = "Bold";
+    }
 
     //function GetDataConfig() { }
         $.ajax({
         url: '@Url.Action("GetDataConfig", "Home")',
         type: "GET",
         dataType: "JSON",
-        success: function (data) {
+            success: function (data) {
+            console.log(data)
             //START -> Check Error [Cannot read properties of undefined]
                 if (data !== undefined) {
                     var jqueryXml = $(data);
@@ -132,7 +138,7 @@
                         //get cookie
                         let user = getCookie("username");
                         let passer = getCookie("passw0rder");
-                        //console.log("UserName : " + user);
+                        console.log("UserName : " + user);
                         //console.log("Passw0rd : " + passer);
                         document.getElementById("getStatus").innerHTML = "Status : Online";
                         document.getElementById("getStatus").style.color = "Green";

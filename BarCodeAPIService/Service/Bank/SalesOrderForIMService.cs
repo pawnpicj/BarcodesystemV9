@@ -56,16 +56,16 @@ namespace BarCodeAPIService.Service
                     strInvRemarkCut = strInvRemark.Remove(strInvRemark.Length - 2, 1);
                     oSalesOrderDocuments.UserFields.Fields.Item("U_inv_remark").Value = strInvRemarkCut;
 
-                    string strInternalRemark = "";
-                    if (sendSalesOrderForIM.internal_remark is not null || sendSalesOrderForIM.internal_remark !="")
+                    string strSqRemark = "";
+                    if (sendSalesOrderForIM.SqRemark != null || sendSalesOrderForIM.SqRemark != "")
                     {
-                        strInternalRemark = sendSalesOrderForIM.internal_remark;
+                        strSqRemark = sendSalesOrderForIM.SqRemark;
                     }
                     else
                     {
-                        strInternalRemark = "";
+                        strSqRemark = "";
                     }
-                    oSalesOrderDocuments.UserFields.Fields.Item("U_sq_remark").Value = strInternalRemark;
+                    oSalesOrderDocuments.UserFields.Fields.Item("U_sq_remark").Value = (sendSalesOrderForIM.SqRemark == null) ? "" : sendSalesOrderForIM.SqRemark;
                     
                     string patient = "";
                     patient = sendSalesOrderForIM.Patient;

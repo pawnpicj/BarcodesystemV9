@@ -531,23 +531,25 @@
             },
             success: function (ex) {
                 console.log("Success PostUserConfig");
-            }
-        });
-
-        //Send To SAP
-        $.ajax({
-            url: '@Url.Action("CreateGoodReturn","GoodReturn")',
-            type: "POST",
-            data: { sendGoodsReturn: object },
-            dataType: "JSON",
-            success: function(data) {
-                alert("Success");
-                document.getElementById("frmLoading").style.display = "none";
-                location.reload();
-            },
-            error: function(erro) {
-                alert(erro.responseText);
-                document.getElementById("frmLoading").style.display = "none";
+                console.log("-> To Saving...");
+                //======================================
+                //Send To SAP
+                $.ajax({
+                    url: '@Url.Action("CreateGoodReturn","GoodReturn")',
+                    type: "POST",
+                    data: { sendGoodsReturn: object },
+                    dataType: "JSON",
+                    success: function(data) {
+                        alert("Success");
+                        document.getElementById("frmLoading").style.display = "none";
+                        location.reload();
+                    },
+                    error: function(erro) {
+                        alert(erro.responseText);
+                        document.getElementById("frmLoading").style.display = "none";
+                    }
+                });
+                //======================================
             }
         });
 

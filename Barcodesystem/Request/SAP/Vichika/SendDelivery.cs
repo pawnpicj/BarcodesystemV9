@@ -29,6 +29,7 @@ namespace BarCodeLibrary.Request.SAP
         public double PriceBeforeDis { get; set; }
         public double PriceAfterVAT { get; set; }
         public string Whs { get; set; }
+        public int BinEntry { get; set; }
         public string UomName { get; set; }
         public string TaxCode { get; set; }
         public int DocEntry { get; set; }
@@ -44,6 +45,7 @@ namespace BarCodeLibrary.Request.SAP
         public string ItemCode { get; set; }
         public string SerialNumber { get; set; }
         public double Qty { get; set; }
+        public int BinEntry { get; set; }
     }
     public class GetBatchDelivery
     {
@@ -53,5 +55,6 @@ namespace BarCodeLibrary.Request.SAP
         //public double InputQty { get; set; }
         public double Qty { get; set; }
         //Quantity
+        public int BinEntry { get; set; }
     }
 }

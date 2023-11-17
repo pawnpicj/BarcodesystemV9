@@ -18,6 +18,7 @@ namespace BarCodeLibrary.Request.SAP
         public string Patient { get; set; }
         public string TranferNo { get; set; }
         public string internal_remark { get; set; }
+        public string SqRemark { get; set; }
         public string InvRemark { get; set; }
         public List<SendSalesOrderLine> Lines { get; set; }
         public List<SendSalesOrderLineX> LinesX { get; set; }

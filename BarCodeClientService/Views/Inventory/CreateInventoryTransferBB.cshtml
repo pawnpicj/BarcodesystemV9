@@ -1778,37 +1778,38 @@
                 },
                 success: function (ex) {
                     console.log("Success PostUserConfig");
-                }
-            });
+                    console.log("-> To Saving...");
 
-            console.log("-> To Saving...");
-            $.ajax({
-                type: "POST",
-                url: '@Url.Action("PostInventoryTransfer", "Inventory")',
-                data: { sendInventoryTransfer: sHead},
-                dataType: "JSON",
-                error: function (request, error) {
-                    console.log(arguments);
-                    alert(" Can't do because: " + error);
-                },
-                success: function (ex) {
-                    //console.log(ex);
-                    if (ex.errorCode == 0) {
-                        alert("Success");
-                        document.getElementById("Save").style.display = 'none';
-                        document.getElementById("frmLoading").style.display = "none";                        
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("PostInventoryTransfer", "Inventory")',
+                        data: { sendInventoryTransfer: sHead},
+                        dataType: "JSON",
+                        error: function (request, error) {
+                            console.log(arguments);
+                            alert(" Can't do because: " + error);
+                        },
+                        success: function (ex) {
+                            //console.log(ex);
+                            if (ex.errorCode == 0) {
+                                alert("Success");
+                                document.getElementById("Save").style.display = 'none';
+                                document.getElementById("frmLoading").style.display = "none";
 
-                        setTimeout(() => {
-                            document.location.reload();
-                        }, 1500);
+                                setTimeout(() => {
+                                    document.location.reload();
+                                }, 1500);
 
 
-                    } else {
-                        console.log(ex.errorMsg);
-                        alert(ex.errorMsg);
-                        document.getElementById("Save").style.display = 'block';
-                        document.getElementById("frmLoading").style.display = "none";
-                    }
+                            } else {
+                                console.log(ex.errorMsg);
+                                alert(ex.errorMsg);
+                                document.getElementById("Save").style.display = 'block';
+                                document.getElementById("frmLoading").style.display = "none";
+                            }
+                        }
+                    });
+
                 }
             });
 

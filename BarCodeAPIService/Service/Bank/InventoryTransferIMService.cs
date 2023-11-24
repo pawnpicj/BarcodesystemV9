@@ -301,10 +301,36 @@ namespace BarCodeAPIService.Service
 
                     foreach (DataRow row in dt.Rows)
                     {
-                        string str = "";
+                        string strRemark = "";
                         string BatchSerialNumber = "";
                         double BalanceByBS = 0;
                         double iBalance = 0;
+                        string prDocNum = "";
+                        string prItemCode = "";
+                        string prIsBtchSerNum = "";
+
+                        prDocNum = row["DocNum"].ToString();
+                        prItemCode = row["ItemCode"].ToString();
+                        if (row["IsBtchSerNum"].ToString() == "B")
+                        {
+                            prIsBtchSerNum = row["BatchesNumber"].ToString();
+                        }
+                        else if (row["IsBtchSerNum"].ToString() == "S")
+                        {
+                            prIsBtchSerNum = row["SerialNumber"].ToString();
+                        }
+                        else if (row["IsBtchSerNum"].ToString() == "N")
+                        {
+                            prIsBtchSerNum = "";
+                        }
+                        if (prDocNum == "122050031" && prItemCode == "0102Z" && prIsBtchSerNum == "PDWPU210401")
+                        {
+                            Console.WriteLine("DocNum : " + prDocNum + " ItemCode : " + prItemCode + " ProductNo : " + prIsBtchSerNum);
+                        }
+                        else
+                        {
+                            Console.WriteLine("DocNum : " + prDocNum + " ItemCode : " + prItemCode + " ProductNo : " + prIsBtchSerNum);
+                        }
 
                         double QtyY = double.Parse(row["QtyBSNo"].ToString());
                         double QtyCvY = double.Parse(row["QTYCV"].ToString());
@@ -321,13 +347,26 @@ namespace BarCodeAPIService.Service
                         if (row["YNCV"].ToString() == "Y" || row["YNNotify"].ToString() == "Y")
                         {
                             //str = Convert.ToString(QtyX) + "-(" + Convert.ToString(QtyCv) + "+" + Convert.ToString(QtyNotify) + ") = " + CalcQty + " | " + row["YNCV"].ToString() + "/" + row["YNNotify"].ToString();
-                            str = "QtyX:- " + CalcQty + " QtyY:- " + CalcQtyBS + " UseBaseUn:- " + UseBaseUn;
+                            strRemark = "QtyX:- " + CalcQty + " QtyY:- " + CalcQtyBS + " UseBaseUn:- " + UseBaseUn;
                         }
                         else
                         {
                             //str = Convert.ToString(QtyX) + "-(" + Convert.ToString(QtyCv) + "+" + Convert.ToString(QtyNotify) + ") = " + CalcQty + " | " + row["YNCV"].ToString() + "/" + row["YNNotify"].ToString();
-                            str = "QtyX:- " + CalcQty + " QtyY:- " + CalcQtyBS + " UseBaseUn:- " + UseBaseUn;
+                            strRemark = "QtyX:- " + CalcQty + " QtyY:- " + CalcQtyBS + " UseBaseUn:- " + UseBaseUn;
                         }
+
+                        string dShowHide = "N";
+                        string rYNCV = row["YNCV"].ToString();
+                        string rYNNotify = row["YNNotify"].ToString();
+                        if (rYNNotify == "Y" && QtyNotifyY == 0)
+                        {
+                            dShowHide = "E";
+                        }
+                        else if (rYNCV == "Y" && QtyCvY == 0)
+                        {
+                            dShowHide = "E";
+                        }
+
 
                         if (row["IsBtchSerNum"].ToString() == "B")
                         {
@@ -340,7 +379,7 @@ namespace BarCodeAPIService.Service
                             {
                                 iBalance = CalcQtyBS;
                             }
-                            
+
                             BatchSerialNumber = row["BatchesNumber"].ToString();
                         }
                         else if (row["IsBtchSerNum"].ToString() == "S")
@@ -358,33 +397,37 @@ namespace BarCodeAPIService.Service
 
                         if (iBalance != 0)
                         {
-                            //Data Line
-                            oWTRIM.Add(new RPT_OWTRIM
+                            if (dShowHide != "E")
                             {
-                                //Head
-                                CardCode = row["CardCode"].ToString(),
-                                CardName = row["CardName"].ToString(),
-                                DocEntry = Convert.ToInt32(row["DocEntry"].ToString()),
-                                DocNum = "IM " + row["DocNum"].ToString(),
-                                DocDate = row["DocDate"].ToString(),
-                                FisrtBin = row["FisrtBin"].ToString(),
-                                ItemCode = row["ItemCode"].ToString(),
-                                Dscription = row["Dscription"].ToString(),
-                                IsBtchSerNum = row["IsBtchSerNum"].ToString(),
-                                BatchSerialNumber = BatchSerialNumber,
-                                ExpDate = row["ExpDate"].ToString(),
-                                Quantity = Convert.ToDouble(row["Quantity"].ToString()),
-                                UomCode = row["UomCode"].ToString(),
-                                Price = Convert.ToDouble(row["Price"].ToString()),
-                                DocTotal = Convert.ToDouble(row["DocTotal"].ToString()),
-                                Balance = iBalance,
-                                BalanceByBS = BalanceByBS,
-                                SlpCode = row["SlpCode"].ToString(),
-                                SlpName = row["SlpName"].ToString(),
-                                Remark = str.ToString(),
-                                QTYByBatchSerial = Convert.ToDouble(row["QtyBSNo"].ToString())
-                            });
-                        }                        
+                                //Data Line
+                                oWTRIM.Add(new RPT_OWTRIM
+                                {
+                                    //Head
+                                    CardCode = row["CardCode"].ToString(),
+                                    CardName = row["CardName"].ToString(),
+                                    DocEntry = Convert.ToInt32(row["DocEntry"].ToString()),
+                                    DocNum = "IM " + row["DocNum"].ToString(),
+                                    DocDate = row["DocDate"].ToString(),
+                                    FisrtBin = row["FisrtBin"].ToString(),
+                                    ItemCode = row["ItemCode"].ToString(),
+                                    Dscription = row["Dscription"].ToString(),
+                                    IsBtchSerNum = row["IsBtchSerNum"].ToString(),
+                                    BatchSerialNumber = BatchSerialNumber,
+                                    ExpDate = row["ExpDate"].ToString(),
+                                    Quantity = Convert.ToDouble(row["Quantity"].ToString()),
+                                    UomCode = row["UomCode"].ToString(),
+                                    Price = Convert.ToDouble(row["Price"].ToString()),
+                                    DocTotal = Convert.ToDouble(row["DocTotal"].ToString()),
+                                    Balance = iBalance,
+                                    BalanceByBS = BalanceByBS,
+                                    SlpCode = row["SlpCode"].ToString(),
+                                    SlpName = row["SlpName"].ToString(),
+                                    Remark = strRemark.ToString(),
+                                    QTYByBatchSerial = Convert.ToDouble(row["QtyBSNo"].ToString())
+                                });
+                            }
+
+                        }
 
                     }
 

@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Inventory Transfer IM Report";
+    ViewData["Title"] = "Inventory Transfer IM Report Auto";
     var dt = DateTime.Now;
     ViewData["Date"] = dt.ToShortDateString();
 }
@@ -222,6 +222,11 @@
     }
 </style>
 
+<script type="text/javascript">
+
+</script>
+
+
 <div id="#main">
 
     <div id="frmLoading" class="cover-spin" style="display:none"></div>
@@ -231,9 +236,9 @@
         From : <input type="date" id="txtFromDate" />
         To : <input type="date" id="txtToDate" /><br>
         Customer : <input type="text" id="txtCustomer" />
-        Sale Employee : <input type="text" id="txtSaleEmployee" />
+        Sale Employee : <input type="text" id="txtSaleEmployee" /><input type="text" id="txtLoad" value=""/>
     </div>
-    <button class="btn-sm btn-danger" onclick="fncGetRptIM();">&nbsp;Search&nbsp;</button>
+    <button class="btn-sm btn-danger" id="btnSearchData" onclick="fncGetRptIM();">&nbsp;Search&nbsp;</button>
 
     <div class="table-responsive-sm">
         <table id="TbRptIM" class="table table-bordered  table-striped table-hover display table-sm" style="width: 100%; background: #f0eff1; color: #696969;">
@@ -263,16 +268,24 @@
 </div>
 
 <script type="text/javascript">
-
+    var $txtFileName = "";
+    var LoadData = "No";
     $(document).ready(function () {
+
         var now = new Date();
         var day = ("0" + now.getDate()).slice(-2);
         var month = ("0" + (now.getMonth() + 1)).slice(-2);
-        //var today1 = now.getFullYear() + "-" + "01" + "-01";
-        var today1 = "2021-01-01";
-        var today2 = now.getFullYear() + "-" + (month) + "-" + (day);
-        $('#txtFromDate').val(today1);
-        $('#txtToDate').val(today2);
+        //var today1 = now.getFullYear() + "-" + "01" + "-01";        
+
+        var monthDef = (now.getMonth() + 1);
+        var yearDef = now.getFullYear();
+
+        //$('#txtFileName').val(yearDef + '-' + monthDef);
+
+        //console.log("Date Now " + now);
+        //console.log("Month Default " + monthDef);
+        //console.log("Year Default " + yearDef);
+        getMMYYYY(monthDef, yearDef);
 
         const LCustomer = [];
         const arrCustomer = {};
@@ -299,6 +312,15 @@
             }
         });
 
+        
+
+        setTimeout(() => {
+            //alert("XxX");
+            document.getElementById("btnSearchData").click();
+            //$('#txtLoad').val('Yes');
+            
+        }, 5000);
+
         const lSaleEmployee = [];
         const arrSaleEmployee = {};
 
@@ -324,10 +346,41 @@
             }
         });
 
+        //$txtFileName = $('#txtFileName').val();
+        
+
     });
 
-    var LData = [];
+    var GetMM = "";
+    var GetYYYY = "";
+    console.log("Get Route -> ");
+    console.log("Route : " + location.pathname.split('/')[1]);
+    var eRoute = "";
 
+    eRoute = location.pathname.split('/')[1];
+    console.log("Get Location -> ");
+    if (eRoute == "SAPUI") {        
+        console.log("MM : " + location.pathname.split('/')[4]);
+        console.log("YYYY : " + location.pathname.split('/')[5]);
+        GetMM = location.pathname.split('/')[4];
+        GetYYYY = location.pathname.split('/')[5];
+    } else {
+        console.log("MM : " + location.pathname.split('/')[3]);
+        console.log("YYYY : " + location.pathname.split('/')[4]);
+        GetMM = location.pathname.split('/')[3];
+        GetYYYY = location.pathname.split('/')[4];
+    }
+    getRePortName(GetMM, GetYYYY);
+
+    console.log("Show -> " + mmx + yyyyx);
+    if (mmx < 10) {
+        mmx = "0" + mmx
+    } else {
+        mmx = mmx
+    }
+
+    var showMMYYYY = mmx + "-" + yyyyx;
+    var LData = [];    
     var collapsedGroups = {};
     var tbRptIM = $('#TbRptIM').DataTable({
         bLengthChange: false,
@@ -370,7 +423,13 @@
         },
         dom: 'Bfrtip',
         buttons: [
-            'excel',
+            {
+                extend: 'excel',
+                filename: 'Inventory_Transfer_IM_Report-' + showMMYYYY,
+                attr: {
+                    id: 'btnDExcel'
+                }
+            },
             {
                 text: 'History',
                 attr: {
@@ -448,7 +507,17 @@
                     tbRptIM.search('').draw();
                     Ltmp = [];
                     tbRptIM.rowGroup().enable().draw();
+                    LoadData = "Yes";
                     document.getElementById("frmLoading").style.display = "none";
+
+
+                    console.log("LoadData :- " + LoadData);
+                    if (LoadData == 'Yes') {
+                        setTimeout(() => {
+                            //alert("XxX");
+                            document.getElementById("btnDExcel").click();
+                        }, 3000);
+                    }
                 }
             });
 
@@ -458,7 +527,7 @@
         }
 
 
-    }
+    }    
 
     function autocomplete(input, list) {
         //Add an event listener to compare the input value with all countries
@@ -550,6 +619,72 @@
         document.addEventListener("click", function (e) {
             closeAllLists(e.target);
         });
+    }
+
+    function getMMYYYY(month, year) {
+        //console.log("getting func getMMYYYY");
+        //month = 3;
+        //year = 2024;
+        var dday = 0;
+        if (month == 1) {
+            month = 12;
+            year = year - 1;
+        } else {
+            month = month - 1;
+            year = year;
+        }
+
+        if (month == 2) {
+            //Mod 4 = 0 is 29
+            if (year % 4 == 0) {
+                dday = "29";
+            } else {
+                dday = "28";
+            }
+        }
+        else if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) {
+            dday = "31";
+        }
+        else if (month == 4 || month == 6 || month == 9 || month == 11) {
+            dday = "30";
+        }
+
+        var zMonth = ("0" + month).slice(-2);
+        var dateFrom = "2021-01-01";
+        var dateTo = year + "-" + zMonth + "-" + dday;
+        $('#txtFromDate').val(dateFrom);
+        $('#txtToDate').val(dateTo);
+        //var fileNameX = "Inventory_Transfer_IM_Report-" + year + "-" + zMonth;
+        //$('#txtFileName').val(fileNameX);
+        //console.log("Result dDay : " + dday);
+    }
+
+    function getRePortName(month, year) {
+        if (month == 1) {
+            month = 12;
+            year = year - 1;
+        } else {
+            month = month - 1;
+            year = year;
+        }
+
+        if (month == 2) {
+            //Mod 4 = 0 is 29
+            if (year % 4 == 0) {
+                dday = "29";
+            } else {
+                dday = "28";
+            }
+        }
+        else if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) {
+            dday = "31";
+        }
+        else if (month == 4 || month == 6 || month == 9 || month == 11) {
+            dday = "30";
+        }
+
+        mmx = month;
+        yyyyx = year;
     }
 
 </script>

@@ -4074,3 +4074,22 @@ ITEM:GC120|Row:1|Status:pass,1,run
 SO DocNum : 123110020
 ->ScanBarCode:JS-SAW-W2T22-320;;;QTY1;004;
 ITEM:JS-SAW-W2T22-320|Row:2|Status:pass,2,run
+SO DocNum : 123120001
+SO DocNum : 123120001
+SO DocNum : 123120002
+SO DocNum : 123120002
+->ScanBarCode:0102Z;PDWPU220802;;QTY;001;
+ITEM:0102Z|Row:5|Status:pass,5,run
+->ScanBarCode:0102Z;PDWPU220802;;QTY;001;
+ITEM:0102Z|Row:5|Status:pass,5,run
+->ScanBarCode:0102Z;PDWPU220802;;QTY;001;
+ITEM:0102Z|Row:5|Status:pass,5,run
+->ScanBarCode:0102Z;PDWPU220802;;QTY;001;
+ITEM:0102Z|Row:5|Status:pass,5,run
+->ScanBarCode:0102Z;PDWPU220802;;QTY;001;
+ITEM:0102Z|Row:5|Status:pass,5,run
+->ScanBarCode:0102Z;PDWPU220802;;QTY;001;
+ITEM:0102Z|Row:5|Status:pass,5,run
+->ScanBarCode:0102Z;PDWPU220802;;QTY;001;
+ITEM:0102Z|Row:5|Status:pass,5,run
+SO DocNum : 123120003
